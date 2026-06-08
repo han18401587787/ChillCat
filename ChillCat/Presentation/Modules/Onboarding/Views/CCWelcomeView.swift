@@ -3,19 +3,18 @@ import SwiftUI
 struct CCWelcomeView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(\.ccAppTheme) private var theme
+    @State private var isLoggingIn = false
 
     var body: some View {
         ZStack {
             LinearGradient(
                 colors: [Color(hex: "E8D9F0").opacity(0.6), Color(hex: "B8D4E3").opacity(0.4), Color(hex: "F9F6F2")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
+                startPoint: .topLeading, endPoint: .bottomTrailing
             ).ignoresSafeArea()
 
             VStack(spacing: 32) {
                 Spacer()
-                Image(systemName: "leaf.circle.fill")
-                    .font(.system(size: 72)).foregroundColor(Color(hex: "5A7A8A"))
+                Image(systemName: "leaf.circle.fill").font(.system(size: 72)).foregroundColor(Color(hex: "5A7A8A"))
                 Text("绪安").font(.system(size: 36, weight: .bold))
                 Text("陪你温柔自愈").font(.system(size: 18)).foregroundColor(Color(hex: "7A9AAA"))
                 VStack(spacing: 8) {
@@ -24,13 +23,46 @@ struct CCWelcomeView: View {
                 }.padding(.top, 32)
                 Spacer()
                 VStack(spacing: 16) {
-                    Button(action: { coordinator.isLoggedIn = true }) {
-                        Text("匿名进入").fontWeight(.semibold).frame(maxWidth: .infinity)
-                            .padding(.vertical, 16).background(Color(hex: "5A7A8A")).foregroundColor(.white).cornerRadius(12)
+                    Button(action: { anonymousLogin() }) {
+                        if isLoggingIn {
+                            ProgressView().tint(.white)
+                        } else {
+                            Text("匿名进入").fontWeight(.semibold)
+                        }
                     }
-                    Button("已有账号登录") { coordinator.navigate(to: .login) }.foregroundColor(Color(hex: "5A7A8A"))
+                    .frame(maxWidth: .infinity).padding(.vertical, 16)
+                    .background(Color(hex: "5A7A8A")).foregroundColor(.white).cornerRadius(12)
+                    .disabled(isLoggingIn)
+
+                    Button("已有账号登录") { coordinator.navigate(to: .login) }
+                        .foregroundColor(Color(hex: "5A7A8A")).disabled(isLoggingIn)
                 }.padding(.horizontal, 32).padding(.bottom, 50)
             }
         }
     }
+
+    private func anonymousLogin() {
+        isLoggingIn = true
+        Task {
+            defer { isLoggingIn = false }
+            do {
+                let url = CCAppEnvironment.current.baseURL.appendingPathComponent("/api/v1/auth/anonymous")
+                var req = URLRequest(url: url)
+                req.httpMethod = "POST"
+                req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                let (data, _) = try await URLSession.shared.data(for: req)
+                let resp = try JSONDecoder().decode(CCAPIResponse<CCAnonymousLoginData>.self, from: data)
+                if resp.isSuccess, let d = resp.data {
+                    CCKeychainManager().set(d.token, for: "access_token")
+                    await MainActor.run { coordinator.isLoggedIn = true }
+                }
+            } catch {
+                await MainActor.run { coordinator.isLoggedIn = true }
+            }
+        }
+    }
+}
+
+struct CCAnonymousLoginData: Decodable {
+    let token: String; let user_id: Int64; let username: String
 }
