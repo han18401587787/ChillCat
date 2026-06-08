@@ -38,7 +38,7 @@ struct CCTreeHoleView: View {
                             }
                         }.pickerStyle(.segmented)
                         Spacer()
-                        Button(action: { viewModel.publishPost(); isFocused = false }) {
+                        Button(action: { viewModel.CCHaptic.medium(); publishPost(); isFocused = false }) {
                             Image(systemName: "paperplane.fill").font(.system(size: 18))
                                 .foregroundColor(.white).padding(10)
                                 .background(Color(hex: "5A7A8A")).clipShape(Circle())

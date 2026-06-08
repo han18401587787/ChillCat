@@ -84,7 +84,7 @@ struct CCHomeView: View {
                         .cornerRadius(theme.radiusMD)
                         .lineLimit(3...5)
 
-                    Button(action: { viewModel.completeCheckIn() }) {
+                    Button(action: { CCHaptic.success(); viewModel.completeCheckIn() }) {
                         Text("就是这样，进去看看")
                             .fontWeight(.medium)
                             .foregroundColor(.white)
@@ -101,7 +101,7 @@ struct CCHomeView: View {
     }
 
     private func emotionButton(_ emotion: CCEmotion) -> some View {
-        Button(action: { viewModel.selectEmotion(emotion) }) {
+        Button(action: { CCHaptic.selection(); viewModel.selectEmotion(emotion) }) {
             VStack(spacing: 6) {
                 Image(systemName: emotion.iconName)
                     .font(.system(size: 22))
