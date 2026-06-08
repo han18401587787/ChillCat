@@ -15,7 +15,7 @@ enum CCAppRoute: Hashable, Identifiable {
     case messages
     case search
     case vipCenter
-    case vipPurchase
+    case vipPurchase(CCMemberProduct)
     case settings
     case detail(id: String)
     case web(url: URL)
@@ -28,7 +28,7 @@ enum CCAppRoute: Hashable, Identifiable {
         case .messages: return "messages"
         case .search: return "search"
         case .vipCenter: return "vipCenter"
-        case .vipPurchase: return "vipPurchase"
+        case .vipPurchase(let p): return "vipPurchase_\(p.id)"
         case .settings: return "settings"
         case .detail(let id): return "detail_\(id)"
         case .web(let url): return "web_\(url.absoluteString)"

@@ -55,16 +55,16 @@ struct CCLightTheme: CCAppThemeProtocol {
 }
 
 struct CCDarkTheme: CCAppThemeProtocol {
-    let primary = Color.blue
-    let secondary = Color.orange
-    let accent = Color.purple
+    let primary = Color.blue.opacity(0.85)
+    let secondary = Color.orange.opacity(0.85)
+    let accent = Color.purple.opacity(0.85)
     let background = Color(.systemBackground)
     let surface = Color(.secondarySystemBackground)
     let textPrimary = Color(.label)
     let textSecondary = Color(.secondaryLabel)
-    let error = Color.red
-    let success = Color.green
-    let warning = Color.orange
+    let error = Color.red.opacity(0.85)
+    let success = Color.green.opacity(0.85)
+    let warning = Color.orange.opacity(0.85)
 
     let spacingXS: CGFloat = 4
     let spacingSM: CGFloat = 8

@@ -117,7 +117,7 @@ struct CCMemberCenterView: View {
 
     private func productCard(_ product: CCMemberProduct) -> some View {
         Button(action: {
-            Task { await viewModel.purchase(product: product) }
+            coordinator.navigate(to: .vipPurchase(product))
         }) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {

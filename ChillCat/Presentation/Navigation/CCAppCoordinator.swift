@@ -73,8 +73,8 @@ final class CCAppCoordinator {
             CCMessageListView()
         case .vipCenter:
             CCMemberCenterView()
-        case .vipPurchase:
-            CCMemberPurchaseView()
+        case .vipPurchase(let product):
+            CCMemberPurchaseView(product: product)
         case .settings:
             CCSettingsView()
         case .detail(let id):

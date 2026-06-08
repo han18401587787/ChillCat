@@ -35,7 +35,13 @@ enum CCMainTab: Int, CaseIterable {
 
 struct CCMainTabView: View {
     @State private var selectedTab: CCMainTab = .home
+    @State private var unreadCount: Int64 = 0
     @Environment(CCAppCoordinator.self) private var coordinator
+
+    private let messageUseCase: CCFetchMessagesUseCase = {
+        let container = CCAppDependencyContainer.shared.container
+        return container.resolve()
+    }()
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -73,6 +79,12 @@ struct CCMainTabView: View {
                 Label(CCMainTab.profile.title, systemImage: CCMainTab.profile.iconName)
             }
             .tag(CCMainTab.profile)
+            .badge(unreadCount > 0 ? Int(unreadCount) : 0)
+        }
+        .task {
+            if let count = try? await messageUseCase.fetchUnreadCount() {
+                unreadCount = count
+            }
         }
     }
 }
