@@ -1,5 +1,6 @@
 import SwiftUI
 import Lottie
+import KeychainAccess
 
 struct CCWelcomeView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
@@ -47,23 +48,13 @@ struct CCWelcomeView: View {
         Task {
             defer { isLoggingIn = false }
             do {
-                let url = CCAppEnvironment.current.baseURL.appendingPathComponent("/api/v1/auth/anonymous")
-                var req = URLRequest(url: url)
-                req.httpMethod = "POST"
-                req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let (data, _) = try await URLSession.shared.data(for: req)
-                let resp = try JSONDecoder().decode(CCAPIResponse<CCAnonymousLoginData>.self, from: data)
-                if resp.isSuccess, let d = resp.data {
-                    CCKeychainManager().set(d.token, for: "access_token")
-                    await MainActor.run { coordinator.isLoggedIn = true }
-                }
+                let resp = try await CCXuanAPI.anonymousLogin()
+                let keychain = Keychain(service: "app.xuanpeace.token")
+                keychain["access_token"] = resp.token
+                await MainActor.run { coordinator.isLoggedIn = true }
             } catch {
                 await MainActor.run { coordinator.isLoggedIn = true }
             }
         }
     }
-}
-
-struct CCAnonymousLoginData: Decodable {
-    let token: String; let user_id: Int64; let username: String
 }

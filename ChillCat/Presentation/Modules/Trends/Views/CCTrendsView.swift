@@ -44,9 +44,9 @@ struct CCTrendsView: View {
             }
 
             HStack(spacing: theme.spacingSM) {
-                statBox(value: "\(stats?.total_count ?? 0)", label: "本周记录", color: theme.softPurpleLight)
-                statBox(value: "\(stats?.streak_days ?? 0)", label: "连续天数", color: theme.primaryMuted)
-                statBox(value: stats?.top_emotion ?? "—", label: "主要情绪", color: theme.softGreenLight)
+                statBox(value: "\(stats?.totalCount ?? 0)", label: "本周记录", color: theme.softPurpleLight)
+                statBox(value: "\(stats?.streakDays ?? 0)", label: "连续天数", color: theme.primaryMuted)
+                statBox(value: stats?.topEmotion ?? "—", label: "主要情绪", color: theme.softGreenLight)
             }
 
             if let s = stats, !s.insight.isEmpty {
@@ -62,9 +62,9 @@ struct CCTrendsView: View {
         VStack(spacing: theme.spacingLG) {
             Text("本月情绪回顾").font(.system(size: 18, weight: .bold))
             HStack(spacing: theme.spacingSM) {
-                statBox(value: "\(stats?.total_count ?? 0)", label: "打卡", color: theme.softPurpleLight)
-                statBox(value: stats?.top_emotion ?? "—", label: "主要情绪", color: Color(hex: "66BB6A").opacity(0.25))
-                statBox(value: "\(stats?.streak_days ?? 0)", label: "连续", color: theme.primaryMuted)
+                statBox(value: "\(stats?.totalCount ?? 0)", label: "打卡", color: theme.softPurpleLight)
+                statBox(value: stats?.topEmotion ?? "—", label: "主要情绪", color: Color(hex: "66BB6A").opacity(0.25))
+                statBox(value: "\(stats?.streakDays ?? 0)", label: "连续", color: theme.primaryMuted)
             }
         }
     }
@@ -73,9 +73,9 @@ struct CCTrendsView: View {
         VStack(spacing: theme.spacingLG) {
             Text("成长轨迹").font(.system(size: 18, weight: .bold))
             VStack(spacing: theme.spacingSM) {
-                growthRow(icon: "chart.line.uptrend.xyaxis", title: "本周记录 \(stats?.total_count ?? 0) 次", subtitle: "继续坚持")
-                growthRow(icon: "figure.mind.and.body", title: "连续打卡 \(stats?.streak_days ?? 0) 天", subtitle: "加油保持")
-                growthRow(icon: "pencil.and.list.clipboard", title: "今日主要情绪", subtitle: stats?.top_emotion ?? "暂无数据")
+                growthRow(icon: "chart.line.uptrend.xyaxis", title: "本周记录 \(stats?.totalCount ?? 0) 次", subtitle: "继续坚持")
+                growthRow(icon: "figure.mind.and.body", title: "连续打卡 \(stats?.streakDays ?? 0) 天", subtitle: "加油保持")
+                growthRow(icon: "pencil.and.list.clipboard", title: "今日主要情绪", subtitle: stats?.topEmotion ?? "暂无数据")
             }
         }
     }
@@ -88,7 +88,7 @@ struct CCTrendsView: View {
             let dayNames = ["日","一","二","三","四","五","六"]
             var counts: [String: Int] = [:]
             for e in s.entries {
-                let d = e.checkin_date
+                let d = e.checkinDate
                 let idx = dayOfWeek(from: d)
                 counts[dayNames[idx], default: 0] += 1
             }

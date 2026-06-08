@@ -18,8 +18,8 @@ final class CCTreeHoleViewModel {
             posts = page.list.map { p in
                 CCTreeHolePost(id: String(p.id), content: p.content,
                     scope: p.scope == "public" ? .public : .comforters,
-                    isAnonymous: p.is_anonymous, hugs: Int(p.hugs),
-                    createdAt: ISO8601DateFormatter().date(from: p.created_at) ?? Date())
+                    isAnonymous: p.isAnonymous, hugs: Int(p.hugs),
+                    createdAt: ISO8601DateFormatter().date(from: p.createdAt) ?? Date())
             }
         } catch {}
         isLoading = false

@@ -42,8 +42,8 @@ final class CCEmotionViewModel {
                 }
                 todayNote = today.note
             }
-            streakDays = Int(today.streak_days)
-            totalDays = Int(today.streak_days) + 18 // approximate
+            streakDays = Int(today.streakDays)
+            totalDays = Int(today.streakDays) + 18 // approximate
         } catch {}
         loadWeeklyStats()
     }
@@ -52,7 +52,7 @@ final class CCEmotionViewModel {
         Task {
             do {
                 let stats = try await CCXuanAPI.getWeeklyStats()
-                weeklyNote = "本周记录 \(stats.total_count) 次，你的情绪以「\(stats.top_emotion)」为主。\(stats.insight)"
+                weeklyNote = "本周记录 \(stats.totalCount) 次，你的情绪以「\(stats.topEmotion)」为主。\(stats.insight)"
             } catch {}
         }
     }
@@ -67,7 +67,7 @@ final class CCEmotionViewModel {
         Task {
             do {
                 let result = try await CCXuanAPI.checkin(emotion: emotion.rawValue, note: todayNote)
-                streakDays = Int(result.streak_days)
+                streakDays = Int(result.streakDays)
             } catch {
                 // Already checked in today — still show success
             }

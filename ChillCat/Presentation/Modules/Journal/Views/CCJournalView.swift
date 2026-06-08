@@ -63,14 +63,14 @@ struct CCJournalView: View {
                                 VStack(alignment: .leading, spacing: 2) {
                                     HStack {
                                         Text(entry.emotion).font(.system(size: 15, weight: .medium))
-                                        if entry.has_doodle { Text("有涂鸦").font(.system(size: 11)).foregroundColor(theme.softPink) }
+                                        if entry.hasDoodle { Text("有涂鸦").font(.system(size: 11)).foregroundColor(theme.softPink) }
                                     }
                                     if !entry.note.isEmpty {
                                         Text(entry.note).font(.system(size: 13)).foregroundColor(theme.textSecondary).lineLimit(2)
                                     }
                                 }
                                 Spacer()
-                                Text(String(entry.checkin_date.suffix(5))).font(.system(size: 12)).foregroundColor(theme.textMuted)
+                                Text(String(entry.checkinDate.suffix(5))).font(.system(size: 12)).foregroundColor(theme.textMuted)
                             }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD)
                         }
                     }
@@ -81,7 +81,7 @@ struct CCJournalView: View {
     }
 
     private var calendarDays: [Int] { (1...31).map { $0 } }
-    private var uniqueDays: Int { Set(entries.map { $0.checkin_date }).count }
+    private var uniqueDays: Int { Set(entries.map { $0.checkinDate }).count }
 
     private func loadJournal() async {
         isLoading = true
@@ -95,7 +95,7 @@ struct CCJournalView: View {
 
     private func dayHasEntry(_ day: Int) -> Bool {
         let dayStr = String(format: "%04d-%02d-%02d", Calendar.current.component(.year, from: Date()), selectedMonth, day)
-        return entries.contains { $0.checkin_date == dayStr }
+        return entries.contains { $0.checkinDate == dayStr }
     }
 
     private func emotionColor(_ name: String) -> Color {
