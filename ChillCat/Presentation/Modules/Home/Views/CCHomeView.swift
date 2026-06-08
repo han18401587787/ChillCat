@@ -31,6 +31,9 @@ struct CCHomeView: View {
                 // 本周回顾
                 weeklyReviewCard
 
+                // 探索更多
+                exploreSection
+
                 // 每日语录
                 quoteCard
             }
@@ -187,6 +190,30 @@ struct CCHomeView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(theme.cardBackground)
         .cornerRadius(theme.radiusMD)
+    }
+
+    // MARK: - Explore
+    private var exploreSection: some View {
+        VStack(spacing: theme.spacingSM) {
+            Text("探索更多可能").font(.system(size: 16, weight: .semibold)).frame(maxWidth: .infinity, alignment: .leading)
+            HStack(spacing: theme.spacingSM) {
+                exploreCard(icon: "book.pages.fill", title: "情绪日记", color: Color(hex: "D4C8E8"), route: .journal)
+                exploreCard(icon: "wind", title: "冥想放松", color: Color(hex: "B8D4E3"), route: .meditation)
+                exploreCard(icon: "lightbulb.fill", title: "小课堂", color: Color(hex: "D5E8D4"), route: .courses)
+            }
+        }
+    }
+
+    func exploreCard(icon: String, title: String, color: Color, route: CCAppRoute) -> some View {
+        Button(action: { coordinator.navigate(to: route) }) {
+            VStack(spacing: 8) {
+                Image(systemName: icon).font(.system(size: 24)).foregroundColor(color)
+                    .frame(width: 48, height: 48).background(color.opacity(0.15)).cornerRadius(theme.radiusSM)
+                Text(title).font(.system(size: 13)).foregroundColor(theme.textPrimary)
+            }
+            .frame(maxWidth: .infinity).padding(.vertical, 12)
+            .background(theme.cardBackground).cornerRadius(theme.radiusMD)
+        }
     }
 
     // MARK: - Quote

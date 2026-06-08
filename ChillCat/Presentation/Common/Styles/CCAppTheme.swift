@@ -114,7 +114,7 @@ struct CCDarkTheme: CCAppThemeProtocol {
     let radiusXL: CGFloat = 24
 }
 
-private extension Color {
+extension Color {
     init(hex: String) {
         let r, g, b: Double
         let start = hex.hasPrefix("#") ? String(hex.dropFirst()) : hex
