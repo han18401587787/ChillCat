@@ -20,6 +20,9 @@ enum CCAppRoute: Hashable, Identifiable {
     case courses
     case vipCenter
     case profile
+    case privacy
+    case dataManagement
+    case faq
     case deleteAccount
     case settings
     case web(url: URL)
@@ -37,6 +40,9 @@ enum CCAppRoute: Hashable, Identifiable {
         case .courses: return "courses"
         case .vipCenter: return "vipCenter"
         case .profile: return "profile"
+        case .privacy: return "privacy"
+        case .dataManagement: return "dataManagement"
+        case .faq: return "faq"
         case .deleteAccount: return "deleteAccount"
         case .settings: return "settings"
         case .web(let url): return "web_\(url.absoluteString)"

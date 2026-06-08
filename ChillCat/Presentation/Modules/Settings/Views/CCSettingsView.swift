@@ -15,12 +15,13 @@ struct CCSettingsView: View {
             }
             Section("关于") {
                 Label("版本 2.0", systemImage: "info.circle")
-                Label("隐私政策", systemImage: "lock.fill")
+                Button(action: { coordinator.navigate(to: .privacy) }) { Label("隐私设置", systemImage: "lock.fill").foregroundColor(.primary) }
                 Label("用户协议", systemImage: "doc.text.fill")
+                Button(action: { coordinator.navigate(to: .faq) }) { Label("常见问题", systemImage: "questionmark.circle.fill").foregroundColor(.primary) }
                 Label("意见反馈", systemImage: "envelope.fill")
             }
             Section("数据") {
-                Button("数据管理") {}
+                Button("数据管理") { coordinator.navigate(to: .dataManagement) }
                 Button("注销账号", role: .destructive) { coordinator.navigate(to: .deleteAccount) }
             }
         }
