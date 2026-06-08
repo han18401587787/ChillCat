@@ -197,7 +197,8 @@ struct CCHomeView: View {
         VStack(spacing: theme.spacingSM) {
             Text("探索更多可能").font(.system(size: 16, weight: .semibold)).frame(maxWidth: .infinity, alignment: .leading)
             HStack(spacing: theme.spacingSM) {
-                exploreCard(icon: "book.pages.fill", title: "情绪日记", color: Color(hex: "D4C8E8"), route: .journal)
+                exploreCard(icon: "chart.bar.fill", title: "情绪趋势", color: Color(hex: "D4C8E8"), route: .trends)
+                exploreCard(icon: "book.pages.fill", title: "情绪日记", color: Color(hex: "D9C8E3"), route: .journal)
                 exploreCard(icon: "wind", title: "冥想放松", color: Color(hex: "B8D4E3"), route: .meditation)
                 exploreCard(icon: "lightbulb.fill", title: "小课堂", color: Color(hex: "D5E8D4"), route: .courses)
             }

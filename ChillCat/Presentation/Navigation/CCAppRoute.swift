@@ -14,6 +14,7 @@ enum CCAppRoute: Hashable, Identifiable {
     case home
     case treeHole
     case journal
+    case trends
     case meditation
     case courses
     case vipCenter
@@ -28,6 +29,7 @@ enum CCAppRoute: Hashable, Identifiable {
         case .home: return "home"
         case .treeHole: return "treeHole"
         case .journal: return "journal"
+        case .trends: return "trends"
         case .meditation: return "meditation"
         case .courses: return "courses"
         case .vipCenter: return "vipCenter"
