@@ -273,6 +273,70 @@ assert_eq "-1" "$REMAINING" "永久会员 remaining_days 为 -1"
 echo ""
 
 # =============================================
+# 11. Token 刷新
+# =============================================
+bold "📋 11. Token 刷新"
+echo ""
+
+RESP=$(curl -s -X POST "$BASE_URL/api/v1/auth/refresh" \
+    -H "Authorization: Bearer $LOGIN_TOKEN")
+CODE=$(echo "$RESP" | python3 -c "import sys,json; print(json.load(sys.stdin)['code'])")
+NEW_TOKEN=$(echo "$RESP" | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['token'])" 2>/dev/null)
+assert_eq "0" "$CODE" "刷新Token返回 code=0"
+assert_contain "$NEW_TOKEN" "." "刷新Token有效"
+
+echo ""
+
+# =============================================
+# 12. Feed 内容流
+# =============================================
+bold "📋 12. Feed 内容流"
+echo ""
+
+RESP=$(curl -s "$BASE_URL/api/v1/feeds?page=1&page_size=5" \
+    -H "Authorization: Bearer $LOGIN_TOKEN")
+CODE=$(echo "$RESP" | python3 -c "import sys,json; print(json.load(sys.stdin)['code'])")
+FEED_COUNT=$(echo "$RESP" | python3 -c "import sys,json; d=json.load(sys.stdin)['data']; print(len(d['list']))" 2>/dev/null)
+assert_eq "0" "$CODE" "Feed列表返回 code=0"
+assert_contain "$RESP" "list" "Feed响应包含 list 字段"
+echo "  返回 $FEED_COUNT 条内容"
+
+echo ""
+
+# =============================================
+# 13. 搜索
+# =============================================
+bold "📋 13. 搜索"
+echo ""
+
+RESP=$(curl -s "$BASE_URL/api/v1/search?q=ChillCat" \
+    -H "Authorization: Bearer $LOGIN_TOKEN")
+CODE=$(echo "$RESP" | python3 -c "import sys,json; print(json.load(sys.stdin)['code'])")
+assert_eq "0" "$CODE" "搜索返回 code=0"
+
+echo ""
+
+# =============================================
+# 14. 消息列表 & 未读数
+# =============================================
+bold "📋 14. 消息中心"
+echo ""
+
+RESP=$(curl -s "$BASE_URL/api/v1/messages?page=1&page_size=10" \
+    -H "Authorization: Bearer $LOGIN_TOKEN")
+CODE=$(echo "$RESP" | python3 -c "import sys,json; print(json.load(sys.stdin)['code'])")
+assert_eq "0" "$CODE" "消息列表返回 code=0"
+
+RESP=$(curl -s "$BASE_URL/api/v1/messages/unread" \
+    -H "Authorization: Bearer $LOGIN_TOKEN")
+CODE=$(echo "$RESP" | python3 -c "import sys,json; print(json.load(sys.stdin)['code'])")
+UNREAD=$(echo "$RESP" | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['count'])" 2>/dev/null)
+assert_eq "0" "$CODE" "未读消息数返回 code=0"
+echo "  未读消息: $UNREAD 条"
+
+echo ""
+
+# =============================================
 # 汇总
 # =============================================
 bold "═══════════════════════════════════════════"

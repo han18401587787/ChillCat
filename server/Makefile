@@ -33,6 +33,10 @@ docker-down:
 docker-logs:
 	docker-compose logs -f
 
+# 填充种子数据
+seed:
+	go run ./cmd/seed
+
 # 数据库迁移（手动）
 migrate:
 	go run ./cmd/migrate
