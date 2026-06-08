@@ -36,10 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C0001 /* Alamofire in Frameworks */,
-				1C0002 /* Kingfisher in Frameworks */,
-				1C0003 /* KeychainAccess in Frameworks */,
-				1C0004 /* Lottie in Frameworks */,);
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -75,10 +72,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				1B0001 /* Alamofire */,
-				1B0002 /* Kingfisher */,
-				1B0003 /* KeychainAccess */,
-				1B0004 /* Lottie */,);
+			);
 			fileSystemSynchronizedGroups = (
 				7A8F02782FAF1FB3001D0053 /* ChillCat */,
 			);
@@ -121,14 +115,6 @@
 				7A8F02752FAF1FB3001D0053 /* ChillCat */,
 			);
 		};
-
-/* Begin XCSwiftPackageProductDependency section */
-		1B0001 /* Alamofire */ = { isa = XCSwiftPackageProductDependency; package = 1A0001; productName = Alamofire; };
-		1B0002 /* Kingfisher */ = { isa = XCSwiftPackageProductDependency; package = 1A0002; productName = Kingfisher; };
-		1B0003 /* KeychainAccess */ = { isa = XCSwiftPackageProductDependency; package = 1A0003; productName = KeychainAccess; };
-		1B0004 /* Lottie */ = { isa = XCSwiftPackageProductDependency; package = 1A0004; productName = Lottie; };
-/* End XCSwiftPackageProductDependency section */
-
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -335,30 +321,6 @@
 			};
 			name = Release;
 		};
-
-/* Begin XCRemoteSwiftPackageReference section */
-		1A0001 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = { kind = upToNextMajorVersion; minimumVersion = "5.9.0"; };
-		};
-		1A0002 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
-			requirement = { kind = upToNextMajorVersion; minimumVersion = "8.0.0"; };
-		};
-		1A0003 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
-			requirement = { kind = upToNextMajorVersion; minimumVersion = "4.2.0"; };
-		};
-		1A0004 /* XCRemoteSwiftPackageReference "Lottie" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
-			requirement = { kind = upToNextMajorVersion; minimumVersion = "4.5.0"; };
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
