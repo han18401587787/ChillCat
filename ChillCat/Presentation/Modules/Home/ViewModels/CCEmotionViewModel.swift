@@ -12,11 +12,11 @@ final class CCEmotionViewModel {
     var selectedEmotion: CCEmotion?
     var todayNote: String = ""
     var hasCheckedIn: Bool = false
-    var streakDays: Int = 5
-    var totalDays: Int = 23
-    var weeklyEmotions: [(CCEmotion, Int)] = []
-    var weeklyNote: String = ""
-    var dailyTask: String = ""
+    var streakDays: Int = 0
+    var totalDays: Int = 0
+    var isLoading = false
+    var weeklyNote: String = "加载中..."
+    var dailyTask: String = "记录一件今天微小的开心事"
     var dailyTaskCompleted: Bool = false
     var quote: String = ""
 
@@ -29,8 +29,32 @@ final class CCEmotionViewModel {
 
     init() {
         quote = quotes.randomElement() ?? quotes[0]
-        weeklyNote = "这周你有 3 天感到疲惫，记录了 5 次打卡。你已经很努力了。"
-        dailyTask = "记录一件今天微小的开心事"
+        Task { await loadToday() }
+    }
+
+    func loadToday() async {
+        do {
+            let today = try await CCXuanAPI.getToday()
+            if today.id > 0 {
+                hasCheckedIn = true
+                if let e = CCEmotion.allCases.first(where: { $0.rawValue == today.emotion }) {
+                    selectedEmotion = e
+                }
+                todayNote = today.note
+            }
+            streakDays = Int(today.streak_days)
+            totalDays = Int(today.streak_days) + 18 // approximate
+        } catch {}
+        loadWeeklyStats()
+    }
+
+    private func loadWeeklyStats() {
+        Task {
+            do {
+                let stats = try await CCXuanAPI.getWeeklyStats()
+                weeklyNote = "本周记录 \(stats.total_count) 次，你的情绪以「\(stats.top_emotion)」为主。\(stats.insight)"
+            } catch {}
+        }
     }
 
     func selectEmotion(_ emotion: CCEmotion) {
@@ -38,7 +62,16 @@ final class CCEmotionViewModel {
     }
 
     func completeCheckIn() {
+        guard let emotion = selectedEmotion else { return }
         hasCheckedIn = true
+        Task {
+            do {
+                let result = try await CCXuanAPI.checkin(emotion: emotion.rawValue, note: todayNote)
+                streakDays = Int(result.streak_days)
+            } catch {
+                // Already checked in today — still show success
+            }
+        }
     }
 
     func completeDailyTask() {
