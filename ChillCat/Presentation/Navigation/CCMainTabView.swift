@@ -1,90 +1,50 @@
-//
-//  CCMainTabView.swift
-//  ChillCat
-//
-//  Created by doudou.han on 2026/6/8.
-//
-//
-
 import SwiftUI
 
 enum CCMainTab: Int, CaseIterable {
-    case home
-    case search
-    case vip
-    case profile
-
+    case home, treeHole, vip, profile
     var title: String {
         switch self {
-        case .home: return "首页"
-        case .search: return "搜索"
-        case .vip: return "会员"
-        case .profile: return "我的"
+        case .home: return "首页"; case .treeHole: return "树洞"
+        case .vip: return "会员"; case .profile: return "我的"
         }
     }
-
     var iconName: String {
         switch self {
-        case .home: return "house.fill"
-        case .search: return "magnifyingglass"
-        case .vip: return "crown.fill"
-        case .profile: return "person.fill"
+        case .home: return "house.fill"; case .treeHole: return "bubble.left.and.bubble.right.fill"
+        case .vip: return "crown.fill"; case .profile: return "person.fill"
         }
     }
 }
 
 struct CCMainTabView: View {
     @State private var selectedTab: CCMainTab = .home
-    @State private var unreadCount: Int64 = 0
     @Environment(CCAppCoordinator.self) private var coordinator
-
-    private let messageUseCase: CCFetchMessagesUseCase = {
-        let container = CCAppDependencyContainer.shared.container
-        return container.resolve()
-    }()
 
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack {
                 coordinator.buildView(for: .home)
-                    .navigationDestination(for: CCAppRoute.self) { route in
-                        coordinator.buildView(for: route)
-                    }
             }
-            .tabItem {
-                Label(CCMainTab.home.title, systemImage: CCMainTab.home.iconName)
-            }
+            .tabItem { Label(CCMainTab.home.title, systemImage: CCMainTab.home.iconName) }
             .tag(CCMainTab.home)
 
             NavigationStack {
-                CCSearchView()
+                coordinator.buildView(for: .treeHole)
             }
-            .tabItem {
-                Label(CCMainTab.search.title, systemImage: CCMainTab.search.iconName)
-            }
-            .tag(CCMainTab.search)
+            .tabItem { Label(CCMainTab.treeHole.title, systemImage: CCMainTab.treeHole.iconName) }
+            .tag(CCMainTab.treeHole)
 
             NavigationStack {
-                CCMemberCenterView()
+                coordinator.buildView(for: .vipCenter)
             }
-            .tabItem {
-                Label(CCMainTab.vip.title, systemImage: CCMainTab.vip.iconName)
-            }
+            .tabItem { Label(CCMainTab.vip.title, systemImage: CCMainTab.vip.iconName) }
             .tag(CCMainTab.vip)
 
             NavigationStack {
-                CCProfileView()
+                coordinator.buildView(for: .profile)
             }
-            .tabItem {
-                Label(CCMainTab.profile.title, systemImage: CCMainTab.profile.iconName)
-            }
+            .tabItem { Label(CCMainTab.profile.title, systemImage: CCMainTab.profile.iconName) }
             .tag(CCMainTab.profile)
-            .badge(unreadCount > 0 ? Int(unreadCount) : 0)
-        }
-        .task {
-            if let count = try? await messageUseCase.fetchUnreadCount() {
-                unreadCount = count
-            }
         }
     }
 }

@@ -1,126 +1,40 @@
-//
-//  CCProfileView.swift
-//  ChillCat
-//
-//  Created by doudou.han on 2026/6/8.
-//
-//
-
 import SwiftUI
 
 struct CCProfileView: View {
-    @State private var viewModel: CCProfileViewModel
     @Environment(CCAppCoordinator.self) private var coordinator
-
-    init() {
-        let container = CCAppDependencyContainer.shared.container
-        _viewModel = State(initialValue: CCProfileViewModel(
-            profileUseCase: container.resolve()
-        ))
-    }
+    @Environment(\.ccAppTheme) private var theme
 
     var body: some View {
-        Group {
-            if viewModel.isLoading && viewModel.user == nil {
-                CCLoadingView(message: "加载中...")
-            } else if let error = viewModel.errorMessage, viewModel.user == nil {
-                CCErrorView(error: CCAppError.business(code: -1, message: error)) {
-                    await viewModel.loadProfile()
-                }
-            } else {
-                contentList
-            }
-        }
-        .navigationTitle("我的")
-        .task {
-            await viewModel.loadProfile()
-        }
-    }
-
-    private var contentList: some View {
         List {
             Section {
                 HStack(spacing: 16) {
-                    Image(systemName: "person.circle.fill")
-                        .font(.system(size: 60))
-                        .foregroundColor(.blue)
-
+                    Image(systemName: "leaf.circle.fill")
+                        .font(.system(size: 52)).foregroundColor(Color(hex: "5A7A8A"))
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(viewModel.displayName)
-                            .font(.title3)
-                            .fontWeight(.semibold)
-
-                        Text(viewModel.displayEmail)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                        Text("安静的云雀").font(.system(size: 20, weight: .semibold))
+                        Text("已陪伴你 23 天").font(.system(size: 14)).foregroundColor(.secondary)
                     }
-                }
-                .padding(.vertical, 8)
+                }.padding(.vertical, 8)
             }
 
             Section {
-                Button(action: {
-                    coordinator.navigate(to: .messages)
-                }) {
-                    HStack {
-                        Image(systemName: "bell.fill")
-                            .foregroundColor(.red)
-                        Text("消息中心")
-                            .foregroundColor(.primary)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-
-                Button(action: {
-                    coordinator.navigate(to: .vipCenter)
-                }) {
-                    HStack {
-                        Image(systemName: "crown.fill")
-                            .foregroundColor(.orange)
-                        Text("会员中心")
-                            .foregroundColor(.primary)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
+                Button(action: { coordinator.navigate(to: .vipCenter) }) {
+                    Label("会员中心", systemImage: "crown.fill").foregroundColor(Color(hex: "8B6F47"))
                 }
             }
 
             Section {
-                Button(action: {
-                    coordinator.navigate(to: .settings)
-                }) {
-                    HStack {
-                        Image(systemName: "gearshape.fill")
-                            .foregroundColor(.gray)
-                        Text("设置")
-                            .foregroundColor(.primary)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
+                Button(action: { coordinator.navigate(to: .settings) }) {
+                    Label("设置", systemImage: "gearshape.fill").foregroundColor(.primary)
                 }
             }
 
             Section {
-                Button(role: .destructive, action: {
-                    Task {
-                        await viewModel.logout()
-                        coordinator.isLoggedIn = false
-                    }
-                }) {
-                    HStack {
-                        Spacer()
-                        Text("退出登录")
-                        Spacer()
-                    }
+                Button(role: .destructive, action: { coordinator.isLoggedIn = false }) {
+                    HStack { Spacer(); Text("退出登录"); Spacer() }
                 }
             }
         }
+        .navigationTitle("我的")
     }
 }

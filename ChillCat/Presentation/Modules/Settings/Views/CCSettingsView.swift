@@ -1,78 +1,27 @@
-//
-//  CCSettingsView.swift
-//  ChillCat
-//
-//  Created by doudou.han on 2026/6/8.
-//
-//
-
 import SwiftUI
 
 struct CCSettingsView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(CCThemeManager.self) private var themeManager
+    @State private var notificationsEnabled = true
 
     var body: some View {
         List {
             Section("外观") {
-                Toggle(isOn: $themeManager.isDarkMode) {
-                    HStack {
-                        Image(systemName: "moon.fill")
-                            .foregroundColor(.indigo)
-                        Text("暗色模式")
-                    }
-                }
+                Toggle(isOn: $themeManager.isDarkMode) { Label("暗色模式", systemImage: "moon.fill") }
             }
-
-            Section("通用") {
-                HStack {
-                    Image(systemName: "globe")
-                        .foregroundColor(.blue)
-                    Text("语言")
-                    Spacer()
-                    Text("简体中文")
-                        .foregroundColor(.secondary)
-                }
-
-                HStack {
-                    Image(systemName: "textformat.size")
-                        .foregroundColor(.green)
-                    Text("字体大小")
-                    Spacer()
-                    Text("标准")
-                        .foregroundColor(.secondary)
-                }
+            Section("通知") {
+                Toggle(isOn: $notificationsEnabled) { Label("消息推送", systemImage: "bell.fill") }
             }
-
             Section("关于") {
-                HStack {
-                    Image(systemName: "info.circle.fill")
-                        .foregroundColor(.blue)
-                    Text("版本")
-                    Spacer()
-                    Text("1.0.0")
-                        .foregroundColor(.secondary)
-                }
-
-                HStack {
-                    Image(systemName: "doc.text.fill")
-                        .foregroundColor(.gray)
-                    Text("用户协议")
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-
-                HStack {
-                    Image(systemName: "lock.fill")
-                        .foregroundColor(.gray)
-                    Text("隐私政策")
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                Label("版本 2.0", systemImage: "info.circle")
+                Label("隐私政策", systemImage: "lock.fill")
+                Label("用户协议", systemImage: "doc.text.fill")
+                Label("意见反馈", systemImage: "envelope.fill")
+            }
+            Section("数据") {
+                Button("数据管理") {}
+                Button("注销账号", role: .destructive) {}
             }
         }
         .navigationTitle("设置")

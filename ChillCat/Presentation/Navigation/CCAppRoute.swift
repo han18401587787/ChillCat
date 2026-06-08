@@ -9,42 +9,25 @@
 import Foundation
 
 enum CCAppRoute: Hashable, Identifiable {
+    case welcome
     case login
     case home
-    case profile
-    case messages
-    case search
+    case treeHole
     case vipCenter
-    case vipPurchase(CCMemberProduct)
+    case profile
     case settings
-    case detail(id: String)
     case web(url: URL)
 
     var id: String {
         switch self {
+        case .welcome: return "welcome"
         case .login: return "login"
         case .home: return "home"
-        case .profile: return "profile"
-        case .messages: return "messages"
-        case .search: return "search"
+        case .treeHole: return "treeHole"
         case .vipCenter: return "vipCenter"
-        case .vipPurchase(let p): return "vipPurchase_\(p.id)"
+        case .profile: return "profile"
         case .settings: return "settings"
-        case .detail(let id): return "detail_\(id)"
         case .web(let url): return "web_\(url.absoluteString)"
-        }
-    }
-
-    func hash(into hasher: inout Hasher) {
-        switch self {
-        case .detail(let id):
-            hasher.combine("detail")
-            hasher.combine(id)
-        case .web(let url):
-            hasher.combine("web")
-            hasher.combine(url)
-        default:
-            hasher.combine(id)
         }
     }
 }
