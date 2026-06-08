@@ -1,6 +1,6 @@
 # ChillCat API 文档 v1
 
-> 基础地址：`http://localhost:8080/api/v1`
+> 基础地址：`https://api.chillcatgo.com/api/v1`（本地开发：`http://localhost:8080/api/v1`）
 
 ---
 

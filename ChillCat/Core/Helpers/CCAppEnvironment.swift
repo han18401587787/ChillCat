@@ -26,9 +26,9 @@ enum CCAppEnvironment {
         case .development:
             return URL(string: "http://localhost:8080")!
         case .staging:
-            return URL(string: "https://staging-api.chillcat.com")!
+            return URL(string: "https://staging-api.chillcatgo.com")!
         case .production:
-            return URL(string: "https://api.chillcat.com")!
+            return URL(string: "https://api.chillcatgo.com")!
         }
     }
 
