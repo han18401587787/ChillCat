@@ -30,6 +30,7 @@ final class CCAppCoordinator {
         case .courses: CCCoursesView()
         case .vipCenter: CCMemberCenterView()
         case .profile: CCProfileView()
+        case .deleteAccount: CCDeleteAccountView()
         case .settings: CCSettingsView()
         case .web(let url): CCWebView(url: url)
         }

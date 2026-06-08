@@ -21,7 +21,7 @@ struct CCSettingsView: View {
             }
             Section("数据") {
                 Button("数据管理") {}
-                Button("注销账号", role: .destructive) {}
+                Button("注销账号", role: .destructive) { coordinator.navigate(to: .deleteAccount) }
             }
         }
         .navigationTitle("设置")
