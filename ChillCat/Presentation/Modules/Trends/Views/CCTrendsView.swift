@@ -3,16 +3,13 @@ import SwiftUI
 struct CCTrendsView: View {
     @Environment(\.ccAppTheme) private var theme
     @State private var selectedTab = 0
-
-    let weekData: [(day: String, emotions: [CCEmotion], count: Int)] = [
-        ("周一", [.anxious], 2), ("周二", [.tired], 1), ("周三", [.tired, .wronged], 3),
-        ("周四", [.calm], 1), ("周五", [.happy], 2), ("周六", [.happy, .calm], 3), ("周日", [.calm], 1),
-    ]
+    @State private var stats: CCXuanAPI.WeeklyStats?
+    @State private var weekData: [(String, Int)] = []
+    @State private var isLoading = true
 
     var body: some View {
         ScrollView {
             VStack(spacing: theme.spacingLG) {
-                // Tab切换
                 Picker("", selection: $selectedTab) {
                     Text("本周").tag(0); Text("本月").tag(1); Text("成长").tag(2)
                 }.pickerStyle(.segmented).padding(.horizontal)
@@ -23,67 +20,87 @@ struct CCTrendsView: View {
             }.padding()
         }
         .background(theme.background).navigationTitle("情绪趋势")
+        .task { await loadStats() }
     }
 
     // MARK: - Week View
     var weekView: some View {
         VStack(spacing: theme.spacingLG) {
-            // 条形图
             VStack(alignment: .leading, spacing: theme.spacingSM) {
                 Text("本周情绪波动").font(.system(size: 16, weight: .semibold))
-                HStack(alignment: .bottom, spacing: 8) {
-                    ForEach(weekData, id: \.day) { day in
-                        VStack(spacing: 4) {
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(day.emotions.first?.color ?? Color(hex: "B8D4E3"))
-                                .frame(width: 36, height: max(8, CGFloat(day.count) * 28))
-                            Text(day.day).font(.system(size: 11)).foregroundColor(theme.textSecondary)
+                if weekData.isEmpty {
+                    CCSkeletonView().frame(height: 100).cornerRadius(theme.radiusMD)
+                } else {
+                    HStack(alignment: .bottom, spacing: 8) {
+                        ForEach(weekData, id: \.0) { (day, count) in
+                            VStack(spacing: 4) {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Color(hex: "B8D4E3")).frame(width: 36, height: max(8, CGFloat(count) * 24))
+                                Text(day).font(.system(size: 11)).foregroundColor(theme.textSecondary)
+                            }
                         }
-                    }
+                    }.frame(height: 120).padding().background(theme.cardBackground).cornerRadius(theme.radiusMD)
                 }
-                .frame(height: 120).padding().background(theme.cardBackground).cornerRadius(theme.radiusMD)
             }
 
-            // 统计
             HStack(spacing: theme.spacingSM) {
-                statBox(value: "14", label: "本周记录", color: theme.softPurpleLight)
-                statBox(value: "2", label: "情绪波动", color: theme.primaryMuted)
-                statBox(value: "5", label: "打卡天数", color: theme.softGreenLight)
+                statBox(value: "\(stats?.total_count ?? 0)", label: "本周记录", color: theme.softPurpleLight)
+                statBox(value: "\(stats?.streak_days ?? 0)", label: "连续天数", color: theme.primaryMuted)
+                statBox(value: stats?.top_emotion ?? "—", label: "主要情绪", color: theme.softGreenLight)
             }
 
-            // 分析卡片
-            VStack(alignment: .leading, spacing: theme.spacingSM) {
-                Text("绪安洞察").font(.system(size: 16, weight: .semibold))
-                insightCard(text: "这周你有 3 天感到疲惫，记录了 5 次打卡。你已经很努力了。", color: Color(hex: "D4C8E8"))
-                insightCard(text: "你通常在周三情绪最低，周末会好一些。或许可以在周三留点轻松的事情给自己？", color: Color(hex: "B8D4E3"))
+            if let s = stats, !s.insight.isEmpty {
+                VStack(alignment: .leading, spacing: theme.spacingSM) {
+                    Text("绪安洞察").font(.system(size: 16, weight: .semibold))
+                    insightCard(text: s.insight, color: Color(hex: "D4C8E8"))
+                }
             }
         }
     }
 
-    // MARK: - Month View
     var monthView: some View {
         VStack(spacing: theme.spacingLG) {
             Text("本月情绪回顾").font(.system(size: 18, weight: .bold))
             HStack(spacing: theme.spacingSM) {
-                statBox(value: "42", label: "打卡", color: theme.softPurpleLight)
-                statBox(value: "8", label: "平静日", color: Color(hex: "66BB6A").opacity(0.25))
-                statBox(value: "5", label: "疲惫日", color: theme.primaryMuted)
+                statBox(value: "\(stats?.total_count ?? 0)", label: "打卡", color: theme.softPurpleLight)
+                statBox(value: stats?.top_emotion ?? "—", label: "主要情绪", color: Color(hex: "66BB6A").opacity(0.25))
+                statBox(value: "\(stats?.streak_days ?? 0)", label: "连续", color: theme.primaryMuted)
             }
-            insightCard(text: "本月情绪总体平稳，相比上月疲惫天数减少了 2 天。继续保持！", color: Color(hex: "D5E8D4"))
         }
     }
 
-    // MARK: - Growth View
     var growthView: some View {
         VStack(spacing: theme.spacingLG) {
             Text("成长轨迹").font(.system(size: 18, weight: .bold))
             VStack(spacing: theme.spacingSM) {
-                growthRow(icon: "chart.line.uptrend.xyaxis", title: "焦虑天数下降 40%", subtitle: "相比上月")
-                growthRow(icon: "figure.mind.and.body", title: "冥想完成 12 次", subtitle: "累计 48 分钟")
-                growthRow(icon: "pencil.and.list.clipboard", title: "日记 28 篇", subtitle: "连续记录 5 天")
+                growthRow(icon: "chart.line.uptrend.xyaxis", title: "本周记录 \(stats?.total_count ?? 0) 次", subtitle: "继续坚持")
+                growthRow(icon: "figure.mind.and.body", title: "连续打卡 \(stats?.streak_days ?? 0) 天", subtitle: "加油保持")
+                growthRow(icon: "pencil.and.list.clipboard", title: "今日主要情绪", subtitle: stats?.top_emotion ?? "暂无数据")
             }
-            insightCard(text: "你已经连续打卡 5 天了！明天也要记得来绪安看看自己。", color: Color(hex: "E8D9F0"))
         }
+    }
+
+    private func loadStats() async {
+        isLoading = true
+        do {
+            let s = try await CCXuanAPI.getWeeklyStats()
+            stats = s
+            let dayNames = ["日","一","二","三","四","五","六"]
+            var counts: [String: Int] = [:]
+            for e in s.entries {
+                let d = e.checkin_date
+                let idx = dayOfWeek(from: d)
+                counts[dayNames[idx], default: 0] += 1
+            }
+            weekData = dayNames.map { ($0, counts[$0] ?? 0) }
+        } catch {}
+        isLoading = false
+    }
+
+    private func dayOfWeek(from dateStr: String) -> Int {
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"
+        if let d = f.date(from: dateStr) { return Calendar.current.component(.weekday, from: d) - 1 }
+        return 0
     }
 
     // MARK: - Components

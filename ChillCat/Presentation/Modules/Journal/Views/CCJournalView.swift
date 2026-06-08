@@ -1,10 +1,11 @@
 import SwiftUI
 
 struct CCJournalView: View {
-    @State private var selectedMonth = 4
+    @State private var selectedMonth = Calendar.current.component(.month, from: Date())
+    @State private var entries: [CCXuanAPI.JournalEntry] = []
+    @State private var isLoading = true
     @Environment(\.ccAppTheme) private var theme
 
-    let entries: [CCJournalEntry] = CCJournalEntry.sampleEntries
     let columns = Array(repeating: GridItem(.flexible(), spacing: 2), count: 7)
     let weekDays = ["一","二","三","四","五","六","日"]
 
@@ -27,51 +28,79 @@ struct CCJournalView: View {
                     }
                     LazyVGrid(columns: columns, spacing: 6) {
                         ForEach(calendarDays, id: \.self) { day in
-                            if day > 0 {
-                                let entry = entries.first { $0.day == day }
-                                VStack(spacing: 2) {
-                                    Text("\(day)").font(.system(size: 13))
-                                    if let e = entry {
-                                        Image(systemName: e.emotion.iconName).font(.system(size: 12)).foregroundColor(e.emotion.color)
-                                    }
-                                }.frame(height: 40).frame(maxWidth: .infinity)
-                                .background(entry != nil ? entry!.emotion.color.opacity(0.15) : Color.clear).cornerRadius(6)
-                            } else { Color.clear.frame(height: 40) }
+                            let hasEntry = dayHasEntry(day)
+                            VStack(spacing: 2) {
+                                Text("\(day)").font(.system(size: 13))
+                                if hasEntry {
+                                    Circle().fill(Color(hex: "5A7A8A")).frame(width: 4, height: 4)
+                                }
+                            }.frame(height: 40).frame(maxWidth: .infinity)
+                            .background(hasEntry ? Color(hex: "5A7A8A").opacity(0.1) : Color.clear).cornerRadius(6)
                         }
                     }
                 }.padding().background(theme.cardBackground).cornerRadius(theme.radiusLG)
 
                 HStack(spacing: theme.spacingMD) {
-                    statCard(title: "本周", value: "2 次", bg: theme.softPurpleLight.opacity(0.25))
-                    statCard(title: "本月", value: "14 个", bg: theme.primaryMuted.opacity(0.25))
-                    statCard(title: "坚持", value: "5 天", bg: theme.softGreenLight.opacity(0.25))
+                    statCard(title: "本月", value: "\(entries.count) 次", bg: theme.softPurpleLight.opacity(0.25))
+                    statCard(title: "记录", value: "\(entries.count) 天", bg: theme.primaryMuted.opacity(0.25))
+                    statCard(title: "坚持", value: "\(uniqueDays) 天", bg: theme.softGreenLight.opacity(0.25))
                 }
 
                 VStack(alignment: .leading, spacing: theme.spacingSM) {
                     Text("所有情绪日记与打卡记录").font(.system(size: 16, weight: .semibold))
-                    ForEach(entries) { entry in
-                        HStack(spacing: 12) {
-                            Image(systemName: entry.emotion.iconName).font(.system(size: 24))
-                                .foregroundColor(entry.emotion.color).frame(width: 44, height: 44)
-                                .background(entry.emotion.color.opacity(0.1)).cornerRadius(theme.radiusSM)
-                            VStack(alignment: .leading, spacing: 2) {
-                                HStack {
-                                    Text(entry.emotion.rawValue).font(.system(size: 15, weight: .medium))
-                                    if entry.hasDoodle { Text("有涂鸦").font(.system(size: 11)).foregroundColor(theme.softPink) }
+                    if isLoading {
+                        CCSkeletonList(count: 4)
+                    } else if entries.isEmpty {
+                        CCEmptyStateView(title: "暂无记录", message: "开始记录你的第一份情绪日记吧", actionTitle: nil, action: nil)
+                    } else {
+                        ForEach(entries) { entry in
+                            HStack(spacing: 12) {
+                                Image(systemName: CCEmotion.allCases.first(where: { $0.rawValue == entry.emotion })?.iconName ?? "circle.fill")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(emotionColor(entry.emotion))
+                                    .frame(width: 44, height: 44)
+                                    .background(emotionColor(entry.emotion).opacity(0.1)).cornerRadius(theme.radiusSM)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    HStack {
+                                        Text(entry.emotion).font(.system(size: 15, weight: .medium))
+                                        if entry.has_doodle { Text("有涂鸦").font(.system(size: 11)).foregroundColor(theme.softPink) }
+                                    }
+                                    if !entry.note.isEmpty {
+                                        Text(entry.note).font(.system(size: 13)).foregroundColor(theme.textSecondary).lineLimit(2)
+                                    }
                                 }
-                                Text(entry.note).font(.system(size: 13)).foregroundColor(theme.textSecondary).lineLimit(2)
-                            }
-                            Spacer()
-                            Text(entry.dateStr).font(.system(size: 12)).foregroundColor(theme.textMuted)
-                        }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD)
+                                Spacer()
+                                Text(String(entry.checkin_date.suffix(5))).font(.system(size: 12)).foregroundColor(theme.textMuted)
+                            }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD)
+                        }
                     }
                 }
             }.padding()
         }.background(theme.background).navigationTitle("情绪日记")
+        .task { await loadJournal() }
     }
 
-    var calendarDays: [Int] {
-        Array(-2...30).compactMap { $0 > 0 ? $0 : nil } + Array(repeating: -1, count: 2)
+    private var calendarDays: [Int] { (1...31).map { $0 } }
+    private var uniqueDays: Int { Set(entries.map { $0.checkin_date }).count }
+
+    private func loadJournal() async {
+        isLoading = true
+        let m = String(format: "%04d-%02d", Calendar.current.component(.year, from: Date()), selectedMonth)
+        do {
+            let page = try await CCXuanAPI.getJournal(month: m)
+            entries = page.list
+        } catch {}
+        isLoading = false
+    }
+
+    private func dayHasEntry(_ day: Int) -> Bool {
+        let dayStr = String(format: "%04d-%02d-%02d", Calendar.current.component(.year, from: Date()), selectedMonth, day)
+        return entries.contains { $0.checkin_date == dayStr }
+    }
+
+    private func emotionColor(_ name: String) -> Color {
+        let map: [String: String] = ["平静": "66BB6A","开心": "C9A063","疲惫": "7A9AAA","焦虑": "D4C8E8","委屈": "E8B8C8","孤独": "A8C9D7","烦躁": "E57373","迷茫": "D9C8E3","易怒": "8B6F47","内耗": "AAAAAA"]
+        return Color(hex: map[name] ?? "B8D4E3")
     }
 
     func statCard(title: String, value: String, bg: Color) -> some View {
@@ -79,27 +108,5 @@ struct CCJournalView: View {
             Text(value).font(.system(size: 20, weight: .bold)).foregroundColor(Color(hex: "5A7A8A"))
             Text(title).font(.system(size: 12)).foregroundColor(theme.textSecondary)
         }.frame(maxWidth: .infinity).padding(.vertical, 12).background(bg).cornerRadius(theme.radiusMD)
-    }
-}
-
-struct CCJournalEntry: Identifiable {
-    let id: String; let day: Int; let emotion: CCEmotion; let note: String
-    let hasDoodle: Bool; let dateStr: String
-    static let sampleEntries: [CCJournalEntry] = [
-        .init(id: "1", day: 15, emotion: .tired, note: "开会又被说了", hasDoodle: false, dateStr: "4月15日 周二"),
-        .init(id: "2", day: 19, emotion: .happy, note: "拿到了那个项目的正向反馈", hasDoodle: true, dateStr: "4月19日 周六"),
-        .init(id: "3", day: 22, emotion: .calm, note: "周末去了公园，坐在草地上发呆", hasDoodle: false, dateStr: "4月22日 周二"),
-    ]
-}
-
-extension CCEmotion {
-    var color: Color {
-        switch self {
-        case .calm: return Color(hex: "66BB6A"); case .happy: return Color(hex: "C9A063")
-        case .tired: return Color(hex: "7A9AAA"); case .anxious: return Color(hex: "D4C8E8")
-        case .wronged: return Color(hex: "E8B8C8"); case .lonely: return Color(hex: "A8C9D7")
-        case .irritable: return Color(hex: "E57373"); case .confused: return Color(hex: "D9C8E3")
-        case .anger: return Color(hex: "8B6F47"); case .drained: return Color(hex: "AAAAAA")
-        }
     }
 }
