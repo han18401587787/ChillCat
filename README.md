@@ -2,6 +2,8 @@
 
 音乐流媒体 iOS 应用，采用 SwiftUI + Go 全栈架构。
 
+> 🔧 服务端独立仓库：[ChillCat-Server](https://github.com/han18401587787/ChillCat-Server)
+
 ## 项目结构
 
 ```
