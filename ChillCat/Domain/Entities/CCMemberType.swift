@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum CCMemberType: String, Codable, CaseIterable {
+enum CCMemberType: String, Codable, CaseIterable, Hashable {
     case monthly    = "monthly"
     case quarterly  = "quarterly"
     case yearly     = "yearly"

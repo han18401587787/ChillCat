@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct CCMemberProduct: Identifiable, Codable {
+struct CCMemberProduct: Identifiable, Codable, Hashable {
     let id: String
     let type: CCMemberType
     let price: Decimal
