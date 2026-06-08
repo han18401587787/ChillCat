@@ -24,6 +24,7 @@ final class CCAppCoordinator {
         case .login:   CCLoginView()
         case .home:    CCHomeView()
         case .treeHole: CCTreeHoleView()
+        case .voiceCheckin: CCVoiceCheckinView()
         case .journal: CCJournalView()
         case .trends: CCTrendsView()
         case .meditation: CCMeditationView()
