@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 struct CCCoursesView: View {
     @Environment(\.ccAppTheme) private var theme

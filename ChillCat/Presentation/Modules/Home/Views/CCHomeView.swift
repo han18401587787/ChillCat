@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct CCHomeView: View {
     @State private var viewModel = CCEmotionViewModel()
@@ -131,9 +132,7 @@ struct CCHomeView: View {
     // MARK: - Checked In State
     private var checkedInCard: some View {
         VStack(spacing: theme.spacingSM) {
-            Image(systemName: "checkmark.seal.fill")
-                .font(.system(size: 40))
-                .foregroundColor(theme.softGreen)
+            LottieView(animation: .named("xuan_checkin")).playing().frame(width: 80, height: 80)
             Text("今日已打卡")
                 .font(.system(size: 18, weight: .semibold))
             Text("完成了！你真的很棒")
