@@ -19,12 +19,14 @@ enum CCAppRoute: Hashable, Identifiable {
     case meditation
     case courses
     case vipCenter
+    case transactionHistory
     case profile
     case privacy
     case dataManagement
     case faq
     case deleteAccount
     case settings
+    case meditationPlayer(session: CCMeditationSession)
     case web(url: URL)
 
     var id: String {
@@ -39,12 +41,14 @@ enum CCAppRoute: Hashable, Identifiable {
         case .meditation: return "meditation"
         case .courses: return "courses"
         case .vipCenter: return "vipCenter"
+        case .transactionHistory: return "transactionHistory"
         case .profile: return "profile"
         case .privacy: return "privacy"
         case .dataManagement: return "dataManagement"
         case .faq: return "faq"
         case .deleteAccount: return "deleteAccount"
         case .settings: return "settings"
+        case .meditationPlayer(let session): return "meditationPlayer_\(session.id)"
         case .web(let url): return "web_\(url.absoluteString)"
         }
     }

@@ -30,12 +30,14 @@ final class CCAppCoordinator {
         case .meditation: CCMeditationView()
         case .courses: CCCoursesView()
         case .vipCenter: CCMemberCenterView()
+        case .transactionHistory: CCTransactionHistoryView()
         case .profile: CCProfileView()
         case .privacy: CCPrivacyView()
         case .dataManagement: CCDataManagementView()
         case .faq: CCFAQView()
         case .deleteAccount: CCDeleteAccountView()
         case .settings: CCSettingsView()
+        case .meditationPlayer(let session): CCMeditationPlayerView(session: session)
         case .web(let url): CCWebView(url: url)
         }
     }

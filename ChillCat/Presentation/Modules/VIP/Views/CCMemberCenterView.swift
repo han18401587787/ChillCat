@@ -31,6 +31,32 @@ struct CCMemberCenterView: View {
         }
         .navigationTitle("会员中心")
         .task { await viewModel.loadData() }
+        .sheet(isPresented: $viewModel.showConfirmSheet, onDismiss: {
+            viewModel.selectedProduct = nil
+        }) {
+            if let product = viewModel.selectedProduct {
+                CCPaymentConfirmSheet(
+                    product: product,
+                    onConfirm: { await viewModel.confirmPurchase() },
+                    onDismiss: { viewModel.selectedProduct = nil }
+                )
+            }
+        }
+        .alert("购买成功", isPresented: $viewModel.showSuccessAlert) {
+            Button("好的") { }
+        } message: {
+            Text("恭喜成为 ChillCat 会员，即刻享受全部权益")
+        }
+        .alert("购买失败", isPresented: $viewModel.showFailureAlert) {
+            Button("重试") {
+                Task {
+                    await viewModel.confirmPurchase()
+                }
+            }
+            Button("取消", role: .cancel) { }
+        } message: {
+            Text(viewModel.errorMessage ?? "支付失败，请稍后重试")
+        }
     }
 
     private var content: some View {
@@ -39,6 +65,7 @@ struct CCMemberCenterView: View {
                 memberHeader
                 privilegeSection
                 productSection
+                purchaseHistoryLink
             }
             .padding()
         }
@@ -115,9 +142,27 @@ struct CCMemberCenterView: View {
         }
     }
 
+    private var purchaseHistoryLink: some View {
+        Button(action: { coordinator.navigate(to: .transactionHistory) }) {
+            HStack {
+                Image(systemName: "clock.arrow.circlepath")
+                Text("购买记录")
+                    .font(.subheadline)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundColor(theme.textSecondary)
+            }
+            .foregroundColor(theme.primary)
+            .padding(theme.spacingMD)
+            .background(theme.surface)
+            .cornerRadius(theme.radiusMD)
+        }
+    }
+
     private func productCard(_ product: CCMemberProduct) -> some View {
         Button(action: {
-            Task { await viewModel.purchase(product: product) }
+            viewModel.requestPurchase(product: product)
         }) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {

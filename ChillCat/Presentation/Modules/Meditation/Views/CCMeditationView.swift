@@ -3,6 +3,7 @@ import Combine
 
 struct CCMeditationView: View {
     @Environment(\.ccAppTheme) private var theme
+    @Environment(CCAppCoordinator.self) private var coordinator
     @State private var breathing = false
     @State private var breathPhase = "吸气"
     @State private var timerRunning = false
@@ -40,9 +41,9 @@ struct CCMeditationView: View {
 
                 Text("练习计划").font(.system(size: 20, weight: .bold)).frame(maxWidth: .infinity, alignment: .leading)
 
-                medCard(icon: "moon.zzz.fill", title: "睡前助眠", subtitle: "约需 2 分钟", color: Color(hex: "D4C8E8"))
-                medCard(icon: "brain.head.profile", title: "独处放松", subtitle: "约需 5 分钟", color: Color(hex: "B8D4E3"))
-                medCard(icon: "leaf.fill", title: "焦虑治愈", subtitle: "约需 3 分钟", color: Color(hex: "D5E8D4"))
+                medCard(session: CCMeditationSession.presets[0])
+                medCard(session: CCMeditationSession.presets[1])
+                medCard(session: CCMeditationSession.presets[2])
             }.padding()
         }.background(theme.background).navigationTitle("冥想放松")
         .onReceive(timer) { _ in
@@ -55,16 +56,32 @@ struct CCMeditationView: View {
         }
     }
 
-    func medCard(icon: String, title: String, subtitle: String, color: Color) -> some View {
-        HStack(spacing: 16) {
-            Image(systemName: icon).font(.system(size: 28)).foregroundColor(color)
-                .frame(width: 56, height: 56).background(color.opacity(0.15)).cornerRadius(theme.radiusMD)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title).font(.system(size: 16, weight: .medium))
-                Text(subtitle).font(.system(size: 13)).foregroundColor(theme.textSecondary)
+    func medCard(session: CCMeditationSession) -> some View {
+        Button {
+            coordinator.navigate(to: .meditationPlayer(session: session))
+        } label: {
+            HStack(spacing: 16) {
+                Image(systemName: session.category.iconName)
+                    .font(.system(size: 28))
+                    .foregroundColor(Color(hex: session.category.themeColor))
+                    .frame(width: 56, height: 56)
+                    .background(Color(hex: session.category.themeColor).opacity(0.15))
+                    .cornerRadius(theme.radiusMD)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(session.title).font(.system(size: 16, weight: .medium))
+                        .foregroundColor(theme.textPrimary)
+                    Text(session.category.subtitle)
+                        .font(.system(size: 13))
+                        .foregroundColor(theme.textSecondary)
+                }
+                Spacer()
+                Image(systemName: "play.circle.fill")
+                    .font(.system(size: 32))
+                    .foregroundColor(Color(hex: "5A7A8A"))
             }
-            Spacer()
-            Image(systemName: "play.circle.fill").font(.system(size: 32)).foregroundColor(Color(hex: "5A7A8A"))
-        }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD)
+            .padding()
+            .background(theme.cardBackground)
+            .cornerRadius(theme.radiusMD)
+        }
     }
 }

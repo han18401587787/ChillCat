@@ -20,4 +20,16 @@ final class MockMemberRepository: CCMemberRepositoryProtocol {
         case .failure(let e): throw e
         }
     }
+
+    func fetchProducts() async throws -> [CCMemberProduct] {
+        CCMemberViewModel.defaultProducts()
+    }
+
+    func fetchPrivileges() async throws -> [CCMemberPrivilege] {
+        CCMemberViewModel.defaultPrivileges()
+    }
+
+    func restorePurchases() async throws -> CCMemberInfo? {
+        try await fetchMemberInfo()
+    }
 }

@@ -17,6 +17,11 @@ final class CCMemberViewModel {
     var privileges: [CCMemberPrivilege] = []
     var isLoading = false
     var errorMessage: String?
+    var showConfirmSheet = false
+    var showSuccessAlert = false
+    var showFailureAlert = false
+    var selectedProduct: CCMemberProduct?
+    private let orderTracker = CCOrderTrackingViewModel()
 
     private let fetchMemberInfoUseCase: CCFetchMemberInfoUseCase
     private let purchaseMemberUseCase: CCPurchaseMemberUseCase
@@ -60,15 +65,54 @@ final class CCMemberViewModel {
         isLoading = false
     }
 
+    func requestPurchase(product: CCMemberProduct) {
+        selectedProduct = product
+        showConfirmSheet = true
+    }
+
+    func confirmPurchase() async {
+        guard let product = selectedProduct else { return }
+        let transaction = CCTransaction(
+            productType: product.type,
+            amount: product.price,
+            status: .pending
+        )
+        orderTracker.addTransaction(transaction)
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+
+        do {
+            let info = try await purchaseMemberUseCase.execute(product: product)
+            memberInfo = info
+            orderTracker.updateTransaction(id: transaction.id, status: .completed)
+            showSuccessAlert = true
+        } catch {
+            errorMessage = error.localizedDescription
+            orderTracker.updateTransaction(id: transaction.id, status: .failed)
+            showFailureAlert = true
+        }
+    }
+
     func purchase(product: CCMemberProduct) async {
+        let transaction = CCTransaction(
+            productType: product.type,
+            amount: product.price,
+            status: .pending
+        )
+        orderTracker.addTransaction(transaction)
         isLoading = true
         errorMessage = nil
 
         do {
             let info = try await purchaseMemberUseCase.execute(product: product)
             memberInfo = info
+            orderTracker.updateTransaction(id: transaction.id, status: .completed)
+            showSuccessAlert = true
         } catch {
             errorMessage = error.localizedDescription
+            orderTracker.updateTransaction(id: transaction.id, status: .failed)
+            showFailureAlert = true
         }
 
         isLoading = false
