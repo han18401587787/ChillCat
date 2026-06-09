@@ -25,7 +25,7 @@ final class CCDIContainer: CCDIContainerProtocol {
 
     private var registrations: [String: CCRegistration] = [:]
     private var singletons: [String: Any] = [:]
-    private let lock = NSLock()
+    private let lock = NSRecursiveLock()
 
     func register<T>(_ type: T.Type, factory: @escaping (CCDIContainerProtocol) -> T) {
         let key = String(describing: type)

@@ -11,14 +11,14 @@ struct CCApp: View {
 
     var body: some View {
         Group {
-            if isUITesting {
-                CCMainTabView()
-            } else if !coordinator.hasSeenWelcome {
-                CCWelcomeView()
-            } else if coordinator.isLoggedIn {
-                CCMainTabView()
+            if isUITesting || coordinator.hasSeenWelcome {
+                if coordinator.isLoggedIn {
+                    CCMainTabView()
+                } else {
+                    CCLoginView()
+                }
             } else {
-                CCLoginView()
+                CCWelcomeView()
             }
         }
         .environment(\.ccAppTheme, themeManager.currentTheme)
