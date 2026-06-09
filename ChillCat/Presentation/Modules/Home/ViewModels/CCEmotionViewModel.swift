@@ -29,7 +29,11 @@ final class CCEmotionViewModel {
 
     init() {
         quote = quotes.randomElement() ?? quotes[0]
-        Task { await loadToday() }
+    }
+
+    /// 由 View.task 调用，避免阻塞 init
+    func loadData() async {
+        await loadToday()
     }
 
     func loadToday() async {
@@ -68,6 +72,8 @@ final class CCEmotionViewModel {
             do {
                 let result = try await CCXuanAPI.checkin(emotion: emotion.rawValue, note: todayNote)
                 streakDays = Int(result.streakDays)
+                // 同步数据到 Widget
+                CCWidgetDataSync.update(emotion: emotion.rawValue, streak: Int(result.streakDays), quote: quote)
             } catch {
                 // Already checked in today — still show success
             }
