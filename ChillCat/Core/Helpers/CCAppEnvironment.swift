@@ -24,7 +24,7 @@ enum CCAppEnvironment {
     var baseURL: URL {
         switch self {
         case .development:
-            return URL(string: "http://localhost:8080")!
+            return URL(string: "http://api.chillcatgo.com")!
         case .staging:
             return URL(string: "https://staging-api.chillcatgo.com")!
         case .production:

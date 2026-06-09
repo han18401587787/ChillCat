@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		7A2D32022FD7ADE3004F8DCC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 7A2D32012FD7ADE3004F8DCC /* Alamofire */; };
+		7A2D32072FD7ADEF004F8DCC /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 7A2D32062FD7ADEF004F8DCC /* KeychainAccess */; };
+		7A2D320F2FD7AE11004F8DCC /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 7A2D320E2FD7AE11004F8DCC /* Kingfisher */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		7A8F02762FAF1FB3001D0053 /* ChillCat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChillCat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A2D320F2FD7AE11004F8DCC /* Kingfisher in Frameworks */,
+				7A2D32022FD7ADE3004F8DCC /* Alamofire in Frameworks */,
+				7A2D32072FD7ADEF004F8DCC /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +87,9 @@
 			);
 			name = ChillCat;
 			packageProductDependencies = (
+				7A2D32012FD7ADE3004F8DCC /* Alamofire */,
+				7A2D32062FD7ADEF004F8DCC /* KeychainAccess */,
+				7A2D320E2FD7AE11004F8DCC /* Kingfisher */,
 			);
 			productName = ChillCat;
 			productReference = 7A8F02762FAF1FB3001D0053 /* ChillCat.app */;
@@ -107,6 +119,11 @@
 			);
 			mainGroup = 7A8F026D2FAF1FB3001D0053;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7A2D32002FD7ADE3004F8DCC /* XCRemoteSwiftPackageReference "Alamofire" */,
+				7A2D32052FD7ADEF004F8DCC /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				7A2D320D2FD7AE11004F8DCC /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7A8F02772FAF1FB3001D0053 /* Products */;
 			projectDirPath = "";
@@ -150,7 +167,7 @@
 				INFOPLIST_FILE = ChillCat/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-								INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -181,7 +198,7 @@
 				INFOPLIST_FILE = ChillCat/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-								INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -343,6 +360,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7A2D32002FD7ADE3004F8DCC /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.12.0;
+			};
+		};
+		7A2D32052FD7ADEF004F8DCC /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		7A2D320D2FD7AE11004F8DCC /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7A2D32012FD7ADE3004F8DCC /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7A2D32002FD7ADE3004F8DCC /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		7A2D32062FD7ADEF004F8DCC /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7A2D32052FD7ADEF004F8DCC /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+		7A2D320E2FD7AE11004F8DCC /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7A2D320D2FD7AE11004F8DCC /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7A8F026E2FAF1FB3001D0053 /* Project object */;
 }
