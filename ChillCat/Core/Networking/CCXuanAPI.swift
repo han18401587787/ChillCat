@@ -11,9 +11,11 @@ enum CCXuanAPI {
 
     private static let session: Session = {
         let interceptor = XuanAuthInterceptor()
-        let retry = RetryPolicy(retryLimit: 3)
-        let logger = XuanNetworkLogger()
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 5   // 5秒超时，快速失败
+        config.timeoutIntervalForResource = 8
         return Session(
+            configuration: config,
             interceptor: interceptor,
             serverTrustManager: ServerTrustManager(allHostsMustBeEvaluated: false, evaluators: [:])
         )
