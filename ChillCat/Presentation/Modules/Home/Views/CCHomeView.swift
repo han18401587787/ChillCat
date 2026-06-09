@@ -204,7 +204,7 @@ struct CCHomeView: View {
     }
 
     func exploreCard(icon: String, title: String, color: Color, route: CCAppRoute) -> some View {
-        Button(action: { coordinator.navigate(to: route) }) {
+        NavigationLink(value: route) {
             VStack(spacing: 8) {
                 Image(systemName: icon).font(.system(size: 24)).foregroundColor(color)
                     .frame(width: 48, height: 48).background(color.opacity(0.15)).cornerRadius(theme.radiusSM)

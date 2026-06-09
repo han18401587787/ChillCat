@@ -24,3 +24,6 @@ let package = Package(
         )
     ]
 )
+// Test dependencies (add to Xcode test target)
+// ViewInspector: https://github.com/nalexn/ViewInspector
+// SnapshotTesting: https://github.com/pointfreeco/swift-snapshot-testing

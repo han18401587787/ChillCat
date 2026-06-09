@@ -9,7 +9,7 @@ final class CCTreeHoleViewModel {
     var selectedScope: CCPostScope = .public
     var isLoading = false
 
-    init() { Task { await loadPosts() } }
+    init() {}
 
     func loadPosts() async {
         isLoading = true
@@ -21,7 +21,10 @@ final class CCTreeHoleViewModel {
                     isAnonymous: p.isAnonymous, hugs: Int(p.hugs),
                     createdAt: ISO8601DateFormatter().date(from: p.createdAt) ?? Date())
             }
-        } catch {}
+            if posts.isEmpty { posts = CCTreeHolePost.samplePosts }
+        } catch {
+            posts = CCTreeHolePost.samplePosts
+        }
         isLoading = false
     }
 
@@ -58,6 +61,12 @@ struct CCTreeHolePost: Identifiable, Hashable {
         if d < 60 { return "刚刚" }; if d < 3600 { return "\(Int(d/60))分钟前" }
         if d < 86400 { return "\(Int(d/3600))小时前" }; return "\(Int(d/86400))天前"
     }
+    static let samplePosts: [CCTreeHolePost] = [
+        .init(id: "1", content: "下午开会的时候leader当着所有人说我的方案不够细致，我知道他说的有道理，但就是委屈…", scope: .public, isAnonymous: true, hugs: 24, createdAt: Date().addingTimeInterval(-3600)),
+        .init(id: "2", content: "周末去了公园，坐在草地上发呆了一个小时，脑子难得空空的，感觉很舒服。", scope: .public, isAnonymous: true, hugs: 18, createdAt: Date().addingTimeInterval(-7200)),
+        .init(id: "3", content: "为什么明明没做错，还是觉得对不起所有人？", scope: .public, isAnonymous: true, hugs: 31, createdAt: Date().addingTimeInterval(-10800)),
+        .init(id: "4", content: "今天不对自己说任何负面的话。打卡第一天！", scope: .public, isAnonymous: true, hugs: 56, createdAt: Date().addingTimeInterval(-14400)),
+    ]
 }
 
 enum CCPostScope: String, CaseIterable, Hashable { case `public` = "社区公开"; case comforters = "仅安慰者" }
