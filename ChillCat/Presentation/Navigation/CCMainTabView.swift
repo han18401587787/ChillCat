@@ -27,24 +27,28 @@ struct CCMainTabView: View {
             }
             .tabItem { Label(CCMainTab.home.title, systemImage: CCMainTab.home.iconName) }
             .tag(CCMainTab.home)
+                .accessibilityIdentifier("tab_home")
 
             NavigationStack {
                 coordinator.buildView(for: .treeHole)
             }
             .tabItem { Label(CCMainTab.treeHole.title, systemImage: CCMainTab.treeHole.iconName) }
             .tag(CCMainTab.treeHole)
+                .accessibilityIdentifier("tab_treehole")
 
             NavigationStack {
                 coordinator.buildView(for: .vipCenter)
             }
             .tabItem { Label(CCMainTab.vip.title, systemImage: CCMainTab.vip.iconName) }
             .tag(CCMainTab.vip)
+                .accessibilityIdentifier("tab_vip")
 
             NavigationStack {
                 coordinator.buildView(for: .profile)
             }
             .tabItem { Label(CCMainTab.profile.title, systemImage: CCMainTab.profile.iconName) }
             .tag(CCMainTab.profile)
+                .accessibilityIdentifier("tab_profile")
         }
     }
 }
