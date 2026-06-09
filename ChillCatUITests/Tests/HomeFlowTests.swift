@@ -6,8 +6,7 @@ final class HomeFlowTests: XCTestCase {
 
     override func setUp() {
         continueAfterFailure = false
-        app.launch()
-        app.anonymousLogin()
+        app.skipWelcomeAndLaunch()
     }
 
     func test_homePage_showsEmotionGrid() {

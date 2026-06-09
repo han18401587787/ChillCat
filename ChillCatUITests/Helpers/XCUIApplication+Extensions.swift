@@ -72,6 +72,13 @@ extension XCUIApplication {
 
     // MARK: - 完整登录流程
 
+    /// 使用 launchArguments 跳过欢迎页，直接进入主页
+    func skipWelcomeAndLaunch() {
+        launchArguments = ["-UITEST_SKIP_WELCOME"]
+        launch()
+        let _ = tabHome.waitForExistence(timeout: 10)
+    }
+
     /// 匿名登录 → 进入主页（支持离线兜底）
     /// - Note: API 不可用时 VC 会直接本地跳转，最长等待 15s
     func anonymousLogin() {
@@ -80,7 +87,6 @@ extension XCUIApplication {
             return
         }
         welcomeAnonymousButton.tap()
-        // API 不可用时会离线兜底直接进入主页，给足时间
         let _ = tabHome.waitForExistence(timeout: 15)
     }
 

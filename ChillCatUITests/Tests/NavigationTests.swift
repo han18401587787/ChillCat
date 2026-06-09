@@ -6,8 +6,7 @@ final class NavigationTests: XCTestCase {
 
     override func setUp() {
         continueAfterFailure = false
-        app.launch()
-        app.anonymousLogin()
+        app.skipWelcomeAndLaunch()
     }
 
     func test_allFourTabs_exist() {

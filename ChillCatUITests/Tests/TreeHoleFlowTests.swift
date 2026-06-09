@@ -6,8 +6,7 @@ final class TreeHoleFlowTests: XCTestCase {
 
     override func setUp() {
         continueAfterFailure = false
-        app.launch()
-        app.anonymousLogin()
+        app.skipWelcomeAndLaunch()
         app.tabTreeHole.tap()
     }
 
