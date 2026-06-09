@@ -1,5 +1,4 @@
 import SwiftUI
-import Lottie
 import KeychainAccess
 
 struct CCWelcomeView: View {
@@ -16,7 +15,7 @@ struct CCWelcomeView: View {
 
             VStack(spacing: 32) {
                 Spacer()
-                LottieView(animation: .named("xuan_leaf")).playing().frame(width: 120, height: 120)
+                Image(systemName: "leaf.circle.fill").font(.system(size: 72)).foregroundColor(Color(hex: "5A7A8A"))
                 Text("绪安").font(.system(size: 36, weight: .bold))
                 Text("陪你温柔自愈").font(.system(size: 18)).foregroundColor(Color(hex: "7A9AAA"))
                 VStack(spacing: 8) {

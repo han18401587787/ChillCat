@@ -48,7 +48,7 @@ struct CCMemberCenterView: View {
         VStack(spacing: theme.spacingSM) {
             Image(systemName: viewModel.isMember ? "crown.fill" : "crown")
                 .font(.system(size: 48))
-                .foregroundColor(viewModel.isMember ? theme.warning : theme.textSecondary)
+                .foregroundColor(viewModel.isMember ? theme.warm : theme.textSecondary)
 
             Text(viewModel.isMember ? "ChillCat 会员" : "开通 ChillCat 会员")
                 .font(.title2)
@@ -84,7 +84,7 @@ struct CCMemberCenterView: View {
                     VStack(spacing: theme.spacingSM) {
                         Image(systemName: privilege.iconName)
                             .font(.title3)
-                            .foregroundColor(privilege.isHighlight ? theme.warning : theme.primary)
+                            .foregroundColor(privilege.isHighlight ? theme.warm : theme.primary)
 
                         Text(privilege.title)
                             .font(.caption)
@@ -117,7 +117,7 @@ struct CCMemberCenterView: View {
 
     private func productCard(_ product: CCMemberProduct) -> some View {
         Button(action: {
-            coordinator.navigate(to: .vipPurchase(product))
+            Task { await viewModel.purchase(product: product) }
         }) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {

@@ -8,7 +8,9 @@ struct CCSettingsView: View {
     var body: some View {
         List {
             Section("外观") {
-                Toggle(isOn: $themeManager.isDarkMode) { Label("暗色模式", systemImage: "moon.fill") }
+                Button(action: { themeManager.isDarkMode.toggle() }) {
+                    Label("暗色模式", systemImage: themeManager.isDarkMode ? "moon.fill" : "sun.max.fill")
+                }.foregroundColor(.primary)
             }
             Section("通知") {
                 Toggle(isOn: $notificationsEnabled) { Label("消息推送", systemImage: "bell.fill") }

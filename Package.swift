@@ -12,7 +12,6 @@ let package = Package(
         // Keychain：Secure Enclave、生物认证、iCloud 同步、访问级别控制
         .package(url: "https://github.com/kishikawakatsumi/KeychainAccess.git", from: "4.2.0"),
         // 动画引擎：设计师 AE 导出 → 声明式播放，品牌动效/冥想/打卡庆祝
-        .package(url: "https://github.com/airbnb/lottie-ios.git", from: "4.5.0"),
     ],
     targets: [
         .target(
@@ -21,7 +20,6 @@ let package = Package(
                 .product(name: "Alamofire", package: "Alamofire"),
                 .product(name: "Kingfisher", package: "Kingfisher"),
                 .product(name: "KeychainAccess", package: "KeychainAccess"),
-                .product(name: "Lottie", package: "lottie-ios"),
             ]
         )
     ]
