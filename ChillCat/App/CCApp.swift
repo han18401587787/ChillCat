@@ -8,7 +8,6 @@ struct CCApp: View {
         Group {
             if !coordinator.hasSeenWelcome {
                 CCWelcomeView()
-                    .onAppear { coordinator.hasSeenWelcome = true }
             } else if coordinator.isLoggedIn {
                 CCMainTabView()
             } else {

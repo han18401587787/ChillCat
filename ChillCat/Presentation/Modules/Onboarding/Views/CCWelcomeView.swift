@@ -35,7 +35,7 @@ struct CCWelcomeView: View {
                     .background(Color(hex: "5A7A8A")).foregroundColor(.white).cornerRadius(12)
                     .disabled(isLoggingIn)
 
-                    Button("已有账号登录") { coordinator.navigate(to: .login) }
+                    Button("已有账号登录") { coordinator.hasSeenWelcome = true; coordinator.navigate(to: .login) }
                         .foregroundColor(Color(hex: "5A7A8A")).disabled(isLoggingIn)
                 }.padding(.horizontal, 32).padding(.bottom, 50)
             }
@@ -50,9 +50,9 @@ struct CCWelcomeView: View {
                 let resp = try await CCXuanAPI.anonymousLogin()
                 let keychain = Keychain(service: "app.xuanpeace.token")
                 keychain["access_token"] = resp.token
-                await MainActor.run { coordinator.isLoggedIn = true }
+                await MainActor.run { coordinator.hasSeenWelcome = true; coordinator.isLoggedIn = true }
             } catch {
-                await MainActor.run { coordinator.isLoggedIn = true }
+                await MainActor.run { coordinator.hasSeenWelcome = true; coordinator.isLoggedIn = true }
             }
         }
     }
