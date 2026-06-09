@@ -46,16 +46,23 @@ struct CCWelcomeView: View {
         isLoggingIn = true
         print("🌐 [绪安] 开始匿名登录 → \(CCAppEnvironment.current.baseURL)")
         Task {
-            defer { isLoggingIn = false }
             do {
                 let resp = try await CCXuanAPI.anonymousLogin()
-                print("✅ [绪安] 登录成功 user=\(resp.username) token=\(resp.token.prefix(20))...")
+                print("✅ [绪安] 登录成功 user=\(resp.username)")
                 let keychain = Keychain(service: "app.xuanpeace.token")
                 keychain["access_token"] = resp.token
-                await MainActor.run { coordinator.hasSeenWelcome = true; coordinator.isLoggedIn = true }
+                await MainActor.run {
+                    isLoggingIn = false
+                    coordinator.hasSeenWelcome = true
+                    coordinator.isLoggedIn = true
+                }
             } catch {
                 print("⚠️ [绪安] API不可用(\(error.localizedDescription))，离线进入")
-                await MainActor.run { coordinator.hasSeenWelcome = true; coordinator.isLoggedIn = true }
+                await MainActor.run {
+                    isLoggingIn = false
+                    coordinator.hasSeenWelcome = true
+                    coordinator.isLoggedIn = true
+                }
             }
         }
     }
