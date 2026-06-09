@@ -25,6 +25,12 @@ enum CCAppRoute: Hashable, Identifiable {
     case dataManagement
     case faq
     case deleteAccount
+    case postDetail(CCTreeHolePost)
+    case courseDetail(CCXuanAPI.CourseItem)
+    case journalDetail(CCXuanAPI.JournalEntry)
+    case feedback
+    case userAgreement
+    case privacyPolicy
     case settings
     case meditationPlayer(session: CCMeditationSession)
     case web(url: URL)
@@ -47,6 +53,12 @@ enum CCAppRoute: Hashable, Identifiable {
         case .dataManagement: return "dataManagement"
         case .faq: return "faq"
         case .deleteAccount: return "deleteAccount"
+        case .postDetail(let p): return "postDetail_\(p.id)"
+        case .courseDetail(let c): return "courseDetail_\(c.id)"
+        case .journalDetail(let e): return "journalDetail_\(e.id)"
+        case .feedback: return "feedback"
+        case .userAgreement: return "userAgreement"
+        case .privacyPolicy: return "privacyPolicy"
         case .settings: return "settings"
         case .meditationPlayer(let session): return "meditationPlayer_\(session.id)"
         case .web(let url): return "web_\(url.absoluteString)"

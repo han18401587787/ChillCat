@@ -41,7 +41,7 @@ enum CCXuanAPI {
 
     struct CheckinRequest: Encodable { let emotion: String; let note: String }
     struct TodayResponse: Decodable { let id: Int64; let emotion: String; let note: String; let checkinDate: String; let streakDays: Int64 }
-    struct JournalEntry: Decodable, Identifiable { let id: Int64; let emotion: String; let note: String; let hasDoodle: Bool; let checkinDate: String; let createdAt: String }
+    struct JournalEntry: Decodable, Identifiable, Hashable { let id: Int64; let emotion: String; let note: String; let hasDoodle: Bool; let checkinDate: String; let createdAt: String }
     struct JournalPage: Decodable { let list: [JournalEntry]; let total: Int64 }
     struct WeeklyStats: Decodable { let entries: [JournalEntry]; let totalCount: Int64; let streakDays: Int64; let topEmotion: String; let insight: String }
 
@@ -71,7 +71,7 @@ enum CCXuanAPI {
 
     // MARK: - Courses
 
-    struct CourseItem: Decodable, Identifiable { let id: Int64; let title: String; let description: String; let duration: Int; let category: String; let tag: String }
+    struct CourseItem: Decodable, Identifiable, Hashable { let id: Int64; let title: String; let description: String; let duration: Int; let category: String; let tag: String }
 
     static func getCourses(category: String = "") async throws -> [CourseItem] {
         try await get("/api/v1/courses" + (category.isEmpty ? "" : "?category=\(category)"))

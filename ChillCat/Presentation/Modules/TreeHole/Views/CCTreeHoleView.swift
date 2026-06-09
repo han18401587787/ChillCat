@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CCTreeHoleView: View {
     @State private var viewModel = CCTreeHoleViewModel()
+    @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(\.ccAppTheme) private var theme
     @FocusState private var isFocused: Bool
 
@@ -62,7 +63,9 @@ struct CCTreeHoleView: View {
                             }.foregroundColor(Color(hex: "E8B8C8"))
                         }
                     }
-                    Text(post.content).font(.system(size: 15)).lineSpacing(4)
+                    Button(action: { coordinator.navigate(to: .postDetail(post)) }) {
+                    Text(post.content).font(.system(size: 15)).lineSpacing(4).foregroundColor(theme.textPrimary).multilineTextAlignment(.leading)
+                }
                     HStack {
                         Label(post.scope.rawValue, systemImage: post.scope == .public ? "globe.asia.australia" : "hand.raised.fill")
                             .font(.system(size: 11)).foregroundColor(.secondary)

@@ -4,6 +4,7 @@ struct CCJournalView: View {
     @State private var selectedMonth = Calendar.current.component(.month, from: Date())
     @State private var entries: [CCXuanAPI.JournalEntry] = []
     @State private var isLoading = true
+    @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(\.ccAppTheme) private var theme
 
     let columns = Array(repeating: GridItem(.flexible(), spacing: 2), count: 7)
@@ -71,7 +72,7 @@ struct CCJournalView: View {
                                 }
                                 Spacer()
                                 Text(String(entry.checkinDate.suffix(5))).font(.system(size: 12)).foregroundColor(theme.textMuted)
-                            }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD)
+                            }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD).onTapGesture { coordinator.navigate(to: .journalDetail(entry)) }
                         }
                     }
                 }

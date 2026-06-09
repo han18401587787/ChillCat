@@ -2,6 +2,7 @@ import SwiftUI
 import Kingfisher
 
 struct CCCoursesView: View {
+    @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(\.ccAppTheme) private var theme
     @State private var courses: [CCXuanAPI.CourseItem] = []
     @State private var categories: [(name: String, icon: String, color: Color, items: [CCXuanAPI.CourseItem])] = []
@@ -58,7 +59,7 @@ struct CCCoursesView: View {
                     }
                     Spacer()
                     Image(systemName: "chevron.right").font(.system(size: 14)).foregroundColor(theme.textMuted)
-                }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD)
+                }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD).onTapGesture { coordinator.navigate(to: .courseDetail(course)) }
             }
         }
     }
