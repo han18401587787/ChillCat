@@ -42,6 +42,7 @@ struct CCHomeView: View {
         .background(theme.background)
         .navigationTitle("绪安")
         .navigationBarTitleDisplayMode(.inline)
+        .task { await viewModel.loadData() }
     }
 
     // MARK: - Header

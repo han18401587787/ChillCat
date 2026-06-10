@@ -12,8 +12,8 @@ enum CCXuanAPI {
     private static let session: Session = {
         let interceptor = XuanAuthInterceptor()
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 5   // 5秒超时，快速失败
-        config.timeoutIntervalForResource = 8
+        config.timeoutIntervalForRequest = 15
+        config.timeoutIntervalForResource = 30
         return Session(
             configuration: config,
             interceptor: interceptor,

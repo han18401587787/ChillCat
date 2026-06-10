@@ -75,6 +75,6 @@ struct CCTreeHoleView: View {
             }
             .listStyle(.plain)
         }
-        .background(Color(hex: "F9F6F2"))
+        .background(Color(hex: "F9F6F2")).task { await viewModel.loadPosts() }
     }
 }
