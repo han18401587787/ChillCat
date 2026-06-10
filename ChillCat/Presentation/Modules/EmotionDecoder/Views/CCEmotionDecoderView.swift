@@ -4,7 +4,6 @@ import SwiftUI
 struct CCEmotionDecoderView: View {
     @State private var viewModel = CCEmotionDecoderViewModel()
     @State private var showEmoji = false
-    @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(\.ccAppTheme) private var theme
     @FocusState private var isFocused: Bool
 

@@ -42,4 +42,8 @@ final class CCUserRemoteDataSource {
     func logout() async throws {
         let _: CCAPIResponse<CCEmptyResponse> = try await apiClient.request(CCUserAPI.logout)
     }
+
+    func deleteAccount() async throws {
+        let _: CCAPIResponse<CCEmptyResponse> = try await apiClient.request(CCUserAPI.deleteAccount)
+    }
 }

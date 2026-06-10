@@ -20,7 +20,9 @@ struct CCResonanceDetailView: View {
         ZStack {
             theme.background.ignoresSafeArea()
 
-            if isLoading && replies.isEmpty {
+            if let error, replies.isEmpty && !isLoading {
+                CCErrorView(error: error) { await loadDetail() }
+            } else if isLoading && replies.isEmpty {
                 CCLoadingView(message: "加载中...")
             } else {
                 detailContent

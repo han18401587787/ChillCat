@@ -3,7 +3,7 @@ import SwiftUI
 struct CCSettingsView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(CCThemeManager.self) private var themeManager
-    @State private var notificationsEnabled = true
+    @State private var viewModel = CCSettingsViewModel()
 
     var body: some View {
         List {
@@ -13,7 +13,10 @@ struct CCSettingsView: View {
                 }.foregroundColor(.primary)
             }
             Section("通知") {
-                Toggle(isOn: $notificationsEnabled) { Label("消息推送", systemImage: "bell.fill") }
+                Toggle(isOn: Binding(
+                    get: { viewModel.notificationsEnabled },
+                    set: { viewModel.notificationsEnabled = $0 }
+                )) { Label("消息推送", systemImage: "bell.fill") }
             }
             Section("关于") {
                 Label("版本 2.0", systemImage: "info.circle")

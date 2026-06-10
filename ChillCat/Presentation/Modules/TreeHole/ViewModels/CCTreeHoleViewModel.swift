@@ -12,6 +12,7 @@ final class CCTreeHoleViewModel {
     var isLoadingMore = false
     var hasMore = true
     var onlineCount: Int64 = 0
+    var errorMessage: String?
     private var currentPage = 1
 
     init() {}
@@ -23,8 +24,9 @@ final class CCTreeHoleViewModel {
             posts = mapPosts(page.list)
             onlineCount = page.onlineCount
             hasMore = page.total > posts.count
-            if posts.isEmpty { posts = CCResonancePost.samplePosts }
-        } catch { if posts.isEmpty { posts = CCResonancePost.samplePosts } }
+        } catch {
+            errorMessage = "加载失败，请重试"
+        }
         isLoading = false
     }
 
@@ -35,7 +37,9 @@ final class CCTreeHoleViewModel {
             posts = mapPosts(page.list)
             onlineCount = page.onlineCount
             hasMore = page.total > posts.count
-        } catch {}
+        } catch {
+            errorMessage = "刷新失败，请重试"
+        }
         isRefreshing = false
     }
 
@@ -47,7 +51,10 @@ final class CCTreeHoleViewModel {
             posts += mapPosts(page.list)
             onlineCount = page.onlineCount
             hasMore = page.total > posts.count
-        } catch { currentPage -= 1 }
+        } catch {
+            currentPage -= 1
+            errorMessage = "加载更多失败，请重试"
+        }
         isLoadingMore = false
     }
 
@@ -73,17 +80,24 @@ final class CCTreeHoleViewModel {
             do {
                 let _ = try await CCXuanAPI.createPost(content: text, scope: scope == .public ? "public" : "comforters", isAnonymous: anon)
                 await loadPosts()
-            } catch {}
+            } catch {
+                newPostText = text
+                errorMessage = "发布失败，请重试"
+            }
         }
     }
 
     func resonatePost(_ post: CCResonancePost, encouragement: String? = nil) {
         guard let id = Int64(post.id) else { return }
         Task {
-            try? await CCXuanAPI.hugResonance(id: id, message: encouragement)
-            if let idx = posts.firstIndex(where: { $0.id == post.id }) {
-                posts[idx].resonanceCount += 1
-                posts[idx].hasResonated = true
+            do {
+                try await CCXuanAPI.hugResonance(id: id, message: encouragement)
+                if let idx = posts.firstIndex(where: { $0.id == post.id }) {
+                    posts[idx].resonanceCount += 1
+                    posts[idx].hasResonated = true
+                }
+            } catch {
+                errorMessage = "共鸣失败，请重试"
             }
         }
     }
@@ -129,6 +143,10 @@ struct CCResonancePost: Identifiable, Hashable {
         .init(id: "3", content: "今天不对自己说任何负面的话。打卡第一天！", emotion: "开心", emotionColor: "warmLight", resonanceCount: 1456, isAnonymous: true, displayName: "匿名用户", createdAt: Date().addingTimeInterval(-3600)),
         .init(id: "4", content: "下午开会的时候leader当着所有人说我的方案不够细致，我知道他说的有道理，但就是委屈…", emotion: "委屈", emotionColor: "softPink", resonanceCount: 489, isAnonymous: true, displayName: "匿名用户", createdAt: Date().addingTimeInterval(-14400)),
     ]
+}
+
+extension Notification.Name {
+    static let treeHoleDidUpdate = Notification.Name("TreeHoleDidUpdate")
 }
 
 typealias CCTreeHolePost = CCResonancePost

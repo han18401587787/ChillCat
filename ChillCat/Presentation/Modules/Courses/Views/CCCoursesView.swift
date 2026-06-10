@@ -1,46 +1,44 @@
 import SwiftUI
-import Kingfisher
 
 struct CCCoursesView: View {
-    @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(\.ccAppTheme) private var theme
-    @State private var courses: [CCXuanAPI.CourseItem] = []
-    @State private var categories: [(name: String, icon: String, color: Color, items: [CCXuanAPI.CourseItem])] = []
+    @State private var viewModel = CCCoursesViewModel()
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: theme.spacingLG) {
                 Text("小课堂").font(.system(size: 24, weight: .bold))
-                if categories.isEmpty {
+                switch viewModel.loadState {
+                case .loading:
                     CCSkeletonList(count: 6)
-                } else {
-                    ForEach(categories, id: \.name) { cat in
+                case .loaded:
+                    ForEach(viewModel.categories, id: \.name) { cat in
                         categorySection(title: cat.name, icon: cat.icon, color: cat.color, courses: cat.items)
+                    }
+                case .empty:
+                    emptyState
+                case .error(let message):
+                    CCErrorView(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: message])) {
+                        await viewModel.loadCourses()
                     }
                 }
             }.padding()
         }
         .background(theme.background).navigationTitle("小课堂")
-        .task { await loadCourses() }
+        .task { await viewModel.loadCourses() }
     }
 
-    private func loadCourses() async {
-        do {
-            let all = try await CCXuanAPI.getCourses()
-            courses = all
-            let grouped = Dictionary(grouping: all, by: { $0.category })
-            let icons: [String: (String, Color)] = [
-                "情绪管理": ("heart.text.clipboard.fill", Color(hex: "D4C8E8")),
-                "焦虑治愈": ("leaf.circle.fill", Color(hex: "D5E8D4")),
-                "睡前助眠": ("moon.stars.fill", Color(hex: "B8D4E3")),
-                "职场解压": ("briefcase.fill", Color(hex: "E8D9F0")),
-                "成长": ("sparkles", Color(hex: "E8D9C8")),
-            ]
-            categories = grouped.map { (name, items) in
-                let (icon, color) = icons[name] ?? ("book.fill", Color(hex: "D4C8E8"))
-                return (name, icon, color, items)
-            }
-        } catch {}
+    private var emptyState: some View {
+        VStack(spacing: theme.spacingMD) {
+            Spacer().frame(height: 80)
+            Image(systemName: "book.pages")
+                .font(.system(size: 48))
+                .foregroundColor(theme.textMuted)
+            Text("暂无课程")
+                .font(.system(size: 15))
+                .foregroundColor(theme.textMuted)
+        }
+        .frame(maxWidth: .infinity)
     }
 
     func categorySection(title: String, icon: String, color: Color, courses: [CCXuanAPI.CourseItem]) -> some View {

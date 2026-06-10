@@ -33,6 +33,24 @@ struct CCMyEncourageChainsView: View {
         }
         .navigationTitle("我的鼓励链")
         .task { await viewModel.loadMyChains() }
+        .overlay(alignment: .top) {
+            if let error = viewModel.errorMessageMyChains {
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(theme.error)
+                    Text(error)
+                        .foregroundColor(theme.error)
+                }
+                .font(.system(size: 14))
+                .padding()
+                .background(theme.error.opacity(0.08))
+                .cornerRadius(theme.radiusSM)
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .animation(.easeInOut, value: viewModel.errorMessageMyChains)
     }
 
     private func chainCard(_ chain: ChainSummary) -> some View {
@@ -64,9 +82,8 @@ struct CCMyEncourageChainsView: View {
                 Spacer()
 
                 Button(action: {
-                    Task {
-                        await viewModel.loadChain(id: Int64(chain.chainId) ?? 0)
-                    }
+                    guard let id = Int64(chain.chainId) else { return }
+                    coordinator.navigate(to: .encourageChainDetail(chainId: id))
                 }) {
                     Text("查看详情")
                         .font(.system(size: 12, weight: .medium))

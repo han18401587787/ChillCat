@@ -1,9 +1,7 @@
 import SwiftUI
 
 struct CCJournalView: View {
-    @State private var selectedMonth = Calendar.current.component(.month, from: Date())
-    @State private var entries: [CCXuanAPI.JournalEntry] = []
-    @State private var isLoading = true
+    @State private var viewModel = CCJournalViewModel()
     @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(\.ccAppTheme) private var theme
 
@@ -14,11 +12,11 @@ struct CCJournalView: View {
         ScrollView {
             VStack(spacing: theme.spacingLG) {
                 HStack {
-                    Button(action: { selectedMonth -= 1 }) { Image(systemName: "chevron.left") }
+                    Button(action: { viewModel.previousMonth() }) { Image(systemName: "chevron.left") }
                     Spacer()
-                    Text("2026年\(selectedMonth)月").font(.system(size: 18, weight: .semibold))
+                    Text("\(String(viewModel.selectedYear))年\(viewModel.selectedMonth)月").font(.system(size: 18, weight: .semibold))
                     Spacer()
-                    Button(action: { selectedMonth += 1 }) { Image(systemName: "chevron.right") }
+                    Button(action: { viewModel.nextMonth() }) { Image(systemName: "chevron.right") }
                 }.padding(.horizontal)
 
                 VStack(spacing: 8) {
@@ -42,19 +40,19 @@ struct CCJournalView: View {
                 }.padding().background(theme.cardBackground).cornerRadius(theme.radiusLG)
 
                 HStack(spacing: theme.spacingMD) {
-                    statCard(title: "本月", value: "\(entries.count) 次", bg: theme.softPurpleLight.opacity(0.25))
-                    statCard(title: "记录", value: "\(entries.count) 天", bg: theme.primaryMuted.opacity(0.25))
+                    statCard(title: "本月", value: "\(viewModel.entries.count) 次", bg: theme.softPurpleLight.opacity(0.25))
+                    statCard(title: "记录", value: "\(uniqueDays) 天", bg: theme.primaryMuted.opacity(0.25))
                     statCard(title: "坚持", value: "\(uniqueDays) 天", bg: theme.softGreenLight.opacity(0.25))
                 }
 
                 VStack(alignment: .leading, spacing: theme.spacingSM) {
                     Text("所有情绪日记与打卡记录").font(.system(size: 16, weight: .semibold))
-                    if isLoading {
+                    if viewModel.isLoading {
                         CCSkeletonList(count: 4)
-                    } else if entries.isEmpty {
+                    } else if viewModel.entries.isEmpty {
                         CCEmptyStateView(title: "暂无记录", message: "开始记录你的第一份情绪日记吧", actionTitle: nil, action: nil)
                     } else {
-                        ForEach(entries) { entry in
+                        ForEach(viewModel.entries) { entry in
                             HStack(spacing: 12) {
                                 Image(systemName: CCEmotion.allCases.first(where: { $0.rawValue == entry.emotion })?.iconName ?? "circle.fill")
                                     .font(.system(size: 24))
@@ -78,26 +76,26 @@ struct CCJournalView: View {
                 }
             }.padding()
         }.background(theme.background).navigationTitle("情绪日记")
-        .refreshable { isLoading = true; await loadJournal() }
-        .task { await loadJournal() }
+        .refreshable { await viewModel.loadJournal() }
+        .task { await viewModel.loadJournal() }
+        .alert("加载失败", isPresented: Binding<Bool>(
+            get: { viewModel.error != nil },
+            set: { if !$0 { viewModel.error = nil } }
+        )) {
+            Button("重试") { Task { await viewModel.loadJournal() } }
+            Button("取消", role: .cancel) { viewModel.error = nil }
+        } message: {
+            Text(viewModel.error?.localizedDescription ?? "请检查网络后重试")
+        }
     }
 
     private var calendarDays: [Int] { (1...31).map { $0 } }
-    private var uniqueDays: Int { Set(entries.map { $0.checkinDate }).count }
+    private var uniqueDays: Int { Set(viewModel.entries.map { $0.checkinDate }).count }
 
-    private func loadJournal() async {
-        isLoading = true
-        let m = String(format: "%04d-%02d", Calendar.current.component(.year, from: Date()), selectedMonth)
-        do {
-            let page = try await CCXuanAPI.getJournal(month: m)
-            entries = page.list
-        } catch {}
-        isLoading = false
-    }
 
     private func dayHasEntry(_ day: Int) -> Bool {
-        let dayStr = String(format: "%04d-%02d-%02d", Calendar.current.component(.year, from: Date()), selectedMonth, day)
-        return entries.contains { $0.checkinDate == dayStr }
+        let dayStr = String(format: "%04d-%02d-%02d", viewModel.selectedYear, viewModel.selectedMonth, day)
+        return viewModel.entries.contains { $0.checkinDate == dayStr }
     }
 
     private func emotionColor(_ name: String) -> Color {

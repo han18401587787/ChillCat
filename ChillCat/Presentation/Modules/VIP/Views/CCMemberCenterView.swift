@@ -31,9 +31,7 @@ struct CCMemberCenterView: View {
         }
         .navigationTitle("会员中心")
         .task { await viewModel.loadData() }
-        .sheet(isPresented: $viewModel.showConfirmSheet, onDismiss: {
-            viewModel.selectedProduct = nil
-        }) {
+        .sheet(isPresented: $viewModel.showConfirmSheet) {
             if let product = viewModel.selectedProduct {
                 CCPaymentConfirmSheet(
                     product: product,
@@ -43,7 +41,9 @@ struct CCMemberCenterView: View {
             }
         }
         .alert("购买成功", isPresented: $viewModel.showSuccessAlert) {
-            Button("好的") { }
+            Button("好的") {
+                viewModel.selectedProduct = nil
+            }
         } message: {
             Text("恭喜成为 ChillCat 会员，即刻享受全部权益")
         }
@@ -53,9 +53,19 @@ struct CCMemberCenterView: View {
                     await viewModel.confirmPurchase()
                 }
             }
-            Button("取消", role: .cancel) { }
+            Button("取消", role: .cancel) {
+                viewModel.selectedProduct = nil
+            }
         } message: {
             Text(viewModel.errorMessage ?? "支付失败，请稍后重试")
+        }
+        .alert("加载失败", isPresented: $viewModel.showLoadErrorAlert) {
+            Button("重试") {
+                Task { await viewModel.loadData() }
+            }
+            Button("取消", role: .cancel) { }
+        } message: {
+            Text(viewModel.errorMessage ?? "加载数据失败，请检查网络后重试")
         }
     }
 

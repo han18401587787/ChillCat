@@ -1,9 +1,9 @@
 import SwiftUI
-import KeychainAccess
 
 struct CCWelcomeView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(\.ccAppTheme) private var theme
+    @State private var viewModel = CCWelcomeViewModel()
 
     var body: some View {
         ZStack {
@@ -23,37 +23,33 @@ struct CCWelcomeView: View {
                 }.padding(.top, 32)
                 Spacer()
                 VStack(spacing: 16) {
-                    // 先跳转，后台异步请求 Token
-                    Button(action: { enterApp() }) {
-                        Text("匿名进入").fontWeight(.semibold)
+                    Button(action: { viewModel.enterApp(coordinator: coordinator) }) {
+                        if viewModel.isLoading {
+                            ProgressView().tint(.white)
+                        } else {
+                            Text("匿名进入").fontWeight(.semibold)
+                        }
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 16)
                     .background(Color(hex: "5A7A8A")).foregroundColor(.white).cornerRadius(12)
+                    .disabled(viewModel.isLoading)
 
                     Button("已有账号登录") {
                         coordinator.hasSeenWelcome = true
-                        coordinator.navigate(to: .login)
                     }
                     .foregroundColor(Color(hex: "5A7A8A"))
+                    .disabled(viewModel.isLoading)
                 }.padding(.horizontal, 32).padding(.bottom, 50)
             }
         }
-    }
-
-    /// 立即进入主页，后台异步获取 Token
-    private func enterApp() {
-        coordinator.hasSeenWelcome = true
-        coordinator.isLoggedIn = true
-
-        print("🌐 [绪安] 后台获取Token → \(CCAppEnvironment.current.baseURL)")
-        Task {
-            do {
-                let resp = try await CCXuanAPI.anonymousLogin()
-                print("✅ [绪安] Token已缓存 user=\(resp.username)")
-                Keychain(service: "app.xuanpeace.token")["access_token"] = resp.token
-            } catch {
-                print("⚠️ [绪安] Token获取失败，下次启动重试")
-            }
+        .alert("提示", isPresented: Binding(
+            get: { viewModel.errorMessage != nil },
+            set: { if !$0 { viewModel.errorMessage = nil } }
+        )) {
+            Button("重试") { viewModel.enterApp(coordinator: coordinator) }
+            Button("取消", role: .cancel) { }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
         }
     }
 }

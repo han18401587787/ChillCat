@@ -14,4 +14,5 @@ protocol CCUserRepositoryProtocol {
     func fetchProfile() async throws -> CCUser
     func updateProfile(_ user: CCUser) async throws -> CCUser
     func logout() async
+    func deleteAccount() async throws
 }

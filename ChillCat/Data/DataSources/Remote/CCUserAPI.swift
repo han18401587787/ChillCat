@@ -14,6 +14,7 @@ enum CCUserAPI {
     case profile
     case updateProfile(name: String)
     case logout
+    case deleteAccount
 }
 
 extension CCUserAPI: CCAPIEndpoint {
@@ -26,6 +27,7 @@ extension CCUserAPI: CCAPIEndpoint {
         case .profile: return "/api/v1/user/profile"
         case .updateProfile: return "/api/v1/user/profile"
         case .logout: return "/api/v1/auth/logout"
+        case .deleteAccount: return "/api/v1/user/account"
         }
     }
 
@@ -33,6 +35,7 @@ extension CCUserAPI: CCAPIEndpoint {
         switch self {
         case .login, .register, .updateProfile: return .post
         case .profile, .logout: return .get
+        case .deleteAccount: return .post
         }
     }
 

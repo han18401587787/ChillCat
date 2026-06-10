@@ -20,6 +20,7 @@ final class CCMemberViewModel {
     var showConfirmSheet = false
     var showSuccessAlert = false
     var showFailureAlert = false
+    var showLoadErrorAlert = false
     var selectedProduct: CCMemberProduct?
     private let orderTracker = CCOrderTrackingViewModel()
 
@@ -60,6 +61,7 @@ final class CCMemberViewModel {
             privileges = CCMemberViewModel.defaultPrivileges()
         } catch {
             errorMessage = error.localizedDescription
+            showLoadErrorAlert = true
         }
 
         isLoading = false
@@ -86,36 +88,14 @@ final class CCMemberViewModel {
             let info = try await purchaseMemberUseCase.execute(product: product)
             memberInfo = info
             orderTracker.updateTransaction(id: transaction.id, status: .completed)
+            showConfirmSheet = false
             showSuccessAlert = true
         } catch {
             errorMessage = error.localizedDescription
             orderTracker.updateTransaction(id: transaction.id, status: .failed)
+            showConfirmSheet = false
             showFailureAlert = true
         }
-    }
-
-    func purchase(product: CCMemberProduct) async {
-        let transaction = CCTransaction(
-            productType: product.type,
-            amount: product.price,
-            status: .pending
-        )
-        orderTracker.addTransaction(transaction)
-        isLoading = true
-        errorMessage = nil
-
-        do {
-            let info = try await purchaseMemberUseCase.execute(product: product)
-            memberInfo = info
-            orderTracker.updateTransaction(id: transaction.id, status: .completed)
-            showSuccessAlert = true
-        } catch {
-            errorMessage = error.localizedDescription
-            orderTracker.updateTransaction(id: transaction.id, status: .failed)
-            showFailureAlert = true
-        }
-
-        isLoading = false
     }
 
     static func defaultProducts() -> [CCMemberProduct] {

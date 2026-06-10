@@ -54,6 +54,7 @@ final class CCVoiceDiaryViewModel {
 
     private var timer: Timer?
     private let waveformBarCount = 30
+    private var lastDiaryResult: CCVoiceDiaryResult?
 
     // MARK: - Computed Helpers
 
@@ -89,6 +90,8 @@ final class CCVoiceDiaryViewModel {
 
     var resultData: CCVoiceDiaryResult? {
         if case .result(let data) = state { return data }
+        if case .saved = state { return lastDiaryResult }
+        if case .error = state { return lastDiaryResult }
         return nil
     }
 
@@ -166,6 +169,7 @@ final class CCVoiceDiaryViewModel {
 
     func saveDiary() async {
         guard let result = resultData else { return }
+        lastDiaryResult = result
         CCHaptic.success()
         state = .saving
         do {
@@ -192,6 +196,7 @@ final class CCVoiceDiaryViewModel {
         editableTranscription = ""
         editableTags = []
         newTagInput = ""
+        lastDiaryResult = nil
     }
 
     func reRecord() {

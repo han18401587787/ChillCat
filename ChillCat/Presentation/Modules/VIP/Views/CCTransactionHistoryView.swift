@@ -13,7 +13,9 @@ struct CCTransactionHistoryView: View {
 
     var body: some View {
         Group {
-            if viewModel.transactions.isEmpty {
+            if viewModel.isLoading {
+                CCLoadingView(message: "加载中...")
+            } else if viewModel.transactions.isEmpty {
                 CCEmptyStateView(
                     title: "暂无购买记录",
                     message: "您的购买记录将在这里显示",
@@ -32,6 +34,17 @@ struct CCTransactionHistoryView: View {
         }
         .navigationTitle("购买记录")
         .task { viewModel.load() }
+        .alert("加载失败", isPresented: Binding(
+            get: { viewModel.errorMessage != nil },
+            set: { if !$0 { viewModel.errorMessage = nil } }
+        )) {
+            Button("重试") {
+                viewModel.load()
+            }
+            Button("取消", role: .cancel) { }
+        } message: {
+            Text(viewModel.errorMessage ?? "加载购买记录失败")
+        }
     }
 
     private func transactionRow(_ transaction: CCTransaction) -> some View {

@@ -3,9 +3,7 @@ import SwiftUI
 struct CCTrendsView: View {
     @Environment(\.ccAppTheme) private var theme
     @State private var selectedTab = 0
-    @State private var stats: CCXuanAPI.WeeklyStats?
-    @State private var weekData: [(String, Int)] = []
-    @State private var isLoading = true
+    @State private var viewModel = CCTrendsViewModel()
 
     var body: some View {
         ScrollView {
@@ -20,7 +18,13 @@ struct CCTrendsView: View {
             }.padding()
         }
         .background(theme.background).navigationTitle("情绪趋势")
-        .task { await loadStats() }
+        .task { await viewModel.loadStats() }
+        .alert("提示", isPresented: .constant(viewModel.errorMessage != nil)) {
+            Button("重试") { Task { await viewModel.retry() } }
+            Button("取消", role: .cancel) { viewModel.errorMessage = nil }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+        }
     }
 
     // MARK: - Week View
@@ -28,13 +32,13 @@ struct CCTrendsView: View {
         VStack(spacing: theme.spacingLG) {
             VStack(alignment: .leading, spacing: theme.spacingSM) {
                 Text("本周情绪波动").font(.system(size: 16, weight: .semibold))
-                if isLoading {
+                if viewModel.isLoading {
                     CCSkeletonView().frame(height: 100).cornerRadius(theme.radiusMD)
-                } else if weekData.isEmpty {
+                } else if viewModel.weekData.isEmpty {
                     emptyChartPlaceholder
                 } else {
                     HStack(alignment: .bottom, spacing: 8) {
-                        ForEach(weekData, id: \.0) { (day, count) in
+                        ForEach(viewModel.weekData, id: \.0) { (day, count) in
                             VStack(spacing: 4) {
                                 RoundedRectangle(cornerRadius: 4)
                                     .fill(Color(hex: "B8D4E3")).frame(width: 36, height: max(8, CGFloat(count) * 24))
@@ -45,13 +49,15 @@ struct CCTrendsView: View {
                 }
             }
 
-            HStack(spacing: theme.spacingSM) {
-                statBox(value: "\(stats?.totalCount ?? 0)", label: "本周记录", color: theme.softPurpleLight)
-                statBox(value: "\(stats?.streakDays ?? 0)", label: "连续天数", color: theme.primaryMuted)
-                statBox(value: stats?.topEmotion ?? "—", label: "主要情绪", color: theme.softGreenLight)
+            if !viewModel.isLoading {
+                HStack(spacing: theme.spacingSM) {
+                    statBox(value: "\(viewModel.stats?.totalCount ?? 0)", label: "本周记录", color: theme.softPurpleLight)
+                    statBox(value: "\(viewModel.stats?.streakDays ?? 0)", label: "连续天数", color: theme.primaryMuted)
+                    statBox(value: viewModel.stats?.topEmotion ?? "—", label: "主要情绪", color: theme.softGreenLight)
+                }
             }
 
-            if let s = stats, !s.insight.isEmpty {
+            if !viewModel.isLoading, let s = viewModel.stats, !s.insight.isEmpty {
                 VStack(alignment: .leading, spacing: theme.spacingSM) {
                     Text("绪安洞察").font(.system(size: 16, weight: .semibold))
                     insightCard(text: s.insight, color: Color(hex: "D4C8E8"))
@@ -63,10 +69,16 @@ struct CCTrendsView: View {
     var monthView: some View {
         VStack(spacing: theme.spacingLG) {
             Text("本月情绪回顾").font(.system(size: 18, weight: .bold))
-            HStack(spacing: theme.spacingSM) {
-                statBox(value: "\(stats?.totalCount ?? 0)", label: "打卡", color: theme.softPurpleLight)
-                statBox(value: stats?.topEmotion ?? "—", label: "主要情绪", color: Color(hex: "66BB6A").opacity(0.25))
-                statBox(value: "\(stats?.streakDays ?? 0)", label: "连续", color: theme.primaryMuted)
+            if viewModel.isLoading {
+                CCSkeletonView().frame(height: 100).cornerRadius(theme.radiusMD)
+            } else if viewModel.isEmpty {
+                emptyChartPlaceholder
+            } else {
+                HStack(spacing: theme.spacingSM) {
+                    statBox(value: "\(viewModel.stats?.totalCount ?? 0)", label: "打卡", color: theme.softPurpleLight)
+                    statBox(value: viewModel.stats?.topEmotion ?? "—", label: "主要情绪", color: Color(hex: "66BB6A").opacity(0.25))
+                    statBox(value: "\(viewModel.stats?.streakDays ?? 0)", label: "连续", color: theme.primaryMuted)
+                }
             }
         }
     }
@@ -74,35 +86,18 @@ struct CCTrendsView: View {
     var growthView: some View {
         VStack(spacing: theme.spacingLG) {
             Text("成长轨迹").font(.system(size: 18, weight: .bold))
-            VStack(spacing: theme.spacingSM) {
-                growthRow(icon: "chart.line.uptrend.xyaxis", title: "本周记录 \(stats?.totalCount ?? 0) 次", subtitle: "继续坚持")
-                growthRow(icon: "figure.mind.and.body", title: "连续打卡 \(stats?.streakDays ?? 0) 天", subtitle: "加油保持")
-                growthRow(icon: "pencil.and.list.clipboard", title: "今日主要情绪", subtitle: stats?.topEmotion ?? "暂无数据")
+            if viewModel.isLoading {
+                CCSkeletonView().frame(height: 120).cornerRadius(theme.radiusMD)
+            } else if viewModel.isEmpty {
+                emptyChartPlaceholder
+            } else {
+                VStack(spacing: theme.spacingSM) {
+                    growthRow(icon: "chart.line.uptrend.xyaxis", title: "本周记录 \(viewModel.stats?.totalCount ?? 0) 次", subtitle: "继续坚持")
+                    growthRow(icon: "figure.mind.and.body", title: "连续打卡 \(viewModel.stats?.streakDays ?? 0) 天", subtitle: "加油保持")
+                    growthRow(icon: "pencil.and.list.clipboard", title: "今日主要情绪", subtitle: viewModel.stats?.topEmotion ?? "暂无数据")
+                }
             }
         }
-    }
-
-    private func loadStats() async {
-        isLoading = true
-        do {
-            let s = try await CCXuanAPI.getWeeklyStats()
-            stats = s
-            let dayNames = ["日","一","二","三","四","五","六"]
-            var counts: [String: Int] = [:]
-            for e in s.entries {
-                let d = e.checkinDate
-                let idx = dayOfWeek(from: d)
-                counts[dayNames[idx], default: 0] += 1
-            }
-            weekData = dayNames.map { ($0, counts[$0] ?? 0) }
-        } catch {}
-        isLoading = false
-    }
-
-    private func dayOfWeek(from dateStr: String) -> Int {
-        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"
-        if let d = f.date(from: dateStr) { return Calendar.current.component(.weekday, from: d) - 1 }
-        return 0
     }
 
     private var emptyChartPlaceholder: some View {
@@ -110,7 +105,7 @@ struct CCTrendsView: View {
             Image(systemName: "chart.bar.xaxis.ascending")
                 .font(.system(size: 28))
                 .foregroundColor(theme.textSecondary.opacity(0.4))
-            Text("暂无本周数据")
+            Text("暂无数据")
                 .font(.system(size: 13))
                 .foregroundColor(theme.textSecondary)
         }

@@ -4,11 +4,13 @@ struct CCDeleteAccountView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(\.ccAppTheme) private var theme
     @State private var confirmed = false
-    @State private var deleted = false
+    @State private var viewModel = CCDeleteAccountViewModel(
+        userRepository: CCAppDependencyContainer.shared.container.resolve()
+    )
 
     var body: some View {
         Group {
-            if deleted {
+            if viewModel.isDeleted {
                 deletedView
             } else if !confirmed {
                 warningView
@@ -17,6 +19,12 @@ struct CCDeleteAccountView: View {
             }
         }
         .background(theme.background).navigationTitle("注销账号")
+        .alert("注销失败", isPresented: .constant(viewModel.errorMessage != nil)) {
+            Button("重试") { Task { await viewModel.deleteAccount() } }
+            Button("取消", role: .cancel) { viewModel.errorMessage = nil }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+        }
     }
 
     // MARK: - Warning
@@ -63,11 +71,17 @@ struct CCDeleteAccountView: View {
             Text("所有账号数据将从服务器永久删除，此操作不可撤销。").font(.system(size: 15))
                 .foregroundColor(theme.textSecondary).multilineTextAlignment(.center).padding(.horizontal)
 
-            Button(action: { deleted = true }) {
-                Text("确认注销").fontWeight(.semibold).foregroundColor(.white)
-                    .frame(maxWidth: .infinity).padding(.vertical, 16)
-                    .background(Color(hex: "E57373")).cornerRadius(theme.radiusMD)
-            }.padding(.horizontal)
+            Button(action: { Task { await viewModel.deleteAccount() } }) {
+                if viewModel.isDeleting {
+                    ProgressView().tint(.white)
+                        .frame(maxWidth: .infinity).padding(.vertical, 16)
+                } else {
+                    Text("确认注销").fontWeight(.semibold).foregroundColor(.white)
+                        .frame(maxWidth: .infinity).padding(.vertical, 16)
+                }
+            }
+            .disabled(viewModel.isDeleting)
+            .background(Color(hex: "E57373")).cornerRadius(theme.radiusMD).padding(.horizontal)
 
             Button(action: { confirmed = false }) {
                 Text("返回").foregroundColor(theme.textSecondary)

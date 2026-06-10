@@ -74,10 +74,10 @@ final class CCResonanceViewModel {
         }
     }
 
-    func hugResonance(_ item: CCResonanceDisplayItem) {
+    func hugResonance(_ item: CCResonanceDisplayItem, message: String? = nil) {
         guard let id = Int64(item.id) else { return }
         Task {
-            try? await CCXuanAPI.hugResonance(id: id)
+            try? await CCXuanAPI.hugResonance(id: id, message: message)
             if let idx = resonanceItems.firstIndex(where: { $0.id == item.id }) {
                 resonanceItems[idx].resonanceCount += 1
             }

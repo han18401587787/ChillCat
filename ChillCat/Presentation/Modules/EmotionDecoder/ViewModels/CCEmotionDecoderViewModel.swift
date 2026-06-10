@@ -25,7 +25,6 @@ final class CCEmotionDecoderViewModel {
     func decode() async {
         guard canDecode else { return }
         let text = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
-        inputText = ""
         isLoading = true
         errorMessage = nil
         showResult = false
@@ -36,6 +35,7 @@ final class CCEmotionDecoderViewModel {
 
         do {
             let result = try await CCXuanAPI.decodeEmotion(text: text)
+            inputText = ""
             surfaceEmotion = DecodeLayer(
                 label: result.surfaceEmotion.label,
                 icon: result.surfaceEmotion.icon,

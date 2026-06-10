@@ -8,6 +8,12 @@ struct CCEncourageChainView: View {
     @Environment(\.ccAppTheme) private var theme
     @FocusState private var isFocused: Bool
 
+    let specificChainId: Int64?
+
+    init(specificChainId: Int64? = nil) {
+        self.specificChainId = specificChainId
+    }
+
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
@@ -83,7 +89,13 @@ struct CCEncourageChainView: View {
         }
         .animation(.easeInOut, value: showEmoji)
         .navigationTitle("鼓励链")
-        .task { await viewModel.loadCurrentChain() }
+        .task {
+            if let chainId = specificChainId {
+                await viewModel.loadChain(id: chainId)
+            } else {
+                await viewModel.loadCurrentChain()
+            }
+        }
     }
 
     // MARK: - Header

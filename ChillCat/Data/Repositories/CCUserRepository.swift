@@ -54,4 +54,9 @@ final class CCUserRepository: CCUserRepositoryProtocol {
         try? await remoteDataSource.logout()
         await localDataSource.clearUser()
     }
+
+    func deleteAccount() async throws {
+        try await remoteDataSource.deleteAccount()
+        await localDataSource.clearUser()
+    }
 }

@@ -14,6 +14,7 @@ final class CCEncourageChainViewModel {
     // My chains
     var myChains: [ChainSummary] = []
     var isLoadingMyChains = false
+    var errorMessageMyChains: String?
 
     var canRelay: Bool {
         let trimmed = relayText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -39,10 +40,10 @@ final class CCEncourageChainViewModel {
                 )
             }
             participantCount = chain.participantCount
-            if links.isEmpty { links = ChainLinkDisplay.sampleLinks }
+            // Empty state will render when no links are available
         } catch {
-            if links.isEmpty { links = ChainLinkDisplay.sampleLinks }
-            chainId = 2841
+            errorMessage = "加载失败，请重试"
+            chainId = 0
         }
         isLoading = false
     }
@@ -96,7 +97,9 @@ final class CCEncourageChainViewModel {
                     linkCount: $0.links.count
                 )
             }
-        } catch {}
+        } catch {
+            errorMessageMyChains = "加载失败，请重试"
+        }
         isLoadingMyChains = false
     }
 }

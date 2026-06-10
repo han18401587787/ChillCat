@@ -21,6 +21,9 @@ struct CCResonanceView: View {
     @State private var resonateMessage = ""
     @State private var showResonateEmoji = false
 
+    // Share sheet
+    @State private var shareItem: CCResonanceDisplayItem?
+
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             theme.background.ignoresSafeArea()
@@ -57,6 +60,11 @@ struct CCResonanceView: View {
             resonateSheet(for: item)
                 .presentationDetents([.height(320)])
                 .presentationDragIndicator(.visible)
+        }
+        // Share sheet
+        .sheet(item: $shareItem) { item in
+            ShareSheet(activityItems: [item.content])
+                .presentationDetents([.medium])
         }
         // Emoji overlays
         .overlay(alignment: .bottom) {
@@ -216,7 +224,10 @@ struct CCResonanceView: View {
                     .buttonStyle(.plain)
 
                     // "分享共鸣"
-                    Button(action: {}) {
+                    Button(action: {
+                        CCHaptic.light()
+                        shareItem = item
+                    }) {
                         Label("分享共鸣", systemImage: "square.and.arrow.up")
                             .font(.system(size: 12))
                             .foregroundColor(theme.primaryLight)
@@ -366,7 +377,8 @@ struct CCResonanceView: View {
 
             Button(action: {
                 CCHaptic.success()
-                viewModel.hugResonance(item)
+                let msg = resonateMessage.trimmingCharacters(in: .whitespaces)
+                viewModel.hugResonance(item, message: msg.isEmpty ? nil : msg)
                 resonateTarget = nil
                 resonateMessage = ""
             }) {
@@ -387,4 +399,16 @@ struct CCResonanceView: View {
         .padding(theme.spacingLG)
         .background(theme.background)
     }
+}
+
+// MARK: - Share Sheet
+
+private struct ShareSheet: UIViewControllerRepresentable {
+    let activityItems: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }

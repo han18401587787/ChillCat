@@ -35,10 +35,6 @@ struct CCAIListenerCard: View {
                 responsesSection
             }
 
-            // MARK: - Error State
-            if let error = viewModel.errorMessage {
-                errorLabel(error)
-            }
         }
         .padding(theme.spacingMD)
         .background(theme.cardBackground)
@@ -245,22 +241,5 @@ struct CCAIListenerCard: View {
             .cornerRadius(theme.radiusSM)
         }
         .buttonStyle(.plain)
-    }
-
-    // MARK: - Error
-
-    private func errorLabel(_ message: String) -> some View {
-        HStack(spacing: theme.spacingSM) {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 14))
-                .foregroundColor(theme.error)
-            Text(message)
-                .font(.system(size: 14))
-                .foregroundColor(theme.error)
-        }
-        .padding(theme.spacingMD)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(theme.error.opacity(0.08))
-        .cornerRadius(theme.radiusMD)
     }
 }

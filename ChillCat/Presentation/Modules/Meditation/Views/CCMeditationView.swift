@@ -46,6 +46,7 @@ struct CCMeditationView: View {
                 medCard(session: CCMeditationSession.presets[2])
             }.padding()
         }.background(theme.background).navigationTitle("冥想放松")
+        .onDisappear { timerRunning = false; breathing = false }
         .onReceive(timer) { _ in
             guard timerRunning else { return }
             secondsElapsed += 1
@@ -57,9 +58,7 @@ struct CCMeditationView: View {
     }
 
     func medCard(session: CCMeditationSession) -> some View {
-        Button {
-            coordinator.navigate(to: .meditationPlayer(session: session))
-        } label: {
+        NavigationLink(value: CCAppRoute.meditationPlayer(session: session)) {
             HStack(spacing: 16) {
                 Image(systemName: session.category.iconName)
                     .font(.system(size: 28))

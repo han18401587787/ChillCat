@@ -2,18 +2,25 @@ import SwiftUI
 
 struct CCPrivacyView: View {
     @Environment(\.ccAppTheme) private var theme
-    @State private var showMood = true
-    @State private var showJournal = false
-    @State private var allowDataCollection = true
+    @State private var viewModel = CCSettingsViewModel()
 
     var body: some View {
         List {
             Section("情绪数据") {
-                Toggle("展示情绪状态", isOn: $showMood)
-                Toggle("公开情绪日记", isOn: $showJournal)
+                Toggle("展示情绪状态", isOn: Binding(
+                    get: { viewModel.showMood },
+                    set: { viewModel.showMood = $0 }
+                ))
+                Toggle("公开情绪日记", isOn: Binding(
+                    get: { viewModel.showJournal },
+                    set: { viewModel.showJournal = $0 }
+                ))
             }
             Section("数据收集") {
-                Toggle("允许匿名数据收集", isOn: $allowDataCollection)
+                Toggle("允许匿名数据收集", isOn: Binding(
+                    get: { viewModel.allowDataCollection },
+                    set: { viewModel.allowDataCollection = $0 }
+                ))
                 Text("用于改善绪安的情绪分析准确度，不包含个人身份信息").font(.system(size: 12)).foregroundColor(theme.textMuted)
             }
             Section("加密") {
@@ -22,7 +29,8 @@ struct CCPrivacyView: View {
             }
             Section {
                 Label("匿名已开启", systemImage: "theatermasks.fill").foregroundColor(Color(hex: "5A7A8A"))
-                Button("切换为实名") {}.foregroundColor(Color(hex: "E57373"))
+                Button("切换为实名") { viewModel.initiateRealNameFlow() }
+                    .foregroundColor(Color(hex: "E57373"))
             }
         }
         .navigationTitle("隐私设置")

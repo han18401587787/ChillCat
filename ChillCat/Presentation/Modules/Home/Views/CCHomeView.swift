@@ -15,30 +15,34 @@ struct CCHomeView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: theme.spacingLG) {
-                // 头部问候
-                headerSection
-
-                // AI 情绪倾听官
-                CCAIListenerCard()
-
-                // 情绪选择
-                if !viewModel.hasCheckedIn {
-                    emotionCheckInSection
+                if viewModel.isLoading {
+                    loadingContent
                 } else {
-                    checkedInCard
+                    // 头部问候
+                    headerSection
+
+                    // AI 情绪倾听官
+                    CCAIListenerCard()
+
+                    // 情绪选择
+                    if !viewModel.hasCheckedIn {
+                        emotionCheckInSection
+                    } else {
+                        checkedInCard
+                    }
+
+                    // 今日任务
+                    dailyTaskSection
+
+                    // 本周回顾
+                    weeklyReviewCard
+
+                    // 探索更多
+                    exploreSection
+
+                    // 每日语录
+                    quoteCard
                 }
-
-                // 今日任务
-                dailyTaskSection
-
-                // 本周回顾
-                weeklyReviewCard
-
-                // 探索更多
-                exploreSection
-
-                // 每日语录
-                quoteCard
             }
             .padding()
         }
@@ -46,6 +50,27 @@ struct CCHomeView: View {
         .navigationTitle("绪安")
         .navigationBarTitleDisplayMode(.inline)
         .task { await viewModel.loadData() }
+    }
+
+    // MARK: - Loading Skeleton
+
+    private var loadingContent: some View {
+        VStack(spacing: theme.spacingLG) {
+            headerSection
+            skeletonCard(height: 120)
+            skeletonCard(height: 200)
+            skeletonCard(height: 48)
+            skeletonCard(height: 100)
+            skeletonCard(height: 300)
+            skeletonCard(height: 100)
+        }
+    }
+
+    private func skeletonCard(height: CGFloat) -> some View {
+        RoundedRectangle(cornerRadius: theme.radiusMD)
+            .fill(theme.surface)
+            .frame(height: height)
+            .opacity(0.5)
     }
 
     // MARK: - Header

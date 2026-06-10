@@ -9,9 +9,10 @@ struct CCLoginView: View {
     )
 
     var body: some View {
-        VStack(spacing: 24) {
+        ScrollView {
+            VStack(spacing: 24) {
             Spacer()
-            Image(systemName: "leaf.circle.fill").font(.system(size: 56)).foregroundColor(Color(hex: "5A7A8A"))
+            Image(systemName: "leaf.circle.fill").font(.system(size: 56)).foregroundColor(theme.primary)
             Text(viewModel.isRegisterMode ? "注册绪安" : "登录绪安").font(.system(size: 24, weight: .bold))
             Text(viewModel.isRegisterMode ? "创建你的绪安账户" : "输入你的用户名和密码").font(.system(size: 15)).foregroundColor(.secondary)
 
@@ -40,7 +41,7 @@ struct CCLoginView: View {
                 Text(viewModel.isLoading ? "请稍候..." : (viewModel.isRegisterMode ? "注册" : "登录"))
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity).padding(.vertical, 16)
-                    .background(Color(hex: viewModel.isFormValid ? "5A7A8A" : "B8D4E3"))
+                    .background(viewModel.isFormValid ? theme.primary : theme.primaryMuted)
                     .foregroundColor(.white).cornerRadius(12)
             }.padding(.horizontal, 32).disabled(!viewModel.isFormValid || viewModel.isLoading)
 
@@ -50,18 +51,22 @@ struct CCLoginView: View {
             }) {
                 Text(viewModel.isRegisterMode ? "已有账号？去登录" : "没有账号？去注册")
                     .font(.system(size: 14))
-                    .foregroundColor(Color(hex: "5A7A8A"))
+                    .foregroundColor(theme.primary)
             }
 
             HStack(spacing: 4) {
                 Text("使用即代表同意").font(.system(size: 12)).foregroundColor(.secondary)
-                Text("《用户协议》").font(.system(size: 12)).foregroundColor(Color(hex: "5A7A8A"))
+                Text("《用户协议》").font(.system(size: 12)).foregroundColor(theme.primary)
+                    .onTapGesture { coordinator.navigate(to: .userAgreement) }
                 Text("和").font(.system(size: 12)).foregroundColor(.secondary)
-                Text("《隐私政策》").font(.system(size: 12)).foregroundColor(Color(hex: "5A7A8A"))
+                Text("《隐私政策》").font(.system(size: 12)).foregroundColor(theme.primary)
+                    .onTapGesture { coordinator.navigate(to: .privacyPolicy) }
             }
             Spacer()
+            }
         }
-        .background(Color(hex: "F9F6F2"))
+        .scrollDismissesKeyboard(.interactively)
+        .background(theme.background)
         .onChange(of: viewModel.isLoggedIn) { _, newValue in
             if newValue { coordinator.isLoggedIn = true }
         }

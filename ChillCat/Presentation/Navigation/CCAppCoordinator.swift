@@ -20,7 +20,6 @@ final class CCAppCoordinator {
     @ViewBuilder
     func buildView(for route: CCAppRoute) -> some View {
         switch route {
-        case .welcome: CCWelcomeView()
         case .login:   CCLoginView()
         case .home:    CCHomeView()
         case .treeHole: CCTreeHoleView()
@@ -39,9 +38,10 @@ final class CCAppCoordinator {
         case .faq: CCFAQView()
         case .deleteAccount: CCDeleteAccountView()
         case .aiListener: CCAIListenerCard()
-        case .resonanceWall: CCTreeHoleView()
-        case .resonanceDetail(let p): CCTreeHolePostDetailView(post: mapToResonancePost(p))
+        case .resonanceWall: CCResonanceView()
+        case .resonanceDetail(let p): CCResonanceDetailView(item: p)
         case .encourageChain: CCEncourageChainView()
+        case .encourageChainDetail(let chainId): CCEncourageChainView(specificChainId: chainId)
         case .myEncourageChains: CCMyEncourageChainsView()
         case .emotionDecoder: CCEmotionDecoderView()
         case .postDetail(let p): CCTreeHolePostDetailView(post: p)
@@ -56,12 +56,4 @@ final class CCAppCoordinator {
         }
     }
 
-    private func mapToResonancePost(_ item: CCResonanceDisplayItem) -> CCResonancePost {
-        CCResonancePost(
-            id: item.id, content: item.content, emotion: item.emotion,
-            emotionColor: item.emotionColor, resonanceCount: item.resonanceCount,
-            isAnonymous: item.isAnonymous, displayName: item.displayName,
-            createdAt: item.createdAt
-        )
-    }
 }

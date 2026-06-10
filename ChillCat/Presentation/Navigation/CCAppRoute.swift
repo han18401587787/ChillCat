@@ -46,7 +46,6 @@ struct CCResonanceDisplayItem: Hashable, Identifiable {
 }
 
 enum CCAppRoute: Hashable, Identifiable {
-    case welcome
     case login
     case home
     case treeHole
@@ -68,6 +67,7 @@ enum CCAppRoute: Hashable, Identifiable {
     case resonanceWall
     case resonanceDetail(CCResonanceDisplayItem)
     case encourageChain
+    case encourageChainDetail(chainId: Int64)
     case myEncourageChains
     case emotionDecoder
     case voiceEmotionDiary
@@ -82,7 +82,6 @@ enum CCAppRoute: Hashable, Identifiable {
 
     var id: String {
         switch self {
-        case .welcome: return "welcome"
         case .login: return "login"
         case .home: return "home"
         case .treeHole: return "treeHole"
@@ -104,6 +103,7 @@ enum CCAppRoute: Hashable, Identifiable {
         case .resonanceWall: return "resonanceWall"
         case .resonanceDetail(let r): return "resonanceDetail_\(r.id)"
         case .encourageChain: return "encourageChain"
+        case .encourageChainDetail(let chainId): return "encourageChainDetail_\(chainId)"
         case .myEncourageChains: return "myEncourageChains"
         case .emotionDecoder: return "emotionDecoder"
         case .voiceEmotionDiary: return "voiceEmotionDiary"

@@ -142,8 +142,6 @@ struct CCTreeHolePostDetailView: View {
 
                 Button(action: {
                     CCHaptic.success()
-                    resonanceCount += 1
-                    didResonate = true
                     let msg = replyMessage
                     if !msg.isEmpty {
                         let newReply = CCXuanAPI.ResonanceReply(
@@ -155,7 +153,12 @@ struct CCTreeHolePostDetailView: View {
                     }
                     Task {
                         guard let id = Int64(post.id) else { return }
-                        try? await CCXuanAPI.hugResonance(id: id, message: msg.isEmpty ? nil : msg)
+                        do {
+                            try await CCXuanAPI.hugResonance(id: id, message: msg.isEmpty ? nil : msg)
+                            resonanceCount += 1
+                            didResonate = true
+                            NotificationCenter.default.post(name: .treeHoleDidUpdate, object: nil)
+                        } catch {}
                     }
                     replyMessage = ""
                     showReplySheet = false

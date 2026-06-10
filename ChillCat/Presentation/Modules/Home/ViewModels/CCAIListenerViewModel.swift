@@ -25,8 +25,6 @@ final class CCAIListenerViewModel {
     var inputText: String = ""
     var aiResponses: [CCAIResponseMessage] = []
     var isLoading = false
-    var errorMessage: String?
-    var hasReceivedResponse = false
 
     /// Placeholder 轮播
     var currentPlaceholder: String = "随便说说，我在听…"
@@ -87,8 +85,6 @@ final class CCAIListenerViewModel {
 
         // Reset state
         aiResponses = []
-        errorMessage = nil
-        hasReceivedResponse = false
         isLoading = true
         inputText = ""
 
@@ -107,7 +103,6 @@ final class CCAIListenerViewModel {
             await deliverResponses(fallbackTexts)
         }
         isLoading = false
-        hasReceivedResponse = true
     }
 
     /// 逐条动画出现（每条延迟 0.8s）
@@ -146,7 +141,5 @@ final class CCAIListenerViewModel {
         inputText = ""
         aiResponses = []
         isLoading = false
-        errorMessage = nil
-        hasReceivedResponse = false
     }
 }

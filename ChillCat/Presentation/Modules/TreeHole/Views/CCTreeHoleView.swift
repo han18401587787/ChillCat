@@ -67,6 +67,9 @@ struct CCTreeHoleView: View {
                 .presentationDetents([.height(260)])
         }
         .task { await viewModel.loadPosts() }
+        .onReceive(NotificationCenter.default.publisher(for: .treeHoleDidUpdate)) { _ in
+            Task { await viewModel.refresh() }
+        }
     }
 
     // MARK: - Header

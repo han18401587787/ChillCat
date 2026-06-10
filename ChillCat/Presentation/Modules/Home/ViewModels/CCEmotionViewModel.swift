@@ -20,6 +20,9 @@ final class CCEmotionViewModel {
     var dailyTaskCompleted: Bool = false
     var quote: String = ""
 
+    private let dailyTaskKey = "CCDailyTaskCompleted"
+    private let dailyTaskDateKey = "CCDailyTaskDate"
+
     private let quotes = [
         "允许自己偶尔脆弱，不是软弱，是给自己喘息的机会。",
         "没有人规定你一定要在某个年纪做到某件事。慢一点，也是在前进。",
@@ -33,7 +36,20 @@ final class CCEmotionViewModel {
 
     /// 由 View.task 调用，避免阻塞 init
     func loadData() async {
+        isLoading = true
+        reloadDailyTaskState()
         await loadToday()
+        isLoading = false
+    }
+
+    private func reloadDailyTaskState() {
+        guard UserDefaults.standard.bool(forKey: dailyTaskKey),
+              let savedDate = UserDefaults.standard.object(forKey: dailyTaskDateKey) as? Date,
+              Calendar.current.isDate(savedDate, inSameDayAs: Date()) else {
+            dailyTaskCompleted = false
+            return
+        }
+        dailyTaskCompleted = true
     }
 
     func loadToday() async {
@@ -82,5 +98,7 @@ final class CCEmotionViewModel {
 
     func completeDailyTask() {
         dailyTaskCompleted = true
+        UserDefaults.standard.set(true, forKey: dailyTaskKey)
+        UserDefaults.standard.set(Date(), forKey: dailyTaskDateKey)
     }
 }

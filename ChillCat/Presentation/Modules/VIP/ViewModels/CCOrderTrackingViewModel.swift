@@ -13,6 +13,8 @@ import SwiftUI
 @Observable
 final class CCOrderTrackingViewModel {
     var transactions: [CCTransaction] = []
+    var isLoading = false
+    var errorMessage: String?
 
     private let storageKey = "cc_transaction_history"
 
@@ -41,13 +43,19 @@ final class CCOrderTrackingViewModel {
     }
 
     func load() {
-        guard let data = UserDefaults.standard.data(forKey: storageKey),
-              let decoded = try? JSONDecoder().decode([CCTransaction].self, from: data)
-        else {
+        isLoading = true
+        defer { isLoading = false }
+
+        guard let data = UserDefaults.standard.data(forKey: storageKey) else {
             transactions = []
             return
         }
-        transactions = decoded
+        do {
+            transactions = try JSONDecoder().decode([CCTransaction].self, from: data)
+        } catch {
+            errorMessage = "加载购买记录失败"
+            transactions = []
+        }
     }
 
     private func save() {
