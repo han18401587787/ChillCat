@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CCTreeHoleView: View {
     @State private var viewModel = CCTreeHoleViewModel()
+    @State private var showEmoji = false
     @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(\.ccAppTheme) private var theme
     @FocusState private var isFocused: Bool
@@ -39,6 +40,7 @@ struct CCTreeHoleView: View {
                             }
                         }.pickerStyle(.segmented)
                         Spacer()
+                        Button(action: { showEmoji.toggle() }) { Image(systemName: "face.smiling").font(.system(size: 20)).foregroundColor(Color(hex: "5A7A8A")) }.padding(.trailing, 8)
                         Button(action: { CCHaptic.medium(); viewModel.publishPost(); isFocused = false }) {
                             Image(systemName: "paperplane.fill").font(.system(size: 18))
                                 .foregroundColor(.white).padding(10)
@@ -81,6 +83,6 @@ struct CCTreeHoleView: View {
                 HStack { Spacer(); ProgressView(); Spacer() }.padding()
             }
         }
-        .background(Color(hex: "F9F6F2")).task { await viewModel.loadPosts() }
+        .background(Color(hex: "F9F6F2")).overlay(alignment: .bottom) { if showEmoji { CCEmojiPicker(isShowing: $showEmoji) { emoji in viewModel.newPostText += emoji }.frame(height: 300).transition(.move(edge: .bottom)) } }.animation(.easeInOut, value: showEmoji).task { await viewModel.loadPosts() }
     }
 }
