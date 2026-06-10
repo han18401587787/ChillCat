@@ -8,24 +8,50 @@ final class CCTreeHoleViewModel {
     var newPostText: String = ""
     var selectedScope: CCPostScope = .public
     var isLoading = false
+    var isRefreshing = false
+    var isLoadingMore = false
+    var hasMore = true
+    private var currentPage = 1
 
     init() {}
 
     func loadPosts() async {
-        isLoading = true
+        isLoading = true; currentPage = 1
         do {
-            let page = try await CCXuanAPI.listPosts()
-            posts = page.list.map { p in
-                CCTreeHolePost(id: String(p.id), content: p.content,
-                    scope: p.scope == "public" ? .public : .comforters,
-                    isAnonymous: p.isAnonymous, hugs: Int(p.hugs),
-                    createdAt: ISO8601DateFormatter().date(from: p.createdAt) ?? Date())
-            }
+            let page = try await CCXuanAPI.listPosts(page: 1)
+            posts = mapPosts(page.list)
+            hasMore = page.total > posts.count
             if posts.isEmpty { posts = CCTreeHolePost.samplePosts }
-        } catch {
-            posts = CCTreeHolePost.samplePosts
-        }
+        } catch { if posts.isEmpty { posts = CCTreeHolePost.samplePosts } }
         isLoading = false
+    }
+
+    func refresh() async {
+        isRefreshing = true; currentPage = 1
+        do {
+            let page = try await CCXuanAPI.listPosts(page: 1)
+            posts = mapPosts(page.list)
+            hasMore = page.total > posts.count
+        } catch {}
+        isRefreshing = false
+    }
+
+    func loadMore() async {
+        guard !isLoadingMore, hasMore else { return }
+        isLoadingMore = true; currentPage += 1
+        do {
+            let page = try await CCXuanAPI.listPosts(page: currentPage)
+            posts += mapPosts(page.list)
+            hasMore = page.total > posts.count
+        } catch { currentPage -= 1 }
+        isLoadingMore = false
+    }
+
+    private func mapPosts(_ list: [CCXuanAPI.PostResponse]) -> [CCTreeHolePost] {
+        list.map { p in CCTreeHolePost(id: String(p.id), content: p.content,
+            scope: p.scope == "public" ? .public : .comforters,
+            isAnonymous: p.isAnonymous, hugs: Int(p.hugs),
+            createdAt: ISO8601DateFormatter().date(from: p.createdAt) ?? Date()) }
     }
 
     func toggleAnonymous() { isAnonymous.toggle() }

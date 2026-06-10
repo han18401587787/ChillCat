@@ -78,6 +78,7 @@ struct CCJournalView: View {
                 }
             }.padding()
         }.background(theme.background).navigationTitle("情绪日记")
+        .refreshable { isLoading = true; await loadJournal() }
         .task { await loadJournal() }
     }
 

@@ -72,8 +72,14 @@ struct CCTreeHoleView: View {
                     }
                 }
                 .padding(.vertical, 4)
+                .onAppear { if post.id == viewModel.posts.last?.id { Task { await viewModel.loadMore() } } }
             }
             .listStyle(.plain)
+            .refreshable { await viewModel.refresh() }
+
+            if viewModel.isLoadingMore {
+                HStack { Spacer(); ProgressView(); Spacer() }.padding()
+            }
         }
         .background(Color(hex: "F9F6F2")).task { await viewModel.loadPosts() }
     }
