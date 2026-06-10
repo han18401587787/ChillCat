@@ -31,12 +31,14 @@ final class CCCoursesViewModel {
     ]
 
     func loadCourses() async {
+        print("🔄 [Courses] loadCourses start")
         loadState = .loading
         do {
             let all = try await CCXuanAPI.getCourses()
             if all.isEmpty {
                 loadState = .empty
                 categories = []
+                print("✅ [Courses] loadCourses done: empty")
             } else {
                 let grouped = Dictionary(grouping: all, by: { $0.category })
                 categories = grouped.map { (name, items) in
@@ -44,10 +46,12 @@ final class CCCoursesViewModel {
                     return (name, icon, color, items)
                 }
                 loadState = .loaded
+                print("✅ [Courses] loadCourses done: \(all.count) courses, \(categories.count) categories")
             }
         } catch {
             loadState = .error(error.localizedDescription)
             categories = []
+            print("❌ [Courses] loadCourses failed: \(error)")
         }
     }
 }

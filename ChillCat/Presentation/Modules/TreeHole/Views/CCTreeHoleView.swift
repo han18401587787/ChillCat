@@ -23,6 +23,14 @@ struct CCTreeHoleView: View {
                 Spacer()
                 CCLoadingView(message: "正在连接共鸣墙…")
                 Spacer()
+            } else if let error = viewModel.errorMessage, viewModel.posts.isEmpty {
+                Spacer()
+                CCEmptyStateView(
+                    title: "加载失败",
+                    message: error,
+                    imageName: "wifi.slash"
+                )
+                Spacer()
             } else if viewModel.posts.isEmpty {
                 Spacer()
                 CCEmptyStateView(

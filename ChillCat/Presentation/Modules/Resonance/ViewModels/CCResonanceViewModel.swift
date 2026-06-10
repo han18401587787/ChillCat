@@ -23,6 +23,7 @@ final class CCResonanceViewModel {
     var isAnonymous: Bool = true
 
     func loadResonance() async {
+        print("🔄 [Resonance] loadResonance start")
         isLoading = true; error = nil; currentPage = 1
         do {
             let page = try await CCXuanAPI.listResonance(page: 1)
@@ -30,42 +31,54 @@ final class CCResonanceViewModel {
             onlineCount = page.onlineCount
             hasMore = page.total > resonanceItems.count
             if resonanceItems.isEmpty { resonanceItems = [] }
+            print("✅ [Resonance] loadResonance done: \(resonanceItems.count) items, \(onlineCount) online")
         } catch {
             self.error = error
             if resonanceItems.isEmpty { resonanceItems = [] }
+            print("❌ [Resonance] loadResonance failed: \(error)")
         }
         isLoading = false
     }
 
     func refresh() async {
+        print("🔄 [Resonance] refresh start")
         isRefreshing = true; error = nil; currentPage = 1
         do {
             let page = try await CCXuanAPI.listResonance(page: 1)
             resonanceItems = mapItems(page.list)
             onlineCount = page.onlineCount
             hasMore = page.total > resonanceItems.count
-        } catch { self.error = error }
+            print("✅ [Resonance] refresh done: \(resonanceItems.count) items")
+        } catch {
+            self.error = error
+            print("❌ [Resonance] refresh failed: \(error)")
+        }
         isRefreshing = false
     }
 
     func loadMore() async {
         guard !isLoadingMore, hasMore else { return }
+        print("🔄 [Resonance] loadMore start page=\(currentPage + 1)")
         isLoadingMore = true; currentPage += 1
         do {
             let page = try await CCXuanAPI.listResonance(page: currentPage)
             resonanceItems += mapItems(page.list)
             hasMore = page.total > resonanceItems.count
-        } catch { currentPage -= 1 }
+            print("✅ [Resonance] loadMore done: +\(page.list.count) items, total=\(resonanceItems.count)")
+        } catch {
+            currentPage -= 1
+            print("❌ [Resonance] loadMore failed: \(error)")
+        }
         isLoadingMore = false
     }
 
-    private func mapItems(_ list: [CCXuanAPI.ResonanceItem]) -> [CCResonanceDisplayItem] {
+    private func mapItems(_ list: [CCXuanAPI.PostResponse]) -> [CCResonanceDisplayItem] {
         list.map { item in
             CCResonanceDisplayItem(
                 id: String(item.id),
                 content: item.content,
-                emotion: item.emotion,
-                emotionColor: item.emotionColor,
+                emotion: "",
+                emotionColor: ""Color,
                 isAnonymous: item.isAnonymous,
                 displayName: item.displayName,
                 resonanceCount: Int(item.resonanceCount),
@@ -94,9 +107,10 @@ final class CCResonanceViewModel {
                 let _ = try await CCXuanAPI.createResonancePost(
                     emotion: "平静", content: text, isAnonymous: anon
                 )
+                print("✅ [Resonance] publishPost done")
                 await loadResonance()
             } catch {
-                // Silently handle — the post list stays
+                print("❌ [Resonance] publishPost failed: \(error)")
             }
         }
     }

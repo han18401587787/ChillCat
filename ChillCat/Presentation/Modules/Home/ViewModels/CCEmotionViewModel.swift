@@ -53,6 +53,7 @@ final class CCEmotionViewModel {
     }
 
     func loadToday() async {
+        print("🔄 [Emotion] loadToday start")
         do {
             let today = try await CCXuanAPI.getToday()
             if today.id > 0 {
@@ -64,16 +65,23 @@ final class CCEmotionViewModel {
             }
             streakDays = Int(today.streakDays)
             totalDays = Int(today.streakDays)
-        } catch { weeklyNote = "这周你记录了 5 次打卡。你已经很努力了。" }
+            print("✅ [Emotion] loadToday done: checkedIn=\(hasCheckedIn), streak=\(streakDays)")
+        } catch {
+            weeklyNote = "这周你记录了 5 次打卡。你已经很努力了。"
+            print("❌ [Emotion] loadToday failed: \(error)")
+        }
         await loadWeeklyStats()
     }
 
     private func loadWeeklyStats() async {
+        print("🔄 [Emotion] loadWeeklyStats start")
         do {
             let stats = try await CCXuanAPI.getWeeklyStats()
             weeklyNote = "本周记录 \(stats.totalCount) 次，你的情绪以「\(stats.topEmotion)」为主"
+            print("✅ [Emotion] loadWeeklyStats done: \(stats.totalCount) entries, top=\(stats.topEmotion)")
         } catch {
             weeklyNote = "开始记录你的第一份情绪吧"
+            print("❌ [Emotion] loadWeeklyStats failed: \(error)")
         }
     }
 

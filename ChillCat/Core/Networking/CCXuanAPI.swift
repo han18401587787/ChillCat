@@ -17,7 +17,8 @@ enum CCXuanAPI {
         return Session(
             configuration: config,
             interceptor: interceptor,
-            serverTrustManager: ServerTrustManager(allHostsMustBeEvaluated: false, evaluators: [:])
+            serverTrustManager: ServerTrustManager(allHostsMustBeEvaluated: false, evaluators: [:]),
+            eventMonitors: [XuanNetworkLogger()]
         )
     }()
 
@@ -65,8 +66,19 @@ enum CCXuanAPI {
     }
     static func listPosts(page: Int = 1) async throws -> PostPage { try await get("/api/v1/treehole/posts?page=\(page)") }
     static func hugPost(id: Int64) async throws {
-        let _ = try await session.request(fullURL("/api/v1/treehole/posts/\(id)/hug"), method: .post)
-            .validate().serializingData().value
+        let path = "/api/v1/treehole/posts/\(id)/hug"
+        let start = CFAbsoluteTimeGetCurrent()
+        print("🌐 [API] → POST \(path)")
+        do {
+            let _ = try await session.request(fullURL(path), method: .post)
+                .validate().serializingData().value
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+            print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
+        } catch {
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            throw error
+        }
     }
 
     // MARK: - Courses
@@ -151,19 +163,30 @@ enum CCXuanAPI {
     struct ResonanceReply: Decodable, Identifiable { let id: Int64; let content: String; let createdAt: String }
         struct ResonancePostRequest: Encodable { let emotion: String; let content: String; let isAnonymous: Bool }
 
-    static func listResonance(page: Int = 1) async throws -> ResonancePage {
-        try await get("/api/v1/resonance?page=\(page)")
+    static func listResonance(page: Int = 1) async throws -> PostPage {
+        try await get("/api/v1/treehole?page=\(page)")
     }
     static func getResonanceDetail(id: Int64) async throws -> ResonanceDetailResponse {
-        try await get("/api/v1/resonance/\(id)")
+        try await get("/api/v1/treehole/\(id)")
     }
     static func hugResonance(id: Int64, message: String? = nil) async throws {
-        let _ = try await session.request(fullURL("/api/v1/resonance/\(id)/hug"), method: .post,
-            parameters: ["message": message].compactMapValues { $0 }, encoder: JSONParameterEncoder.default)
-            .validate().serializingData().value
+        let path = "/api/v1/treehole/\(id)/hug"
+        let start = CFAbsoluteTimeGetCurrent()
+        print("🌐 [API] → POST \(path)")
+        do {
+            let _ = try await session.request(fullURL(path), method: .post,
+                parameters: ["message": message].compactMapValues { $0 }, encoder: JSONParameterEncoder.default)
+                .validate().serializingData().value
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+            print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
+        } catch {
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            throw error
+        }
     }
     static func createResonancePost(emotion: String, content: String, isAnonymous: Bool) async throws -> ResonanceItem {
-        try await post("/api/v1/resonance/posts", body: ResonancePostRequest(emotion: emotion, content: content, isAnonymous: isAnonymous))
+        try await post("/api/v1/treehole/posts", body: ResonancePostRequest(emotion: emotion, content: content, isAnonymous: isAnonymous))
     }
 
     // MARK: - Encourage Chain (鼓励链)
@@ -196,17 +219,49 @@ enum CCXuanAPI {
     }
 
     private static func get<T: Decodable>(_ path: String) async throws -> T {
-        let data = try await session.request(fullURL(path)).validate().serializingData().value
-        let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
-        guard resp.isSuccess, let d = resp.data else { throw CCAPIError.badRequest }
-        return d
+        let start = CFAbsoluteTimeGetCurrent()
+        print("🌐 [API] → GET \(path)")
+        do {
+            let data = try await session.request(fullURL(path)).validate().serializingData().value
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+            let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
+            guard resp.isSuccess, let d = resp.data else { throw CCAPIError.badRequest }
+            let preview = String(data: data, encoding: .utf8)?.prefix(200) ?? ""
+            print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
+            if !preview.isEmpty { print("   📦 \(preview)") }
+            return d
+        } catch {
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            throw error
+        }
     }
 
     private static func post<T: Decodable, B: Encodable>(_ path: String, body: B?) async throws -> T {
-        let data = try await session.request(fullURL(path), method: .post, parameters: body, encoder: JSONParameterEncoder.default).validate().serializingData().value
-        let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
-        guard resp.isSuccess, let d = resp.data else { throw CCAPIError.badRequest }
-        return d
+        let start = CFAbsoluteTimeGetCurrent()
+        let bodyPreview: String = {
+            guard let body else { return "nil" }
+            let encoder = JSONEncoder()
+            guard let json = try? encoder.encode(body),
+                  let str = String(data: json, encoding: .utf8) else { return "<encodable>" }
+            return String(str.prefix(200))
+        }()
+        print("🌐 [API] → POST \(path)")
+        if body != nil { print("   📤 \(bodyPreview)") }
+        do {
+            let data = try await session.request(fullURL(path), method: .post, parameters: body, encoder: JSONParameterEncoder.default).validate().serializingData().value
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+            let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
+            guard resp.isSuccess, let d = resp.data else { throw CCAPIError.badRequest }
+            let preview = String(data: data, encoding: .utf8)?.prefix(200) ?? ""
+            print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
+            if !preview.isEmpty { print("   📦 \(preview)") }
+            return d
+        } catch {
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            throw error
+        }
     }
 }
 
@@ -238,13 +293,43 @@ final class XuanAuthInterceptor: RequestInterceptor {
 import OSLog
 final class XuanNetworkLogger: EventMonitor {
     private let logger = Logger(subsystem: "app.xuanpeace", category: "API")
+    private var requestStartTimes: [UUID: CFAbsoluteTime] = [:]
+    private let lock = NSLock()
 
     func request(_ request: Request, didCreateURLRequest urlRequest: URLRequest) {
-        logger.debug("→ \(urlRequest.httpMethod ?? "?") \(urlRequest.url?.path ?? "")")
+        lock.lock()
+        requestStartTimes[request.id] = CFAbsoluteTimeGetCurrent()
+        lock.unlock()
+
+        let method = urlRequest.httpMethod ?? "?"
+        let fullPath = urlRequest.url?.absoluteString ?? urlRequest.url?.path ?? ""
+        var msg = "→ \(method) \(fullPath)"
+
+        if let body = urlRequest.httpBody,
+           let bodyStr = String(data: body, encoding: .utf8)?.prefix(500) {
+            msg += "\n  Body: \(bodyStr)"
+        }
+        logger.debug("\(msg)")
     }
 
     func request(_ request: Request, didCompleteTask task: URLSessionTask, with error: AFError?) {
-        if let e = error { logger.error("✗ \(task.originalRequest?.url?.path ?? ""): \(e.localizedDescription)") }
-        else { logger.debug("✓ \(task.originalRequest?.url?.path ?? "") \(task.response.map { "\(($0 as? HTTPURLResponse)?.statusCode ?? 0)" } ?? "")") }
+        let elapsed: Int = {
+            lock.lock()
+            let start = requestStartTimes.removeValue(forKey: request.id)
+            lock.unlock()
+            guard let start else { return -1 }
+            return Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+        }()
+
+        let fullPath = task.originalRequest?.url?.absoluteString
+            ?? task.originalRequest?.url?.path ?? ""
+
+        if let e = error {
+            let statusCode = (task.response as? HTTPURLResponse)?.statusCode ?? 0
+            logger.error("✗ \(statusCode) \(fullPath) (\(elapsed)ms): \(e.localizedDescription)")
+        } else {
+            let statusCode = (task.response as? HTTPURLResponse)?.statusCode ?? 0
+            logger.debug("✓ \(statusCode) \(fullPath) (\(elapsed)ms)")
+        }
     }
 }

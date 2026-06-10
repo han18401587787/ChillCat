@@ -18,52 +18,58 @@ final class CCTreeHoleViewModel {
     init() {}
 
     func loadPosts() async {
+        print("🔄 [TreeHole] loadPosts start")
         isLoading = true; currentPage = 1
         do {
-            let page = try await CCXuanAPI.listResonance(page: 1)
+            let page = try await CCXuanAPI.listPosts(page: 1)
             posts = mapPosts(page.list)
-            onlineCount = page.onlineCount
             hasMore = page.total > posts.count
+            print("✅ [TreeHole] loadPosts done: \(posts.count) posts, \(onlineCount) online")
         } catch {
             errorMessage = "加载失败，请重试"
+            print("❌ [TreeHole] loadPosts failed: \(error)")
         }
         isLoading = false
     }
 
     func refresh() async {
+        print("🔄 [TreeHole] refresh start")
         isRefreshing = true; currentPage = 1
         do {
-            let page = try await CCXuanAPI.listResonance(page: 1)
+            let page = try await CCXuanAPI.listPosts(page: 1)
             posts = mapPosts(page.list)
-            onlineCount = page.onlineCount
             hasMore = page.total > posts.count
+            print("✅ [TreeHole] refresh done: \(posts.count) posts")
         } catch {
             errorMessage = "刷新失败，请重试"
+            print("❌ [TreeHole] refresh failed: \(error)")
         }
         isRefreshing = false
     }
 
     func loadMore() async {
         guard !isLoadingMore, hasMore else { return }
+        print("🔄 [TreeHole] loadMore start page=\(currentPage + 1)")
         isLoadingMore = true; currentPage += 1
         do {
-            let page = try await CCXuanAPI.listResonance(page: currentPage)
+            let page = try await CCXuanAPI.listPosts(page: currentPage)
             posts += mapPosts(page.list)
-            onlineCount = page.onlineCount
             hasMore = page.total > posts.count
+            print("✅ [TreeHole] loadMore done: +\(page.list.count) posts, total=\(posts.count)")
         } catch {
             currentPage -= 1
             errorMessage = "加载更多失败，请重试"
+            print("❌ [TreeHole] loadMore failed: \(error)")
         }
         isLoadingMore = false
     }
 
-    private func mapPosts(_ list: [CCXuanAPI.ResonanceItem]) -> [CCResonancePost] {
+    private func mapPosts(_ list: [CCXuanAPI.PostResponse]) -> [CCResonancePost] {
         list.map { p in
             CCResonancePost(
                 id: String(p.id), content: p.content,
-                emotion: p.emotion, emotionColor: p.emotionColor,
-                resonanceCount: Int(p.resonanceCount),
+                emotion: "", emotionColor: "primaryMuted",
+                resonanceCount: Int(p.hugs),
                 isAnonymous: p.isAnonymous, displayName: p.displayName,
                 createdAt: ISO8601DateFormatter().date(from: p.createdAt) ?? Date()
             )
@@ -79,10 +85,12 @@ final class CCTreeHoleViewModel {
         Task {
             do {
                 let _ = try await CCXuanAPI.createPost(content: text, scope: scope == .public ? "public" : "comforters", isAnonymous: anon)
+                print("✅ [TreeHole] publishPost done")
                 await loadPosts()
             } catch {
                 newPostText = text
                 errorMessage = "发布失败，请重试"
+                print("❌ [TreeHole] publishPost failed: \(error)")
             }
         }
     }
@@ -96,8 +104,10 @@ final class CCTreeHoleViewModel {
                     posts[idx].resonanceCount += 1
                     posts[idx].hasResonated = true
                 }
+                print("✅ [TreeHole] resonatePost done id=\(id)")
             } catch {
                 errorMessage = "共鸣失败，请重试"
+                print("❌ [TreeHole] resonatePost failed id=\(id): \(error)")
             }
         }
     }

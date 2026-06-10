@@ -15,6 +15,7 @@ final class CCTrendsViewModel {
     var errorMessage: String?
 
     func loadStats() async {
+        print("🔄 [Trends] loadStats start")
         isLoading = true
         errorMessage = nil
         do {
@@ -28,8 +29,10 @@ final class CCTrendsViewModel {
                 counts[dayNames[idx], default: 0] += 1
             }
             weekData = dayNames.map { ($0, counts[$0] ?? 0) }
+            print("✅ [Trends] loadStats done: \(s.totalCount) entries, top=\(s.topEmotion), streak=\(s.streakDays)")
         } catch {
             errorMessage = "加载失败，请检查网络后重试"
+            print("❌ [Trends] loadStats failed: \(error)")
         }
         isLoading = false
     }

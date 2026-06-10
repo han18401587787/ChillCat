@@ -16,15 +16,18 @@ final class CCJournalViewModel {
     var error: Error?
 
     func loadJournal() async {
+        print("🔄 [Journal] loadJournal start month=\(selectedYear)-\(selectedMonth)")
         isLoading = true
         error = nil
         let m = String(format: "%04d-%02d", selectedYear, selectedMonth)
         do {
             let page = try await CCXuanAPI.getJournal(month: m)
             entries = page.list
+            print("✅ [Journal] loadJournal done: \(page.list.count) entries, total=\(page.total)")
         } catch {
             self.error = error
             if entries.isEmpty { entries = [] }
+            print("❌ [Journal] loadJournal failed: \(error)")
         }
         isLoading = false
     }
