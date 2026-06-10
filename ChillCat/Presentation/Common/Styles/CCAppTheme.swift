@@ -24,6 +24,9 @@ protocol CCAppThemeProtocol {
     var softGreenLight: Color { get }
     // 柔和粉
     var softPink: Color { get }
+    var softPinkLight: Color { get }
+    // 暖调衍生
+    var warmMuted: Color { get }
     // 背景
     var background: Color { get }
     var surface: Color { get }
@@ -60,6 +63,8 @@ struct CCLightTheme: CCAppThemeProtocol {
     let softGreen = Color(hex: "66BB6A")
     let softGreenLight = Color(hex: "D5E8D4")
     let softPink = Color(hex: "E8B8C8")
+    let softPinkLight = Color(hex: "F2D5E0")
+    let warmMuted = Color(hex: "EBE2D5")
     let background = Color(hex: "F9F6F2")
     let surface = Color(hex: "F0EDE8")
     let cardBackground = Color.white
@@ -93,6 +98,8 @@ struct CCDarkTheme: CCAppThemeProtocol {
     let softGreen = Color(hex: "66BB6A")
     let softGreenLight = Color(hex: "3D7040")
     let softPink = Color(hex: "C890A0")
+    let softPinkLight = Color(hex: "A87888")
+    let warmMuted = Color(hex: "3D3528")
     let background = Color(hex: "1A1D1F")
     let surface = Color(hex: "242729")
     let cardBackground = Color(hex: "2D3033")

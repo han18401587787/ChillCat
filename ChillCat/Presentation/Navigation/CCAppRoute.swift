@@ -7,6 +7,43 @@
 //
 
 import Foundation
+import SwiftUI
+
+/// Type bridge used by the resonance detail route — mirrors CCResonancePost
+struct CCResonanceDisplayItem: Hashable, Identifiable {
+    let id: String; let content: String; let emotion: String
+    let emotionColor: String; let isAnonymous: Bool
+    let displayName: String; var resonanceCount: Int; let createdAt: Date
+
+    var emotionColorValue: Color { Color(hex: emotionColor) }
+
+    var timeAgo: String {
+        let d = Date().timeIntervalSince(createdAt)
+        if d < 60 { return "刚刚" }
+        if d < 3600 { return "\(Int(d/60))分钟前" }
+        if d < 86400 { return "\(Int(d/3600))小时前" }
+        return "\(Int(d/86400))天前"
+    }
+
+    static var demoItems: [CCResonanceDisplayItem] = [
+        .init(id: "1", content: "三十岁生日一个人过的，给自己买了个小蛋糕。有点孤独，但也挺自由的。",
+              emotion: "孤独", emotionColor: "7A9AAA",
+              isAnonymous: true, displayName: "匿名用户",
+              resonanceCount: 2341, createdAt: Date().addingTimeInterval(-7200)),
+        .init(id: "2", content: "下周一就答辩了，PPT改了三遍了还是不满意。",
+              emotion: "焦虑", emotionColor: "D4C8E8",
+              isAnonymous: true, displayName: "匿名用户",
+              resonanceCount: 892, createdAt: Date().addingTimeInterval(-18000)),
+        .init(id: "3", content: "今天终于鼓起勇气和妈妈说了心里话。说着说着就哭了，但说完轻松了好多好多。",
+              emotion: "平静", emotionColor: "66BB6A",
+              isAnonymous: true, displayName: "匿名用户",
+              resonanceCount: 1567, createdAt: Date().addingTimeInterval(-3600)),
+        .init(id: "4", content: "在地铁上看到一个女孩偷偷擦眼泪，想递张纸巾又怕冒犯。希望你现在好一点了。",
+              emotion: "委屈", emotionColor: "E8B8C8",
+              isAnonymous: true, displayName: "匿名用户",
+              resonanceCount: 3201, createdAt: Date().addingTimeInterval(-5400)),
+    ]
+}
 
 enum CCAppRoute: Hashable, Identifiable {
     case welcome
@@ -14,6 +51,7 @@ enum CCAppRoute: Hashable, Identifiable {
     case home
     case treeHole
     case voiceCheckin
+    case voiceDiary
     case journal
     case trends
     case meditation
@@ -26,6 +64,13 @@ enum CCAppRoute: Hashable, Identifiable {
     case faq
     case deleteAccount
     case postDetail(CCTreeHolePost)
+    case aiListener
+    case resonanceWall
+    case resonanceDetail(CCResonanceDisplayItem)
+    case encourageChain
+    case myEncourageChains
+    case emotionDecoder
+    case voiceEmotionDiary
     case courseDetail(CCXuanAPI.CourseItem)
     case journalDetail(CCXuanAPI.JournalEntry)
     case feedback
@@ -42,6 +87,7 @@ enum CCAppRoute: Hashable, Identifiable {
         case .home: return "home"
         case .treeHole: return "treeHole"
         case .voiceCheckin: return "voiceCheckin"
+        case .voiceDiary: return "voiceDiary"
         case .journal: return "journal"
         case .trends: return "trends"
         case .meditation: return "meditation"
@@ -54,6 +100,13 @@ enum CCAppRoute: Hashable, Identifiable {
         case .faq: return "faq"
         case .deleteAccount: return "deleteAccount"
         case .postDetail(let p): return "postDetail_\(p.id)"
+        case .aiListener: return "aiListener"
+        case .resonanceWall: return "resonanceWall"
+        case .resonanceDetail(let r): return "resonanceDetail_\(r.id)"
+        case .encourageChain: return "encourageChain"
+        case .myEncourageChains: return "myEncourageChains"
+        case .emotionDecoder: return "emotionDecoder"
+        case .voiceEmotionDiary: return "voiceEmotionDiary"
         case .courseDetail(let c): return "courseDetail_\(c.id)"
         case .journalDetail(let e): return "journalDetail_\(e.id)"
         case .feedback: return "feedback"

@@ -47,17 +47,17 @@ final class CCEmotionViewModel {
                 todayNote = today.note
             }
             streakDays = Int(today.streakDays)
-            totalDays = Int(today.streakDays) + 18 // approximate
+            totalDays = Int(today.streakDays)
         } catch { weeklyNote = "这周你记录了 5 次打卡。你已经很努力了。" }
-        loadWeeklyStats()
+        await loadWeeklyStats()
     }
 
-    private func loadWeeklyStats() {
-        Task {
-            do {
-                let stats = try await CCXuanAPI.getWeeklyStats()
-                weeklyNote = "本周记录 \(stats.totalCount) 次，你的情绪以「\(stats.topEmotion)」为主"
-            } catch {}
+    private func loadWeeklyStats() async {
+        do {
+            let stats = try await CCXuanAPI.getWeeklyStats()
+            weeklyNote = "本周记录 \(stats.totalCount) 次，你的情绪以「\(stats.topEmotion)」为主"
+        } catch {
+            weeklyNote = "开始记录你的第一份情绪吧"
         }
     }
 

@@ -36,21 +36,31 @@ enum CCToastType {
 struct CCToastView: View {
     let message: String
     let type: CCToastType
+    @Environment(\.ccAppTheme) private var theme
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: theme.spacingSM) {
             Image(systemName: type.iconName)
-                .foregroundColor(type.color)
+                .foregroundColor(toastColor)
             Text(message)
-                .font(.subheadline)
-                .foregroundColor(.primary)
+                .font(.system(size: 15))
+                .foregroundColor(theme.textPrimary)
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, theme.spacingMD)
         .padding(.vertical, 12)
-        .background(.regularMaterial)
-        .cornerRadius(8)
-        .shadow(radius: 4)
-        .padding(.horizontal)
+        .background(theme.cardBackground)
+        .cornerRadius(theme.radiusSM)
+        .shadow(color: theme.textMuted.opacity(0.2), radius: 4)
+        .padding(.horizontal, theme.spacingMD)
+    }
+
+    private var toastColor: Color {
+        switch type {
+        case .success: return theme.success
+        case .error:   return theme.error
+        case .warning: return theme.warm
+        case .info:    return theme.primary
+        }
     }
 }
 

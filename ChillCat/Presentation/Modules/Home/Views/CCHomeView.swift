@@ -18,6 +18,9 @@ struct CCHomeView: View {
                 // 头部问候
                 headerSection
 
+                // AI 情绪倾听官
+                CCAIListenerCard()
+
                 // 情绪选择
                 if !viewModel.hasCheckedIn {
                     emotionCheckInSection
@@ -194,12 +197,25 @@ struct CCHomeView: View {
     // MARK: - Explore
     private var exploreSection: some View {
         VStack(spacing: theme.spacingSM) {
-            Text("探索更多可能").font(.system(size: 16, weight: .semibold)).frame(maxWidth: .infinity, alignment: .leading)
-            HStack(spacing: theme.spacingSM) {
+            Text("探索更多可能")
+                .font(.system(size: 16, weight: .semibold))
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            LazyVGrid(
+                columns: [GridItem(.flexible(), spacing: theme.spacingSM),
+                          GridItem(.flexible(), spacing: theme.spacingSM),
+                          GridItem(.flexible())],
+                spacing: theme.spacingSM
+            ) {
                 exploreCard(icon: "chart.bar.fill", title: "情绪趋势", color: Color(hex: "D4C8E8"), route: .trends)
                 exploreCard(icon: "book.pages.fill", title: "情绪日记", color: Color(hex: "D9C8E3"), route: .journal)
                 exploreCard(icon: "wind", title: "冥想放松", color: Color(hex: "B8D4E3"), route: .meditation)
                 exploreCard(icon: "lightbulb.fill", title: "小课堂", color: Color(hex: "D5E8D4"), route: .courses)
+                exploreCard(icon: "heart.text.square.fill", title: "共鸣墙", color: Color(hex: "E8B8C8"), route: .resonanceWall)
+                exploreCard(icon: "flame.fill", title: "鼓励链", color: Color(hex: "8B6F47"), route: .encourageChain)
+                exploreCard(icon: "brain.head.profile", title: "情绪解码", color: Color(hex: "D4C8E8"), route: .emotionDecoder)
+                exploreCard(icon: "mic.fill", title: "语音日记", color: Color(hex: "B8D4E3"), route: .voiceEmotionDiary)
+
             }
         }
     }
@@ -207,12 +223,22 @@ struct CCHomeView: View {
     func exploreCard(icon: String, title: String, color: Color, route: CCAppRoute) -> some View {
         NavigationLink(value: route) {
             VStack(spacing: 8) {
-                Image(systemName: icon).font(.system(size: 24)).foregroundColor(color)
-                    .frame(width: 48, height: 48).background(color.opacity(0.15)).cornerRadius(theme.radiusSM)
-                Text(title).font(.system(size: 13)).foregroundColor(theme.textPrimary)
+                Image(systemName: icon)
+                    .font(.system(size: 22))
+                    .foregroundColor(color)
+                    .frame(width: 48, height: 48)
+                    .background(color.opacity(0.15))
+                    .cornerRadius(theme.radiusSM)
+                Text(title)
+                    .font(.system(size: 12))
+                    .foregroundColor(theme.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
-            .frame(maxWidth: .infinity).padding(.vertical, 12)
-            .background(theme.cardBackground).cornerRadius(theme.radiusMD)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(theme.cardBackground)
+            .cornerRadius(theme.radiusMD)
         }
     }
 

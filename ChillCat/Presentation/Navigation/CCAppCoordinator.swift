@@ -25,6 +25,8 @@ final class CCAppCoordinator {
         case .home:    CCHomeView()
         case .treeHole: CCTreeHoleView()
         case .voiceCheckin: CCVoiceCheckinView()
+        case .voiceDiary: CCVoiceCheckinView()
+        case .voiceEmotionDiary: CCVoiceCheckinView()
         case .journal: CCJournalView()
         case .trends: CCTrendsView()
         case .meditation: CCMeditationView()
@@ -36,6 +38,12 @@ final class CCAppCoordinator {
         case .dataManagement: CCDataManagementView()
         case .faq: CCFAQView()
         case .deleteAccount: CCDeleteAccountView()
+        case .aiListener: CCAIListenerCard()
+        case .resonanceWall: CCTreeHoleView()
+        case .resonanceDetail(let p): CCTreeHolePostDetailView(post: mapToResonancePost(p))
+        case .encourageChain: CCEncourageChainView()
+        case .myEncourageChains: CCMyEncourageChainsView()
+        case .emotionDecoder: CCEmotionDecoderView()
         case .postDetail(let p): CCTreeHolePostDetailView(post: p)
         case .courseDetail(let c): CCCourseDetailView(course: c)
         case .journalDetail(let e): CCJournalDetailView(entry: e)
@@ -46,5 +54,14 @@ final class CCAppCoordinator {
         case .meditationPlayer(let session): CCMeditationPlayerView(session: session)
         case .web(let url): CCWebView(url: url)
         }
+    }
+
+    private func mapToResonancePost(_ item: CCResonanceDisplayItem) -> CCResonancePost {
+        CCResonancePost(
+            id: item.id, content: item.content, emotion: item.emotion,
+            emotionColor: item.emotionColor, resonanceCount: item.resonanceCount,
+            isAnonymous: item.isAnonymous, displayName: item.displayName,
+            createdAt: item.createdAt
+        )
     }
 }

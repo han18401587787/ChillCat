@@ -28,8 +28,10 @@ struct CCTrendsView: View {
         VStack(spacing: theme.spacingLG) {
             VStack(alignment: .leading, spacing: theme.spacingSM) {
                 Text("本周情绪波动").font(.system(size: 16, weight: .semibold))
-                if weekData.isEmpty {
+                if isLoading {
                     CCSkeletonView().frame(height: 100).cornerRadius(theme.radiusMD)
+                } else if weekData.isEmpty {
+                    emptyChartPlaceholder
                 } else {
                     HStack(alignment: .bottom, spacing: 8) {
                         ForEach(weekData, id: \.0) { (day, count) in
@@ -101,6 +103,19 @@ struct CCTrendsView: View {
         let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"
         if let d = f.date(from: dateStr) { return Calendar.current.component(.weekday, from: d) - 1 }
         return 0
+    }
+
+    private var emptyChartPlaceholder: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "chart.bar.xaxis.ascending")
+                .font(.system(size: 28))
+                .foregroundColor(theme.textSecondary.opacity(0.4))
+            Text("暂无本周数据")
+                .font(.system(size: 13))
+                .foregroundColor(theme.textSecondary)
+        }
+        .frame(height: 100).frame(maxWidth: .infinity)
+        .background(theme.cardBackground).cornerRadius(theme.radiusMD)
     }
 
     // MARK: - Components
