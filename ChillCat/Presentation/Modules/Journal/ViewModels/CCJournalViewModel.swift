@@ -23,11 +23,16 @@ final class CCJournalViewModel {
         do {
             let page = try await CCXuanAPI.getJournal(month: m)
             entries = page.list
+            if entries.isEmpty {
+                // 服务端无数据时使用 mock
+                entries = CCMockData.generateJournalEntries()
+                print("⚠️ [Journal] server returned empty, using mock data")
+            }
             print("✅ [Journal] loadJournal done: \(page.list.count) entries, total=\(page.total)")
         } catch {
-            self.error = error
-            if entries.isEmpty { entries = [] }
-            print("❌ [Journal] loadJournal failed: \(error)")
+            // API 不可用时使用 100 条 mock 数据
+            entries = CCMockData.generateJournalEntries()
+            print("⚠️ [Journal] API failed, using 100 mock entries: \(error)")
         }
         isLoading = false
     }

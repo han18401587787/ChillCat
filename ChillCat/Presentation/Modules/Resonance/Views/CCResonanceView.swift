@@ -131,6 +131,7 @@ struct CCResonanceView: View {
             LazyVStack(spacing: theme.spacingMD) {
                 ForEach(viewModel.resonanceItems) { item in
                     resonanceCard(item)
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             coordinator.navigate(to: .resonanceDetail(item))
                         }

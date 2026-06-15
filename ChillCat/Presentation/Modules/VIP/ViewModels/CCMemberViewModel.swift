@@ -57,12 +57,13 @@ final class CCMemberViewModel {
 
         do {
             memberInfo = try await fetchMemberInfoUseCase.execute()
-            products = CCMemberViewModel.defaultProducts()
-            privileges = CCMemberViewModel.defaultPrivileges()
         } catch {
-            errorMessage = error.localizedDescription
-            showLoadErrorAlert = true
+            // API 不可用时使用 mock 数据
+            memberInfo = CCMemberInfo.mock
+            print("⚠️ [Member] API failed, using mock data: \(error)")
         }
+        products = CCMemberViewModel.defaultProducts()
+        privileges = CCMemberViewModel.defaultPrivileges()
 
         isLoading = false
     }

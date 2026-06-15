@@ -28,7 +28,7 @@ final class CCResonanceViewModel {
         do {
             let page = try await CCXuanAPI.listResonance(page: 1)
             resonanceItems = mapItems(page.list)
-            onlineCount = page.onlineCount
+            onlineCount = 0
             hasMore = page.total > resonanceItems.count
             if resonanceItems.isEmpty { resonanceItems = [] }
             print("✅ [Resonance] loadResonance done: \(resonanceItems.count) items, \(onlineCount) online")
@@ -46,7 +46,7 @@ final class CCResonanceViewModel {
         do {
             let page = try await CCXuanAPI.listResonance(page: 1)
             resonanceItems = mapItems(page.list)
-            onlineCount = page.onlineCount
+            onlineCount = 0
             hasMore = page.total > resonanceItems.count
             print("✅ [Resonance] refresh done: \(resonanceItems.count) items")
         } catch {
@@ -73,16 +73,16 @@ final class CCResonanceViewModel {
     }
 
     private func mapItems(_ list: [CCXuanAPI.PostResponse]) -> [CCResonanceDisplayItem] {
-        list.map { item in
+        list.map { p in
             CCResonanceDisplayItem(
-                id: String(item.id),
-                content: item.content,
+                id: String(p.id),
+                content: p.content,
                 emotion: "",
-                emotionColor: ""Color,
-                isAnonymous: item.isAnonymous,
-                displayName: item.displayName,
-                resonanceCount: Int(item.resonanceCount),
-                createdAt: ISO8601DateFormatter().date(from: item.createdAt) ?? Date()
+                emotionColor: "primaryMuted",
+                isAnonymous: p.isAnonymous,
+                displayName: p.displayName,
+                resonanceCount: Int(p.hugs),
+                createdAt: ISO8601DateFormatter().date(from: p.createdAt) ?? Date()
             )
         }
     }

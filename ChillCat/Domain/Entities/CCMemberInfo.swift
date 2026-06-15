@@ -27,6 +27,14 @@ struct CCMemberInfo: Codable, Equatable {
         return Calendar.current.dateComponents([.day], from: Date(), to: endDate).day
     }
 
+    static var mock: CCMemberInfo {
+        CCMemberInfo(
+            type: .monthly, status: .active,
+            startDate: Date(), endDate: Calendar.current.date(byAdding: .day, value: 23, to: Date()),
+            isAutoRenew: true, purchaseDate: Date().addingTimeInterval(-7 * 86400)
+        )
+    }
+
     var statusDescription: String {
         switch status {
         case .active:

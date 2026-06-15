@@ -164,13 +164,13 @@ enum CCXuanAPI {
         struct ResonancePostRequest: Encodable { let emotion: String; let content: String; let isAnonymous: Bool }
 
     static func listResonance(page: Int = 1) async throws -> PostPage {
-        try await get("/api/v1/treehole?page=\(page)")
+        try await get("/api/v1/treehole/posts?page=\(page)")
     }
     static func getResonanceDetail(id: Int64) async throws -> ResonanceDetailResponse {
-        try await get("/api/v1/treehole/\(id)")
+        try await get("/api/v1/treehole/posts/\(id)")
     }
     static func hugResonance(id: Int64, message: String? = nil) async throws {
-        let path = "/api/v1/treehole/\(id)/hug"
+        let path = "/api/v1/treehole/posts/\(id)/hug"
         let start = CFAbsoluteTimeGetCurrent()
         print("🌐 [API] → POST \(path)")
         do {
@@ -332,4 +332,187 @@ final class XuanNetworkLogger: EventMonitor {
             logger.debug("✓ \(statusCode) \(fullPath) (\(elapsed)ms)")
         }
     }
+}
+
+// MARK: - Mock Data Provider (开发/演示用)
+
+enum CCMockData {
+
+    private static let emotions: [(String, String)] = [
+        ("平静", "66BB6A"), ("开心", "FFC107"), ("焦虑", "D4C8E8"),
+        ("委屈", "E8B8C8"), ("孤独", "7A9AAA"), ("烦躁", "FF7043"),
+        ("迷茫", "90A4AE"), ("疲惫", "78909C"), ("感恩", "FFAB91"),
+        ("期待", "81D4FA"), ("满足", "A5D6A7"), ("失落", "BDBDBD"),
+        ("感动", "F48FB1"), ("紧张", "FFCC80"), ("释然", "80CBC4"),
+    ]
+
+    private static let notes: [String] = [
+        "今天阳光很好，心情也跟着亮了起来。",
+        "早上喝了一杯好喝的咖啡，小小确幸。",
+        "下雨天适合窝在家里看书。",
+        "工作上解决了一个难题，有成就感。",
+        "朋友突然发消息说想我了，心里暖暖的。",
+        "今天运动了30分钟，感觉充满能量。",
+        "地铁上看到一个可爱的小朋友对我笑。",
+        "晚上做了一顿好吃的饭，很满足。",
+        "收到了一个意外的礼物，好惊喜。",
+        "今天有点累，但想想明天就是周五了。",
+        "和妈妈通了电话，她说她很好。",
+        "刚看完一本好书，想推荐给所有人。",
+        "今天效率很高，把所有待办都清完了。",
+        "失眠了，脑子里太多事情在转。",
+        "面试前紧张得手心出汗，但发挥得还行。",
+        "又想家了，虽然已经离开很多年了。",
+        "和闺蜜吵架了，心里很难受。",
+        "被人误解了，解释不清楚，算了。",
+        "看到朋友圈大家都在晒幸福，有点羡慕。",
+        "今天不想说话，只想一个人待着。",
+        "在地铁上看到一个女孩偷偷擦眼泪。",
+        "加班到很晚，楼下保安说辛苦了。",
+        "做了一个很美好的梦，醒来有点失落。",
+        "突然想起很久没联系的老朋友。",
+        "三十岁了还在迷茫，正常吗？",
+        "今天不对自己说任何负面的话。打卡！",
+        "同事说我最近气色很好，开心。",
+        "终于鼓起勇气去看了心理咨询师。",
+        "今天散步时看到一只流浪猫，喂了它。",
+        "买了一束花放在书桌上，看着心情好。",
+        "今天把拖延了三个月的事情终于做完了。",
+        "有人说我的笑容很有感染力。",
+        "在公司楼下遇到一只会蹭人的猫。",
+        "睡了一个很好的午觉，醒来精神饱满。",
+        "小区里的桂花开了，好香。",
+        "今天穿了一件新衣服，同事都夸好看。",
+        "看了夕阳，觉得世界还是很美好的。",
+        "把手机屏幕时间减少了，感觉轻松了。",
+        "第一次自己做了蛋糕，虽然丑但好吃。",
+        "早上起晚了但发现是周六，虚惊一场。",
+        "学会了一个新的技能，觉得自己好棒。",
+        "大扫除后家里干净整洁，心情舒畅。",
+        "一个陌生人帮我扶住了电梯门。",
+        "加班到12点，到家发现室友留了宵夜。",
+        "收到的工资比预期多，虽然只多了200。",
+        "下雨天，在家里点蜡烛听音乐。",
+        "今天什么也没发生，平淡但安心。",
+        "又看了一遍最爱的电影，还是忍不住哭。",
+        "半夜饿了煮了泡面，加了一个蛋。",
+        "工作汇报做得很成功，领导表扬了。",
+        "今天打了疫苗，胳膊有点疼但值得。",
+        "在二手书店淘到了一本绝版书。",
+        "给未来的自己写了一封信。",
+        "和对象一起看了落日，没有拍照。",
+        "在小区楼下捡到一只迷路的小狗。",
+        "戒咖啡第三天，头痛但坚持下来了。",
+        "今天学会了拒绝别人，感觉好爽。",
+        "看到一首诗，泪流满面。",
+        "去游乐园坐过山车，尖叫了一整天。",
+        "在家躺了一天，什么都没做。",
+        "第一次尝试冥想，5分钟就睡着了。",
+        "和朋友视频通话聊到凌晨两点。",
+        "买了新耳机，音质好极了。",
+        "参加了一个线上读书会，认识了新朋友。",
+        "今天剪了头发，换了个风格。",
+        "在小红书上分享了一篇笔记，有人点赞。",
+        "家里的绿植开了第一朵花。",
+        "今天把房间重新布置了，像换了个家。",
+        "学了一道新菜，味道还不错。",
+        "被一只路过的猫选中，它蹭了我的腿。",
+        "在直播间里中了9.9包邮的福袋。",
+        "花了两个小时整理照片，回忆满满。",
+        "路边摊买的糖炒栗子特别甜。",
+        "今天决定开始学吉他，买了第一把。",
+        "收到了十年前写给自己的信。",
+        "在公司年会上抽到了一个加湿器。",
+        "下雪了，南方人第一次看到雪。",
+        "出差在外的第二个晚上，想家了。",
+        "今天帮助了一个迷路的老人找到家人。",
+        "早上出门前发现车胎没气了，晚了半小时。",
+        "在机场看到一对情侣拥抱告别。",
+        "做了一个详细的旅行计划，期待出发。",
+        "今天开始写日记，这是第一篇。",
+        "去健身房办了卡，希望能坚持。",
+        "生日那天一个人去了海边。",
+        "年底了，回顾这一年感觉自己成长了很多。",
+        "今天和同事一起加班，互相吐槽。",
+        "看了最喜欢的乐队的live演出。",
+        "在菜市场买到了很新鲜的水果。",
+        "把攒了很久的快递盒子送去回收。",
+        "今天走了15000步，打破了自己的纪录。",
+        "晚上睡不着，起来看星星。",
+        "公交车上给一个老人让了座。",
+        "和朋友一起去野餐，带了我做的三明治。",
+        "今天开始尝试素食，坚持了一天。",
+        "下雨天叫了外卖，配送小哥全身湿透。",
+        "学会了一句手语：「你很棒」。",
+        "被一条温暖的评论治愈了。",
+    ]
+
+    // MARK: - 100 Journal Entries
+
+    static func generateJournalEntries(count: Int = 100) -> [CCXuanAPI.JournalEntry] {
+        let calendar = Calendar.current
+        let today = Date()
+        var entries: [CCXuanAPI.JournalEntry] = []
+
+        for i in 0..<count {
+            let daysAgo = count - 1 - i
+            guard let date = calendar.date(byAdding: .day, value: -daysAgo, to: today) else { continue }
+            let checkinDate = dateFormatter.string(from: date)
+            let createdAt = isoFormatter.string(from: date)
+            let (emotion, _) = emotions.randomElement()!
+            let note = notes.randomElement()!
+
+            entries.append(CCXuanAPI.JournalEntry(
+                id: Int64(1000 + i),
+                emotion: emotion,
+                note: note,
+                hasDoodle: i % 7 == 0,
+                checkinDate: checkinDate,
+                createdAt: createdAt
+            ))
+        }
+        return entries
+    }
+
+    // MARK: - Today's Emotion
+
+    static func generateToday() -> CCXuanAPI.TodayResponse {
+        let (emotion, _) = emotions.randomElement()!
+        return CCXuanAPI.TodayResponse(
+            id: 9999,
+            emotion: emotion,
+            note: notes.randomElement()!,
+            checkinDate: dateFormatter.string(from: Date()),
+            streakDays: Int64.random(in: 1...21)
+        )
+    }
+
+    // MARK: - Weekly Stats
+
+    static func generateWeeklyStats() -> CCXuanAPI.WeeklyStats {
+        let entries = Array(generateJournalEntries(count: 7).prefix(7))
+        let emotionCounts = Dictionary(grouping: entries, by: { $0.emotion })
+        let topEmotion = emotionCounts.max(by: { $0.value.count < $1.value.count })?.key ?? "平静"
+        let insight = "这周你的情绪以「\(topEmotion)」为主。记录本身就是一种疗愈。"
+        return CCXuanAPI.WeeklyStats(
+            entries: entries,
+            totalCount: Int64(entries.count),
+            streakDays: Int64.random(in: 3...21),
+            topEmotion: topEmotion,
+            insight: insight
+        )
+    }
+
+    // MARK: - Helpers
+
+    private static let dateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        return f
+    }()
+
+    private static let isoFormatter: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        return f
+    }()
 }
