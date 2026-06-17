@@ -1,12 +1,11 @@
 import SwiftUI
 
 struct CCCoursesView: View {
-    @Environment(\.ccAppTheme) private var theme
     @State private var viewModel = CCCoursesViewModel()
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: theme.spacingLG) {
+            VStack(alignment: .leading, spacing: AppSpacing.lg) {
                 Text("小课堂").font(.system(size: 24, weight: .bold))
                 switch viewModel.loadState {
                 case .loading:
@@ -24,25 +23,25 @@ struct CCCoursesView: View {
                 }
             }.padding()
         }
-        .background(theme.background).navigationTitle("小课堂")
+        .background(AppTheme.background).navigationTitle("小课堂")
         .task { await viewModel.loadCourses() }
     }
 
     private var emptyState: some View {
-        VStack(spacing: theme.spacingMD) {
+        VStack(spacing: AppSpacing.md) {
             Spacer().frame(height: 80)
             Image(systemName: "book.pages")
                 .font(.system(size: 48))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(AppTheme.textMuted)
             Text("暂无课程")
                 .font(.system(size: 15))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(AppTheme.textMuted)
         }
         .frame(maxWidth: .infinity)
     }
 
     func categorySection(title: String, icon: String, color: Color, courses: [CCXuanAPI.CourseItem]) -> some View {
-        VStack(alignment: .leading, spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: AppSpacing.sm) {
             HStack { Image(systemName: icon).foregroundColor(color); Text(title).font(.system(size: 18, weight: .semibold)) }
             ForEach(courses) { course in
                 NavigationLink(value: CCAppRoute.courseDetail(course)) {
@@ -53,12 +52,12 @@ struct CCCoursesView: View {
                                 Text(course.tag).font(.system(size: 11)).foregroundColor(Color(hex: "5A7A8A"))
                                     .padding(.horizontal, 8).padding(.vertical, 2)
                                     .background(Color(hex: "B8D4E3").opacity(0.3)).cornerRadius(4)
-                                Text("\(course.duration / 60) 分钟").font(.system(size: 11)).foregroundColor(theme.textMuted)
+                                Text("\(course.duration / 60) 分钟").font(.system(size: 11)).foregroundColor(AppTheme.textMuted)
                             }
                         }
                         Spacer()
-                        Image(systemName: "chevron.right").font(.system(size: 14)).foregroundColor(theme.textMuted)
-                    }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD)
+                        Image(systemName: "chevron.right").font(.system(size: 14)).foregroundColor(AppTheme.textMuted)
+                    }.padding().background(AppTheme.cardBackground).cornerRadius(AppRadius.md)
                 }
             }
         }

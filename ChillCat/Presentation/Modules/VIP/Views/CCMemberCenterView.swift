@@ -11,7 +11,6 @@ import SwiftUI
 struct CCMemberCenterView: View {
     @State private var viewModel: CCMemberViewModel
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
 
     init() {
         let container = CCAppDependencyContainer.shared.container
@@ -71,7 +70,7 @@ struct CCMemberCenterView: View {
 
     private var content: some View {
         ScrollView {
-            VStack(spacing: theme.spacingLG) {
+            VStack(spacing: AppSpacing.lg) {
                 memberHeader
                 privilegeSection
                 productSection
@@ -82,10 +81,10 @@ struct CCMemberCenterView: View {
     }
 
     private var memberHeader: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             Image(systemName: viewModel.isMember ? "crown.fill" : "crown")
                 .font(.system(size: 48))
-                .foregroundColor(viewModel.isMember ? theme.warm : theme.textSecondary)
+                .foregroundColor(viewModel.isMember ? AppTheme.warm : AppTheme.textSecondary)
 
             Text(viewModel.isMember ? "ChillCat 会员" : "开通 ChillCat 会员")
                 .font(.title2)
@@ -93,35 +92,35 @@ struct CCMemberCenterView: View {
 
             Text(viewModel.statusDescription)
                 .font(.subheadline)
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
 
             if viewModel.isMember {
                 Text(viewModel.remainingText)
                     .font(.caption)
-                    .foregroundColor(theme.primary)
+                    .foregroundColor(AppTheme.primary)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 4)
-                    .background(theme.primary.opacity(0.1))
-                    .cornerRadius(theme.radiusSM)
+                    .background(AppTheme.primary.opacity(0.1))
+                    .cornerRadius(AppRadius.sm)
             }
         }
-        .padding(theme.spacingLG)
+        .padding(AppSpacing.lg)
         .frame(maxWidth: .infinity)
-        .background(theme.surface)
-        .cornerRadius(theme.radiusLG)
+        .background(AppTheme.surface)
+        .cornerRadius(AppRadius.lg)
     }
 
     private var privilegeSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
             Text("会员权益")
                 .font(.headline)
 
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: theme.spacingMD) {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: AppSpacing.md) {
                 ForEach(viewModel.privileges) { privilege in
-                    VStack(spacing: theme.spacingSM) {
+                    VStack(spacing: AppSpacing.sm) {
                         Image(systemName: privilege.iconName)
                             .font(.title3)
-                            .foregroundColor(privilege.isHighlight ? theme.warm : theme.primary)
+                            .foregroundColor(privilege.isHighlight ? AppTheme.warm : AppTheme.primary)
 
                         Text(privilege.title)
                             .font(.caption)
@@ -129,20 +128,20 @@ struct CCMemberCenterView: View {
 
                         Text(privilege.description)
                             .font(.caption2)
-                            .foregroundColor(theme.textSecondary)
+                            .foregroundColor(AppTheme.textSecondary)
                             .multilineTextAlignment(.center)
                     }
-                    .padding(theme.spacingSM)
+                    .padding(AppSpacing.sm)
                     .frame(maxWidth: .infinity)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
                 }
             }
         }
     }
 
     private var productSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
             Text("选择套餐")
                 .font(.headline)
 
@@ -161,12 +160,12 @@ struct CCMemberCenterView: View {
                 Spacer()
                 Image(systemName: "chevron.right")
                     .font(.caption)
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
             }
-            .foregroundColor(theme.primary)
-            .padding(theme.spacingMD)
-            .background(theme.surface)
-            .cornerRadius(theme.radiusMD)
+            .foregroundColor(AppTheme.primary)
+            .padding(AppSpacing.md)
+            .background(AppTheme.surface)
+            .cornerRadius(AppRadius.md)
         }
     }
 
@@ -178,12 +177,12 @@ struct CCMemberCenterView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(product.type.displayName)
                         .font(.headline)
-                        .foregroundColor(theme.textPrimary)
+                        .foregroundColor(AppTheme.textPrimary)
 
                     Text(product.displayPrice)
                         .font(.title3)
                         .fontWeight(.bold)
-                        .foregroundColor(theme.primary)
+                        .foregroundColor(AppTheme.primary)
                 }
 
                 Spacer()
@@ -194,8 +193,8 @@ struct CCMemberCenterView: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 2)
-                        .background(theme.error)
-                        .cornerRadius(theme.radiusSM)
+                        .background(AppTheme.error)
+                        .cornerRadius(AppRadius.sm)
                 }
 
                 Text("立即购买")
@@ -204,12 +203,12 @@ struct CCMemberCenterView: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
-                    .background(theme.primary)
-                    .cornerRadius(theme.radiusSM)
+                    .background(AppTheme.primary)
+                    .cornerRadius(AppRadius.sm)
             }
-            .padding(theme.spacingMD)
-            .background(theme.surface)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.md)
+            .background(AppTheme.surface)
+            .cornerRadius(AppRadius.md)
         }
     }
 }

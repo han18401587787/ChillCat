@@ -104,13 +104,12 @@ struct CCEmojiPicker: View {
     @State private var selectedCategory: CCEmojiCategory = .basic
     @State private var emojis: [CCEmoji] = CCEmoji.filter(by: .basic)
     @State private var appeared = false
-    @Environment(\.ccAppTheme) private var theme
 
     var body: some View {
         VStack(spacing: 0) {
             // Drag indicator
             Capsule()
-                .fill(theme.textMuted.opacity(0.35))
+                .fill(AppTheme.textMuted.opacity(0.35))
                 .frame(width: 36, height: 4)
                 .padding(.top, 10)
                 .padding(.bottom, 6)
@@ -140,21 +139,21 @@ struct CCEmojiPicker: View {
             // Emoji grid with animation
             ScrollView {
                 LazyVGrid(
-                    columns: Array(repeating: GridItem(.flexible(), spacing: theme.spacingSM), count: 6),
-                    spacing: theme.spacingMD
+                    columns: Array(repeating: GridItem(.flexible(), spacing: AppSpacing.sm), count: 6),
+                    spacing: AppSpacing.md
                 ) {
                     ForEach(emojis) { emoji in
                         emojiCell(emoji)
                     }
                 }
-                .padding(.horizontal, theme.spacingMD)
-                .padding(.vertical, theme.spacingSM)
+                .padding(.horizontal, AppSpacing.md)
+                .padding(.vertical, AppSpacing.sm)
             }
             .frame(height: 260)
         }
         .background(
-            RoundedRectangle(cornerRadius: theme.radiusXL)
-                .fill(theme.background)
+            RoundedRectangle(cornerRadius: AppRadius.xl)
+                .fill(AppTheme.background)
                 .shadow(color: .black.opacity(0.08), radius: 12, y: -4)
         )
         .offset(y: appeared ? 0 : 300)
@@ -181,15 +180,15 @@ struct CCEmojiPicker: View {
             VStack(spacing: 4) {
                 Image(systemName: cat.iconName)
                     .font(.system(size: 16))
-                    .foregroundColor(isSelected ? cat.color : theme.textMuted)
+                    .foregroundColor(isSelected ? cat.color : AppTheme.textMuted)
                 Text(cat.rawValue)
                     .font(.system(size: 10, weight: isSelected ? .semibold : .regular))
-                    .foregroundColor(isSelected ? cat.color : theme.textMuted)
+                    .foregroundColor(isSelected ? cat.color : AppTheme.textMuted)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 8)
             .background(
-                RoundedRectangle(cornerRadius: theme.radiusSM)
+                RoundedRectangle(cornerRadius: AppRadius.sm)
                     .fill(isSelected ? cat.backgroundColor : Color.clear)
             )
             .animation(.easeInOut(duration: 0.2), value: isSelected)

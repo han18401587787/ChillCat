@@ -2,7 +2,6 @@ import SwiftUI
 
 struct CCTreeHolePostDetailView: View {
     let post: CCResonancePost
-    @Environment(\.ccAppTheme) private var theme
     @State private var resonanceCount: Int
     @State private var didResonate = false
     @State private var showReplySheet = false
@@ -17,7 +16,7 @@ struct CCTreeHolePostDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: theme.spacingLG) {
+            VStack(alignment: .leading, spacing: AppSpacing.lg) {
                 // Post header
                 HStack {
                     Circle()
@@ -29,25 +28,25 @@ struct CCTreeHolePostDetailView: View {
                     Spacer()
                     Text(post.timeAgo)
                         .font(.system(size: 13))
-                        .foregroundColor(theme.textMuted)
+                        .foregroundColor(AppTheme.textMuted)
                 }
 
                 // Post content
                 Text(post.content)
                     .font(.system(size: 17))
                     .lineSpacing(6)
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Divider()
-                    .padding(.vertical, theme.spacingSM)
+                    .padding(.vertical, AppSpacing.sm)
 
                 // Resonance section
-                VStack(spacing: theme.spacingSM) {
+                VStack(spacing: AppSpacing.sm) {
                     HStack {
                         Text("\(post.formattedResonance) 人共鸣")
                             .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(theme.textPrimary)
+                            .foregroundColor(AppTheme.textPrimary)
                         Spacer()
                     }
 
@@ -59,11 +58,11 @@ struct CCTreeHolePostDetailView: View {
                             Text(didResonate ? "已共鸣" : "我也有过这种感觉")
                                 .font(.system(size: 15, weight: .medium))
                         }
-                        .foregroundColor(didResonate ? theme.error : theme.primary)
+                        .foregroundColor(didResonate ? AppTheme.error : AppTheme.primary)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
-                        .background(didResonate ? theme.softPink.opacity(0.15) : theme.primary.opacity(0.08))
-                        .cornerRadius(theme.radiusMD)
+                        .background(didResonate ? AppTheme.softPink.opacity(0.15) : AppTheme.primary.opacity(0.08))
+                        .cornerRadius(AppRadius.md)
                     }
 
                     // Resonance replies
@@ -72,29 +71,29 @@ struct CCTreeHolePostDetailView: View {
                     } else if replies.isEmpty {
                         Text("成为第一个表达共鸣的人")
                             .font(.system(size: 14))
-                            .foregroundColor(theme.textMuted)
+                            .foregroundColor(AppTheme.textMuted)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, theme.spacingLG)
+                            .padding(.vertical, AppSpacing.lg)
                     } else {
-                        VStack(spacing: theme.spacingSM) {
+                        VStack(spacing: AppSpacing.sm) {
                             ForEach(replies) { reply in
                                 HStack(alignment: .top, spacing: 10) {
                                     Image(systemName: "heart.fill")
                                         .font(.system(size: 12))
-                                        .foregroundColor(theme.softPink)
+                                        .foregroundColor(AppTheme.softPink)
                                         .padding(.top, 2)
                                     Text(reply.content)
                                         .font(.system(size: 14))
-                                        .foregroundColor(theme.textSecondary)
+                                        .foregroundColor(AppTheme.textSecondary)
                                         .lineSpacing(4)
                                     Spacer()
                                     Text(timeAgo(from: reply.createdAt))
                                         .font(.system(size: 11))
-                                        .foregroundColor(theme.textMuted)
+                                        .foregroundColor(AppTheme.textMuted)
                                 }
                                 .padding()
-                                .background(theme.surface)
-                                .cornerRadius(theme.radiusSM)
+                                .background(AppTheme.surface)
+                                .cornerRadius(AppRadius.sm)
                             }
                         }
                     }
@@ -102,13 +101,13 @@ struct CCTreeHolePostDetailView: View {
 
                 Text("共鸣墙没有评判，只有温柔理解。")
                     .font(.system(size: 13))
-                    .foregroundColor(theme.textMuted)
-                    .padding(.top, theme.spacingSM)
+                    .foregroundColor(AppTheme.textMuted)
+                    .padding(.top, AppSpacing.sm)
                     .frame(maxWidth: .infinity)
             }
             .padding()
         }
-        .background(theme.background)
+        .background(AppTheme.background)
         .navigationTitle("共鸣详情")
         .sheet(isPresented: $showReplySheet) {
             replySheetView
@@ -123,22 +122,22 @@ struct CCTreeHolePostDetailView: View {
         VStack(spacing: 16) {
             Text("我也有过这种感觉")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(AppTheme.textPrimary)
 
             TextField("说一句鼓励的话吧", text: $replyMessage, axis: .vertical)
                 .font(.system(size: 15))
                 .padding()
-                .background(theme.surface)
-                .cornerRadius(theme.radiusMD)
+                .background(AppTheme.surface)
+                .cornerRadius(AppRadius.md)
                 .lineLimit(2...4)
 
             HStack(spacing: 12) {
                 Button("取消") { showReplySheet = false }
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
 
                 Button(action: {
                     CCHaptic.success()
@@ -168,13 +167,13 @@ struct CCTreeHolePostDetailView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
-                        .background(theme.primary)
-                        .cornerRadius(theme.radiusMD)
+                        .background(AppTheme.primary)
+                        .cornerRadius(AppRadius.md)
                 }
             }
         }
         .padding()
-        .background(theme.background)
+        .background(AppTheme.background)
     }
 
     // MARK: - Helpers
@@ -197,16 +196,16 @@ struct CCTreeHolePostDetailView: View {
 
     private func emotionColorFor(_ colorName: String) -> Color {
         switch colorName {
-        case "softGreen": return theme.softGreen
-        case "warmLight": return theme.warmLight
-        case "primaryMuted": return theme.primaryMuted
-        case "softPurple": return theme.softPurple
-        case "softPink": return theme.softPink
-        case "primaryLight": return theme.primaryLight
-        case "error": return theme.error
-        case "softPurpleLight": return theme.softPurpleLight
-        case "warm": return theme.warm
-        default: return theme.primaryMuted
+        case "softGreen": return AppTheme.softGreen
+        case "warmLight": return AppTheme.warmLight
+        case "primaryMuted": return AppTheme.primaryMuted
+        case "softPurple": return AppTheme.softPurple
+        case "softPink": return AppTheme.softPink
+        case "primaryLight": return AppTheme.primaryLight
+        case "error": return AppTheme.error
+        case "softPurpleLight": return AppTheme.softPurpleLight
+        case "warm": return AppTheme.warm
+        default: return AppTheme.primaryMuted
         }
     }
 }

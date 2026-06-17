@@ -3,14 +3,13 @@ import SwiftUI
 struct CCJournalView: View {
     @State private var viewModel = CCJournalViewModel()
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
 
     let columns = Array(repeating: GridItem(.flexible(), spacing: 2), count: 7)
     let weekDays = ["一","二","三","四","五","六","日"]
 
     var body: some View {
         ScrollView {
-            VStack(spacing: theme.spacingLG) {
+            VStack(spacing: AppSpacing.lg) {
                 HStack {
                     Button(action: { viewModel.previousMonth() }) { Image(systemName: "chevron.left") }
                     Spacer()
@@ -22,7 +21,7 @@ struct CCJournalView: View {
                 VStack(spacing: 8) {
                     HStack(spacing: 0) {
                         ForEach(weekDays, id: \.self) { day in
-                            Text(day).font(.system(size: 12)).foregroundColor(theme.textMuted).frame(maxWidth: .infinity)
+                            Text(day).font(.system(size: 12)).foregroundColor(AppTheme.textMuted).frame(maxWidth: .infinity)
                         }
                     }
                     LazyVGrid(columns: columns, spacing: 6) {
@@ -37,15 +36,15 @@ struct CCJournalView: View {
                             .background(hasEntry ? Color(hex: "5A7A8A").opacity(0.1) : Color.clear).cornerRadius(6)
                         }
                     }
-                }.padding().background(theme.cardBackground).cornerRadius(theme.radiusLG)
+                }.padding().background(AppTheme.cardBackground).cornerRadius(AppRadius.lg)
 
-                HStack(spacing: theme.spacingMD) {
-                    statCard(title: "本月", value: "\(viewModel.entries.count) 次", bg: theme.softPurpleLight.opacity(0.25))
-                    statCard(title: "记录", value: "\(uniqueDays) 天", bg: theme.primaryMuted.opacity(0.25))
-                    statCard(title: "坚持", value: "\(uniqueDays) 天", bg: theme.softGreenLight.opacity(0.25))
+                HStack(spacing: AppSpacing.md) {
+                    statCard(title: "本月", value: "\(viewModel.entries.count) 次", bg: AppTheme.softPurpleLight.opacity(0.25))
+                    statCard(title: "记录", value: "\(uniqueDays) 天", bg: AppTheme.primaryMuted.opacity(0.25))
+                    statCard(title: "坚持", value: "\(uniqueDays) 天", bg: AppTheme.softGreenLight.opacity(0.25))
                 }
 
-                VStack(alignment: .leading, spacing: theme.spacingSM) {
+                VStack(alignment: .leading, spacing: AppSpacing.sm) {
                     Text("所有情绪日记与打卡记录").font(.system(size: 16, weight: .semibold))
                     if viewModel.isLoading {
                         CCSkeletonList(count: 4)
@@ -58,24 +57,24 @@ struct CCJournalView: View {
                                     .font(.system(size: 24))
                                     .foregroundColor(emotionColor(entry.emotion))
                                     .frame(width: 44, height: 44)
-                                    .background(emotionColor(entry.emotion).opacity(0.1)).cornerRadius(theme.radiusSM)
+                                    .background(emotionColor(entry.emotion).opacity(0.1)).cornerRadius(AppRadius.sm)
                                 VStack(alignment: .leading, spacing: 2) {
                                     HStack {
                                         Text(entry.emotion).font(.system(size: 15, weight: .medium))
-                                        if entry.hasDoodle { Text("有涂鸦").font(.system(size: 11)).foregroundColor(theme.softPink) }
+                                        if entry.hasDoodle { Text("有涂鸦").font(.system(size: 11)).foregroundColor(AppTheme.softPink) }
                                     }
                                     if !entry.note.isEmpty {
-                                        Text(entry.note).font(.system(size: 13)).foregroundColor(theme.textSecondary).lineLimit(2)
+                                        Text(entry.note).font(.system(size: 13)).foregroundColor(AppTheme.textSecondary).lineLimit(2)
                                     }
                                 }
                                 Spacer()
-                                Text(String(entry.checkinDate.suffix(5))).font(.system(size: 12)).foregroundColor(theme.textMuted)
-                            }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD).onTapGesture { coordinator.navigate(to: .journalDetail(entry)) }
+                                Text(String(entry.checkinDate.suffix(5))).font(.system(size: 12)).foregroundColor(AppTheme.textMuted)
+                            }.padding().background(AppTheme.cardBackground).cornerRadius(AppRadius.md).onTapGesture { coordinator.navigate(to: .journalDetail(entry)) }
                         }
                     }
                 }
             }.padding()
-        }.background(theme.background).navigationTitle("情绪日记")
+        }.background(AppTheme.background).navigationTitle("情绪日记")
         .refreshable { await viewModel.loadJournal() }
         .task { await viewModel.loadJournal() }
         .alert("加载失败", isPresented: Binding<Bool>(
@@ -106,7 +105,7 @@ struct CCJournalView: View {
     func statCard(title: String, value: String, bg: Color) -> some View {
         VStack(spacing: 4) {
             Text(value).font(.system(size: 20, weight: .bold)).foregroundColor(Color(hex: "5A7A8A"))
-            Text(title).font(.system(size: 12)).foregroundColor(theme.textSecondary)
-        }.frame(maxWidth: .infinity).padding(.vertical, 12).background(bg).cornerRadius(theme.radiusMD)
+            Text(title).font(.system(size: 12)).foregroundColor(AppTheme.textSecondary)
+        }.frame(maxWidth: .infinity).padding(.vertical, 12).background(bg).cornerRadius(AppRadius.md)
     }
 }

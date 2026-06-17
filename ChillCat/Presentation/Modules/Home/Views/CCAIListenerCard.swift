@@ -8,7 +8,6 @@ import SwiftUI
 struct CCAIListenerCard: View {
     @State private var viewModel = CCAIListenerViewModel()
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
     @FocusState private var isInputFocused: Bool
 
     /// EmojiPicker 显示状态
@@ -18,7 +17,7 @@ struct CCAIListenerCard: View {
     @State private var isAnimatingDots = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
             // MARK: - Header
             headerSection
 
@@ -36,26 +35,26 @@ struct CCAIListenerCard: View {
             }
 
         }
-        .padding(theme.spacingMD)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusLG)
+        .padding(AppSpacing.md)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.lg)
         .overlay(
-            RoundedRectangle(cornerRadius: theme.radiusLG)
-                .stroke(theme.primaryMuted.opacity(0.3), lineWidth: 1)
+            RoundedRectangle(cornerRadius: AppRadius.lg)
+                .stroke(AppTheme.primaryMuted.opacity(0.3), lineWidth: 1)
         )
     }
 
     // MARK: - Header
 
     private var headerSection: some View {
-        HStack(spacing: theme.spacingSM) {
+        HStack(spacing: AppSpacing.sm) {
             Image(systemName: "headphones")
                 .font(.system(size: 20, weight: .medium))
-                .foregroundColor(theme.primary)
+                .foregroundColor(AppTheme.primary)
 
             Text("今天想和我说什么？")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(AppTheme.textPrimary)
 
             Spacer()
         }
@@ -64,13 +63,13 @@ struct CCAIListenerCard: View {
     // MARK: - Input
 
     private var inputSection: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             // 文本输入区域
             ZStack(alignment: .topLeading) {
                 if viewModel.inputText.isEmpty && !isInputFocused {
                     Text(viewModel.currentPlaceholder)
                         .font(.system(size: 15))
-                        .foregroundColor(theme.textMuted)
+                        .foregroundColor(AppTheme.textMuted)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 10)
                         .allowsHitTesting(false)
@@ -78,25 +77,25 @@ struct CCAIListenerCard: View {
 
                 TextField("", text: $viewModel.inputText, axis: .vertical)
                     .font(.system(size: 15))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                     .focused($isInputFocused)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 10)
                     .lineLimit(3...6)
             }
             .frame(minHeight: 80, alignment: .topLeading)
-            .background(theme.background)
-            .cornerRadius(theme.radiusMD)
+            .background(AppTheme.background)
+            .cornerRadius(AppRadius.md)
 
             // 底部操作栏
-            HStack(spacing: theme.spacingSM) {
+            HStack(spacing: AppSpacing.sm) {
                 // CCEmojiPicker 触发按钮
                 Button {
                     showEmojiPicker = true
                 } label: {
                     Image(systemName: "face.smiling")
                         .font(.system(size: 18))
-                        .foregroundColor(theme.textMuted)
+                        .foregroundColor(AppTheme.textMuted)
                         .frame(width: 44, height: 44)
                 }
                 .buttonStyle(.plain)
@@ -107,10 +106,10 @@ struct CCAIListenerCard: View {
                 NavigationLink(value: CCAppRoute.voiceCheckin) {
                     Image(systemName: "mic.fill")
                         .font(.system(size: 20))
-                        .foregroundColor(theme.primary)
+                        .foregroundColor(AppTheme.primary)
                         .frame(width: 44, height: 44)
-                        .background(theme.primaryMuted.opacity(0.25))
-                        .cornerRadius(theme.radiusSM)
+                        .background(AppTheme.primaryMuted.opacity(0.25))
+                        .cornerRadius(AppRadius.sm)
                 }
 
                 // 发送按钮 (min 44×44 触控区域)
@@ -121,14 +120,14 @@ struct CCAIListenerCard: View {
                 } label: {
                     Image(systemName: "sparkles")
                         .font(.system(size: 18, weight: .medium))
-                        .foregroundColor(viewModel.isSendEnabled ? .white : theme.textMuted)
+                        .foregroundColor(viewModel.isSendEnabled ? .white : AppTheme.textMuted)
                         .frame(width: 44, height: 44)
                         .background(
                             viewModel.isSendEnabled
-                                ? theme.primary
-                                : theme.surface
+                                ? AppTheme.primary
+                                : AppTheme.surface
                         )
-                        .cornerRadius(theme.radiusSM)
+                        .cornerRadius(AppRadius.sm)
                 }
                 .disabled(!viewModel.isSendEnabled)
             }
@@ -148,7 +147,7 @@ struct CCAIListenerCard: View {
         HStack(spacing: 4) {
             ForEach(0..<3) { index in
                 Circle()
-                    .fill(theme.primaryMuted)
+                    .fill(AppTheme.primaryMuted)
                     .frame(width: 8, height: 8)
                     .scaleEffect(isAnimatingDots ? 1.5 : 0.8)
                     .animation(
@@ -160,7 +159,7 @@ struct CCAIListenerCard: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, theme.spacingSM)
+        .padding(.vertical, AppSpacing.sm)
         .onAppear { isAnimatingDots = true }
         .onDisappear { isAnimatingDots = false }
     }
@@ -168,7 +167,7 @@ struct CCAIListenerCard: View {
     // MARK: - Responses
 
     private var responsesSection: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             ForEach(viewModel.aiResponses) { message in
                 responseBubble(message)
                     .transition(
@@ -180,14 +179,14 @@ struct CCAIListenerCard: View {
     }
 
     private func responseBubble(_ message: CCAIResponseMessage) -> some View {
-        VStack(alignment: .leading, spacing: theme.spacingXS) {
-            HStack(alignment: .top, spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: AppSpacing.xs) {
+            HStack(alignment: .top, spacing: AppSpacing.sm) {
                 Text(message.emoji)
                     .font(.system(size: 18))
 
                 Text("「\(message.text)」")
                     .font(.system(size: 15))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                     .lineSpacing(4)
 
                 Spacer(minLength: 0)
@@ -195,7 +194,7 @@ struct CCAIListenerCard: View {
 
             // 反馈按钮（仅当无反馈时显示）
             if message.feedback == nil {
-                HStack(spacing: theme.spacingLG) {
+                HStack(spacing: AppSpacing.lg) {
                     feedbackButton(label: "有用", icon: "hand.thumbsup", for: message, isHelpful: true)
                     feedbackButton(label: "不太对", icon: "hand.thumbsdown", for: message, isHelpful: false)
                 }
@@ -208,14 +207,14 @@ struct CCAIListenerCard: View {
                     Text("感谢反馈")
                         .font(.system(size: 12))
                 }
-                .foregroundColor(theme.softGreen)
+                .foregroundColor(AppTheme.softGreen)
                 .padding(.top, 4)
             }
         }
-        .padding(theme.spacingMD)
+        .padding(AppSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(theme.softGreenLight.opacity(0.25))
-        .cornerRadius(theme.radiusMD)
+        .background(AppTheme.softGreenLight.opacity(0.25))
+        .cornerRadius(AppRadius.md)
     }
 
     private func feedbackButton(
@@ -234,11 +233,11 @@ struct CCAIListenerCard: View {
                 Text(label)
                     .font(.system(size: 13))
             }
-            .foregroundColor(theme.textSecondary)
+            .foregroundColor(AppTheme.textSecondary)
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
-            .background(theme.surface.opacity(0.6))
-            .cornerRadius(theme.radiusSM)
+            .background(AppTheme.surface.opacity(0.6))
+            .cornerRadius(AppRadius.sm)
         }
         .buttonStyle(.plain)
     }

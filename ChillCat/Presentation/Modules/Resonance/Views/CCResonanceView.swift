@@ -8,7 +8,6 @@ import SwiftUI
 struct CCResonanceView: View {
     @State private var viewModel = CCResonanceViewModel()
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
 
     // Compose
     @State private var showComposer = false
@@ -26,7 +25,7 @@ struct CCResonanceView: View {
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            theme.background.ignoresSafeArea()
+            AppTheme.background.ignoresSafeArea()
 
             if viewModel.isLoading && viewModel.resonanceItems.isEmpty {
                 CCLoadingView(message: "正在连接共鸣…")
@@ -73,8 +72,8 @@ struct CCResonanceView: View {
                     composerText += emoji
                 }
                 .frame(height: 300)
-                .background(theme.background)
-                .clipShape(RoundedRectangle(cornerRadius: theme.radiusLG))
+                .background(AppTheme.background)
+                .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
                 .shadow(radius: 8)
                 .transition(.move(edge: .bottom))
             }
@@ -85,8 +84,8 @@ struct CCResonanceView: View {
                     resonateMessage += emoji
                 }
                 .frame(height: 300)
-                .background(theme.background)
-                .clipShape(RoundedRectangle(cornerRadius: theme.radiusLG))
+                .background(AppTheme.background)
+                .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
                 .shadow(radius: 8)
                 .transition(.move(edge: .bottom))
             }
@@ -103,15 +102,15 @@ struct CCResonanceView: View {
             HStack(spacing: 4) {
                 Image(systemName: "person.2.fill")
                     .font(.system(size: 11))
-                    .foregroundColor(theme.primaryMuted)
+                    .foregroundColor(AppTheme.primaryMuted)
                 Text("\(viewModel.onlineCount) 人此刻")
                     .font(.system(size: 12))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 4)
-            .background(theme.primaryMuted.opacity(0.2))
-            .cornerRadius(theme.radiusSM)
+            .background(AppTheme.primaryMuted.opacity(0.2))
+            .cornerRadius(AppRadius.sm)
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button(action: { coordinator.navigate(to: .encourageChain) }) {
@@ -119,7 +118,7 @@ struct CCResonanceView: View {
                     Text("🔥").font(.system(size: 13))
                     Text("鼓励链").font(.system(size: 13))
                 }
-                .foregroundColor(theme.warm)
+                .foregroundColor(AppTheme.warm)
             }
         }
     }
@@ -128,7 +127,7 @@ struct CCResonanceView: View {
 
     private var resonanceList: some View {
         ScrollView {
-            LazyVStack(spacing: theme.spacingMD) {
+            LazyVStack(spacing: AppSpacing.md) {
                 ForEach(viewModel.resonanceItems) { item in
                     resonanceCard(item)
                         .contentShape(Rectangle())
@@ -149,8 +148,8 @@ struct CCResonanceView: View {
                 if !viewModel.hasMore && !viewModel.resonanceItems.isEmpty {
                     Text("— 已经到底了 —")
                         .font(.system(size: 12))
-                        .foregroundColor(theme.textMuted)
-                        .padding(.vertical, theme.spacingMD)
+                        .foregroundColor(AppTheme.textMuted)
+                        .padding(.vertical, AppSpacing.md)
                 }
             }
             .padding()
@@ -167,11 +166,11 @@ struct CCResonanceView: View {
             RoundedRectangle(cornerRadius: 2)
                 .fill(item.emotionColorValue)
                 .frame(width: 4)
-                .padding(.vertical, theme.spacingMD)
+                .padding(.vertical, AppSpacing.md)
 
-            VStack(alignment: .leading, spacing: theme.spacingSM) {
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
                 // Header: emotion label + time
-                HStack(spacing: theme.spacingSM) {
+                HStack(spacing: AppSpacing.sm) {
                     HStack(spacing: 4) {
                         Circle()
                             .fill(item.emotionColorValue)
@@ -183,20 +182,20 @@ struct CCResonanceView: View {
                     Spacer()
                     Text(item.timeAgo)
                         .font(.system(size: 12))
-                        .foregroundColor(theme.textMuted)
+                        .foregroundColor(AppTheme.textMuted)
                 }
 
                 // Content (max 280 chars per spec, fold after 5 lines)
                 Text(item.content)
                     .font(.system(size: 15))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                     .lineSpacing(6)
                     .lineLimit(5)
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
 
                 // Bottom: resonance count + actions
-                HStack(spacing: theme.spacingLG) {
+                HStack(spacing: AppSpacing.lg) {
                     // Resonance count — tapping opens resonate sheet per spec
                     Button(action: {
                         CCHaptic.light()
@@ -206,10 +205,10 @@ struct CCResonanceView: View {
                         HStack(spacing: 4) {
                             Image(systemName: "heart.fill")
                                 .font(.system(size: 14))
-                                .foregroundColor(theme.softPink)
+                                .foregroundColor(AppTheme.softPink)
                             Text("\(item.resonanceCount) 人共鸣")
                                 .font(.system(size: 13))
-                                .foregroundColor(theme.textSecondary)
+                                .foregroundColor(AppTheme.textSecondary)
                         }
                     }
                     .buttonStyle(.plain)
@@ -220,7 +219,7 @@ struct CCResonanceView: View {
                     Button(action: { showComposer = true }) {
                         Label("我也想说", systemImage: "bubble.left")
                             .font(.system(size: 12))
-                            .foregroundColor(theme.primaryLight)
+                            .foregroundColor(AppTheme.primaryLight)
                     }
                     .buttonStyle(.plain)
 
@@ -231,17 +230,17 @@ struct CCResonanceView: View {
                     }) {
                         Label("分享共鸣", systemImage: "square.and.arrow.up")
                             .font(.system(size: 12))
-                            .foregroundColor(theme.primaryLight)
+                            .foregroundColor(AppTheme.primaryLight)
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.leading, theme.spacingSM)
-            .padding(.vertical, theme.spacingMD)
-            .padding(.trailing, theme.spacingMD)
+            .padding(.leading, AppSpacing.sm)
+            .padding(.vertical, AppSpacing.md)
+            .padding(.trailing, AppSpacing.md)
         }
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusLG)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.lg)
     }
 
     // MARK: - Floating Compose Button
@@ -257,26 +256,26 @@ struct CCResonanceView: View {
             .foregroundColor(.white)
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
-            .background(theme.primary)
+            .background(AppTheme.primary)
             .cornerRadius(24)
-            .shadow(color: theme.primary.opacity(0.3), radius: 6, y: 2)
+            .shadow(color: AppTheme.primary.opacity(0.3), radius: 6, y: 2)
         }
-        .padding(.trailing, theme.spacingLG)
-        .padding(.bottom, theme.spacingMD)
+        .padding(.trailing, AppSpacing.lg)
+        .padding(.bottom, AppSpacing.md)
     }
 
     // MARK: - Compose Sheet
 
     private var composeSheet: some View {
         NavigationStack {
-            VStack(spacing: theme.spacingMD) {
+            VStack(spacing: AppSpacing.md) {
                 HStack {
                     Spacer()
 
                     Button(action: { showComposerEmoji.toggle() }) {
                         Image(systemName: "face.smiling")
                             .font(.system(size: 20))
-                            .foregroundColor(theme.primary)
+                            .foregroundColor(AppTheme.primary)
                     }
                     .padding(.trailing, 8)
 
@@ -294,7 +293,7 @@ struct CCResonanceView: View {
                             .padding(10)
                             .background(
                                 composerText.trimmingCharacters(in: .whitespaces).count >= 3
-                                    ? theme.primary : theme.textMuted
+                                    ? AppTheme.primary : AppTheme.textMuted
                             )
                             .clipShape(Circle())
                     }
@@ -305,14 +304,14 @@ struct CCResonanceView: View {
                     .focused($composerFocused)
                     .font(.system(size: 15))
                     .lineLimit(4...10)
-                    .padding(theme.spacingMD)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .padding(AppSpacing.md)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
 
                 Spacer()
             }
-            .padding(theme.spacingLG)
-            .background(theme.background)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.background)
             .navigationTitle("写下心情")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -329,7 +328,7 @@ struct CCResonanceView: View {
     // MARK: - Resonate Sheet
 
     private func resonateSheet(for item: CCResonanceDisplayItem) -> some View {
-        VStack(alignment: .leading, spacing: theme.spacingLG) {
+        VStack(alignment: .leading, spacing: AppSpacing.lg) {
             // Quote the post
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 6) {
@@ -337,41 +336,41 @@ struct CCResonanceView: View {
                     Text(item.emotion)
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(item.emotionColorValue)
-                    Text("·").foregroundColor(theme.textMuted)
+                    Text("·").foregroundColor(AppTheme.textMuted)
                     Text(item.timeAgo)
                         .font(.system(size: 13))
-                        .foregroundColor(theme.textMuted)
+                        .foregroundColor(AppTheme.textMuted)
                 }
                 Text(item.content)
                     .font(.system(size: 15))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                     .lineSpacing(5)
                     .lineLimit(3)
             }
-            .padding(theme.spacingMD)
-            .background(theme.surface)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.md)
+            .background(AppTheme.surface)
+            .cornerRadius(AppRadius.md)
 
             Text("我也有过这种感觉")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(AppTheme.textPrimary)
 
             Text("你愿意附上一句鼓励吗？（选填）")
                 .font(.system(size: 14))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
 
             HStack(alignment: .bottom, spacing: 8) {
                 TextField("一句温暖的话…", text: $resonateMessage, axis: .vertical)
                     .font(.system(size: 15))
                     .lineLimit(2...4)
-                    .padding(theme.spacingMD)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .padding(AppSpacing.md)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
 
                 Button(action: { showResonateEmoji.toggle() }) {
                     Image(systemName: "face.smiling")
                         .font(.system(size: 20))
-                        .foregroundColor(theme.primary)
+                        .foregroundColor(AppTheme.primary)
                 }
                 .padding(.bottom, 8)
             }
@@ -391,14 +390,14 @@ struct CCResonanceView: View {
                     Spacer()
                 }
                 .padding(.vertical, 14)
-                .background(theme.softGreen)
-                .cornerRadius(theme.radiusMD)
+                .background(AppTheme.softGreen)
+                .cornerRadius(AppRadius.md)
             }
 
             Spacer()
         }
-        .padding(theme.spacingLG)
-        .background(theme.background)
+        .padding(AppSpacing.lg)
+        .background(AppTheme.background)
     }
 }
 

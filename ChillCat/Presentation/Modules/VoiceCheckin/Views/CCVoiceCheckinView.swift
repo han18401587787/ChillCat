@@ -10,17 +10,16 @@ struct CCVoiceCheckinView: View {
     @State private var showEmojiPicker = false
     @State private var isPressed = false
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
     @FocusState private var transcriptionFocused: Bool
     @FocusState private var tagFocused: Bool
 
     var body: some View {
         ZStack {
-            theme.background.ignoresSafeArea()
+            AppTheme.background.ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: theme.spacingLG) {
-                    Spacer().frame(height: theme.spacingSM)
+                VStack(spacing: AppSpacing.lg) {
+                    Spacer().frame(height: AppSpacing.sm)
 
                     switch viewModel.state {
                     case .idle:
@@ -39,8 +38,8 @@ struct CCVoiceCheckinView: View {
                         errorStateView
                     }
                 }
-                .padding(.horizontal, theme.spacingMD)
-                .padding(.bottom, theme.spacingXL)
+                .padding(.horizontal, AppSpacing.md)
+                .padding(.bottom, AppSpacing.xl)
             }
             .scrollDisabled(viewModel.state == .idle || viewModel.isRecording)
 
@@ -52,8 +51,8 @@ struct CCVoiceCheckinView: View {
                         viewModel.editableTranscription += emoji
                     }
                     .frame(height: 300)
-                    .background(theme.background)
-                    .cornerRadius(theme.radiusXL)
+                    .background(AppTheme.background)
+                    .cornerRadius(AppRadius.xl)
                     .shadow(radius: 10)
                     .transition(.move(edge: .bottom))
                 }
@@ -70,18 +69,18 @@ struct CCVoiceCheckinView: View {
     // MARK: - Idle State
 
     private var idleStateView: some View {
-        VStack(spacing: theme.spacingXL) {
+        VStack(spacing: AppSpacing.xl) {
             Spacer().frame(height: 40)
 
             Text("随便说什么都好，这里不评判…")
                 .font(.system(size: 18))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
 
             idleWaveform
                 .frame(height: 80)
 
-            Spacer().frame(height: theme.spacingSM)
+            Spacer().frame(height: AppSpacing.sm)
 
             recordButton
                 .simultaneousGesture(
@@ -102,7 +101,7 @@ struct CCVoiceCheckinView: View {
 
             Text("按住说话…")
                 .font(.system(size: 14))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(AppTheme.textMuted)
 
             Spacer()
         }
@@ -111,20 +110,20 @@ struct CCVoiceCheckinView: View {
     // MARK: - Recording State
 
     private var recordingStateView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: AppSpacing.lg) {
             Spacer().frame(height: 20)
 
             Text("正在聆听…")
                 .font(.system(size: 18))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
 
             liveWaveform
                 .frame(height: 80)
-                .padding(.vertical, theme.spacingMD)
+                .padding(.vertical, AppSpacing.md)
 
             Text(viewModel.formattedDuration)
                 .font(.system(size: 32, weight: .light))
-                .foregroundColor(theme.primary)
+                .foregroundColor(AppTheme.primary)
                 .monospacedDigit()
 
             HStack(spacing: 6) {
@@ -139,11 +138,11 @@ struct CCVoiceCheckinView: View {
                     .foregroundColor(Color(hex: "E57373"))
             }
 
-            Spacer().frame(height: theme.spacingMD)
+            Spacer().frame(height: AppSpacing.md)
 
             ZStack {
                 Circle()
-                    .stroke(theme.primaryMuted, lineWidth: 3)
+                    .stroke(AppTheme.primaryMuted, lineWidth: 3)
                     .frame(width: 100, height: 100)
                 Circle()
                     .fill(Color(hex: "E57373"))
@@ -154,7 +153,7 @@ struct CCVoiceCheckinView: View {
 
             Text("松手完成录音")
                 .font(.system(size: 14))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(AppTheme.textMuted)
 
             Spacer()
         }
@@ -163,13 +162,13 @@ struct CCVoiceCheckinView: View {
     // MARK: - Analyzing State
 
     private var analyzingStateView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: AppSpacing.lg) {
             Spacer().frame(height: 60)
 
             HStack(spacing: 8) {
                 ForEach(0..<3, id: \.self) { i in
                     Circle()
-                        .fill(theme.primaryMuted)
+                        .fill(AppTheme.primaryMuted)
                         .frame(width: 12, height: 12)
                         .scaleEffect(viewModel.isAnalyzing ? (i == 0 ? 1.3 : i == 1 ? 1.0 : 0.7) : 0.5)
                         .animation(
@@ -184,11 +183,11 @@ struct CCVoiceCheckinView: View {
 
             Text("AI 正在理解你的情绪…")
                 .font(.system(size: 18))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
 
             Text("这可能需要 1-2 秒")
                 .font(.system(size: 13))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(AppTheme.textMuted)
 
             Spacer()
         }
@@ -197,7 +196,7 @@ struct CCVoiceCheckinView: View {
     // MARK: - Result State
 
     private var resultStateView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: AppSpacing.lg) {
             analysisResultCard
             transcriptionEditor
             tagsEditor
@@ -206,17 +205,17 @@ struct CCVoiceCheckinView: View {
     }
 
     private var analysisResultCard: some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
-            HStack(spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
+            HStack(spacing: AppSpacing.sm) {
                 Image(systemName: "heart.text.clinic.fill")
                     .font(.system(size: 18))
                     .foregroundColor(Color(hex: "66BB6A"))
                 Text("情绪识别:")
                     .font(.system(size: 15, weight: .medium))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                 Text(viewModel.resultData?.emotion ?? "")
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(theme.primary)
+                    .foregroundColor(AppTheme.primary)
                 Spacer()
                 Text(viewModel.confidencePercent)
                     .font(.system(size: 13, weight: .medium))
@@ -224,14 +223,14 @@ struct CCVoiceCheckinView: View {
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
                     .background(viewModel.confidenceColor.opacity(0.12))
-                    .cornerRadius(theme.radiusSM)
+                    .cornerRadius(AppRadius.sm)
             }
 
             if viewModel.resultData != nil {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 4)
-                            .fill(theme.primaryMuted.opacity(0.3))
+                            .fill(AppTheme.primaryMuted.opacity(0.3))
                             .frame(height: 4)
                         RoundedRectangle(cornerRadius: 4)
                             .fill(viewModel.confidenceColor)
@@ -241,49 +240,49 @@ struct CCVoiceCheckinView: View {
                 .frame(height: 4)
             }
 
-            Divider().background(theme.primaryMuted.opacity(0.3))
+            Divider().background(AppTheme.primaryMuted.opacity(0.3))
 
-            HStack(alignment: .top, spacing: theme.spacingSM) {
+            HStack(alignment: .top, spacing: AppSpacing.sm) {
                 Image(systemName: "doc.text.fill")
                     .font(.system(size: 14))
-                    .foregroundColor(theme.primaryLight)
+                    .foregroundColor(AppTheme.primaryLight)
                     .frame(width: 20)
                 Text("转文字:")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
                 Text(viewModel.resultData?.transcription ?? "")
                     .font(.system(size: 14))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                     .lineSpacing(4)
             }
 
-            HStack(alignment: .top, spacing: theme.spacingSM) {
+            HStack(alignment: .top, spacing: AppSpacing.sm) {
                 Image(systemName: "tag.fill")
                     .font(.system(size: 14))
-                    .foregroundColor(theme.warmLight)
+                    .foregroundColor(AppTheme.warmLight)
                     .frame(width: 20)
                 Text("标签:")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
                 Text(viewModel.resultData?.tags.map { $0 }.joined(separator: " ") ?? "")
                     .font(.system(size: 14))
-                    .foregroundColor(theme.warm)
+                    .foregroundColor(AppTheme.warm)
             }
         }
-        .padding(theme.spacingMD)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusLG)
+        .padding(AppSpacing.md)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.lg)
         .shadow(color: .black.opacity(0.04), radius: 4, y: 2)
     }
 
     // MARK: - Transcription Editor
 
     private var transcriptionEditor: some View {
-        VStack(alignment: .leading, spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: AppSpacing.sm) {
             HStack {
                 Text("编辑转文字")
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
                 Spacer()
                 Button(action: { showEmojiPicker.toggle() }) {
                     HStack(spacing: 4) {
@@ -292,24 +291,24 @@ struct CCVoiceCheckinView: View {
                         Text("表情")
                             .font(.system(size: 13))
                     }
-                    .foregroundColor(theme.primary)
+                    .foregroundColor(AppTheme.primary)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .background(theme.primaryMuted.opacity(0.2))
-                    .cornerRadius(theme.radiusSM)
+                    .background(AppTheme.primaryMuted.opacity(0.2))
+                    .cornerRadius(AppRadius.sm)
                 }
             }
 
             TextEditor(text: $viewModel.editableTranscription)
                 .font(.system(size: 15))
                 .focused($transcriptionFocused)
-                .padding(theme.spacingSM)
+                .padding(AppSpacing.sm)
                 .frame(minHeight: 80)
-                .background(theme.surface)
-                .cornerRadius(theme.radiusMD)
+                .background(AppTheme.surface)
+                .cornerRadius(AppRadius.md)
                 .overlay(
-                    RoundedRectangle(cornerRadius: theme.radiusMD)
-                        .stroke(transcriptionFocused ? theme.primary.opacity(0.4) : Color.clear, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: AppRadius.md)
+                        .stroke(transcriptionFocused ? AppTheme.primary.opacity(0.4) : Color.clear, lineWidth: 1)
                 )
         }
     }
@@ -317,38 +316,38 @@ struct CCVoiceCheckinView: View {
     // MARK: - Tags Editor
 
     private var tagsEditor: some View {
-        VStack(alignment: .leading, spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: AppSpacing.sm) {
             Text("情绪标签")
                 .font(.system(size: 14, weight: .medium))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
 
             FlowLayout(spacing: 8) {
                 ForEach(viewModel.editableTags, id: \.self) { tag in
                     HStack(spacing: 4) {
                         Text(tag)
                             .font(.system(size: 13))
-                            .foregroundColor(theme.warm)
+                            .foregroundColor(AppTheme.warm)
                         Button(action: { viewModel.removeTag(tag) }) {
                             Image(systemName: "xmark.circle.fill")
                                 .font(.system(size: 12))
-                                .foregroundColor(theme.textMuted)
+                                .foregroundColor(AppTheme.textMuted)
                         }
                     }
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .background(theme.warmLight.opacity(0.12))
-                    .cornerRadius(theme.radiusSM)
+                    .background(AppTheme.warmLight.opacity(0.12))
+                    .cornerRadius(AppRadius.sm)
                 }
             }
 
-            HStack(spacing: theme.spacingSM) {
+            HStack(spacing: AppSpacing.sm) {
                 TextField("添加标签…", text: $viewModel.newTagInput)
                     .font(.system(size: 14))
                     .focused($tagFocused)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
 
                 Button(action: {
                     viewModel.addTag()
@@ -358,7 +357,7 @@ struct CCVoiceCheckinView: View {
                         .font(.system(size: 24))
                         .foregroundColor(
                             viewModel.newTagInput.trimmingCharacters(in: .whitespaces).isEmpty
-                                ? theme.textMuted : theme.primary
+                                ? AppTheme.textMuted : AppTheme.primary
                         )
                 }
                 .disabled(viewModel.newTagInput.trimmingCharacters(in: .whitespaces).isEmpty)
@@ -369,7 +368,7 @@ struct CCVoiceCheckinView: View {
     // MARK: - Action Buttons
 
     private var actionButtons: some View {
-        HStack(spacing: theme.spacingMD) {
+        HStack(spacing: AppSpacing.md) {
             Button(action: {
                 CCHaptic.selection()
                 viewModel.reRecord()
@@ -380,11 +379,11 @@ struct CCVoiceCheckinView: View {
                     Text("重新录制")
                         .font(.system(size: 15, weight: .medium))
                 }
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(theme.surface)
-                .cornerRadius(theme.radiusMD)
+                .background(AppTheme.surface)
+                .cornerRadius(AppRadius.md)
             }
 
             Button(action: {
@@ -399,8 +398,8 @@ struct CCVoiceCheckinView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(theme.primary)
-                .cornerRadius(theme.radiusMD)
+                .background(AppTheme.primary)
+                .cornerRadius(AppRadius.md)
             }
         }
     }
@@ -408,13 +407,13 @@ struct CCVoiceCheckinView: View {
     // MARK: - Saving State
 
     private var savingStateView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: AppSpacing.lg) {
             Spacer().frame(height: 80)
             ProgressView()
                 .scaleEffect(1.5)
             Text("正在保存日记…")
                 .font(.system(size: 18))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
             Spacer()
         }
     }
@@ -422,31 +421,31 @@ struct CCVoiceCheckinView: View {
     // MARK: - Saved State
 
     private var savedStateView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: AppSpacing.lg) {
             Spacer().frame(height: 60)
 
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 72))
-                .foregroundColor(theme.softGreen)
+                .foregroundColor(AppTheme.softGreen)
 
             Text("打卡成功")
                 .font(.system(size: 22, weight: .bold))
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(AppTheme.textPrimary)
 
             if let result = viewModel.resultData {
                 VStack(spacing: 4) {
                     Text("情绪: \(result.emotion)")
                         .font(.system(size: 15))
-                        .foregroundColor(theme.textSecondary)
+                        .foregroundColor(AppTheme.textSecondary)
                     Text("时长: \(viewModel.formattedDuration)")
                         .font(.system(size: 13))
-                        .foregroundColor(theme.textMuted)
+                        .foregroundColor(AppTheme.textMuted)
                 }
             }
 
-            Spacer().frame(height: theme.spacingMD)
+            Spacer().frame(height: AppSpacing.md)
 
-            HStack(spacing: theme.spacingMD) {
+            HStack(spacing: AppSpacing.md) {
                 Button(action: { viewModel.reRecord() }) {
                     HStack(spacing: 6) {
                         Image(systemName: "mic.fill")
@@ -454,11 +453,11 @@ struct CCVoiceCheckinView: View {
                         Text("再录一条")
                             .font(.system(size: 15, weight: .medium))
                     }
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
                 }
 
                 Button(action: {
@@ -473,8 +472,8 @@ struct CCVoiceCheckinView: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(theme.primary)
-                    .cornerRadius(theme.radiusMD)
+                    .background(AppTheme.primary)
+                    .cornerRadius(AppRadius.md)
                 }
             }
 
@@ -485,19 +484,19 @@ struct CCVoiceCheckinView: View {
     // MARK: - Error State
 
     private var errorStateView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: AppSpacing.lg) {
             Spacer().frame(height: 60)
 
             Image(systemName: "exclamationmark.circle.fill")
                 .font(.system(size: 56))
-                .foregroundColor(theme.error)
+                .foregroundColor(AppTheme.error)
 
             Text(viewModel.errorMessage ?? "发生未知错误")
                 .font(.system(size: 18))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
 
-            HStack(spacing: theme.spacingMD) {
+            HStack(spacing: AppSpacing.md) {
                 Button(action: { viewModel.reRecord() }) {
                     HStack(spacing: 6) {
                         Image(systemName: "arrow.counterclockwise")
@@ -505,11 +504,11 @@ struct CCVoiceCheckinView: View {
                         Text("重新录制")
                             .font(.system(size: 15, weight: .medium))
                     }
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
                 }
 
                 Button(action: {
@@ -520,8 +519,8 @@ struct CCVoiceCheckinView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(theme.primary)
-                        .cornerRadius(theme.radiusMD)
+                        .background(AppTheme.primary)
+                        .cornerRadius(AppRadius.md)
                 }
                 .disabled(viewModel.resultData == nil)
             }
@@ -536,7 +535,7 @@ struct CCVoiceCheckinView: View {
         HStack(spacing: 2) {
             ForEach(0..<30, id: \.self) { i in
                 RoundedRectangle(cornerRadius: 2)
-                    .fill(theme.primaryMuted.opacity(0.4))
+                    .fill(AppTheme.primaryMuted.opacity(0.4))
                     .frame(width: 3, height: 6)
             }
         }
@@ -548,8 +547,8 @@ struct CCVoiceCheckinView: View {
                 RoundedRectangle(cornerRadius: 2)
                     .fill(
                         viewModel.isRecording
-                            ? theme.primary.opacity(0.5 + Double(viewModel.waveformData[i]) / 120)
-                            : theme.primaryMuted
+                            ? AppTheme.primary.opacity(0.5 + Double(viewModel.waveformData[i]) / 120)
+                            : AppTheme.primaryMuted
                     )
                     .frame(width: 3, height: max(4, viewModel.waveformData[i]))
                     .animation(.easeInOut(duration: 0.15), value: viewModel.waveformData[i])
@@ -562,11 +561,11 @@ struct CCVoiceCheckinView: View {
     private var recordButton: some View {
         ZStack {
             Circle()
-                .stroke(theme.primaryMuted, lineWidth: 3)
+                .stroke(AppTheme.primaryMuted, lineWidth: 3)
                 .frame(width: 100, height: 100)
 
             Circle()
-                .fill(isPressed ? Color(hex: "E57373") : theme.primary)
+                .fill(isPressed ? Color(hex: "E57373") : AppTheme.primary)
                 .frame(width: isPressed ? 70 : 80, height: isPressed ? 70 : 80)
                 .animation(.easeInOut(duration: 0.15), value: isPressed)
 

@@ -13,12 +13,11 @@ struct CCResonanceDetailView: View {
     @State private var isLoading = true
     @State private var error: Error?
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
     @FocusState private var isFocused: Bool
 
     var body: some View {
         ZStack {
-            theme.background.ignoresSafeArea()
+            AppTheme.background.ignoresSafeArea()
 
             if let error, replies.isEmpty && !isLoading {
                 CCErrorView(error: error) { await loadDetail() }
@@ -35,53 +34,53 @@ struct CCResonanceDetailView: View {
 
     private var detailContent: some View {
         ScrollView {
-            VStack(spacing: theme.spacingLG) {
+            VStack(spacing: AppSpacing.lg) {
                 // 原始卡片（全内容展开）
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
                         RoundedRectangle(cornerRadius: 2)
                             .fill(item.emotionColorValue)
                             .frame(width: 4)
-                            .padding(.vertical, theme.spacingMD)
+                            .padding(.vertical, AppSpacing.md)
 
-                        VStack(alignment: .leading, spacing: theme.spacingSM) {
-                            HStack(spacing: theme.spacingSM) {
+                        VStack(alignment: .leading, spacing: AppSpacing.sm) {
+                            HStack(spacing: AppSpacing.sm) {
                                 HStack(spacing: 4) {
                                     Circle().fill(item.emotionColorValue).frame(width: 8, height: 8)
                                     Text(item.emotion).font(.system(size: 13)).foregroundColor(item.emotionColorValue)
                                 }
                                 Spacer()
-                                Text(item.timeAgo).font(.system(size: 12)).foregroundColor(theme.textMuted)
+                                Text(item.timeAgo).font(.system(size: 12)).foregroundColor(AppTheme.textMuted)
                             }
 
                             Text(item.content)
                                 .font(.system(size: 15))
-                                .foregroundColor(theme.textPrimary)
+                                .foregroundColor(AppTheme.textPrimary)
                                 .lineSpacing(6)
                                 .fixedSize(horizontal: false, vertical: true)
 
-                            HStack(spacing: theme.spacingLG) {
+                            HStack(spacing: AppSpacing.lg) {
                                 HStack(spacing: 4) {
-                                    Image(systemName: "heart.fill").font(.system(size: 14)).foregroundColor(theme.softPink)
-                                    Text("\(item.resonanceCount) 人共鸣").font(.system(size: 13)).foregroundColor(theme.textSecondary)
+                                    Image(systemName: "heart.fill").font(.system(size: 14)).foregroundColor(AppTheme.softPink)
+                                    Text("\(item.resonanceCount) 人共鸣").font(.system(size: 13)).foregroundColor(AppTheme.textSecondary)
                                 }
                                 Spacer()
                             }
                         }
-                        .padding(.leading, theme.spacingSM)
-                        .padding(.vertical, theme.spacingMD)
-                        .padding(.trailing, theme.spacingMD)
+                        .padding(.leading, AppSpacing.sm)
+                        .padding(.vertical, AppSpacing.md)
+                        .padding(.trailing, AppSpacing.md)
                     }
                 }
-                .background(theme.cardBackground)
-                .cornerRadius(theme.radiusLG)
+                .background(AppTheme.cardBackground)
+                .cornerRadius(AppRadius.lg)
 
                 // 共鸣回应列表
                 if !replies.isEmpty {
-                    VStack(alignment: .leading, spacing: theme.spacingSM) {
+                    VStack(alignment: .leading, spacing: AppSpacing.sm) {
                         Text("回应 (\(replies.count))")
                             .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(theme.textPrimary)
+                            .foregroundColor(AppTheme.textPrimary)
 
                         ForEach(replies) { reply in
                             replyRow(reply)
@@ -107,46 +106,46 @@ struct CCResonanceDetailView: View {
     }
 
     private func replyRow(_ reply: CCResonanceReplyDisplay) -> some View {
-        HStack(alignment: .top, spacing: theme.spacingSM) {
+        HStack(alignment: .top, spacing: AppSpacing.sm) {
             Image(systemName: "person.circle.fill")
                 .font(.system(size: 20))
-                .foregroundColor(theme.primaryMuted)
+                .foregroundColor(AppTheme.primaryMuted)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("匿名用户")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
                 Text(reply.content)
                     .font(.system(size: 14))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                     .lineSpacing(4)
                 Text(reply.timeAgo)
                     .font(.system(size: 11))
-                    .foregroundColor(theme.textMuted)
+                    .foregroundColor(AppTheme.textMuted)
             }
         }
-        .padding(theme.spacingSM)
+        .padding(AppSpacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(theme.surface)
-        .cornerRadius(theme.radiusSM)
+        .background(AppTheme.surface)
+        .cornerRadius(AppRadius.sm)
     }
 
     private var replyInputSection: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             Divider()
-            HStack(spacing: theme.spacingSM) {
+            HStack(spacing: AppSpacing.sm) {
                 TextField("附上一句鼓励...", text: $newReply, axis: .vertical)
                     .focused($isFocused)
                     .font(.system(size: 15))
                     .padding(10)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
                     .lineLimit(1...3)
 
                 Button(action: { showEmoji.toggle() }) {
                     Image(systemName: "face.smiling")
                         .font(.system(size: 20))
-                        .foregroundColor(theme.primary)
+                        .foregroundColor(AppTheme.primary)
                 }
 
                 Button(action: { sendReply() }) {
@@ -154,7 +153,7 @@ struct CCResonanceDetailView: View {
                         .font(.system(size: 16))
                         .foregroundColor(.white)
                         .padding(10)
-                        .background(newReply.trimmingCharacters(in: .whitespaces).isEmpty ? theme.textMuted : theme.primary)
+                        .background(newReply.trimmingCharacters(in: .whitespaces).isEmpty ? AppTheme.textMuted : AppTheme.primary)
                         .clipShape(Circle())
                 }
                 .disabled(newReply.trimmingCharacters(in: .whitespaces).isEmpty)

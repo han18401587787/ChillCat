@@ -13,12 +13,11 @@ struct CCPaymentConfirmSheet: View {
     let onDismiss: () -> Void
 
     @State private var isProcessing = false
-    @Environment(\.ccAppTheme) private var theme
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: theme.spacingLG) {
+            VStack(spacing: AppSpacing.lg) {
                 headerSection
                 detailSection
                 Spacer()
@@ -37,10 +36,10 @@ struct CCPaymentConfirmSheet: View {
     }
 
     private var headerSection: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             Image(systemName: "crown.fill")
                 .font(.system(size: 40))
-                .foregroundColor(theme.warm)
+                .foregroundColor(AppTheme.warm)
 
             Text(product.type.displayName)
                 .font(.title3)
@@ -49,12 +48,12 @@ struct CCPaymentConfirmSheet: View {
             Text(product.displayPrice)
                 .font(.largeTitle)
                 .fontWeight(.heavy)
-                .foregroundColor(theme.primary)
+                .foregroundColor(AppTheme.primary)
 
             if let originalPrice = product.originalPrice {
                 Text("原价 \(originalPrice.formatted())")
                     .font(.caption)
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
                     .strikethrough()
             }
 
@@ -64,18 +63,18 @@ struct CCPaymentConfirmSheet: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 2)
-                    .background(theme.error)
-                    .cornerRadius(theme.radiusSM)
+                    .background(AppTheme.error)
+                    .cornerRadius(AppRadius.sm)
             }
         }
-        .padding(theme.spacingLG)
+        .padding(AppSpacing.lg)
         .frame(maxWidth: .infinity)
-        .background(theme.surface)
-        .cornerRadius(theme.radiusLG)
+        .background(AppTheme.surface)
+        .cornerRadius(AppRadius.lg)
     }
 
     private var detailSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: AppSpacing.sm) {
             Text("购买详情")
                 .font(.headline)
 
@@ -93,30 +92,30 @@ struct CCPaymentConfirmSheet: View {
                     detailRow(icon: "checkmark.shield.fill", title: "购买方式", value: "一次性买断")
                 }
             }
-            .padding(theme.spacingMD)
-            .background(theme.surface)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.md)
+            .background(AppTheme.surface)
+            .cornerRadius(AppRadius.md)
         }
     }
 
     private func detailRow(icon: String, title: String, value: String) -> some View {
         HStack {
             Image(systemName: icon)
-                .foregroundColor(theme.primary)
+                .foregroundColor(AppTheme.primary)
                 .frame(width: 24)
             Text(title)
                 .font(.subheadline)
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
             Spacer()
             Text(value)
                 .font(.subheadline)
                 .fontWeight(.medium)
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(AppTheme.textPrimary)
         }
     }
 
     private var actionButtons: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             Button(action: {
                 isProcessing = true
                 Task {
@@ -135,15 +134,15 @@ struct CCPaymentConfirmSheet: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(isProcessing ? theme.primary.opacity(0.5) : theme.primary)
+                .background(isProcessing ? AppTheme.primary.opacity(0.5) : AppTheme.primary)
                 .foregroundColor(.white)
-                .cornerRadius(theme.radiusMD)
+                .cornerRadius(AppRadius.md)
             }
             .disabled(isProcessing)
 
             Text("支付即表示您同意服务条款和隐私政策")
                 .font(.caption2)
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(AppTheme.textMuted)
                 .multilineTextAlignment(.center)
         }
     }

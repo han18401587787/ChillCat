@@ -4,12 +4,11 @@ import SwiftUI
 struct CCEmotionDecoderView: View {
     @State private var viewModel = CCEmotionDecoderViewModel()
     @State private var showEmoji = false
-    @Environment(\.ccAppTheme) private var theme
     @FocusState private var isFocused: Bool
 
     var body: some View {
         ScrollView {
-            VStack(spacing: theme.spacingLG) {
+            VStack(spacing: AppSpacing.lg) {
                 // Header
                 headerSection
 
@@ -20,12 +19,12 @@ struct CCEmotionDecoderView: View {
 
                 // Loading
                 if viewModel.isLoading {
-                    VStack(spacing: theme.spacingMD) {
+                    VStack(spacing: AppSpacing.md) {
                         ProgressView()
                             .scaleEffect(1.3)
                         Text("正在解码你的情绪…")
                             .font(.system(size: 15))
-                            .foregroundColor(theme.textSecondary)
+                            .foregroundColor(AppTheme.textSecondary)
                     }
                     .padding(.vertical, 60)
                 }
@@ -38,32 +37,32 @@ struct CCEmotionDecoderView: View {
                     Button(action: { viewModel.reset() }) {
                         Text("再试一次")
                             .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(theme.primary)
+                            .foregroundColor(AppTheme.primary)
                             .padding(.horizontal, 24)
                             .padding(.vertical, 10)
-                            .background(theme.primary.opacity(0.1))
-                            .cornerRadius(theme.radiusMD)
+                            .background(AppTheme.primary.opacity(0.1))
+                            .cornerRadius(AppRadius.md)
                     }
-                    .padding(.top, theme.spacingSM)
+                    .padding(.top, AppSpacing.sm)
                 }
 
                 // Error
                 if let error = viewModel.errorMessage {
                     HStack {
                         Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundColor(theme.error)
+                            .foregroundColor(AppTheme.error)
                         Text(error)
-                            .foregroundColor(theme.error)
+                            .foregroundColor(AppTheme.error)
                     }
                     .font(.system(size: 14))
                     .padding()
-                    .background(theme.error.opacity(0.08))
-                    .cornerRadius(theme.radiusSM)
+                    .background(AppTheme.error.opacity(0.08))
+                    .cornerRadius(AppRadius.sm)
                 }
             }
             .padding()
         }
-        .background(theme.background)
+        .background(AppTheme.background)
         .overlay(alignment: .bottom) {
             if showEmoji {
                 CCEmojiPicker(isShowing: $showEmoji) { emoji in
@@ -83,7 +82,7 @@ struct CCEmotionDecoderView: View {
         HStack {
             Text("🧠 情绪解码")
                 .font(.system(size: 22, weight: .bold))
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(AppTheme.textPrimary)
             Spacer()
         }
     }
@@ -91,10 +90,10 @@ struct CCEmotionDecoderView: View {
     // MARK: - Input
 
     private var inputSection: some View {
-        VStack(spacing: theme.spacingMD) {
+        VStack(spacing: AppSpacing.md) {
             Text("写下让你困惑的感受，AI 帮你一层层拆解")
                 .font(.system(size: 14))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
 
             ZStack(alignment: .bottomTrailing) {
                 TextEditor(text: $viewModel.inputText)
@@ -104,16 +103,16 @@ struct CCEmotionDecoderView: View {
                     .background(Color.clear)
                     .frame(minHeight: 100, maxHeight: 160)
                     .padding(12)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
 
                 HStack(spacing: 8) {
                     Button(action: { showEmoji.toggle() }) {
                         Image(systemName: "face.smiling")
                             .font(.system(size: 18))
-                            .foregroundColor(theme.primary)
+                            .foregroundColor(AppTheme.primary)
                             .frame(width: 36, height: 36)
-                            .background(theme.primary.opacity(0.1))
+                            .background(AppTheme.primary.opacity(0.1))
                             .clipShape(Circle())
                     }
                     .padding(.bottom, 8)
@@ -134,8 +133,8 @@ struct CCEmotionDecoderView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(viewModel.canDecode ? theme.primary : theme.textMuted)
-                .cornerRadius(theme.radiusMD)
+                .background(viewModel.canDecode ? AppTheme.primary : AppTheme.textMuted)
+                .cornerRadius(AppRadius.md)
             }
             .disabled(!viewModel.canDecode)
         }
@@ -152,8 +151,8 @@ struct CCEmotionDecoderView: View {
                     icon: viewModel.surfaceEmotion?.icon ?? "😰",
                     label: viewModel.surfaceEmotion?.label ?? "",
                     confidence: viewModel.surfaceEmotion?.confidence,
-                    color: theme.softPurple,
-                    bgColor: theme.softPurpleLight.opacity(0.2)
+                    color: AppTheme.softPurple,
+                    bgColor: AppTheme.softPurpleLight.opacity(0.2)
                 )
                 .transition(.opacity.combined(with: .move(edge: .top)))
             } else if viewModel.showResult {
@@ -172,7 +171,7 @@ struct CCEmotionDecoderView: View {
                 VStack(spacing: 8) {
                     Text("中层情绪")
                         .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(theme.textSecondary)
+                        .foregroundColor(AppTheme.textSecondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 4)
 
@@ -182,17 +181,17 @@ struct CCEmotionDecoderView: View {
                                 .font(.system(size: 20))
                             Text(emotion.label)
                                 .font(.system(size: 15))
-                                .foregroundColor(theme.textPrimary)
+                                .foregroundColor(AppTheme.textPrimary)
                             Spacer()
                             if let confidence = emotion.confidence {
                                 Text("\(Int(confidence * 100))%")
                                     .font(.system(size: 12))
-                                    .foregroundColor(theme.textMuted)
+                                    .foregroundColor(AppTheme.textMuted)
                             }
                         }
                         .padding()
-                        .background(theme.softPink.opacity(0.15))
-                        .cornerRadius(theme.radiusMD)
+                        .background(AppTheme.softPink.opacity(0.15))
+                        .cornerRadius(AppRadius.md)
                     }
                 }
                 .transition(.opacity.combined(with: .move(edge: .leading)))
@@ -212,7 +211,7 @@ struct CCEmotionDecoderView: View {
                 VStack(spacing: 8) {
                     Text("深层需求")
                         .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(theme.textSecondary)
+                        .foregroundColor(AppTheme.textSecondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 4)
 
@@ -222,12 +221,12 @@ struct CCEmotionDecoderView: View {
                                 .font(.system(size: 18))
                             Text(need.label)
                                 .font(.system(size: 15, weight: .medium))
-                                .foregroundColor(theme.textPrimary)
+                                .foregroundColor(AppTheme.textPrimary)
                             Spacer()
                         }
                         .padding()
-                        .background(theme.softGreenLight.opacity(0.3))
-                        .cornerRadius(theme.radiusMD)
+                        .background(AppTheme.softGreenLight.opacity(0.3))
+                        .cornerRadius(AppRadius.md)
                     }
                 }
                 .transition(.opacity.combined(with: .move(edge: .leading)))
@@ -239,10 +238,10 @@ struct CCEmotionDecoderView: View {
 
             // Suggestions
             if viewModel.showSuggestions {
-                VStack(alignment: .leading, spacing: theme.spacingSM) {
+                VStack(alignment: .leading, spacing: AppSpacing.sm) {
                     Text("💡 建议行动")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(theme.textPrimary)
+                        .foregroundColor(AppTheme.textPrimary)
 
                     ForEach(viewModel.suggestions) { suggestion in
                         HStack(spacing: 12) {
@@ -251,23 +250,23 @@ struct CCEmotionDecoderView: View {
                                 .foregroundColor(suggestionColor(suggestion.colorName))
                                 .frame(width: 36, height: 36)
                                 .background(suggestionColor(suggestion.colorName).opacity(0.15))
-                                .cornerRadius(theme.radiusSM)
+                                .cornerRadius(AppRadius.sm)
 
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(suggestion.title)
                                     .font(.system(size: 15, weight: .medium))
-                                    .foregroundColor(theme.textPrimary)
+                                    .foregroundColor(AppTheme.textPrimary)
                                 Text(suggestion.description)
                                     .font(.system(size: 13))
-                                    .foregroundColor(theme.textSecondary)
+                                    .foregroundColor(AppTheme.textSecondary)
                                     .lineSpacing(3)
                             }
 
                             Spacer()
                         }
                         .padding()
-                        .background(theme.cardBackground)
-                        .cornerRadius(theme.radiusMD)
+                        .background(AppTheme.cardBackground)
+                        .cornerRadius(AppRadius.md)
                     }
                 }
                 .transition(.move(edge: .trailing).combined(with: .opacity))
@@ -281,7 +280,7 @@ struct CCEmotionDecoderView: View {
         VStack(spacing: 8) {
             Text(title)
                 .font(.system(size: 13, weight: .medium))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 4)
 
@@ -290,17 +289,17 @@ struct CCEmotionDecoderView: View {
                     .font(.system(size: 24))
                 Text(label)
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                 Spacer()
                 if let confidence = confidence {
                     Text("\(Int(confidence * 100))%")
                         .font(.system(size: 12))
-                        .foregroundColor(theme.textMuted)
+                        .foregroundColor(AppTheme.textMuted)
                 }
             }
             .padding()
             .background(bgColor)
-            .cornerRadius(theme.radiusMD)
+            .cornerRadius(AppRadius.md)
         }
     }
 
@@ -309,11 +308,11 @@ struct CCEmotionDecoderView: View {
     private var animatedArrow: some View {
         VStack(spacing: 0) {
             Rectangle()
-                .fill(theme.primaryMuted.opacity(0.4))
+                .fill(AppTheme.primaryMuted.opacity(0.4))
                 .frame(width: 2, height: 24)
             Image(systemName: "arrowtriangle.down.fill")
                 .font(.system(size: 8))
-                .foregroundColor(theme.primaryMuted.opacity(0.6))
+                .foregroundColor(AppTheme.primaryMuted.opacity(0.6))
                 .scaleEffect(arrowScale)
                 .animation(
                     .easeInOut(duration: 1.2).repeatForever(autoreverses: true),
@@ -329,12 +328,12 @@ struct CCEmotionDecoderView: View {
 
     private func suggestionColor(_ name: String) -> Color {
         switch name {
-        case "softPurple": return theme.softPurple
-        case "softPink": return theme.softPink
-        case "warmLight": return theme.warmLight
-        case "softGreen": return theme.softGreen
-        case "primaryMuted": return theme.primaryMuted
-        default: return theme.primaryMuted
+        case "softPurple": return AppTheme.softPurple
+        case "softPink": return AppTheme.softPink
+        case "warmLight": return AppTheme.warmLight
+        case "softGreen": return AppTheme.softGreen
+        case "primaryMuted": return AppTheme.primaryMuted
+        default: return AppTheme.primaryMuted
         }
     }
 }

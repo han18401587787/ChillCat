@@ -8,13 +8,12 @@ import SwiftUI
 struct CCHomeView: View {
     @State private var viewModel = CCEmotionViewModel()
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
 
     let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 5)
 
     var body: some View {
         ScrollView {
-            VStack(spacing: theme.spacingLG) {
+            VStack(spacing: AppSpacing.lg) {
                 if viewModel.isLoading {
                     loadingContent
                 } else {
@@ -46,7 +45,7 @@ struct CCHomeView: View {
             }
             .padding()
         }
-        .background(theme.background)
+        .background(AppTheme.background)
         .navigationTitle("绪安")
         .navigationBarTitleDisplayMode(.inline)
         .task { await viewModel.loadData() }
@@ -55,7 +54,7 @@ struct CCHomeView: View {
     // MARK: - Loading Skeleton
 
     private var loadingContent: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: AppSpacing.lg) {
             headerSection
             skeletonCard(height: 120)
             skeletonCard(height: 200)
@@ -67,8 +66,8 @@ struct CCHomeView: View {
     }
 
     private func skeletonCard(height: CGFloat) -> some View {
-        RoundedRectangle(cornerRadius: theme.radiusMD)
-            .fill(theme.surface)
+        RoundedRectangle(cornerRadius: AppRadius.md)
+            .fill(AppTheme.surface)
             .frame(height: height)
             .opacity(0.5)
     }
@@ -79,38 +78,38 @@ struct CCHomeView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text("现在是什么感受？")
                     .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                 Text("已陪伴你 \(viewModel.totalDays) 天")
                     .font(.system(size: 14))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
             }
             Spacer()
             Text("连续\(viewModel.streakDays)天")
                 .font(.system(size: 13, weight: .medium))
-                .foregroundColor(theme.primary)
+                .foregroundColor(AppTheme.primary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
-                .background(theme.primaryMuted.opacity(0.3))
-                .cornerRadius(theme.radiusSM)
+                .background(AppTheme.primaryMuted.opacity(0.3))
+                .cornerRadius(AppRadius.sm)
         }
     }
 
     // MARK: - Emotion Grid
     private var emotionCheckInSection: some View {
-        VStack(spacing: theme.spacingMD) {
-            LazyVGrid(columns: columns, spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.md) {
+            LazyVGrid(columns: columns, spacing: AppSpacing.sm) {
                 ForEach(CCEmotion.allCases) { emotion in
                     emotionButton(emotion)
                 }
             }
 
             if let selected = viewModel.selectedEmotion {
-                VStack(spacing: theme.spacingMD) {
+                VStack(spacing: AppSpacing.md) {
                     TextField("不用勉强说…", text: $viewModel.todayNote, axis: .vertical)
                         .font(.system(size: 15))
                         .padding()
-                        .background(theme.cardBackground)
-                        .cornerRadius(theme.radiusMD)
+                        .background(AppTheme.cardBackground)
+                        .cornerRadius(AppRadius.md)
                         .lineLimit(3...5)
 
                     Button(action: { CCHaptic.success(); viewModel.completeCheckIn() }) {
@@ -119,8 +118,8 @@ struct CCHomeView: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
-                            .background(theme.primary)
-                            .cornerRadius(theme.radiusMD)
+                            .background(AppTheme.primary)
+                            .cornerRadius(AppRadius.md)
                     }
                 }
                 .transition(.opacity.combined(with: .move(edge: .bottom)))
@@ -141,36 +140,36 @@ struct CCHomeView: View {
             .padding(.vertical, 12)
             .background(
                 viewModel.selectedEmotion == emotion
-                    ? theme.primary.opacity(0.15)
-                    : theme.surface
+                    ? AppTheme.primary.opacity(0.15)
+                    : AppTheme.surface
             )
-            .cornerRadius(theme.radiusMD)
+            .cornerRadius(AppRadius.md)
             .overlay(
-                RoundedRectangle(cornerRadius: theme.radiusMD)
+                RoundedRectangle(cornerRadius: AppRadius.md)
                     .stroke(
                         viewModel.selectedEmotion == emotion
-                            ? theme.primary : Color.clear,
+                            ? AppTheme.primary : Color.clear,
                         lineWidth: 1.5
                     )
             )
         }
-        .foregroundColor(theme.textPrimary)
+        .foregroundColor(AppTheme.textPrimary)
     }
 
     // MARK: - Checked In State
     private var checkedInCard: some View {
-        VStack(spacing: theme.spacingSM) {
-            Image(systemName: "checkmark.seal.fill").font(.system(size: 40)).foregroundColor(theme.softGreen)
+        VStack(spacing: AppSpacing.sm) {
+            Image(systemName: "checkmark.seal.fill").font(.system(size: 40)).foregroundColor(AppTheme.softGreen)
             Text("今日已打卡")
                 .font(.system(size: 18, weight: .semibold))
             Text("完成了！你真的很棒")
                 .font(.system(size: 14))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, theme.spacingLG)
-        .background(theme.softGreenLight.opacity(0.3))
-        .cornerRadius(theme.radiusLG)
+        .padding(.vertical, AppSpacing.lg)
+        .background(AppTheme.softGreenLight.opacity(0.3))
+        .cornerRadius(AppRadius.lg)
     }
 
     // MARK: - Daily Task
@@ -179,58 +178,58 @@ struct CCHomeView: View {
             Button(action: { viewModel.completeDailyTask() }) {
                 Image(systemName: viewModel.dailyTaskCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundColor(viewModel.dailyTaskCompleted ? theme.softGreen : theme.textMuted)
+                    .foregroundColor(viewModel.dailyTaskCompleted ? AppTheme.softGreen : AppTheme.textMuted)
             }
 
             Text(viewModel.dailyTask)
                 .font(.system(size: 15))
                 .foregroundColor(
-                    viewModel.dailyTaskCompleted ? theme.textSecondary : theme.textPrimary
+                    viewModel.dailyTaskCompleted ? AppTheme.textSecondary : AppTheme.textPrimary
                 )
                 .strikethrough(viewModel.dailyTaskCompleted)
 
             Spacer()
         }
         .padding()
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     // MARK: - Weekly Review
     private var weeklyReviewCard: some View {
-        VStack(alignment: .leading, spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: AppSpacing.sm) {
             HStack {
                 Text("本周情绪回顾")
                     .font(.system(size: 16, weight: .semibold))
                 Spacer()
                 Text("本周 14 个")
                     .font(.system(size: 13))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
             }
 
             Text(viewModel.weeklyNote)
                 .font(.system(size: 14))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
                 .lineSpacing(4)
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     // MARK: - Explore
     private var exploreSection: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             Text("探索更多可能")
                 .font(.system(size: 16, weight: .semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             LazyVGrid(
-                columns: [GridItem(.flexible(), spacing: theme.spacingSM),
-                          GridItem(.flexible(), spacing: theme.spacingSM),
+                columns: [GridItem(.flexible(), spacing: AppSpacing.sm),
+                          GridItem(.flexible(), spacing: AppSpacing.sm),
                           GridItem(.flexible())],
-                spacing: theme.spacingSM
+                spacing: AppSpacing.sm
             ) {
                 exploreCard(icon: "chart.bar.fill", title: "情绪趋势", color: Color(hex: "D4C8E8"), route: .trends)
                 exploreCard(icon: "book.pages.fill", title: "情绪日记", color: Color(hex: "D9C8E3"), route: .journal)
@@ -253,41 +252,41 @@ struct CCHomeView: View {
                     .foregroundColor(color)
                     .frame(width: 48, height: 48)
                     .background(color.opacity(0.15))
-                    .cornerRadius(theme.radiusSM)
+                    .cornerRadius(AppRadius.sm)
                 Text(title)
                     .font(.system(size: 12))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
         }
     }
 
     // MARK: - Quote
     private var quoteCard: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             Image(systemName: "quote.opening")
                 .font(.system(size: 20))
-                .foregroundColor(theme.primaryMuted)
+                .foregroundColor(AppTheme.primaryMuted)
 
             Text(viewModel.quote)
                 .font(.system(size: 15))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(6)
                 .fixedSize(horizontal: false, vertical: true)
 
             Image(systemName: "quote.closing")
                 .font(.system(size: 20))
-                .foregroundColor(theme.primaryMuted)
+                .foregroundColor(AppTheme.primaryMuted)
         }
-        .padding(theme.spacingLG)
+        .padding(AppSpacing.lg)
         .frame(maxWidth: .infinity)
-        .background(theme.softPurpleLight.opacity(0.3))
-        .cornerRadius(theme.radiusLG)
+        .background(AppTheme.softPurpleLight.opacity(0.3))
+        .cornerRadius(AppRadius.lg)
     }
 }

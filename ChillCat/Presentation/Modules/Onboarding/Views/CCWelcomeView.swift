@@ -2,7 +2,6 @@ import SwiftUI
 
 struct CCWelcomeView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
     @State private var viewModel = CCWelcomeViewModel()
 
     var body: some View {

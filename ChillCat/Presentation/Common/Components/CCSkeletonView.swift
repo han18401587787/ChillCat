@@ -2,13 +2,12 @@ import SwiftUI
 
 struct CCSkeletonView: View {
     @State private var phase: CGFloat = -1
-    @Environment(\.ccAppTheme) private var theme
 
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                theme.surface
-                theme.background
+                AppTheme.surface
+                AppTheme.background
                     .mask(
                         Rectangle()
                             .fill(LinearGradient(
@@ -65,7 +64,6 @@ struct CCSkeletonGrid: View {
 
 struct CCSkeletonList: View {
     var count: Int = 4
-    @Environment(\.ccAppTheme) private var theme
 
     var body: some View {
         VStack(spacing: 12) {
@@ -78,8 +76,8 @@ struct CCSkeletonList: View {
                     }
                 }
                 .padding()
-                .background(theme.cardBackground)
-                .cornerRadius(theme.radiusMD)
+                .background(AppTheme.cardBackground)
+                .cornerRadius(AppRadius.md)
             }
         }
     }

@@ -14,7 +14,6 @@ struct CCEmptyStateView: View {
     let imageName: String
     let actionTitle: String?
     let action: (() async -> Void)?
-    @Environment(\.ccAppTheme) private var theme
 
     init(
         title: String,
@@ -31,18 +30,18 @@ struct CCEmptyStateView: View {
     }
 
     var body: some View {
-        VStack(spacing: theme.spacingMD) {
+        VStack(spacing: AppSpacing.md) {
             Image(systemName: imageName)
                 .font(.system(size: 48))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(AppTheme.textMuted)
 
             Text(title)
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(AppTheme.textPrimary)
 
             Text(message)
                 .font(.system(size: 15))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
 
             if let actionTitle = actionTitle, let action = action {
@@ -50,12 +49,12 @@ struct CCEmptyStateView: View {
                     Task { await action() }
                 }
                 .buttonStyle(.bordered)
-                .tint(theme.primary)
-                .padding(.top, theme.spacingSM)
+                .tint(AppTheme.primary)
+                .padding(.top, AppSpacing.sm)
             }
         }
-        .padding(theme.spacingLG)
+        .padding(AppSpacing.lg)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(theme.background)
+        .background(AppTheme.background)
     }
 }

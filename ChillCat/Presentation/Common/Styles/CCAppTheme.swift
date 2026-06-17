@@ -146,13 +146,28 @@ extension EnvironmentValues {
     }
 }
 
+// MARK: - CCThemeManager（v3.0 适配）
+/// v3.0 设计系统改为 AppTheme 静态属性，不再通过协议注入
+/// CCThemeManager 保留用于暗色模式切换控制
 @MainActor
 @Observable
 final class CCThemeManager {
-    var currentTheme: CCAppThemeProtocol = CCLightTheme()
+    /// 用户偏好：nil=跟随系统, false=浅色, true=深色
+    var isDarkModeOverride: Bool? = nil
+
+    /// 返回适合 preferredColorScheme 的值
+    var colorScheme: ColorScheme? {
+        guard let override = isDarkModeOverride else { return nil }
+        return override ? .dark : .light
+    }
 
     var isDarkMode: Bool {
-        get { currentTheme is CCDarkTheme }
-        set { currentTheme = newValue ? CCDarkTheme() : CCLightTheme() }
+        get { isDarkModeOverride ?? false }
+        set { isDarkModeOverride = newValue }
+    }
+
+    /// 重置为跟随系统
+    func resetToSystem() {
+        isDarkModeOverride = nil
     }
 }

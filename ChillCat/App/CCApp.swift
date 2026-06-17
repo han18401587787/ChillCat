@@ -21,8 +21,10 @@ struct CCApp: View {
                 CCWelcomeView()
             }
         }
-        .environment(\.ccAppTheme, themeManager.currentTheme)
+        // v3.0: 设计系统改为 AppTheme 静态属性，不再通过 Environment 注入
+        // CCThemeManager 保留用于暗色模式切换（后续版本实现）
         .environment(coordinator)
         .environment(themeManager)
+        .preferredColorScheme(themeManager.colorScheme)
     }
 }

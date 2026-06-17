@@ -5,7 +5,6 @@ struct CCEncourageChainView: View {
     @State private var viewModel = CCEncourageChainViewModel()
     @State private var showEmoji = false
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
     @FocusState private var isFocused: Bool
 
     let specificChainId: Int64?
@@ -46,32 +45,32 @@ struct CCEncourageChainView: View {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 12))
                         }
-                        .foregroundColor(theme.warm)
+                        .foregroundColor(AppTheme.warm)
                         .padding()
-                        .background(theme.cardBackground)
-                        .cornerRadius(theme.radiusMD)
+                        .background(AppTheme.cardBackground)
+                        .cornerRadius(AppRadius.md)
                         .padding(.horizontal)
-                        .padding(.top, theme.spacingMD)
+                        .padding(.top, AppSpacing.md)
                     }
 
                     // Error message
                     if let error = viewModel.errorMessage {
                         HStack {
                             Image(systemName: "exclamationmark.triangle.fill")
-                                .foregroundColor(theme.error)
+                                .foregroundColor(AppTheme.error)
                             Text(error)
-                                .foregroundColor(theme.error)
+                                .foregroundColor(AppTheme.error)
                         }
                         .font(.system(size: 14))
                         .padding()
-                        .background(theme.error.opacity(0.08))
-                        .cornerRadius(theme.radiusSM)
+                        .background(AppTheme.error.opacity(0.08))
+                        .cornerRadius(AppRadius.sm)
                         .padding(.horizontal)
                     }
                 }
                 .padding(.bottom, 40)
             }
-            .background(theme.background)
+            .background(AppTheme.background)
             .onChange(of: viewModel.links.count) { _, _ in
                 withAnimation {
                     proxy.scrollTo("inputArea", anchor: .bottom)
@@ -106,13 +105,13 @@ struct CCEncourageChainView: View {
                 Spacer()
                 Text("🌟 鼓励链 #\(viewModel.chainId)")
                     .font(.system(size: 22, weight: .bold))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                 Spacer()
             }
             if viewModel.participantCount > 0 {
                 Text("\(viewModel.participantCount) 人参与传递")
                     .font(.system(size: 14))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
             }
 
             // Milestone banner
@@ -121,12 +120,12 @@ struct CCEncourageChainView: View {
                     Text("🎉")
                     Text("已达成里程碑！")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(theme.warm)
+                        .foregroundColor(AppTheme.warm)
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
-                .background(theme.warm.opacity(0.1))
-                .cornerRadius(theme.radiusSM)
+                .background(AppTheme.warm.opacity(0.1))
+                .cornerRadius(AppRadius.sm)
             }
         }
         .padding()
@@ -151,12 +150,12 @@ struct CCEncourageChainView: View {
                 VStack(spacing: 16) {
                     Image(systemName: "flame.fill")
                         .font(.system(size: 48))
-                        .foregroundColor(theme.warm)
+                        .foregroundColor(AppTheme.warm)
                     Text("还没有鼓励链")
                         .font(.system(size: 18, weight: .semibold))
                     Text("成为第一个发起鼓励的人")
                         .font(.system(size: 14))
-                        .foregroundColor(theme.textSecondary)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
                 .padding(.vertical, 60)
             }
@@ -170,33 +169,33 @@ struct CCEncourageChainView: View {
                     .font(.system(size: 20))
                 Text("\(link.label) — 匿名")
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(theme.warm)
+                    .foregroundColor(AppTheme.warm)
                 Spacer()
                 Text(link.createdAt, style: .relative)
                     .font(.system(size: 11))
-                    .foregroundColor(theme.textMuted)
+                    .foregroundColor(AppTheme.textMuted)
             }
 
             Text(link.content)
                 .font(.system(size: 15))
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(AppTheme.textPrimary)
                 .lineSpacing(5)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding()
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
         .shadow(color: Color.black.opacity(0.03), radius: 3, y: 1)
     }
 
     private var chainConnector: some View {
         VStack(spacing: 0) {
             Rectangle()
-                .fill(theme.primaryMuted.opacity(0.4))
+                .fill(AppTheme.primaryMuted.opacity(0.4))
                 .frame(width: 2, height: 20)
             Image(systemName: "arrowtriangle.down.fill")
                 .font(.system(size: 8))
-                .foregroundColor(theme.primaryMuted.opacity(0.6))
+                .foregroundColor(AppTheme.primaryMuted.opacity(0.6))
         }
     }
 
@@ -205,7 +204,7 @@ struct CCEncourageChainView: View {
     private var inputSection: some View {
         VStack(spacing: 12) {
             Rectangle()
-                .fill(theme.primaryMuted.opacity(0.3))
+                .fill(AppTheme.primaryMuted.opacity(0.3))
                 .frame(width: 2, height: 20)
 
             VStack(spacing: 10) {
@@ -214,7 +213,7 @@ struct CCEncourageChainView: View {
                         .font(.system(size: 16))
                     Text("写下你的鼓励，传递下去")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(theme.textSecondary)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
 
                 ZStack(alignment: .bottomTrailing) {
@@ -223,13 +222,13 @@ struct CCEncourageChainView: View {
                         .font(.system(size: 15))
                         .lineLimit(3...5)
                         .padding()
-                        .background(theme.surface)
-                        .cornerRadius(theme.radiusMD)
+                        .background(AppTheme.surface)
+                        .cornerRadius(AppRadius.md)
 
                     Text("\(viewModel.characterCount)/140")
                         .font(.system(size: 11))
                         .foregroundColor(
-                            viewModel.characterCount > 140 ? theme.error : theme.textMuted
+                            viewModel.characterCount > 140 ? AppTheme.error : AppTheme.textMuted
                         )
                         .padding(.trailing, 12)
                         .padding(.bottom, 8)
@@ -239,9 +238,9 @@ struct CCEncourageChainView: View {
                     Button(action: { showEmoji.toggle() }) {
                         Image(systemName: "face.smiling")
                             .font(.system(size: 18))
-                            .foregroundColor(theme.primary)
+                            .foregroundColor(AppTheme.primary)
                             .frame(width: 40, height: 40)
-                            .background(theme.primary.opacity(0.1))
+                            .background(AppTheme.primary.opacity(0.1))
                             .clipShape(Circle())
                     }
 
@@ -266,15 +265,15 @@ struct CCEncourageChainView: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 10)
-                        .background(viewModel.canRelay ? theme.primary : theme.textMuted)
-                        .cornerRadius(theme.radiusMD)
+                        .background(viewModel.canRelay ? AppTheme.primary : AppTheme.textMuted)
+                        .cornerRadius(AppRadius.md)
                     }
                     .disabled(!viewModel.canRelay || viewModel.isRelaying)
                 }
             }
             .padding()
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
             .padding(.horizontal, 16)
         }
     }

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct CCTransactionHistoryView: View {
     @State private var viewModel = CCOrderTrackingViewModel()
-    @Environment(\.ccAppTheme) private var theme
 
     var body: some View {
         Group {
@@ -25,11 +24,11 @@ struct CCTransactionHistoryView: View {
                 List {
                     ForEach(viewModel.transactions) { transaction in
                         transactionRow(transaction)
-                            .listRowBackground(theme.surface)
+                            .listRowBackground(AppTheme.surface)
                     }
                 }
                 .scrollContentBackground(.hidden)
-                .background(theme.background)
+                .background(AppTheme.background)
             }
         }
         .navigationTitle("购买记录")
@@ -48,7 +47,7 @@ struct CCTransactionHistoryView: View {
     }
 
     private func transactionRow(_ transaction: CCTransaction) -> some View {
-        HStack(spacing: theme.spacingMD) {
+        HStack(spacing: AppSpacing.md) {
             Image(systemName: transaction.status.systemImage)
                 .font(.title3)
                 .foregroundColor(statusColor(transaction.status))
@@ -60,7 +59,7 @@ struct CCTransactionHistoryView: View {
 
                 Text(transaction.purchaseDate.cc_formatted("yyyy-MM-dd HH:mm"))
                     .font(.caption)
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
             }
 
             Spacer()
@@ -80,10 +79,10 @@ struct CCTransactionHistoryView: View {
 
     private func statusColor(_ status: CCTransactionStatus) -> Color {
         switch status {
-        case .pending:   return theme.warm
-        case .completed: return theme.success
-        case .failed:    return theme.error
-        case .refunded:  return theme.textMuted
+        case .pending:   return AppTheme.warm
+        case .completed: return AppTheme.success
+        case .failed:    return AppTheme.error
+        case .refunded:  return AppTheme.textMuted
         }
     }
 }

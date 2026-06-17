@@ -10,14 +10,13 @@ import SwiftUI
 struct CCMeditationPlayerView: View {
     let session: CCMeditationSession
 
-    @Environment(\.ccAppTheme) private var theme
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel = CCAudioPlayerViewModel()
     @State private var isDragging = false
     @State private var dragTime: TimeInterval = 0
 
     var body: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: AppSpacing.lg) {
             // 顶部占位
             Spacer().frame(height: 40)
 
@@ -25,17 +24,17 @@ struct CCMeditationPlayerView: View {
             audioVisualizer
 
             // 标题
-            VStack(spacing: theme.spacingXS) {
+            VStack(spacing: AppSpacing.xs) {
                 Text(session.title)
                     .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(AppTheme.textPrimary)
                 Text(session.category.displayName)
                     .font(.system(size: 15))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
             }
 
             // 进度条 + 时间
-            VStack(spacing: theme.spacingSM) {
+            VStack(spacing: AppSpacing.sm) {
                 Slider(
                     value: isDragging ? $dragTime : $viewModel.currentTime,
                     in: 0...max(viewModel.duration, 1),
@@ -54,14 +53,14 @@ struct CCMeditationPlayerView: View {
                 HStack {
                     Text(formatTime(isDragging ? dragTime : viewModel.currentTime))
                         .font(.system(size: 13, design: .monospaced))
-                        .foregroundColor(theme.textSecondary)
+                        .foregroundColor(AppTheme.textSecondary)
                     Spacer()
                     Text(formatTime(viewModel.duration))
                         .font(.system(size: 13, design: .monospaced))
-                        .foregroundColor(theme.textMuted)
+                        .foregroundColor(AppTheme.textMuted)
                 }
             }
-            .padding(.horizontal, theme.spacingLG)
+            .padding(.horizontal, AppSpacing.lg)
 
             // 播放/暂停按钮
             Button(action: { viewModel.togglePlayPause() }) {
@@ -85,24 +84,24 @@ struct CCMeditationPlayerView: View {
             if let error = viewModel.errorMessage {
                 Text(error)
                     .font(.system(size: 13))
-                    .foregroundColor(theme.error)
+                    .foregroundColor(AppTheme.error)
                     .padding(.horizontal)
             } else if viewModel.isLoading {
                 Text("正在准备音频...")
                     .font(.system(size: 13))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(AppTheme.textSecondary)
             } else {
                 hintText
                     .font(.system(size: 14))
-                    .foregroundColor(theme.textMuted)
+                    .foregroundColor(AppTheme.textMuted)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, theme.spacingLG)
+                    .padding(.horizontal, AppSpacing.lg)
             }
 
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(theme.background)
+        .background(AppTheme.background)
         .navigationTitle("冥想播放")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(false)
@@ -139,7 +138,7 @@ struct CCMeditationPlayerView: View {
                 if viewModel.isPlaying {
                     Text("播放中")
                         .font(.system(size: 13))
-                        .foregroundColor(theme.textSecondary)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
             }
         }

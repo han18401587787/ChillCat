@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct CCFAQView: View {
-    @Environment(\.ccAppTheme) private var theme
 
     var body: some View {
         List {
@@ -12,14 +11,14 @@ struct CCFAQView: View {
             faqSection(q: "树洞是什么？", a: "树洞是一个匿名倾诉社区。你可以随便说什么，没有评判，只有温柔回应。")
         }
         .navigationTitle("常见问题")
-        .background(theme.background)
+        .background(AppTheme.background)
     }
 
     func faqSection(q: String, a: String) -> some View {
         Section {
-            Text(a).font(.system(size: 14)).foregroundColor(theme.textSecondary).lineSpacing(4)
+            Text(a).font(.system(size: 14)).foregroundColor(AppTheme.textSecondary).lineSpacing(4)
         } header: {
-            Text(q).font(.system(size: 15, weight: .medium)).foregroundColor(theme.textPrimary)
+            Text(q).font(.system(size: 15, weight: .medium)).foregroundColor(AppTheme.textPrimary)
         }
     }
 }
