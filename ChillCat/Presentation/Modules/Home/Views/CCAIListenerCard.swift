@@ -132,12 +132,9 @@ struct CCAIListenerCard: View {
                 .disabled(!viewModel.isSendEnabled)
             }
         }
-        // Emoji Picker Sheet
-        .sheet(isPresented: $showEmojiPicker) {
-            CCEmojiPicker(isShowing: $showEmojiPicker) { emoji in
-                viewModel.inputText += emoji
-            }
-            .presentationDetents([.medium, .large])
+        // Emoji Picker Overlay (v3)
+        .cc_emojiPickerV3Overlay(isShowing: $showEmojiPicker) { emoji in
+            viewModel.inputText += emoji.displayName
         }
     }
 

@@ -5,7 +5,7 @@ import SwiftUI
 /// 安全协议触发时替换对话区域
 /// 包含：热线电话、稳情练习快捷入口、温暖视觉设计
 
-struct CrisisInterventionView: View {
+struct CCCrisisInterventionView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showHealingPlan = false
     @State private var animateIn = false
@@ -81,7 +81,7 @@ struct CrisisInterventionView: View {
         }
         .fullScreenCover(isPresented: $showHealingPlan) {
             NavigationStack {
-                HealingPlanView()
+                CCHealingPlanView()
             }
         }
     }
@@ -308,5 +308,5 @@ struct HealingExerciseCard: View {
 }
 
 #Preview {
-    CrisisInterventionView()
+    CCCrisisInterventionView()
 }

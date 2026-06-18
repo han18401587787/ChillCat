@@ -77,14 +77,8 @@ struct CCEncourageChainView: View {
                 }
             }
         }
-        .overlay(alignment: .bottom) {
-            if showEmoji {
-                CCEmojiPicker(isShowing: $showEmoji) { emoji in
-                    viewModel.relayText += emoji
-                }
-                .frame(height: 280)
-                .transition(.move(edge: .bottom))
-            }
+        .cc_emojiPickerV3Overlay(isShowing: $showEmoji) { emoji in
+            viewModel.relayText += emoji.displayName
         }
         .animation(.easeInOut, value: showEmoji)
         .navigationTitle("鼓励链")

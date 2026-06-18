@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Emotion Grid View
 /// 情绪选择网格 - 10色情绪色板
-struct EmotionGridView: View {
+struct CCEmotionGridView: View {
     let emotions: [(name: String, chinese: String, color: Color, sfSymbol: String)]
     @Binding var selectedEmotion: String?
     let onSelect: ((String, String, Color, String)) -> Void
@@ -274,7 +274,7 @@ struct EmotionCheckinSuccessView: View {
 // MARK: - Preview
 #Preview("Emotion Grid") {
     VStack {
-        EmotionGridView(
+        CCEmotionGridView(
             emotions: EmotionColors.allEmotions,
             selectedEmotion: .constant("平静"),
             onSelect: { _, _, _, _ in }

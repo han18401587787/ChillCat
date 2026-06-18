@@ -4,7 +4,7 @@ import SwiftUI
 /// 稳情计划练习页
 /// 包含：步骤引导、呼吸动画（4-7-8呼吸法）、白噪音播放、练习评分、免责声明
 
-struct HealingPlanView: View {
+struct CCHealingPlanView: View {
     @StateObject private var viewModel = HealingPlanViewModel()
     @Environment(\.dismiss) private var dismiss
     @State private var showInterruptAlert = false
@@ -832,6 +832,6 @@ final class HealingPlanViewModel: ObservableObject {
 // MARK: - Preview
 #Preview {
     NavigationStack {
-        HealingPlanView()
+        CCHealingPlanView()
     }
 }

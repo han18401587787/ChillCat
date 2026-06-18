@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Emotion Tag View (Standalone)
 /// 独立的情绪标签组件，用于各处复用
-struct EmotionTagComponent: View {
+struct CCEmotionTagView: View {
     let emotion: String
     let color: Color
     let icon: String
@@ -85,7 +85,7 @@ struct EmotionFlowLayout: View {
                         selectedEmotions.insert(emotion.name)
                     }
                 } label: {
-                    EmotionTagComponent(
+                    CCEmotionTagView(
                         emotion: emotion.chinese,
                         color: emotion.color,
                         icon: emotion.sfSymbol,
@@ -173,9 +173,9 @@ struct FlowLayout: Layout {
 #Preview("Emotion Tags") {
     VStack(spacing: 20) {
         HStack {
-            EmotionTagComponent(emotion: "喜悦", color: EmotionColors.joy, icon: "sun.max.fill")
-            EmotionTagComponent(emotion: "平静", color: EmotionColors.calm, icon: "wind")
-            EmotionTagComponent(emotion: "焦虑", color: EmotionColors.anxiety, icon: "waveform.path.ecg")
+            CCEmotionTagView(emotion: "喜悦", color: EmotionColors.joy, icon: "sun.max.fill")
+            CCEmotionTagView(emotion: "平静", color: EmotionColors.calm, icon: "wind")
+            CCEmotionTagView(emotion: "焦虑", color: EmotionColors.anxiety, icon: "waveform.path.ecg")
         }
         
         EmotionFlowLayout(

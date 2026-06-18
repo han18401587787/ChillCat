@@ -35,7 +35,7 @@ extension CCUserAPI: CCAPIEndpoint {
         switch self {
         case .login, .register, .updateProfile: return .post
         case .profile, .logout: return .get
-        case .deleteAccount: return .post
+        case .deleteAccount: return .delete
         }
     }
 

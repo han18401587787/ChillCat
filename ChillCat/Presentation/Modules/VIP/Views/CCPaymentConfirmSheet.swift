@@ -17,13 +17,15 @@ struct CCPaymentConfirmSheet: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: AppSpacing.lg) {
-                headerSection
-                detailSection
-                Spacer()
-                actionButtons
+            ScrollView {
+                VStack(spacing: AppSpacing.lg) {
+                    headerSection
+                    detailSection
+                    Spacer()
+                    actionButtons
+                }
+                .padding()
             }
-            .padding()
             .navigationTitle("确认购买")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

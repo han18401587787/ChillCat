@@ -19,7 +19,7 @@ struct CCSettingsView: View {
                 )) { Label("消息推送", systemImage: "bell.fill") }
             }
             Section("关于") {
-                Label("版本 2.0", systemImage: "info.circle")
+                Label("版本 3.0", systemImage: "info.circle")
                 Button(action: { coordinator.navigate(to: .privacy) }) { Label("隐私设置", systemImage: "lock.fill").foregroundColor(.primary) }
                 Button(action: { coordinator.navigate(to: .privacyPolicy) }) { Label("隐私政策", systemImage: "hand.raised.fill").foregroundColor(.primary) }
                 Button(action: { coordinator.navigate(to: .userAgreement) }) { Label("用户协议", systemImage: "doc.text.fill").foregroundColor(.primary) }

@@ -465,6 +465,8 @@ struct HealingOverlayView: View {
             .padding(AppSpacing.xl)
             .scaleEffect(showContent ? 1 : 0.8)
             .opacity(showContent ? 1 : 0)
+            .contentShape(Rectangle())
+            .onTapGesture { /* 拦截防止穿透到背景 */ }
         }
         .onAppear {
             withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {

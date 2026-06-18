@@ -59,14 +59,8 @@ struct CCTreeHoleView: View {
             }
         }
         .background(AppTheme.background)
-        .overlay(alignment: .bottom) {
-            if showEmoji {
-                CCEmojiPicker(isShowing: $showEmoji) { emoji in
-                    viewModel.newPostText += emoji
-                }
-                .frame(height: 300)
-                .transition(.move(edge: .bottom))
-            }
+        .cc_emojiPickerV3Overlay(isShowing: $showEmoji) { emoji in
+            viewModel.newPostText += emoji.displayName
         }
         .animation(.easeInOut, value: showEmoji)
         .sheet(isPresented: $showResonateSheet) {
@@ -170,15 +164,7 @@ struct CCTreeHoleView: View {
     // MARK: - Resonance Card
 
     private func resonanceCard(_ post: CCResonancePost) -> some View {
-        Button(action: {
-            let displayItem = CCResonanceDisplayItem(
-                id: post.id, content: post.content, emotion: post.emotion,
-                emotionColor: post.emotionColor, isAnonymous: post.isAnonymous,
-                displayName: post.displayName,
-                resonanceCount: post.resonanceCount, createdAt: post.createdAt
-            )
-            coordinator.navigate(to: .resonanceDetail(displayItem))
-        }) {
+        VStack {
             HStack(alignment: .top, spacing: 0) {
                 // Left emotion color bar
                 RoundedRectangle(cornerRadius: 2)
@@ -214,15 +200,23 @@ struct CCTreeHoleView: View {
 
                     // Bottom: resonance count + actions
                     HStack(spacing: 12) {
-                        // Resonance count
-                        HStack(spacing: 4) {
-                            Image(systemName: post.hasResonated ? "heart.fill" : "heart")
-                                .font(.system(size: 13))
-                                .foregroundColor(post.hasResonated ? AppTheme.error : AppTheme.softPink)
-                            Text("\(post.formattedResonance) 人共鸣")
-                                .font(.system(size: 13))
-                                .foregroundColor(AppTheme.textSecondary)
+                        // Resonance count — tappable
+                        Button(action: {
+                            CCHaptic.light()
+                            resonateTarget = post
+                            resonateMessage = ""
+                            showResonateSheet = true
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: post.hasResonated ? "heart.fill" : "heart")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(post.hasResonated ? AppTheme.error : AppTheme.softPink)
+                                Text("\(post.formattedResonance) 人共鸣")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(AppTheme.textSecondary)
+                            }
                         }
+                        .buttonStyle(.plain)
 
                         Spacer()
 
@@ -262,8 +256,16 @@ struct CCTreeHoleView: View {
             .cornerRadius(AppRadius.lg)
             .shadow(color: Color.black.opacity(0.03), radius: 4, y: 2)
         }
-        .buttonStyle(.plain)
-    }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            let displayItem = CCResonanceDisplayItem(
+                id: post.id, content: post.content, emotion: post.emotion,
+                emotionColor: post.emotionColor, isAnonymous: post.isAnonymous,
+                displayName: post.displayName,
+                resonanceCount: post.resonanceCount, createdAt: post.createdAt
+            )
+            coordinator.navigate(to: .resonanceDetail(displayItem))
+        }
 
     // MARK: - Resonate Sheet
 

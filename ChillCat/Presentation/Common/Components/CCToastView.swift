@@ -44,6 +44,7 @@ struct CCToastView: View {
             Text(message)
                 .font(.system(size: 15))
                 .foregroundColor(AppTheme.textPrimary)
+                .lineLimit(3)
         }
         .padding(.horizontal, AppSpacing.md)
         .padding(.vertical, 12)

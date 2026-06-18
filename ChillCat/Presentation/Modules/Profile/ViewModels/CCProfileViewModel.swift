@@ -37,7 +37,20 @@ final class CCProfileViewModel {
         do {
             user = try await profileUseCase.fetchProfile()
         } catch {
-            errorMessage = error.localizedDescription
+            if let apiError = error as? CCAPIError {
+                switch apiError {
+                case .unauthorized:
+                    errorMessage = "登录已过期，请重新登录"
+                case .networkFailure:
+                    errorMessage = "网络连接失败，请检查网络设置"
+                case .serverError:
+                    errorMessage = "服务器繁忙，请稍后重试"
+                default:
+                    errorMessage = "加载失败，请下拉刷新重试"
+                }
+            } else {
+                errorMessage = "加载失败，请下拉刷新重试"
+            }
         }
 
         isLoading = false

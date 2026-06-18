@@ -216,6 +216,10 @@ struct CCHomeView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.md)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            coordinator.navigate(to: .trends)
+        }
     }
 
     // MARK: - Explore

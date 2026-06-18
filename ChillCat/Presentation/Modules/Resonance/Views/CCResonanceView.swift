@@ -65,30 +65,12 @@ struct CCResonanceView: View {
             ShareSheet(activityItems: [item.content])
                 .presentationDetents([.medium])
         }
-        // Emoji overlays
-        .overlay(alignment: .bottom) {
-            if showComposerEmoji {
-                CCEmojiPicker(isShowing: $showComposerEmoji) { emoji in
-                    composerText += emoji
-                }
-                .frame(height: 300)
-                .background(AppTheme.background)
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
-                .shadow(radius: 8)
-                .transition(.move(edge: .bottom))
-            }
+        // Emoji overlays (V3)
+        .cc_emojiPickerV3Overlay(isShowing: $showComposerEmoji) { emoji in
+            composerText += emoji.displayName
         }
-        .overlay(alignment: .bottom) {
-            if showResonateEmoji {
-                CCEmojiPicker(isShowing: $showResonateEmoji) { emoji in
-                    resonateMessage += emoji
-                }
-                .frame(height: 300)
-                .background(AppTheme.background)
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
-                .shadow(radius: 8)
-                .transition(.move(edge: .bottom))
-            }
+        .cc_emojiPickerV3Overlay(isShowing: $showResonateEmoji) { emoji in
+            resonateMessage += emoji.displayName
         }
         .animation(.easeInOut(duration: 0.25), value: showComposerEmoji)
         .animation(.easeInOut(duration: 0.25), value: showResonateEmoji)

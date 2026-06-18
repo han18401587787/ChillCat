@@ -97,6 +97,7 @@ struct CCEmoji: Identifiable, Hashable {
 
 // MARK: - CCEmojiPicker (Upgraded)
 
+@available(*, deprecated, message: "Use CCEmojiPickerV3 instead. v3 supports 24 emotion-based emojis with 6 types × 4 intensities.")
 struct CCEmojiPicker: View {
     @Binding var isShowing: Bool
     var onSelect: (String) -> Void
@@ -215,6 +216,7 @@ struct CCEmojiPicker: View {
 
 extension View {
     /// 以底部浮层样式展示 CCEmojiPicker
+    @available(*, deprecated, message: "Use cc_emojiPickerV3Overlay instead.")
     func cc_emojiPickerOverlay(
         isShowing: Binding<Bool>,
         onSelect: @escaping (String) -> Void

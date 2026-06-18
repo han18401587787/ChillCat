@@ -52,7 +52,7 @@ struct CheckinResultView: View {
             PublishToResonanceView(isPresented: $showPublishSheet)
         }
         .sheet(isPresented: $showEmotionDecode) {
-            EmotionDecodeView(
+            CCEmotionDecodeView(
                 emotion: viewModel.emotionLabel,
                 intensity: viewModel.intensity,
                 summary: viewModel.aiSummary

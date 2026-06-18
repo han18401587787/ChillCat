@@ -63,14 +63,8 @@ struct CCEmotionDecoderView: View {
             .padding()
         }
         .background(AppTheme.background)
-        .overlay(alignment: .bottom) {
-            if showEmoji {
-                CCEmojiPicker(isShowing: $showEmoji) { emoji in
-                    viewModel.inputText += emoji
-                }
-                .frame(height: 280)
-                .transition(.move(edge: .bottom))
-            }
+        .cc_emojiPickerV3Overlay(isShowing: $showEmoji) { emoji in
+            viewModel.inputText += emoji.displayName
         }
         .animation(.easeInOut, value: showEmoji)
         .navigationTitle("情绪解码")

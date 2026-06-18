@@ -4,7 +4,7 @@ import SwiftUI
 /// 情绪解码页
 /// 包含：4维度滑动展示、置信度标注、纠错按钮、推荐练习、连续低分预警
 
-struct EmotionDecodeView: View {
+struct CCEmotionDecodeView: View {
     let emotion: String
     let intensity: Double
     let summary: String
@@ -57,7 +57,7 @@ struct EmotionDecodeView: View {
                 }
             }
             .sheet(isPresented: $showCorrection) {
-                EmotionCorrectionView(
+                CCEmotionCorrectionView(
                     currentEmotion: emotion,
                     currentIntensity: intensity,
                     onCorrect: { newEmotion, newIntensity in
@@ -67,7 +67,7 @@ struct EmotionDecodeView: View {
             }
             .fullScreenCover(isPresented: $showHealingPlan) {
                 NavigationStack {
-                    HealingPlanView()
+                    CCHealingPlanView()
                 }
             }
         }
@@ -679,7 +679,7 @@ final class EmotionDecodeViewModel: ObservableObject {
 }
 
 #Preview {
-    EmotionDecodeView(
+    CCEmotionDecodeView(
         emotion: "焦虑",
         intensity: 6,
         summary: "你今天的情绪以焦虑为主，可能与工作压力有关。"

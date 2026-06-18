@@ -43,22 +43,8 @@ struct CCVoiceCheckinView: View {
             }
             .scrollDisabled(viewModel.state == .idle || viewModel.isRecording)
 
-            // Emoji Picker overlay
-            if showEmojiPicker {
-                VStack {
-                    Spacer()
-                    CCEmojiPicker(isShowing: $showEmojiPicker) { emoji in
-                        viewModel.editableTranscription += emoji
-                    }
-                    .frame(height: 300)
-                    .background(AppTheme.background)
-                    .cornerRadius(AppRadius.xl)
-                    .shadow(radius: 10)
-                    .transition(.move(edge: .bottom))
-                }
-                .ignoresSafeArea(edges: .bottom)
-                .zIndex(1)
-            }
+        .cc_emojiPickerV3Overlay(isShowing: $showEmojiPicker) { emoji in
+            viewModel.editableTranscription += emoji.displayName
         }
         .animation(.easeInOut(duration: 0.3), value: viewModel.state)
         .animation(.easeInOut, value: showEmojiPicker)

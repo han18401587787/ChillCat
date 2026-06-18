@@ -1,129 +1,260 @@
 import SwiftUI
 
-// MARK: - CCAppTheme v3.0
-/// 绪安设计系统 - 基于v2 CCAppTheme 增量升级
-/// 保留v2所有色值（作为兼容别名），新增v3语义化Token
-/// 使用方式：AppTheme.primary / AppSpacing.md / AppRadius.lg
+// MARK: - CCAppTheme v3.0 暖色调全面重构
+/// 绪安设计系统 — 基于色彩心理学（Headspace/Calm 最佳实践）
+/// 从"灰蓝冷色调"全面转向"暖色调温暖治愈"体系
+/// 实现每日主题色切换 + 字体语义化Token + 圆角/阴影升级
+///
+/// 使用方式：AppTheme.primary / AppTheme.accent / AppSpacing.md / AppRadius.lg
+
+// MARK: - 每日主题色
+
+enum DayTheme: Int, CaseIterable {
+    case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday
+
+    var name: String {
+        switch self {
+        case .monday:    return "希望杏"
+        case .tuesday:   return "勇气蓝"
+        case .wednesday: return "治愈绿"
+        case .thursday:  return "温暖金"
+        case .friday:    return "喜悦橙"
+        case .saturday:  return "宁静紫"
+        case .sunday:    return "温柔粉"
+        }
+    }
+
+    var primary: Color {
+        switch self {
+        case .monday:    return AppTheme.warmOrange
+        case .tuesday:   return AppTheme.warmBlue
+        case .wednesday: return AppTheme.warmGreen
+        case .thursday:  return AppTheme.warmGold
+        case .friday:    return AppTheme.warmOrange2
+        case .saturday:  return AppTheme.warmPurple
+        case .sunday:    return AppTheme.warmPink
+        }
+    }
+
+    var subtitle: String {
+        switch self {
+        case .monday:    return "新的一周，从希望开始"
+        case .tuesday:   return "勇气是温柔的力量"
+        case .wednesday: return "治愈自己，也治愈世界"
+        case .thursday:  return "每一天都闪闪发光"
+        case .friday:    return "喜悦是最好的礼物"
+        case .saturday:  return "宁静是给自己的温柔"
+        case .sunday:    return "被温柔包裹的一天"
+        }
+    }
+
+    /// 根据 Foundation Calendar API 自动计算当天主题
+    static var current: DayTheme {
+        let weekday = Calendar.current.component(.weekday, from: Date())
+        return DayTheme(rawValue: weekday) ?? .monday
+    }
+}
+
+// MARK: - 字体语义化 Token
+
+enum FontToken {
+    /// 主问候语/大标题 28pt Medium Rounded
+    case greetingTitle
+    /// 卡片标题/Section 20pt Medium Rounded
+    case sectionTitle
+    /// 正文/对话 16pt Regular, lineHeight 1.65
+    case bodyComfortable
+    /// 长文/情绪日记 15pt Regular, lineHeight 1.7
+    case journalText
+    /// 大数字 Semibold Rounded
+    case numberWarm(CGFloat)
+    /// 按钮文字 16pt Medium Rounded
+    case buttonLabel
+    /// 辅助说明 13pt Regular
+    case caption
+
+    var font: Font {
+        switch self {
+        case .greetingTitle:
+            return .system(size: 28, weight: .medium, design: .rounded)
+        case .sectionTitle:
+            return .system(size: 20, weight: .medium, design: .rounded)
+        case .bodyComfortable:
+            return .system(size: 16, weight: .regular, design: .default)
+        case .journalText:
+            return .system(size: 15, weight: .regular, design: .default)
+        case .numberWarm(let size):
+            return .system(size: size, weight: .semibold, design: .rounded)
+        case .buttonLabel:
+            return .system(size: 16, weight: .medium, design: .rounded)
+        case .caption:
+            return .system(size: 13, weight: .regular, design: .default)
+        }
+    }
+
+    var lineSpacing: CGFloat {
+        switch self {
+        case .greetingTitle:  return 0
+        case .sectionTitle:   return 0
+        case .bodyComfortable: return 16 * 0.65  // 1.65 lineHeight → spacing
+        case .journalText:     return 15 * 0.70  // 1.7 lineHeight → spacing
+        case .numberWarm:      return 0
+        case .buttonLabel:     return 0
+        case .caption:         return 0
+        }
+    }
+}
+
+// MARK: - AppTheme 颜色系统
+
 enum AppTheme {
-    // MARK: - 主色调（与v2一致）
-    
-    static let primary = Color(hex: "5A7A8A")
-    static let primaryLight = Color(hex: "7A9AAA")
-    static let primaryDark = Color(hex: "4A6A7A")
-    /// v2兼容别名：primaryMuted → v2 色值 #B8D4E3
-    static let primaryMuted = Color(hex: "B8D4E3")
-    
-    // MARK: - 暖调（与v2一致）
-    
-    /// v2兼容别名：warm → v2 色值 #8B6F47
-    static let warm = Color(hex: "8B6F47")
-    /// v2兼容别名：warmLight → v2 色值 #C9A063
-    static let warmLight = Color(hex: "C9A063")
-    /// v2兼容别名：warmMuted → v2 色值 #EBE2D5
-    static let warmMuted = Color(hex: "EBE2D5")
-    
-    // MARK: - 柔和色（与v2一致）
-    
-    /// v2兼容别名：softPurple → v2 色值 #D4C8E8
-    static let softPurple = Color(hex: "D4C8E8")
-    /// v2兼容别名：softPurpleLight → v2 色值 #E8D9F0
-    static let softPurpleLight = Color(hex: "E8D9F0")
-    /// v2兼容别名：softGreen → v2 色值 #66BB6A
-    static let softGreen = Color(hex: "66BB6A")
-    /// v2兼容别名：softGreenLight → v2 色值 #D5E8D4
-    static let softGreenLight = Color(hex: "D5E8D4")
-    /// v2兼容别名：softPink → v2 色值 #E8B8C8
-    static let softPink = Color(hex: "E8B8C8")
-    /// v2兼容别名：softPinkLight → v2 色值 #F2D5E0
-    static let softPinkLight = Color(hex: "F2D5E0")
-    
-    // MARK: - 背景色（与v2一致，Ardot设计规范）
-    
-    static let background = Color(hex: "F9F6F2")
-    static let backgroundSecondary = Color(hex: "F0EDE8")
-    static let surface = Color.white
-    static let surfaceSecondary = Color(hex: "F0EDE8")
-    /// v2兼容别名：cardBackground → #FFFFFF
+    // MARK: - v3 暖色系基础色
+
+    static let warmOrange  = Color(hex: "E8895C")   // 暖杏橙（默认主色）
+    static let warmBlue    = Color(hex: "7A9AAA")   // 勇气蓝（提亮）
+    static let warmGreen   = Color(hex: "7CB887")   // 治愈绿
+    static let warmGold    = Color(hex: "D4A85C")   // 温暖金
+    static let warmOrange2 = Color(hex: "F5A623")   // 喜悦橙
+    static let warmPurple  = Color(hex: "A085C6")   // 宁静紫
+    static let warmPink    = Color(hex: "E8B4B0")   // 温柔粉
+
+    // MARK: - 背景/表面（暖奶油系）
+
+    static let background   = Color(hex: "FFF5F0")  // 暖奶油背景
+    static let surface      = Color(hex: "FFF0E8")  // 暖桃白表面
+    static let surfaceHover = Color(hex: "FFE8DC")  // 暖桃表面悬停
+
+    // MARK: - 文字（暖棕系，禁止纯黑）
+
+    static let textPrimary   = Color(hex: "3D2E28")  // 暖棕黑
+    static let textSecondary = Color(hex: "9B8579")  // 暖灰褐
+    static let textMuted     = Color(hex: "C4AFA3")  // 暖灰
+
+    // MARK: - 功能色
+
+    static let success = Color(hex: "7CB887")  // 暖鼠尾草绿
+    static let warning = Color(hex: "D4A85C")  // 暖蜂蜜金
+    static let error   = Color(hex: "E8846E")  // 暖珊瑚红
+    static let info    = Color(hex: "7A9AAA")  // 暖蓝
+
+    // MARK: - 强调色
+
+    static let accentGreen = Color(hex: "7CB887")
+    static let accentPink  = Color(hex: "E8B4B0")
+    static let accentGold  = Color(hex: "D4A85C")
+
+    // MARK: - 动态主色（每日主题）
+
+    /// 根据当天星期自动切换主色
+    static var accent: Color { DayTheme.current.primary }
+
+    // MARK: - 语义化颜色
+
+    static let homeGradientStart = warmOrange
+    static let homeGradientEnd   = warmOrange2
+    static let alertBackground   = Color(hex: "FFE8DC")
+    static let alertForeground   = error
+    static let checkinComplete   = success
+    static let checkinPending    = textMuted
+    static let encouragementChain = warmGold
+
+    // MARK: - v2 兼容别名（全部保留，确保旧引用不报错）
+
+    /// v2: primary → #5A7A8A
+    static let primary = warmOrange
+    /// v2: primaryLight → #7A9AAA
+    static let primaryLight = warmBlue
+    /// v2: primaryDark → #4A6A7A
+    static let primaryDark = Color(hex: "6A8A9A")
+    /// v2: primaryMuted → #B8D4E3
+    static let primaryMuted = warmOrange.opacity(0.6)
+
+    /// v2: warm → #8B6F47
+    static let warm = warmGold
+    /// v2: warmLight → #C9A063
+    static let warmLight = Color(hex: "E8C98C")
+    /// v2: warmMuted → #EBE2D5
+    static let warmMuted = Color(hex: "F5EBDC")
+
+    /// v2: softPurple → #D4C8E8
+    static let softPurple = warmPurple.opacity(0.5)
+    /// v2: softPurpleLight → #E8D9F0
+    static let softPurpleLight = warmPurple.opacity(0.25)
+    /// v2: softGreen → #66BB6A
+    static let softGreen = warmGreen
+    /// v2: softGreenLight → #D5E8D4
+    static let softGreenLight = warmGreen.opacity(0.25)
+    /// v2: softPink → #E8B8C8
+    static let softPink = warmPink
+    /// v2: softPinkLight → #F2D5E0
+    static let softPinkLight = warmPink.opacity(0.25)
+
+    /// v2: background → #F9F6F2
+    static let backgroundSecondary = surface
+    /// v2: surface → white
+    static let surfaceSecondary = surface
+    /// v2: cardBackground → #FFFFFF
     static let cardBackground = Color.white
-    
-    // MARK: - 文字色（与v2一致，Ardot设计规范）
-    
-    static let textPrimary = Color(hex: "2D2D2D")
-    static let textSecondary = Color(hex: "7A7A7A")
-    static let textTertiary = Color(hex: "AAAAAA")
+
+    /// v2: textSecondary → #7A7A7A
+    /// v2: textTertiary → #AAAAAA
+    static let textTertiary = textMuted
+    /// v2: textInverse → white
     static let textInverse = Color.white
-    /// v2兼容别名：textMuted → 同 textTertiary #AAAAAA
-    static let textMuted = Color(hex: "AAAAAA")
-    
-    // MARK: - 状态色（与v2一致）
-    
-    /// v2兼容别名：error → v2 色值 #E57373
-    static let error = Color(hex: "E57373")
-    /// v2兼容别名：success → v2 色值 #66BB6A
-    static let success = Color(hex: "66BB6A")
-    
-    // MARK: - 边框/分隔线
-    
-    static let border = Color(hex: "E5E0D8")
-    static let divider = Color(hex: "F0EDE8")
-    
-    // MARK: - v3.0 新增语义化颜色Token（10个）
-    
-    /// 危机红 - 用于紧急状态/高危提示（v3新增）
+
+    /// v2: border → #E5E0D8
+    static let border = Color(hex: "E8DDD0")
+    /// v2: divider → #F0EDE8
+    static let divider = Color(hex: "F5EDE4")
+
+    // MARK: - v3 语义化颜色 Token（v3新增，暖化版）
+
+    /// 危机红 - 用于紧急状态/高危提示
     static let crisisRed = error
-    static let crisisRedLight = Color(hex: "FFCDD2")
-    static let crisisRedDark = Color(hex: "C62828")
-    
-    /// 安全绿 - 用于稳定状态/安全标识（v3新增）
+    static let crisisRedLight = Color(hex: "FFDAD5")
+    static let crisisRedDark = Color(hex: "C0503C")
+
+    /// 安全绿 - 用于稳定状态/安全标识
     static let safeGreen = success
-    static let safeGreenLight = Color(hex: "C8E6C9")
-    static let safeGreenDark = Color(hex: "388E3C")
-    
-    /// 暖光 - 用于温暖提示/鼓励（v3新增，与v2 warm不同色系）
-    static let warmGlow = Color(hex: "FFD700")
-    static let warmGlowLight = Color(hex: "FFF9C4")
-    static let warmGlowDark = Color(hex: "F9A825")
-    
-    /// 柔和紫 - 用于冥想/放松场景（v3新增，Material Design色系）
-    static let softPurpleV3 = Color(hex: "CE93D8")
-    static let softPurpleV3Light = Color(hex: "F3E5F5")
-    
-    /// 宁静蓝 - 用于睡眠/平静场景（v3新增）
-    static let calmBlue = Color(hex: "64B5F6")
-    static let calmBlueLight = Color(hex: "E3F2FD")
-    
-    /// 活力橙 - 用于激励/提醒（v3新增）
-    static let vibrantOrange = Color(hex: "FF8A65")
-    static let vibrantOrangeLight = Color(hex: "FBE9E7")
-    
-    /// 希望青 - 用于成长/进步（v3新增）
-    static let hopeCyan = Color(hex: "4DD0E1")
-    static let hopeCyanLight = Color(hex: "E0F7FA")
-    
-    /// 深空灰 - 用于高级感卡片背景（v3新增）
-    static let deepSpaceGray = Color(hex: "37474F")
-    static let deepSpaceGrayLight = Color(hex: "ECEFF1")
-    
-    /// 玫瑰金 - 用于温柔强调（v3新增）
-    static let roseGold = Color(hex: "F48FB1")
-    static let roseGoldLight = Color(hex: "FCE4EC")
-    
-    /// 薄荷绿 - 用于清新/新生（v3新增）
-    static let mintGreen = Color(hex: "80CBC4")
-    static let mintGreenLight = Color(hex: "E0F2F1")
-    
-    // MARK: - 语义化颜色（v3新增）
-    
-    static let homeGradientStart = primary
-    static let homeGradientEnd = Color(hex: "7EC8E3")
-    static let alertBackground = crisisRedLight
-    static let alertForeground = crisisRed
-    static let checkinComplete = safeGreen
-    static let checkinPending = textTertiary
-    static let encouragementChain = warmGlow
+    static let safeGreenLight = Color(hex: "D4EDD6")
+    static let safeGreenDark = Color(hex: "5A8A5E")
+
+    /// 暖光 - 用于温暖提示/鼓励
+    static let warmGlow = warmGold
+    static let warmGlowLight = Color(hex: "FDF0D5")
+    static let warmGlowDark = Color(hex: "B08A3A")
+
+    /// 柔和紫 - 用于冥想/放松场景
+    static let softPurpleV3 = warmPurple
+    static let softPurpleV3Light = warmPurple.opacity(0.25)
+
+    /// 宁静蓝 - 用于睡眠/平静场景
+    static let calmBlue = warmBlue
+    static let calmBlueLight = warmBlue.opacity(0.2)
+
+    /// 活力橙 - 用于激励/提醒
+    static let vibrantOrange = warmOrange2
+    static let vibrantOrangeLight = warmOrange2.opacity(0.2)
+
+    /// 希望青 - 用于成长/进步
+    static let hopeCyan = Color(hex: "7CB8B0")
+    static let hopeCyanLight = hopeCyan.opacity(0.2)
+
+    /// 深空灰 - 用于高级感卡片背景
+    static let deepSpaceGray = Color(hex: "5A4A44")
+    static let deepSpaceGrayLight = Color(hex: "F0EBE8")
+
+    /// 玫瑰金 - 用于温柔强调
+    static let roseGold = warmPink
+    static let roseGoldLight = warmPink.opacity(0.2)
+
+    /// 薄荷绿 - 用于清新/新生
+    static let mintGreen = warmGreen.opacity(0.7)
+    static let mintGreenLight = warmGreen.opacity(0.15)
 }
 
 // MARK: - Color Extension
+
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -148,7 +279,8 @@ extension Color {
     }
 }
 
-// MARK: - 字体系统
+// MARK: - 字体系统（保留 v2 兼容）
+
 enum AppFont {
     static let largeTitle = Font.system(size: 34, weight: .bold, design: .default)
     static let title1 = Font.system(size: 28, weight: .bold, design: .default)
@@ -161,42 +293,45 @@ enum AppFont {
     static let caption2 = Font.system(size: 11, weight: .regular, design: .default)
 }
 
-// MARK: - 间距系统（Ardot设计规范：6/10/16/24/32 + v3扩展）
+// MARK: - 间距系统（保留 v2 兼容）
+
 enum AppSpacing {
     static let xs: CGFloat = 6
     static let sm: CGFloat = 10
     static let md: CGFloat = 16
     static let lg: CGFloat = 24
     static let xl: CGFloat = 32
-    /// v3新增：超大间距
     static let xxl: CGFloat = 48
-    /// v3新增：超超大间距
     static let xxxl: CGFloat = 64
 }
 
-// MARK: - 圆角系统（Ardot设计规范：8/12/16/24）
+// MARK: - 圆角系统（v3 升级）
+
 enum AppRadius {
-    static let sm: CGFloat = 8
-    static let md: CGFloat = 12
-    static let lg: CGFloat = 16
-    static let xl: CGFloat = 24
+    static let xs: CGFloat = 6    // v3: 4→6
+    static let sm: CGFloat = 12   // v3: 8→12
+    static let md: CGFloat = 16   // v3: 12→16
+    static let lg: CGFloat = 24   // v3: 16→24
+    static let xl: CGFloat = 32   // v3: 24→32
     static let full: CGFloat = 9999
 }
 
-// MARK: - 阴影系统
+// MARK: - 阴影系统（v3 升级：品牌暖色叠加）
+
 enum AppShadow {
-    static func card() -> some View {
+    /// 卡片阴影 — 使用品牌暖色叠加
+    static func card(color: Color = AppTheme.warmOrange) -> some View {
         Color.clear
-            .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 2)
+            .shadow(color: color.opacity(0.08), radius: 12, x: 0, y: 4)
     }
-    
-    static func elevated() -> some View {
+
+    static func elevated(color: Color = AppTheme.warmOrange) -> some View {
         Color.clear
-            .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 4)
+            .shadow(color: color.opacity(0.10), radius: 16, x: 0, y: 6)
     }
-    
-    static func button() -> some View {
+
+    static func button(color: Color = AppTheme.warmOrange) -> some View {
         Color.clear
-            .shadow(color: AppTheme.primary.opacity(0.3), radius: 8, x: 0, y: 4)
+            .shadow(color: color.opacity(0.25), radius: 8, x: 0, y: 4)
     }
 }

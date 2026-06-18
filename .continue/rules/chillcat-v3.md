@@ -174,3 +174,6 @@ Type: `feat` / `fix` / `docs` / `style` / `refactor` / `perf` / `test` / `chore`
 | 2026-06-17 | AppSpacing 新增 xxl(48)/xxxl(64) | v3 新页面需要的更大间距 Token |
 | 2026-06-17 | CCThemeManager 改为管理暗色模式覆盖 | 适配 AppTheme 静态属性的新架构 |
 | 2026-06-17 | .environment(\\.ccAppTheme) 全局移除 | AppTheme 为静态属性，不再需要 Environment 注入 |
+| 2026-06-17 | **覆盖操作必须先 diff 再执行** | 回退/覆盖代码时，先 `git diff` 确认是否有新增改动需要保留，避免丢失有效变更 |
+| 2026-06-17 | 高风险操作（force push/删除覆盖/修改核心逻辑）需用户确认 | 防止不可逆操作造成代码丢失 |
+| 2026-06-17 | **每个任务完成后立即提交 Git** | 不再询问确认，改动随完成随提交，保持版本可追溯 |

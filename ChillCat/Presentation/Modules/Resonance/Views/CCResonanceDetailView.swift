@@ -60,10 +60,13 @@ struct CCResonanceDetailView: View {
                                 .fixedSize(horizontal: false, vertical: true)
 
                             HStack(spacing: AppSpacing.lg) {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "heart.fill").font(.system(size: 14)).foregroundColor(AppTheme.softPink)
-                                    Text("\(item.resonanceCount) 人共鸣").font(.system(size: 13)).foregroundColor(AppTheme.textSecondary)
+                                Button(action: { /* 共鸣互动 */ }) {
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "heart.fill").font(.system(size: 14)).foregroundColor(AppTheme.softPink)
+                                        Text("\(item.resonanceCount) 人共鸣").font(.system(size: 13)).foregroundColor(AppTheme.textSecondary)
+                                    }
                                 }
+                                .buttonStyle(.plain)
                                 Spacer()
                             }
                         }
@@ -93,14 +96,8 @@ struct CCResonanceDetailView: View {
             }
             .padding()
         }
-        .overlay(alignment: .bottom) {
-            if showEmoji {
-                CCEmojiPicker(isShowing: $showEmoji) { emoji in
-                    newReply += emoji
-                }
-                .frame(height: 300)
-                .transition(.move(edge: .bottom))
-            }
+        .cc_emojiPickerV3Overlay(isShowing: $showEmoji) { emoji in
+            newReply += emoji.displayName
         }
         .animation(.easeInOut, value: showEmoji)
     }

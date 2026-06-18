@@ -34,6 +34,14 @@ struct CCJournalView: View {
                                 }
                             }.frame(height: 40).frame(maxWidth: .infinity)
                             .background(hasEntry ? Color(hex: "5A7A8A").opacity(0.1) : Color.clear).cornerRadius(6)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                guard hasEntry else { return }
+                                let dayStr = String(format: "%04d-%02d-%02d", viewModel.selectedYear, viewModel.selectedMonth, day)
+                                if let entry = viewModel.entries.first(where: { $0.checkinDate == dayStr }) {
+                                    coordinator.navigate(to: .journalDetail(entry))
+                                }
+                            }
                         }
                     }
                 }.padding().background(AppTheme.cardBackground).cornerRadius(AppRadius.lg)

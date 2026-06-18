@@ -4,7 +4,7 @@ import SwiftUI
 /// 情绪标签纠错组件
 /// 弹出式情绪选择问卷 + 强度滑块 + 提交后更新情绪画像
 
-struct EmotionCorrectionView: View {
+struct CCEmotionCorrectionView: View {
     let currentEmotion: String
     let currentIntensity: Double
     let onCorrect: (String, Double) -> Void
@@ -311,7 +311,7 @@ final class EmotionCorrectionViewModel: ObservableObject {
 }
 
 #Preview {
-    EmotionCorrectionView(
+    CCEmotionCorrectionView(
         currentEmotion: "焦虑",
         currentIntensity: 6,
         onCorrect: { _, _ in }
