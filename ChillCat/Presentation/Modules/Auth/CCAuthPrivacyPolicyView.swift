@@ -12,7 +12,7 @@ struct PrivacyPolicyView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     // 最后更新日期
                     Text("最后更新日期：2026年6月17日")
-                        .font(AppTheme.Typography.caption)
+                        .font(AppFont.footnote)
                         .foregroundColor(AppTheme.textTertiary)
                     
                     PrivacySection(title: "一、信息收集") {
@@ -106,7 +106,7 @@ struct PrivacyPolicyView: View {
                     // 心理援助热线
                     VStack(alignment: .leading, spacing: 12) {
                         Text("🆘 心理援助热线")
-                            .font(AppTheme.Typography.headline)
+                            .font(AppFont.title3)
                             .foregroundColor(AppTheme.primary)
                         
                         CrisisHotlineRow(name: "全国心理援助热线", number: "400-161-9995")
@@ -116,7 +116,7 @@ struct PrivacyPolicyView: View {
                     }
                     .padding()
                     .background(AppTheme.surface)
-                    .cornerRadius(AppTheme.cornerRadius12)
+                    .cornerRadius(AppRadius.md)
                 }
                 .padding(24)
             }
@@ -141,7 +141,7 @@ struct UserAgreementView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("最后更新日期：2026年6月17日")
-                        .font(AppTheme.Typography.caption)
+                        .font(AppFont.footnote)
                         .foregroundColor(AppTheme.textTertiary)
                     
                     PrivacySection(title: "一、服务说明") {
@@ -230,11 +230,11 @@ struct PrivacyConsentView: View {
                 .foregroundColor(AppTheme.primary)
             
             Text("绪安 ChillCat")
-                .font(AppTheme.Typography.largeTitle)
+                .font(AppFont.title1)
                 .foregroundColor(AppTheme.textPrimary)
             
             Text("接住所有情绪，温柔自愈，自在松弛")
-                .font(AppTheme.Typography.body)
+                .font(AppFont.body)
                 .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
             
@@ -253,24 +253,24 @@ struct PrivacyConsentView: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text("我已阅读并同意")
-                            .font(AppTheme.Typography.body)
+                            .font(AppFont.body)
                             .foregroundColor(AppTheme.textSecondary)
                         
                         HStack(spacing: 4) {
                             Button("《隐私政策》") {
                                 showPrivacy = true
                             }
-                            .font(AppTheme.Typography.body)
+                            .font(AppFont.body)
                             .foregroundColor(AppTheme.primary)
                             
                             Text("和")
-                                .font(AppTheme.Typography.body)
+                                .font(AppFont.body)
                                 .foregroundColor(AppTheme.textSecondary)
                             
                             Button("《用户协议》") {
                                 showAgreement = true
                             }
-                            .font(AppTheme.Typography.body)
+                            .font(AppFont.body)
                             .foregroundColor(AppTheme.primary)
                         }
                     }
@@ -281,18 +281,18 @@ struct PrivacyConsentView: View {
                     UserDefaults.standard.set(true, forKey: "privacy_consent_accepted")
                 } label: {
                     Text("同意并继续")
-                        .font(AppTheme.Typography.headline)
+                        .font(AppFont.title3)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                         .background(isAgreed ? AppTheme.primary : AppTheme.textTertiary)
-                        .cornerRadius(AppTheme.cornerRadius12)
+                        .cornerRadius(AppRadius.md)
                 }
                 .disabled(!isAgreed)
             }
             .padding(24)
             .background(AppTheme.surface)
-            .cornerRadius(AppTheme.cornerRadius16)
+            .cornerRadius(AppRadius.lg)
             .padding(.horizontal, 24)
         }
         .padding(.bottom, 40)
@@ -315,7 +315,7 @@ private struct PrivacySection<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(title)
-                .font(AppTheme.Typography.headline)
+                .font(AppFont.title3)
                 .foregroundColor(AppTheme.textPrimary)
             
             content()
@@ -333,7 +333,7 @@ private struct PrivacyItem: View {
     
     var body: some View {
         Text(text)
-            .font(AppTheme.Typography.body)
+            .font(AppFont.body)
             .foregroundColor(AppTheme.textSecondary)
             .lineSpacing(4)
     }
@@ -353,7 +353,7 @@ private struct BulletList: View {
                     Text("•")
                         .foregroundColor(AppTheme.primary)
                     Text(item)
-                        .font(AppTheme.Typography.body)
+                        .font(AppFont.body)
                         .foregroundColor(AppTheme.textSecondary)
                 }
             }
@@ -372,7 +372,7 @@ private struct ContactRow: View {
                 .foregroundColor(AppTheme.primary)
                 .frame(width: 20)
             Text(text)
-                .font(AppTheme.Typography.body)
+                .font(AppFont.body)
                 .foregroundColor(AppTheme.textSecondary)
         }
     }
@@ -385,7 +385,7 @@ private struct CrisisHotlineRow: View {
     var body: some View {
         HStack {
             Text(name)
-                .font(AppTheme.Typography.body)
+                .font(AppFont.body)
                 .foregroundColor(AppTheme.textPrimary)
             Spacer()
             Button(number) {
@@ -393,7 +393,7 @@ private struct CrisisHotlineRow: View {
                     UIApplication.shared.open(url)
                 }
             }
-            .font(AppTheme.Typography.callout.monospacedDigit())
+            .font(AppFont.footnote.monospacedDigit())
             .foregroundColor(AppTheme.primary)
         }
         .padding(.vertical, 4)
