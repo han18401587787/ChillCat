@@ -131,6 +131,9 @@ struct CCToolboxView: View {
         LazyVGrid(columns: columns, spacing: 12) {
             ForEach(Array(CCToolItem.all.enumerated()), id: \.element.id) { index, item in
                 NavigationLink(value: item.route) {
+            toolCardView(item)
+        }
+        .accessibilityLabel("\(item.name)：\(item.description)") {
                     toolCard(item: item)
                 }
                 .buttonStyle(.plain)
