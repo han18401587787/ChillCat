@@ -6,11 +6,20 @@ struct CCTreeHoleView: View {
     @State private var showResonateSheet = false
     @State private var resonateTarget: CCResonancePost?
     @State private var resonateMessage = ""
+    @State private var showContentWarning = false
+    @State private var pendingPublishText: String = ""
+    @State private var showGuidelineBanner = true
     @Environment(CCAppCoordinator.self) private var coordinator
+    @Environment(\.ccAppTheme) private var theme
     @FocusState private var isFocused: Bool
 
     var body: some View {
         VStack(spacing: 0) {
+            // Community guideline banner
+            if showGuidelineBanner {
+                guidelineBanner
+            }
+
             // Header
             headerSection
 
@@ -58,16 +67,38 @@ struct CCTreeHoleView: View {
                 }
             }
         }
-        .background(AppTheme.background)
-        .cc_emojiPickerV3Overlay(isShowing: $showEmoji) { emoji in
-            viewModel.newPostText += emoji.displayName
+        .background(theme.background)
+        .overlay(alignment: .bottom) {
+            if showEmoji {
+                CCEmojiPicker(isShowing: $showEmoji) { emoji in
+                    viewModel.newPostText += emoji
+                }
+                .frame(height: 300)
+                .transition(.move(edge: .bottom))
+            }
         }
         .animation(.easeInOut, value: showEmoji)
         .sheet(isPresented: $showResonateSheet) {
             resonateSheetView
-                .presentationDetents([.height(260)])
+                .presentationDetents([.height(400)])
+        }
+        .alert("社区准则提醒", isPresented: $showContentWarning) {
+            Button("修改") {
+                viewModel.newPostText = pendingPublishText
+                pendingPublishText = ""
+                isFocused = true
+            }
+            Button("仍然发布", role: .destructive) {
+                viewModel.newPostText = pendingPublishText
+                pendingPublishText = ""
+                viewModel.publishPost(force: true)
+                isFocused = false
+            }
+        } message: {
+            Text("你的文字会被很多人看到，确保内容温暖友善。确定要发布吗？")
         }
         .task { await viewModel.loadPosts() }
+        .task { await viewModel.loadWarmTemplates() }
         .onReceive(NotificationCenter.default.publisher(for: .treeHoleDidUpdate)) { _ in
             Task { await viewModel.refresh() }
         }
@@ -79,19 +110,35 @@ struct CCTreeHoleView: View {
         HStack {
             Text("共鸣墙")
                 .font(.system(size: 24, weight: .bold))
-                .foregroundColor(AppTheme.textPrimary)
+                .foregroundColor(theme.textPrimary)
             Spacer()
+
+            // Mutual aid group entry
+            NavigationLink(value: CCAppRoute.mutualAidGroups) {
+                HStack(spacing: 4) {
+                    Image(systemName: "person.3.fill")
+                        .font(.system(size: 12))
+                    Text("互助小组")
+                        .font(.system(size: 13))
+                        .foregroundColor(theme.softGreen)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
+                .background(theme.softGreen.opacity(0.1))
+                .cornerRadius(theme.radiusSM)
+            }
+
             HStack(spacing: 4) {
                 Text("🕊️")
                     .font(.system(size: 14))
                 Text("\(viewModel.onlineCount) 人此刻")
                     .font(.system(size: 13))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(theme.textSecondary)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 4)
-            .background(AppTheme.primaryMuted.opacity(0.2))
-            .cornerRadius(AppRadius.sm)
+            .background(theme.primaryMuted.opacity(0.2))
+            .cornerRadius(theme.radiusSM)
 
             NavigationLink(value: CCAppRoute.encourageChain) {
                 HStack(spacing: 4) {
@@ -99,12 +146,12 @@ struct CCTreeHoleView: View {
                         .font(.system(size: 13))
                     Text("鼓励链")
                         .font(.system(size: 13))
-                        .foregroundColor(AppTheme.warm)
+                        .foregroundColor(theme.warm)
                 }
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
-                .background(AppTheme.warm.opacity(0.1))
-                .cornerRadius(AppRadius.sm)
+                .background(theme.warm.opacity(0.1))
+                .cornerRadius(theme.radiusSM)
             }
         }
         .padding(.horizontal)
@@ -121,8 +168,8 @@ struct CCTreeHoleView: View {
                 .font(.system(size: 15))
                 .lineLimit(3...6)
                 .padding()
-                .background(AppTheme.surface)
-                .cornerRadius(AppRadius.md)
+                .background(theme.surface)
+                .cornerRadius(theme.radiusMD)
 
             if !viewModel.newPostText.isEmpty {
                 HStack {
@@ -138,20 +185,26 @@ struct CCTreeHoleView: View {
                     Button(action: { showEmoji.toggle() }) {
                         Image(systemName: "face.smiling")
                             .font(.system(size: 20))
-                            .foregroundColor(AppTheme.primary)
+                            .foregroundColor(theme.primary)
                     }
                     .padding(.trailing, 8)
 
                     Button(action: {
                         CCHaptic.medium()
-                        viewModel.publishPost()
-                        isFocused = false
+                        if viewModel.checkContentBeforePublish(viewModel.newPostText) {
+                            viewModel.publishPost()
+                            isFocused = false
+                        } else {
+                            pendingPublishText = viewModel.newPostText
+                            viewModel.newPostText = ""
+                            showContentWarning = true
+                        }
                     }) {
                         Image(systemName: "paperplane.fill")
                             .font(.system(size: 18))
                             .foregroundColor(.white)
                             .padding(10)
-                            .background(AppTheme.primary)
+                            .background(theme.primary)
                             .clipShape(Circle())
                     }
                 }
@@ -164,7 +217,15 @@ struct CCTreeHoleView: View {
     // MARK: - Resonance Card
 
     private func resonanceCard(_ post: CCResonancePost) -> some View {
-        VStack {
+        Button(action: {
+            let displayItem = CCResonanceDisplayItem(
+                id: post.id, content: post.content, emotion: post.emotion,
+                emotionColor: post.emotionColor, isAnonymous: post.isAnonymous,
+                displayName: post.displayName,
+                resonanceCount: post.resonanceCount, createdAt: post.createdAt
+            )
+            coordinator.navigate(to: .resonanceDetail(displayItem))
+        }) {
             HStack(alignment: .top, spacing: 0) {
                 // Left emotion color bar
                 RoundedRectangle(cornerRadius: 2)
@@ -183,10 +244,10 @@ struct CCTreeHoleView: View {
                             .font(.system(size: 13, weight: .medium))
                             .foregroundColor(emotionColorFor(post.emotionColor))
                         Text("·")
-                            .foregroundColor(AppTheme.textMuted)
+                            .foregroundColor(theme.textMuted)
                         Text(post.timeAgo)
                             .font(.system(size: 12))
-                            .foregroundColor(AppTheme.textMuted)
+                            .foregroundColor(theme.textMuted)
                         Spacer()
                     }
 
@@ -194,29 +255,21 @@ struct CCTreeHoleView: View {
                     Text(post.content)
                         .font(.system(size: 15))
                         .lineSpacing(4)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .foregroundColor(theme.textPrimary)
                         .multilineTextAlignment(.leading)
                         .lineLimit(5)
 
                     // Bottom: resonance count + actions
                     HStack(spacing: 12) {
-                        // Resonance count — tappable
-                        Button(action: {
-                            CCHaptic.light()
-                            resonateTarget = post
-                            resonateMessage = ""
-                            showResonateSheet = true
-                        }) {
-                            HStack(spacing: 4) {
-                                Image(systemName: post.hasResonated ? "heart.fill" : "heart")
-                                    .font(.system(size: 13))
-                                    .foregroundColor(post.hasResonated ? AppTheme.error : AppTheme.softPink)
-                                Text("\(post.formattedResonance) 人共鸣")
-                                    .font(.system(size: 13))
-                                    .foregroundColor(AppTheme.textSecondary)
-                            }
+                        // Resonance count
+                        HStack(spacing: 4) {
+                            Image(systemName: post.hasResonated ? "heart.fill" : "heart")
+                                .font(.system(size: 13))
+                                .foregroundColor(post.hasResonated ? theme.error : theme.softPink)
+                            Text("\(post.formattedResonance) 人共鸣")
+                                .font(.system(size: 13))
+                                .foregroundColor(theme.textSecondary)
                         }
-                        .buttonStyle(.plain)
 
                         Spacer()
 
@@ -228,11 +281,11 @@ struct CCTreeHoleView: View {
                         }) {
                             Text("我也想说")
                                 .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(AppTheme.primary)
+                                .foregroundColor(theme.primary)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
-                                .background(AppTheme.primary.opacity(0.1))
-                                .cornerRadius(AppRadius.sm)
+                                .background(theme.primary.opacity(0.1))
+                                .cornerRadius(theme.radiusSM)
                         }
 
                         // Share resonance - just resonate directly
@@ -242,9 +295,9 @@ struct CCTreeHoleView: View {
                         }) {
                             Image(systemName: "arrowshape.turn.up.forward.fill")
                                 .font(.system(size: 14))
-                                .foregroundColor(AppTheme.textSecondary)
+                                .foregroundColor(theme.textSecondary)
                                 .padding(8)
-                                .background(AppTheme.surface)
+                                .background(theme.surface)
                                 .clipShape(Circle())
                         }
                     }
@@ -252,20 +305,12 @@ struct CCTreeHoleView: View {
                 .padding(.vertical, 12)
             }
             .padding(.horizontal, 12)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.lg)
+            .background(theme.cardBackground)
+            .cornerRadius(theme.radiusLG)
             .shadow(color: Color.black.opacity(0.03), radius: 4, y: 2)
         }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            let displayItem = CCResonanceDisplayItem(
-                id: post.id, content: post.content, emotion: post.emotion,
-                emotionColor: post.emotionColor, isAnonymous: post.isAnonymous,
-                displayName: post.displayName,
-                resonanceCount: post.resonanceCount, createdAt: post.createdAt
-            )
-            coordinator.navigate(to: .resonanceDetail(displayItem))
-        }
+        .buttonStyle(.plain)
+    }
 
     // MARK: - Resonate Sheet
 
@@ -273,24 +318,27 @@ struct CCTreeHoleView: View {
         VStack(spacing: 16) {
             Text("我也有过这种感觉")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(AppTheme.textPrimary)
+                .foregroundColor(theme.textPrimary)
+
+            // Warm template chips
+            warmTemplateChips
 
             TextField("说一句鼓励的话吧（可选）", text: $resonateMessage, axis: .vertical)
                 .font(.system(size: 15))
                 .padding()
-                .background(AppTheme.surface)
-                .cornerRadius(AppRadius.md)
+                .background(theme.surface)
+                .cornerRadius(theme.radiusMD)
                 .lineLimit(2...4)
 
             HStack(spacing: 12) {
                 Button("取消") {
                     showResonateSheet = false
                 }
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(theme.textSecondary)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
-                .background(AppTheme.surface)
-                .cornerRadius(AppRadius.md)
+                .background(theme.surface)
+                .cornerRadius(theme.radiusMD)
 
                 Button(action: {
                     CCHaptic.success()
@@ -304,29 +352,94 @@ struct CCTreeHoleView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
-                        .background(AppTheme.primary)
-                        .cornerRadius(AppRadius.md)
+                        .background(theme.primary)
+                        .cornerRadius(theme.radiusMD)
                 }
             }
         }
         .padding()
-        .background(AppTheme.background)
+        .background(theme.background)
+    }
+
+    // MARK: - Warm Template Chips
+
+    private var warmTemplateChips: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(viewModel.warmTemplates) { template in
+                    Button(action: {
+                        CCHaptic.light()
+                        resonateMessage = template.content
+                    }) {
+                        HStack(spacing: 4) {
+                            Text(template.emoji)
+                                .font(.system(size: 12))
+                            Text(template.content)
+                                .font(.system(size: 12))
+                                .foregroundColor(
+                                    resonateMessage == template.content
+                                        ? .white
+                                        : theme.textSecondary
+                                )
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(
+                            resonateMessage == template.content
+                                ? theme.primary
+                                : theme.surface
+                        )
+                        .cornerRadius(theme.radiusFull)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: theme.radiusFull)
+                                .stroke(theme.primary.opacity(0.2), lineWidth: 1)
+                        )
+                    }
+                }
+            }
+            .padding(.horizontal, 4)
+        }
+    }
+
+    // MARK: - Guideline Banner
+
+    private var guidelineBanner: some View {
+        HStack(spacing: 8) {
+            Text("💚")
+                .font(.system(size: 14))
+            Text("社区准则：温暖友善，互相支持")
+                .font(.system(size: 13))
+                .foregroundColor(theme.textSecondary)
+            Spacer()
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    showGuidelineBanner = false
+                }
+            }) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(theme.textMuted)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(theme.softGreenLight)
     }
 
     // MARK: - Helpers
 
     private func emotionColorFor(_ colorName: String) -> Color {
         switch colorName {
-        case "softGreen": return AppTheme.softGreen
-        case "warmLight": return AppTheme.warmLight
-        case "primaryMuted": return AppTheme.primaryMuted
-        case "softPurple": return AppTheme.softPurple
-        case "softPink": return AppTheme.softPink
-        case "primaryLight": return AppTheme.primaryLight
-        case "error": return AppTheme.error
-        case "softPurpleLight": return AppTheme.softPurpleLight
-        case "warm": return AppTheme.warm
-        default: return AppTheme.primaryMuted
+        case "softGreen": return theme.softGreen
+        case "warmLight": return theme.warmLight
+        case "primaryMuted": return theme.primaryMuted
+        case "softPurple": return theme.softPurple
+        case "softPink": return theme.softPink
+        case "primaryLight": return theme.primaryLight
+        case "error": return theme.error
+        case "softPurpleLight": return theme.softPurpleLight
+        case "warm": return theme.warm
+        default: return theme.primaryMuted
         }
     }
 }

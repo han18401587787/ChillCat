@@ -79,6 +79,21 @@ enum CCAppRoute: Hashable, Identifiable {
     case settings
     case meditationPlayer(session: CCMeditationSession)
     case web(url: URL)
+    case professionalResources
+    case safetyPlan
+    case crisisHotline
+    case toolbox
+    case breathingExercise
+    case cbtRestructuring
+    case progressiveMuscleRelaxation
+    case bodyScan
+    case valuesExplorer
+    case gratitudeJournal
+    case behavioralActivation
+    case growthArchive
+    case growthReport
+    case mutualAidGroups
+    case mutualAidGroupDetail(Int64)
 
     var id: String {
         switch self {
@@ -115,6 +130,21 @@ enum CCAppRoute: Hashable, Identifiable {
         case .settings: return "settings"
         case .meditationPlayer(let session): return "meditationPlayer_\(session.id)"
         case .web(let url): return "web_\(url.absoluteString)"
+        case .professionalResources: return "professionalResources"
+        case .safetyPlan: return "safetyPlan"
+        case .crisisHotline: return "crisisHotline"
+        case .toolbox: return "toolbox"
+        case .breathingExercise: return "breathingExercise"
+        case .cbtRestructuring: return "cbtRestructuring"
+        case .progressiveMuscleRelaxation: return "progressiveMuscleRelaxation"
+        case .bodyScan: return "bodyScan"
+        case .valuesExplorer: return "valuesExplorer"
+        case .gratitudeJournal: return "gratitudeJournal"
+        case .behavioralActivation: return "behavioralActivation"
+        case .growthArchive: return "growthArchive"
+        case .growthReport: return "growthReport"
+        case .mutualAidGroups: return "mutualAidGroups"
+        case .mutualAidGroupDetail(let id): return "mutualAidGroupDetail_\(id)"
         }
     }
 }

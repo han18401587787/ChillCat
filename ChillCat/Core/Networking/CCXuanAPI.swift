@@ -210,6 +210,317 @@ enum CCXuanAPI {
         try await get("/api/v1/encourage-chain/my")
     }
 
+    // MARK: - Crisis & Safety
+
+    // Crisis resource models
+    struct CrisisResourceItem: Decodable, Identifiable {
+        let id: Int64
+        let name: String
+        let phone: String
+        let type: String
+        let region: String
+        let description: String
+    }
+
+    struct CrisisResourceListResponse: Decodable {
+        let resources: [CrisisResourceItem]
+    }
+
+    // Safety plan models
+    struct SafetyPlanData: Codable {
+        var warningSigns: [String]
+        var strategies: [String]
+        var contacts: [String]
+        var resources: [String]
+    }
+
+    struct SafetyPlanResponse: Decodable {
+        let id: Int64
+        let warningSigns: [String]
+        let strategies: [String]
+        let contacts: [String]
+        let resources: [String]
+    }
+
+    // Tool usage models
+    struct ToolUsageRecord: Encodable {
+        let toolType: String
+        let duration: Int
+        let completed: Bool
+    }
+
+    struct ToolUsageStats: Decodable {
+        let totalCount: Int64
+        let totalDuration: Int64
+        let lastUsedAt: String?
+    }
+
+    /// 获取危机资源列表
+    static func getCrisisResources(type: String = "") async throws -> [CrisisResourceItem] {
+        let path = "/api/v1/crisis/resources" + (type.isEmpty ? "" : "?type=\(type)")
+        let response: CrisisResourceListResponse = try await get(path)
+        return response.resources
+    }
+
+    /// 获取用户安全计划
+    static func getSafetyPlan() async throws -> SafetyPlanResponse {
+        try await get("/api/v1/crisis/safety-plan")
+    }
+
+    /// 创建/更新安全计划
+    static func updateSafetyPlan(_ plan: SafetyPlanData) async throws -> SafetyPlanResponse {
+        try await post("/api/v1/crisis/safety-plan", body: plan)
+    }
+
+    /// 记录工具使用
+    static func recordToolUsage(toolType: String, duration: Int, completed: Bool) async throws {
+        let record = ToolUsageRecord(toolType: toolType, duration: duration, completed: completed)
+        let _: CCEmptyResponse = try await post("/api/v1/tools/usage", body: record)
+    }
+
+    /// 获取工具使用统计
+    static func getToolUsageStats(toolType: String) async throws -> ToolUsageStats {
+        try await get("/api/v1/tools/usage/stats?toolType=\(toolType)")
+    }
+
+    // MARK: - Warm Templates
+
+    struct WarmTemplateResponse: Decodable {
+        let id: String; let content: String; let emoji: String; let category: String
+    }
+
+    static func fetchWarmTemplates() async throws -> [CCWarmResponseTemplate] {
+        let raw: [WarmTemplateResponse] = try await get("/api/v1/community/warm-templates")
+        return raw.map { CCWarmResponseTemplate(id: $0.id, content: $0.content, emoji: $0.emoji, category: $0.category) }
+    }
+
+    // MARK: - Mutual Aid Groups
+
+    struct MutualAidGroupResponse: Decodable {
+        let id: Int64; let name: String; let description: String; let category: String
+        let memberCount: Int64; let iconName: String; let isJoined: Bool
+    }
+
+    static func fetchMutualAidGroups() async throws -> [CCMutualAidGroup] {
+        let raw: [MutualAidGroupResponse] = try await get("/api/v1/community/mutual-aid-groups")
+        return raw.map {
+            CCMutualAidGroup(id: $0.id, name: $0.name, description: $0.description,
+                             category: $0.category, memberCount: $0.memberCount,
+                             iconName: $0.iconName, isJoined: $0.isJoined)
+        }
+    }
+
+    static func joinMutualAidGroup(id: Int64) async throws {
+        let path = "/api/v1/community/mutual-aid-groups/\(id)/join"
+        let _: CCEmptyResponse = try await post(path, body: Optional<String>.none)
+    }
+
+    static func leaveMutualAidGroup(id: Int64) async throws {
+        let path = "/api/v1/community/mutual-aid-groups/\(id)/leave"
+        let _: CCEmptyResponse = try await post(path, body: Optional<String>.none)
+    }
+
+    // MARK: - Growth & Achievement
+
+    // Achievement models
+    struct AchievementVO: Decodable, Identifiable {
+        let id: Int64
+        let code: String
+        let name: String
+        let description: String
+        let iconName: String
+        let category: String
+        let isUnlocked: Bool
+        let progress: Int
+        let targetValue: Int
+        let progressPercent: Double
+        let unlockedAt: String?
+    }
+
+    struct AchievementListResponse: Decodable {
+        let achievements: [AchievementVO]
+    }
+
+    // Milestone models
+    struct MilestoneVO: Decodable, Identifiable {
+        let id: Int64
+        let title: String
+        let description: String
+        let milestoneType: String
+        let createdAt: String
+    }
+
+    struct MilestoneListResponse: Decodable {
+        let milestones: [MilestoneVO]
+    }
+
+    // Growth stats models
+    struct GrowthStatsVO: Decodable {
+        let totalCheckins: Int64
+        let streakDays: Int64
+        let emotionTypes: Int64
+        let toolUsageCount: Int64
+        let communityInteractions: Int64
+        let totalDays: Int64
+    }
+
+    // Growth report models
+    struct GrowthReportVO: Decodable {
+        let stats: GrowthStatsVO
+        let topEmotions: [String]?
+        let toolDistribution: [String: Int64]?
+        let milestones: [MilestoneVO]?
+        let insights: [String]?
+    }
+
+    /// 获取所有成就及用户进度
+    static func getAchievements() async throws -> [AchievementVO] {
+        let response: AchievementListResponse = try await get("/api/v1/achievements")
+        return response.achievements
+    }
+
+    /// 获取已解锁成就
+    static func getUnlockedAchievements() async throws -> [AchievementVO] {
+        let response: AchievementListResponse = try await get("/api/v1/achievements/unlocked")
+        return response.achievements
+    }
+
+    /// 获取里程碑列表
+    static func getMilestones() async throws -> [MilestoneVO] {
+        let response: MilestoneListResponse = try await get("/api/v1/milestones")
+        return response.milestones
+    }
+
+    /// 获取成长统计
+    static func getGrowthStats() async throws -> GrowthStatsVO {
+        return try await get("/api/v1/growth/stats")
+    }
+
+    /// 获取成长报告
+    static func getGrowthReport(period: String = "month") async throws -> GrowthReportVO {
+        return try await get("/api/v1/growth/report?period=\(period)")
+    }
+
+    // MARK: - Community
+
+    struct MutualAidGroupVO: Decodable, Identifiable {
+        let id: Int64
+        let name: String
+        let description: String
+        let category: String
+        let memberCount: Int64
+        let iconName: String
+        let isJoined: Bool
+    }
+
+    struct MutualAidGroupListResponse: Decodable {
+        let groups: [MutualAidGroupVO]
+    }
+
+    struct MutualAidGroupDetailResponse: Decodable {
+        let group: MutualAidGroupVO
+    }
+
+    struct WarmTemplateVO: Decodable, Identifiable {
+        let id: Int64
+        let content: String
+        let emoji: String
+        let category: String
+    }
+
+    struct WarmTemplateListResponse: Decodable {
+        let templates: [WarmTemplateVO]
+    }
+
+    /// 获取互助小组列表
+    static func listMutualAidGroups(category: String = "") async throws -> [MutualAidGroupVO] {
+        let path = category.isEmpty ? "/community/groups" : "/community/groups?category=\(category)"
+        let response: MutualAidGroupListResponse = try await get(path)
+        return response.groups
+    }
+
+    /// 获取小组详情
+    static func getGroupDetail(id: Int64) async throws -> MutualAidGroupVO {
+        let response: MutualAidGroupDetailResponse = try await get("/community/groups/\(id)")
+        return response.group
+    }
+
+    /// 加入小组
+    static func joinGroup(id: Int64) async throws {
+        let _: CCEmptyResponse = try await post("/community/groups/\(id)/join", body: Optional<String>.none)
+    }
+
+    /// 退出小组
+    static func leaveGroup(id: Int64) async throws {
+        let _: CCEmptyResponse = try await post("/community/groups/\(id)/leave", body: Optional<String>.none)
+    }
+
+    /// 获取我的小组
+    static func getMyGroups() async throws -> [MutualAidGroupVO] {
+        let response: MutualAidGroupListResponse = try await get("/community/my-groups")
+        return response.groups
+    }
+
+    /// 获取温暖回应模板
+    static func getWarmTemplates() async throws -> [WarmTemplateVO] {
+        let response: WarmTemplateListResponse = try await get("/community/warm-templates")
+        return response.templates
+    }
+
+    // MARK: - Analytics
+
+    struct CCInsightsResponse: Decodable {
+        let insights: [String]
+    }
+
+    struct EmotionTrendVO: Decodable {
+        let labels: [String]
+        let values: [Double]
+        let dominantEmotion: String?
+    }
+
+    struct ToolUsageItemVO: Decodable, Identifiable {
+        var id: String { toolType }
+        let toolType: String
+        let count: Int64
+        let totalDuration: Int64
+    }
+
+    struct ToolUsageDistributionResponse: Decodable {
+        let items: [ToolUsageItemVO]
+    }
+
+    struct DashboardVO: Decodable {
+        let totalCheckins: Int64
+        let streakDays: Int64
+        let topEmotion: String?
+        let toolUsageCount: Int64
+        let groupCount: Int64
+        let totalDays: Int64
+    }
+
+    /// 获取情绪趋势
+    static func getEmotionTrend(period: String = "week") async throws -> EmotionTrendVO {
+        return try await get("/analytics/emotion-trend?period=\(period)")
+    }
+
+    /// 获取工具使用分布
+    static func getToolUsageDistribution() async throws -> [ToolUsageItemVO] {
+        let response: ToolUsageDistributionResponse = try await get("/analytics/tool-usage")
+        return response.items
+    }
+
+    /// 获取仪表盘数据
+    static func getDashboard() async throws -> DashboardVO {
+        return try await get("/analytics/dashboard")
+    }
+
+    /// 获取AI洞察
+    static func getInsights() async throws -> [String] {
+        let response: CCInsightsResponse = try await get("/analytics/insights")
+        return response.insights
+    }
+
     // MARK: - Internal helpers
 
     private static let keychain = Keychain(service: "app.xuanpeace.token")

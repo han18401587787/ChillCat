@@ -1,17 +1,19 @@
 import SwiftUI
 
 enum CCMainTab: Int, CaseIterable {
-    case home, treeHole, vip, profile
+    case home, treeHole, toolbox, vip, profile
     var title: String {
         switch self {
         case .home: return "首页"; case .treeHole: return "共鸣"
-        case .vip: return "会员"; case .profile: return "我的"
+        case .toolbox: return "工具箱"; case .vip: return "会员"
+        case .profile: return "我的"
         }
     }
     var iconName: String {
         switch self {
         case .home: return "house.fill"; case .treeHole: return "heart.fill"
-        case .vip: return "crown.fill"; case .profile: return "person.fill"
+        case .toolbox: return "square.grid.2x2.fill"; case .vip: return "crown.fill"
+        case .profile: return "person.fill"
         }
     }
 }
@@ -39,6 +41,15 @@ struct CCMainTabView: View {
             }
             .tabItem { Label(CCMainTab.treeHole.title, systemImage: CCMainTab.treeHole.iconName) }
             .tag(CCMainTab.treeHole).accessibilityIdentifier("tab_treehole")
+
+            NavigationStack {
+                coordinator.buildView(for: .toolbox)
+                    .navigationDestination(for: CCAppRoute.self) { route in
+                        coordinator.buildView(for: route)
+                    }
+            }
+            .tabItem { Label(CCMainTab.toolbox.title, systemImage: CCMainTab.toolbox.iconName) }
+            .tag(CCMainTab.toolbox).accessibilityIdentifier("tab_toolbox")
 
             NavigationStack {
                 coordinator.buildView(for: .vipCenter)

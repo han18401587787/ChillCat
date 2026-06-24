@@ -13,9 +13,54 @@ final class CCTreeHoleViewModel {
     var hasMore = true
     var onlineCount: Int64 = 0
     var errorMessage: String?
+    var warmTemplates: [CCWarmResponseTemplate] = CCWarmResponseTemplate.presets
+    var showCommunityGuideline = false
     private var currentPage = 1
 
     init() {}
+
+    /// Check content for potentially negative/unfriendly keywords before publishing.
+    /// Returns false if potentially harmful content is detected, triggering a guideline alert.
+    func checkContentBeforePublish(_ text: String) -> Bool {
+        let lowercased = text.lowercased()
+
+        let negativeKeywords: Set<String> = [
+            "傻逼", "sb", "fuck", "shit", "废物", "垃圾", "滚",
+            "去死", "死了算了", "没用", "loser", "idiot", "stupid",
+            "恨你", "恶心", "诅咒", "去你妈的", "tmd", "cnm",
+        ]
+
+        for keyword in negativeKeywords {
+            if lowercased.contains(keyword) {
+                return false
+            }
+        }
+
+        // Also check for excessive negative self-talk patterns
+        let selfHarmPatterns: Set<String> = [
+            "不想活了", "活不下去", "自杀", "结束自己", "kill myself",
+        ]
+        for pattern in selfHarmPatterns {
+            if lowercased.contains(pattern) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    func loadWarmTemplates() async {
+        // Attempt to load from API; fallback to presets on failure
+        do {
+            let remote = try await CCXuanAPI.fetchWarmTemplates()
+            guard !remote.isEmpty else { return }
+            warmTemplates = remote
+            print("✅ [TreeHole] loadWarmTemplates: \(remote.count) from API")
+        } catch {
+            warmTemplates = CCWarmResponseTemplate.presets
+            print("⚠️ [TreeHole] loadWarmTemplates fallback to presets: \(error)")
+        }
+    }
 
     func loadPosts() async {
         print("🔄 [TreeHole] loadPosts start")
@@ -78,8 +123,15 @@ final class CCTreeHoleViewModel {
 
     func toggleAnonymous() { isAnonymous.toggle() }
 
-    func publishPost() {
+    func publishPost(force: Bool = false) {
         guard !newPostText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+
+        // Community guideline check — unless forced
+        if !force && !checkContentBeforePublish(newPostText) {
+            showCommunityGuideline = true
+            return
+        }
+
         let text = newPostText; newPostText = ""
         let scope = selectedScope; let anon = isAnonymous
         Task {

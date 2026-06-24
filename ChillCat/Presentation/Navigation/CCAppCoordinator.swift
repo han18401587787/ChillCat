@@ -53,6 +53,21 @@ final class CCAppCoordinator {
         case .settings: CCSettingsView()
         case .meditationPlayer(let session): CCMeditationPlayerView(session: session)
         case .web(let url): CCWebView(url: url)
+        case .professionalResources: CCProfessionalResourceView()
+        case .safetyPlan: CCSafetyPlanView()
+        case .crisisHotline: CCCrisisHotlineView()
+        case .toolbox: CCToolboxView()
+        case .breathingExercise: CCBreathingExerciseView()
+        case .cbtRestructuring: CCCBTView()
+        case .progressiveMuscleRelaxation: CCPMRView()
+        case .bodyScan: CCBodyScanView()
+        case .valuesExplorer: CCValuesExplorerView()
+        case .gratitudeJournal: CCGratitudeJournalView()
+        case .behavioralActivation: CCBehavioralActivationView()
+        case .growthArchive: CCGrowthArchiveView()
+        case .growthReport: CCGrowthReportView()
+        case .mutualAidGroups: CCMutualAidGroupView()
+        case .mutualAidGroupDetail(let id): CCMutualAidGroupView()
         }
     }
 
