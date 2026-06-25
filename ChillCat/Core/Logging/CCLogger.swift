@@ -125,6 +125,7 @@ final class CCLogger: CCLoggerProtocol {
 
 // MARK: - Global Log Functions
 
+@MainActor
 func LogD(_ message: @autoclosure () -> String, module: CCLogModule = .default,
           category: String = "General", file: String = #file,
           function: String = #function, line: Int = #line) {
@@ -132,6 +133,7 @@ func LogD(_ message: @autoclosure () -> String, module: CCLogModule = .default,
                            file: file, function: function, line: line)
 }
 
+@MainActor
 func LogI(_ message: @autoclosure () -> String, module: CCLogModule = .default,
           category: String = "General", file: String = #file,
           function: String = #function, line: Int = #line) {
@@ -139,6 +141,7 @@ func LogI(_ message: @autoclosure () -> String, module: CCLogModule = .default,
                           file: file, function: function, line: line)
 }
 
+@MainActor
 func LogW(_ message: @autoclosure () -> String, module: CCLogModule = .default,
           category: String = "General", file: String = #file,
           function: String = #function, line: Int = #line) {
@@ -146,6 +149,7 @@ func LogW(_ message: @autoclosure () -> String, module: CCLogModule = .default,
                             file: file, function: function, line: line)
 }
 
+@MainActor
 func LogE(_ message: @autoclosure () -> String, module: CCLogModule = .default,
           category: String = "General", file: String = #file,
           function: String = #function, line: Int = #line, error: Error? = nil) {
