@@ -581,7 +581,7 @@ struct ChatBubble: View {
                     .padding(.vertical, AppSpacing.md)
                     .background(
                         message.isFromAI
-                            ? AppTheme.backgroundSecondary
+                            ? AnyView(AppTheme.backgroundSecondary)
                             : AnyView(
                                 LinearGradient(
                                     colors: [AppTheme.primary, AppTheme.primaryDark],
@@ -593,7 +593,7 @@ struct ChatBubble: View {
                     .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
 
                 HStack(spacing: 4) {
-                    Text(message.timestamp.formatted(date: ./* TODO: use DateFormatter */, time: .omitted))
+                    Text(message.timestamp.formatted(date: .abbreviated, time: .shortened))
                         .font(AppFont.caption2)
                         .foregroundColor(AppTheme.textTertiary)
 

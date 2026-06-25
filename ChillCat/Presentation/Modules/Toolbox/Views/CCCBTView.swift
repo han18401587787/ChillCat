@@ -11,13 +11,12 @@ import SwiftUI
 // MARK: - CBT View
 
 struct CCCBTView: View {
-    @Environment(\.ccAppTheme) private var theme
     @Environment(CCAppCoordinator.self) private var coordinator
     @State private var viewModel = CCCBTViewModel()
 
     var body: some View {
         ScrollView {
-            VStack(spacing: theme.spacingXL) {
+            VStack(spacing: AppSpacing.xl) {
                 // Step progress indicator
                 stepProgressBar
 
@@ -45,17 +44,17 @@ struct CCCBTView: View {
                     navigationButtons
                 }
             }
-            .padding(.horizontal, theme.spacingLG)
-            .padding(.top, theme.spacingSM)
-            .padding(.bottom, theme.spacing3XL)
+            .padding(.horizontal, AppSpacing.lg)
+            .padding(.top, AppSpacing.sm)
+            .padding(.bottom, AppSpacing.xl)
         }
-        .background(theme.background.ignoresSafeArea())
+        .background(AppTheme.background.ignoresSafeArea())
         .navigationTitle("CBT认知重构")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
-                    .foregroundColor(theme.primary)
+                    .foregroundColor(AppTheme.primary)
             }
         }
     }
@@ -63,7 +62,7 @@ struct CCCBTView: View {
     // MARK: - Step Progress Bar
 
     private var stepProgressBar: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             HStack(spacing: 0) {
                 ForEach(CCCBTStep.allCases.dropLast(), id: \.rawValue) { step in
                     stepIndicator(step: step)
@@ -74,18 +73,18 @@ struct CCCBTView: View {
             HStack(spacing: 0) {
                 ForEach(CCCBTStep.allCases.dropLast(), id: \.rawValue) { step in
                     Text(step.title)
-                        .font(theme.fontCaption)
+                        .font(AppFont.caption)
                         .foregroundColor(
                             step.rawValue <= viewModel.currentStep.rawValue
-                                ? theme.primary : theme.textMuted
+                                ? AppTheme.primary : AppTheme.textSecondary
                         )
                         .frame(maxWidth: .infinity)
                 }
             }
         }
-        .padding(theme.spacingLG)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.lg)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     private func stepIndicator(step: CCCBTStep) -> some View {
@@ -94,8 +93,8 @@ struct CCCBTView: View {
             ZStack {
                 Circle()
                     .fill(step.rawValue < viewModel.currentStep.rawValue
-                          ? theme.primary : (step.rawValue == viewModel.currentStep.rawValue
-                                             ? theme.primary : theme.divider))
+                          ? AppTheme.primary : (step.rawValue == viewModel.currentStep.rawValue
+                                             ? AppTheme.primary : AppTheme.border))
                     .frame(width: 28, height: 28)
                 if step.rawValue < viewModel.currentStep.rawValue {
                     Image(systemName: "checkmark")
@@ -103,15 +102,15 @@ struct CCCBTView: View {
                         .foregroundColor(.white)
                 } else {
                     Text("\(step.rawValue + 1)")
-                        .font(theme.fontCaption.weight(.bold))
-                        .foregroundColor(step.rawValue == viewModel.currentStep.rawValue ? .white : theme.textMuted)
+                        .font(AppFont.caption.weight(.bold))
+                        .foregroundColor(step.rawValue == viewModel.currentStep.rawValue ? .white : AppTheme.textSecondary)
                 }
             }
 
             // Connector line
             if step.rawValue < CCCBTStep.completed.rawValue {
                 Rectangle()
-                    .fill(step.rawValue < viewModel.currentStep.rawValue ? theme.primary : theme.divider)
+                    .fill(step.rawValue < viewModel.currentStep.rawValue ? AppTheme.primary : AppTheme.border)
                     .frame(height: 2)
                     .frame(maxWidth: .infinity)
             }
@@ -121,116 +120,116 @@ struct CCCBTView: View {
     // MARK: - Step 1: Record Automatic Thought
 
     private var step1RecordThought: some View {
-        VStack(alignment: .leading, spacing: theme.spacingLG) {
+        VStack(alignment: .leading, spacing: AppSpacing.lg) {
             stepHeader
 
             // Situation
-            VStack(alignment: .leading, spacing: theme.spacingSM) {
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
                 Text("情境描述")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
                 Text("描述发生了什么具体事件？在什么时候、什么地方、和谁？")
-                    .font(theme.fontBodyS)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.footnote)
+                    .foregroundColor(AppTheme.textSecondary)
                 TextField("例如：今天开会时我的发言被同事打断了...", text: $viewModel.situationText, axis: .vertical)
-                    .font(theme.fontBody)
-                    .padding(theme.spacingMD)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusSM)
+                    .font(AppFont.body)
+                    .padding(AppSpacing.md)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.sm)
                     .lineLimit(3...6)
             }
-            .padding(theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
 
             // Automatic thought
-            VStack(alignment: .leading, spacing: theme.spacingSM) {
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
                 Text("自动思维")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
                 Text("当时脑海中自动浮现了什么想法？")
-                    .font(theme.fontBodyS)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.footnote)
+                    .foregroundColor(AppTheme.textSecondary)
                 TextEditor(text: $viewModel.automaticThought)
-                    .font(theme.fontBody)
+                    .font(AppFont.body)
                     .frame(minHeight: 100)
-                    .padding(theme.spacingSM)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusSM)
+                    .padding(AppSpacing.sm)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.sm)
                     .overlay(
-                        RoundedRectangle(cornerRadius: theme.radiusSM)
-                            .stroke(theme.divider, lineWidth: 0.5)
+                        RoundedRectangle(cornerRadius: AppRadius.sm)
+                            .stroke(AppTheme.border, lineWidth: 0.5)
                     )
             }
-            .padding(theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
         }
     }
 
     // MARK: - Step 2: Identify Distortions
 
     private var step2IdentifyDistortions: some View {
-        VStack(alignment: .leading, spacing: theme.spacingLG) {
+        VStack(alignment: .leading, spacing: AppSpacing.lg) {
             stepHeader
 
-            VStack(alignment: .leading, spacing: theme.spacingMD) {
+            VStack(alignment: .leading, spacing: AppSpacing.md) {
                 Text("选择包含的认知扭曲")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
                 Text("你的自动思维中可能包含多种认知扭曲，请选择所有适用的")
-                    .font(theme.fontBodyS)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.footnote)
+                    .foregroundColor(AppTheme.textSecondary)
             }
-            .padding(.horizontal, theme.spacingLG)
-            .padding(.top, theme.spacingLG)
+            .padding(.horizontal, AppSpacing.lg)
+            .padding(.top, AppSpacing.lg)
 
             // Distortion grid
             LazyVGrid(
-                columns: [GridItem(.flexible(), spacing: theme.spacingSM), GridItem(.flexible(), spacing: theme.spacingSM)],
-                spacing: theme.spacingSM
+                columns: [GridItem(.flexible(), spacing: AppSpacing.sm), GridItem(.flexible(), spacing: AppSpacing.sm)],
+                spacing: AppSpacing.sm
             ) {
                 ForEach(CCCognitiveDistortion.all) { distortion in
                     distortionButton(distortion)
                 }
             }
-            .padding(.horizontal, theme.spacingLG)
-            .padding(.bottom, theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(.horizontal, AppSpacing.lg)
+            .padding(.bottom, AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
 
             // Selected distortions summary
             if !viewModel.selectedDistortions.isEmpty {
-                VStack(alignment: .leading, spacing: theme.spacingSM) {
+                VStack(alignment: .leading, spacing: AppSpacing.sm) {
                     Text("已选择 \(viewModel.selectedDistortions.count) 种认知扭曲")
-                        .font(theme.fontBodyS)
-                        .foregroundColor(theme.textSecondary)
-                    FlowLayout(spacing: theme.spacingSM) {
+                        .font(AppFont.footnote)
+                        .foregroundColor(AppTheme.textSecondary)
+                    FlowLayout(spacing: AppSpacing.sm) {
                         ForEach(Array(viewModel.selectedDistortions), id: \.self) { id in
                             if let distortion = CCCognitiveDistortion.all.first(where: { $0.id == id }) {
                                 HStack(spacing: 4) {
                                     Text(distortion.name)
-                                        .font(theme.fontCaption)
-                                        .foregroundColor(theme.softPurple)
+                                        .font(AppFont.caption)
+                                        .foregroundColor(AppTheme.softPurple)
                                     Button {
                                         viewModel.toggleDistortion(id)
                                     } label: {
                                         Image(systemName: "xmark.circle.fill")
                                             .font(.system(size: 12))
-                                            .foregroundColor(theme.softPurple.opacity(0.6))
+                                            .foregroundColor(AppTheme.softPurple.opacity(0.6))
                                     }
                                 }
-                                .padding(.horizontal, theme.spacingSM)
-                                .padding(.vertical, theme.spacingXS)
-                                .background(theme.softPurpleLight.opacity(0.3))
-                                .cornerRadius(theme.radiusFull)
+                                .padding(.horizontal, AppSpacing.sm)
+                                .padding(.vertical, AppSpacing.xs)
+                                .background(AppTheme.softPurpleLight.opacity(0.3))
+                                .cornerRadius(AppRadius.full)
                             }
                         }
                     }
                 }
-                .padding(theme.spacingLG)
-                .background(theme.cardBackground)
-                .cornerRadius(theme.radiusMD)
+                .padding(AppSpacing.lg)
+                .background(AppTheme.cardBackground)
+                .cornerRadius(AppRadius.md)
             }
         }
     }
@@ -241,11 +240,11 @@ struct CCCBTView: View {
             CCHaptic.light()
             viewModel.toggleDistortion(distortion.id)
         } label: {
-            VStack(alignment: .leading, spacing: theme.spacingXS) {
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
                 HStack {
                     Text(distortion.name)
-                        .font(theme.fontBody.weight(.medium))
-                        .foregroundColor(isSelected ? .white : theme.textPrimary)
+                        .font(AppFont.body.weight(.medium))
+                        .foregroundColor(isSelected ? .white : AppTheme.textPrimary)
                     Spacer()
                     if isSelected {
                         Image(systemName: "checkmark.circle.fill")
@@ -254,19 +253,19 @@ struct CCCBTView: View {
                     }
                 }
                 Text(distortion.description)
-                    .font(theme.fontCaption)
-                    .foregroundColor(isSelected ? .white.opacity(0.85) : theme.textMuted)
+                    .font(AppFont.caption)
+                    .foregroundColor(isSelected ? .white.opacity(0.85) : AppTheme.textSecondary)
                     .lineLimit(2)
             }
-            .padding(theme.spacingMD)
+            .padding(AppSpacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: theme.radiusSM)
-                    .fill(isSelected ? theme.softPurple : theme.surface)
+                RoundedRectangle(cornerRadius: AppRadius.sm)
+                    .fill(isSelected ? AppTheme.softPurple : AppTheme.surface)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: theme.radiusSM)
-                    .stroke(isSelected ? theme.softPurple : theme.divider, lineWidth: 1)
+                RoundedRectangle(cornerRadius: AppRadius.sm)
+                    .stroke(isSelected ? AppTheme.softPurple : AppTheme.border, lineWidth: 1)
             )
         }
         .buttonStyle(.plain)
@@ -275,79 +274,79 @@ struct CCCBTView: View {
     // MARK: - Step 3: Reframe
 
     private var step3ReframeThought: some View {
-        VStack(alignment: .leading, spacing: theme.spacingLG) {
+        VStack(alignment: .leading, spacing: AppSpacing.lg) {
             stepHeader
 
             // Emotion before
-            VStack(alignment: .leading, spacing: theme.spacingSM) {
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
                 Text("情绪强度（重构前）")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
                 emotionSliderRow(
                     value: $viewModel.emotionBefore,
-                    color: theme.softPurple,
+                    color: AppTheme.softPurple,
                     label: "重构前"
                 )
             }
-            .padding(theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
 
             // Balanced thought
-            VStack(alignment: .leading, spacing: theme.spacingSM) {
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
                 Text("重构合理思维")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
                 Text("如果用更平衡、更客观的角度来看这件事，你会怎么想？有什么证据支持或反对这个自动思维？如果朋友遇到同样的事，你会对他说什么？")
-                    .font(theme.fontBodyS)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.footnote)
+                    .foregroundColor(AppTheme.textSecondary)
                 TextEditor(text: $viewModel.balancedThought)
-                    .font(theme.fontBody)
+                    .font(AppFont.body)
                     .frame(minHeight: 120)
-                    .padding(theme.spacingSM)
-                    .background(theme.softGreenLight.opacity(0.3))
-                    .cornerRadius(theme.radiusSM)
+                    .padding(AppSpacing.sm)
+                    .background(AppTheme.softGreenLight.opacity(0.3))
+                    .cornerRadius(AppRadius.sm)
                     .overlay(
-                        RoundedRectangle(cornerRadius: theme.radiusSM)
-                            .stroke(theme.softGreen.opacity(0.4), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: AppRadius.sm)
+                            .stroke(AppTheme.softGreen.opacity(0.4), lineWidth: 1)
                     )
             }
-            .padding(theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
 
             // Emotion after
-            VStack(alignment: .leading, spacing: theme.spacingSM) {
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
                 Text("情绪强度（重构后）")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
                 emotionSliderRow(
                     value: $viewModel.emotionAfter,
-                    color: theme.softGreen,
+                    color: AppTheme.softGreen,
                     label: "重构后"
                 )
             }
-            .padding(theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
         }
     }
 
     private func emotionSliderRow(value: Binding<Double>, color: Color, label: String) -> some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             HStack {
                 Text("非常轻微")
-                    .font(theme.fontCaption)
-                    .foregroundColor(theme.textMuted)
+                    .font(AppFont.caption)
+                    .foregroundColor(AppTheme.textSecondary)
                 Spacer()
                 Text("\(Int(value.wrappedValue))/10")
-                    .font(theme.fontH3)
+                    .font(AppFont.title3)
                     .foregroundColor(color)
                     .contentTransition(.numericText())
                 Spacer()
                 Text("非常强烈")
-                    .font(theme.fontCaption)
-                    .foregroundColor(theme.textMuted)
+                    .font(AppFont.caption)
+                    .foregroundColor(AppTheme.textSecondary)
             }
             Slider(value: value, in: 1...10, step: 1)
                 .tint(color)
@@ -357,113 +356,113 @@ struct CCCBTView: View {
     // MARK: - Completion
 
     private var completionView: some View {
-        VStack(spacing: theme.spacingXL) {
+        VStack(spacing: AppSpacing.xl) {
             // Success icon
             ZStack {
                 Circle()
-                    .fill(theme.softGreenLight)
+                    .fill(AppTheme.softGreenLight)
                     .frame(width: 100, height: 100)
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 48))
-                    .foregroundColor(theme.softGreen)
+                    .foregroundColor(AppTheme.softGreen)
             }
-            .padding(.top, theme.spacing2XL)
+            .padding(.top, AppSpacing.xl)
 
             Text("练习完成！")
-                .font(theme.fontH1)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.largeTitle)
+                .foregroundColor(AppTheme.textPrimary)
 
             Text(viewModel.completionMessage)
-                .font(theme.fontBodyL)
-                .foregroundColor(theme.textSecondary)
+                .font(AppFont.body.weight(.medium))
+                .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, theme.spacingLG)
+                .padding(.horizontal, AppSpacing.lg)
 
             // Emotion comparison
-            VStack(spacing: theme.spacingMD) {
+            VStack(spacing: AppSpacing.md) {
                 Text("情绪变化")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
 
-                HStack(spacing: theme.spacing2XL) {
-                    emotionStat(label: "重构前", value: Int(viewModel.emotionBefore), color: theme.softPurple)
+                HStack(spacing: AppSpacing.xl) {
+                    emotionStat(label: "重构前", value: Int(viewModel.emotionBefore), color: AppTheme.softPurple)
                     Image(systemName: "arrow.right")
                         .font(.system(size: 20))
-                        .foregroundColor(theme.textMuted)
-                    emotionStat(label: "重构后", value: Int(viewModel.emotionAfter), color: theme.softGreen)
+                        .foregroundColor(AppTheme.textSecondary)
+                    emotionStat(label: "重构后", value: Int(viewModel.emotionAfter), color: AppTheme.softGreen)
                 }
 
                 Text(viewModel.emotionChangeDescription)
-                    .font(theme.fontBody)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.body)
+                    .foregroundColor(AppTheme.textSecondary)
                     .multilineTextAlignment(.center)
             }
-            .padding(theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
 
             // Identified distortions summary
             if !viewModel.selectedDistortions.isEmpty {
-                VStack(alignment: .leading, spacing: theme.spacingSM) {
+                VStack(alignment: .leading, spacing: AppSpacing.sm) {
                     Text("识别的认知扭曲")
-                        .font(theme.fontH3)
-                        .foregroundColor(theme.textPrimary)
-                    FlowLayout(spacing: theme.spacingSM) {
+                        .font(AppFont.title3)
+                        .foregroundColor(AppTheme.textPrimary)
+                    FlowLayout(spacing: AppSpacing.sm) {
                         ForEach(Array(viewModel.selectedDistortions), id: \.self) { id in
                             if let d = CCCognitiveDistortion.all.first(where: { $0.id == id }) {
                                 Text(d.name)
-                                    .font(theme.fontCaption)
-                                    .foregroundColor(theme.softPurple)
-                                    .padding(.horizontal, theme.spacingSM)
-                                    .padding(.vertical, theme.spacingXS)
-                                    .background(theme.softPurpleLight.opacity(0.3))
-                                    .cornerRadius(theme.radiusFull)
+                                    .font(AppFont.caption)
+                                    .foregroundColor(AppTheme.softPurple)
+                                    .padding(.horizontal, AppSpacing.sm)
+                                    .padding(.vertical, AppSpacing.xs)
+                                    .background(AppTheme.softPurpleLight.opacity(0.3))
+                                    .cornerRadius(AppRadius.full)
                             }
                         }
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(theme.spacingLG)
-                .background(theme.cardBackground)
-                .cornerRadius(theme.radiusMD)
+                .padding(AppSpacing.lg)
+                .background(AppTheme.cardBackground)
+                .cornerRadius(AppRadius.md)
             }
 
             // Action buttons
-            VStack(spacing: theme.spacingSM) {
+            VStack(spacing: AppSpacing.sm) {
                 Button {
                     viewModel.reset()
                 } label: {
                     Text("再做一次练习")
-                        .font(theme.fontBodyL.weight(.medium))
+                        .font(AppFont.body.weight(.medium))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, theme.spacingMD)
-                        .background(theme.primary)
-                        .cornerRadius(theme.radiusMD)
+                        .padding(.vertical, AppSpacing.md)
+                        .background(AppTheme.primary)
+                        .cornerRadius(AppRadius.md)
                 }
 
                 Button {
                     coordinator.dismiss()
                 } label: {
                     Text("返回工具箱")
-                        .font(theme.fontBodyL)
-                        .foregroundColor(theme.textSecondary)
+                        .font(AppFont.body)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
             }
-            .padding(.top, theme.spacingLG)
+            .padding(.top, AppSpacing.lg)
         }
     }
 
     // MARK: - Step Header
 
     private var stepHeader: some View {
-        VStack(alignment: .leading, spacing: theme.spacingXS) {
+        VStack(alignment: .leading, spacing: AppSpacing.xs) {
             Text(viewModel.currentStep.title)
-                .font(theme.fontH1)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.largeTitle)
+                .foregroundColor(AppTheme.textPrimary)
             Text(viewModel.currentStep.subtitle)
-                .font(theme.fontBodyL)
-                .foregroundColor(theme.textSecondary)
+                .font(AppFont.body.weight(.medium))
+                .foregroundColor(AppTheme.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -471,7 +470,7 @@ struct CCCBTView: View {
     // MARK: - Navigation Buttons
 
     private var navigationButtons: some View {
-        HStack(spacing: theme.spacingMD) {
+        HStack(spacing: AppSpacing.md) {
             if viewModel.currentStep.rawValue > 0 {
                 Button {
                     viewModel.goToPreviousStep()
@@ -480,12 +479,12 @@ struct CCCBTView: View {
                         Image(systemName: "chevron.left")
                         Text("上一步")
                     }
-                    .font(theme.fontBodyL.weight(.medium))
-                    .foregroundColor(theme.primary)
+                    .font(AppFont.body.weight(.medium))
+                    .foregroundColor(AppTheme.primary)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, theme.spacingMD)
-                    .background(theme.primary.opacity(0.1))
-                    .cornerRadius(theme.radiusMD)
+                    .padding(.vertical, AppSpacing.md)
+                    .background(AppTheme.primary.opacity(0.1))
+                    .cornerRadius(AppRadius.md)
                 }
             }
 
@@ -496,12 +495,12 @@ struct CCCBTView: View {
                     Text(viewModel.currentStep == .reframeThought ? "完成练习" : "下一步")
                     Image(systemName: viewModel.currentStep == .reframeThought ? "checkmark" : "chevron.right")
                 }
-                .font(theme.fontBodyL.weight(.medium))
+                .font(AppFont.body.weight(.medium))
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, theme.spacingMD)
-                .background(canProceed ? theme.primary : theme.textMuted)
-                .cornerRadius(theme.radiusMD)
+                .padding(.vertical, AppSpacing.md)
+                .background(canProceed ? AppTheme.primary : AppTheme.textSecondary)
+                .cornerRadius(AppRadius.md)
             }
             .disabled(!canProceed)
         }
@@ -519,13 +518,13 @@ struct CCCBTView: View {
     // MARK: - Helpers
 
     private func emotionStat(label: String, value: Int, color: Color) -> some View {
-        VStack(spacing: theme.spacingXS) {
+        VStack(spacing: AppSpacing.xs) {
             Text("\(value)")
-                .font(theme.fontDisplay)
+                .font(AppFont.largeTitle.weight(.bold))
                 .foregroundColor(color)
             Text(label)
-                .font(theme.fontCaption)
-                .foregroundColor(theme.textMuted)
+                .font(AppFont.caption)
+                .foregroundColor(AppTheme.textSecondary)
         }
     }
 }
@@ -579,7 +578,6 @@ struct CBTFlowLayout: Layout {
 #Preview {
     NavigationStack {
         CCCBTView()
-            .environment(\.ccAppTheme, CCLightTheme())
             .environment(CCAppCoordinator())
     }
 }
