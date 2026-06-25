@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 // MARK: - OnboardingView v3.0
@@ -181,7 +182,7 @@ struct OnboardingView: View {
                         icon: "brain.head.profile",
                         title: "AI倾听官",
                         description: "24小时在线的AI倾听伙伴\n随时与你对话",
-                        color: AppTheme.secondary
+                        color: AppTheme.textSecondary
                     )
                     
                     FeatureIntroRow(

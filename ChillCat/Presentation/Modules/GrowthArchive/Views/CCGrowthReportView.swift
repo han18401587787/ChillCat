@@ -406,14 +406,6 @@ struct CCGrowthReportView: View {
 
 // MARK: - Flow Layout (for keyword chips)
 
-private struct FlowLayout: Layout {
-    var spacing: CGFloat = 8
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let rows = arrange(proposal.width ?? 0, subviews: subviews)
-        let height = rows.last.map { $0.maxY } ?? 0
-        return CGSize(width: proposal.width ?? 0, height: height)
-    }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
         let rows = arrange(bounds.width, subviews: subviews)

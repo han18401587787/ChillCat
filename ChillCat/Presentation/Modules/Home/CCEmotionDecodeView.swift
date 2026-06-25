@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 // MARK: - EmotionDecodeView v3.0 (完善版)
@@ -199,7 +200,7 @@ struct CCEmotionDecodeView: View {
                 icon: "text.alignleft",
                 title: "AI分析",
                 content: viewModel.correctedSummary,
-                color: AppTheme.secondary
+                color: AppTheme.textSecondary
             )
             
             DecodeCard(
@@ -563,14 +564,6 @@ struct KeywordBubble: View {
 }
 
 // MARK: - Flow Layout
-struct FlowLayout: Layout {
-    let spacing: CGFloat
-    
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let rows = computeRows(proposal: proposal, subviews: subviews)
-        let height = rows.map { $0.maxHeight }.reduce(0, +) + CGFloat(max(0, rows.count - 1)) * spacing
-        return CGSize(width: proposal.width ?? 0, height: height)
-    }
     
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
         let rows = computeRows(proposal: proposal, subviews: subviews)

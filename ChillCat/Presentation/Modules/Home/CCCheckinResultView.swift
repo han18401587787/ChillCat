@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 // MARK: - CheckinResultView v3.0
@@ -203,12 +204,12 @@ struct CheckinResultView: View {
             HStack(alignment: .top, spacing: AppSpacing.md) {
                 ZStack {
                     Circle()
-                        .fill(AppTheme.secondary.opacity(0.15))
+                        .fill(AppTheme.textSecondary.opacity(0.15))
                         .frame(width: 32, height: 32)
 
                     Image(systemName: "sparkles")
                         .font(.system(size: 14))
-                        .foregroundColor(AppTheme.secondary)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
 
                 VStack(alignment: .leading, spacing: AppSpacing.sm) {
@@ -391,7 +392,7 @@ struct PublishToResonanceView: View {
     @Binding var isPresented: Bool
     @State private var isAnonymous: Bool = true
     @State private var allowComments: Bool = true
-    @State private var selectedEmoji: XuAnEmoji?
+    @State private var selectedEmoji: CCEmotionEmoji?
 
     var body: some View {
         NavigationStack {
@@ -453,7 +454,7 @@ struct PublishToResonanceView: View {
                         .font(AppFont.caption)
                         .foregroundColor(AppTheme.textTertiary)
 
-                    EmojiPickerView(selectedEmoji: $selectedEmoji)
+                    CCEmojiPickerV3(selectedEmoji: $selectedEmoji)
                 }
 
                 Spacer()

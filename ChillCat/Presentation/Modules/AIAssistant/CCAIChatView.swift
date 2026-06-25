@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 // MARK: - AIChatView v3.0 (Week 2 完善)
@@ -60,7 +61,7 @@ struct AIChatView: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [AppTheme.secondary, AppTheme.softPurple],
+                            colors: [AppTheme.textSecondary, AppTheme.softPurple],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -173,7 +174,7 @@ struct AIChatView: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [AppTheme.secondary.opacity(0.2), AppTheme.softPurple.opacity(0.1)],
+                            colors: [AppTheme.textSecondary.opacity(0.2), AppTheme.softPurple.opacity(0.1)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -182,7 +183,7 @@ struct AIChatView: View {
 
                 Image(systemName: "brain.head.profile")
                     .font(.system(size: 36))
-                    .foregroundColor(AppTheme.secondary)
+                    .foregroundColor(AppTheme.textSecondary)
             }
 
             Text("嗨，我在这里")
@@ -376,12 +377,12 @@ struct AIChatView: View {
                 // AI头像小
                 ZStack {
                     Circle()
-                        .fill(AppTheme.secondary.opacity(0.3))
+                        .fill(AppTheme.textSecondary.opacity(0.3))
                         .frame(width: 28, height: 28)
 
                     Image(systemName: "brain.head.profile")
                         .font(.system(size: 14))
-                        .foregroundColor(AppTheme.secondary)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
 
                 // 加载文字
@@ -592,7 +593,7 @@ struct ChatBubble: View {
                     .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
 
                 HStack(spacing: 4) {
-                    Text(message.timestamp.formatted("HH:mm"))
+                    Text(message.timestamp.formatted(date: ./* TODO: use DateFormatter */, time: .omitted))
                         .font(AppFont.caption2)
                         .foregroundColor(AppTheme.textTertiary)
 
@@ -616,12 +617,12 @@ struct ChatBubble: View {
     private var aiAvatar: some View {
         ZStack {
             Circle()
-                .fill(AppTheme.secondary.opacity(0.2))
+                .fill(AppTheme.textSecondary.opacity(0.2))
                 .frame(width: 28, height: 28)
 
             Image(systemName: "brain.head.profile")
                 .font(.system(size: 14))
-                .foregroundColor(AppTheme.secondary)
+                .foregroundColor(AppTheme.textSecondary)
         }
         .accessibilityHidden(true)
     }

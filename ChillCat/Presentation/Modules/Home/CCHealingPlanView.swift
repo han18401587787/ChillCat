@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 // MARK: - HealingPlanView v3.0
@@ -825,7 +826,9 @@ final class HealingPlanViewModel: ObservableObject {
     }
     
     deinit {
-        stopTimers()
+        MainActor.assumeIsolated {
+            stopTimers()
+        }
     }
 }
 
