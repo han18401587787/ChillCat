@@ -566,7 +566,15 @@ struct CCVoiceCheckinView: View {
 
 // MARK: - Flow Layout
 
-
+struct VoiceFlowLayout: Layout {
+    var spacing: CGFloat = 8
+    
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let rows = arrange(proposal: proposal, subviews: subviews)
+        let totalHeight = rows.reduce(0) { $0 + ($1.map { $0.sizeThatFits(.unspecified).height }.max() ?? 0) + spacing } - (rows.isEmpty ? 0 : spacing)
+        return CGSize(width: proposal.width ?? 0, height: totalHeight)
+    }
+    
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
         let rows = arrange(proposal: proposal, subviews: subviews)
         var y = bounds.minY

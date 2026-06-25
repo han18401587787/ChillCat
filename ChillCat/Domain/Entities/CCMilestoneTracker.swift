@@ -41,7 +41,7 @@ struct CCMilestone: Identifiable, Codable {
 
 // MARK: - Growth Stats
 
-struct CCGrowthStats: Codable {
+struct CCGrowthStats {
     let totalCheckins: Int
     let emotionTypes: Int
     let toolsUsed: Int
@@ -50,9 +50,19 @@ struct CCGrowthStats: Codable {
     let totalDiaryEntries: Int
     let totalMeditationMinutes: Int
     let aiInsights: [String]
-    let topEmotions: [(String, Int)]        // (emotion name, count)
-    let toolUsage: [(String, Int)]          // (tool name, count)
+    let topEmotions: [EmotionCount]
+    let toolUsage: [ToolUsageCount]
     let growthKeywords: [String]
+}
+
+struct EmotionCount: Codable {
+    let name: String
+    let count: Int
+}
+
+struct ToolUsageCount: Codable {
+    let name: String
+    let count: Int
 }
 
 // MARK: - Mock Data
@@ -68,7 +78,7 @@ extension CCMilestone {
         .init(id: "m7",  title: "创建个人安全计划",     description: "为自己建立了一份安全守护",            date: Date().addingTimeInterval(-86400 * 8),  type: .personal),
         .init(id: "m8",  title: "连续打卡21天达成",     description: "你已经形成了稳定的觉察习惯",          date: Date().addingTimeInterval(-86400 * 5),  type: .streak),
         .init(id: "m9",  title: "使用3种不同工具",      description: "找到了适合自己的疗愈方式",            date: Date().addingTimeInterval(-86400 * 3),  type: .tool),
-        .init(id: "m10", title: "累计打卡30天",         description: "一个月的成长，值得庆祝",              date: Date().addingTimeInterval(-86400 * 1),  type: .milestone),
+        .init(id: "m10", title: "累计打卡30天",         description: "一个月的成长，值得庆祝",              date: Date().addingTimeInterval(-86400 * 1),  type: .streak),
     ]
 }
 
@@ -87,8 +97,8 @@ extension CCGrowthStats {
             "你在独处放松方面表现突出，建议继续保持这个习惯。",
             "你的情绪词汇量在增长，这说明你对自己的感受越来越敏锐了。",
         ],
-        topEmotions: [("平静", 12), ("开心", 8), ("焦虑", 5), ("疲惫", 3), ("孤独", 2)],
-        toolUsage: [("呼吸训练", 10), ("冥想", 8), ("感恩日记", 5), ("CBT认知重构", 3), ("身体扫描", 2)],
+        topEmotions: [EmotionCount(name: "平静", count: 12), EmotionCount(name: "开心", count: 8), EmotionCount(name: "焦虑", count: 5), EmotionCount(name: "疲惫", count: 3), EmotionCount(name: "孤独", count: 2)],
+        toolUsage: [ToolUsageCount(name: "呼吸训练", count: 10), ToolUsageCount(name: "冥想", count: 8), ToolUsageCount(name: "感恩日记", count: 5), ToolUsageCount(name: "CBT认知重构", count: 3), ToolUsageCount(name: "身体扫描", count: 2)],
         growthKeywords: ["自我觉察", "坚持", "平静", "成长", "疗愈", "勇气", "接纳", "表达", "放松", "感恩", "觉察", "蜕变"]
     )
 }

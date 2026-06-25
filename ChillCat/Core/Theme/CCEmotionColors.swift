@@ -68,6 +68,26 @@ enum EmotionColors {
         }
     }
     
+    // MARK: - 情绪强度
+    
+    enum Intensity: Int, CaseIterable {
+        case veryLow = 1
+        case low = 2
+        case moderate = 3
+        case high = 4
+        case veryHigh = 5
+        
+        var color: Color {
+            switch self {
+            case .veryLow: return Color(hex: "B8D4E3")
+            case .low: return Color(hex: "7A9AAA")
+            case .moderate: return Color(hex: "C9A063")
+            case .high: return Color(hex: "E57373")
+            case .veryHigh: return Color(hex: "8B6F47")
+            }
+        }
+    }
+    
     // MARK: - 根据情绪名称获取颜色
     
     static func color(for emotion: String) -> Color {

@@ -1,6 +1,7 @@
 import Combine
 import SwiftUI
 import AVFoundation
+import Speech
 import UIKit
 
 // MARK: - VoiceRecorderView v3.0
@@ -279,7 +280,7 @@ final class VoiceRecorderViewModel: ObservableObject {
     @Published var isCancelling: Bool = false
     @Published var waveformAmplitudes: [CGFloat] = Array(repeating: 0.2, count: 30)
 
-    private let speechRecognizer = SpeechRecognizer()
+    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))
     private var audioRecorder: AVAudioRecorder?
     private var recordingURL: URL?
     private var timer: Timer?
