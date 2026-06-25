@@ -170,8 +170,8 @@ private extension CCGrowthArchiveViewModel {
             id: String(vo.id),
             title: vo.title,
             description: vo.description,
-            type: CCMilestoneType(rawValue: vo.milestoneType) ?? .personal,
-            date: formatter.date(from: vo.createdAt) ?? Date()
+            date: formatter.date(from: vo.createdAt) ?? Date(),
+            type: CCMilestoneType(rawValue: vo.milestoneType) ?? .personal
         )
     }
 

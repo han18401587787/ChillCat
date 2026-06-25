@@ -83,7 +83,7 @@ struct CCGrowthReportView: View {
 
             if let stats = viewModel.stats, !stats.topEmotions.isEmpty {
                 // Bar chart using colored rectangles
-                let maxCount = stats.topEmotions.map(\.1).max() ?? 1
+                let maxCount = stats.topEmotions.map(\.count).max() ?? 1
                 VStack(spacing: AppSpacing.sm) {
                     ForEach(stats.topEmotions, id: \.0) { emotion, count in
                         emotionBar(emotion: emotion, count: count, maxCount: maxCount)
@@ -158,7 +158,7 @@ struct CCGrowthReportView: View {
             sectionHeader(title: "工具使用", icon: "wrench.and.screwdriver.fill", color: Color(hex: "66BB6A"))
 
             if let stats = viewModel.stats, !stats.toolUsage.isEmpty {
-                let maxCount = stats.toolUsage.map(\.1).max() ?? 1
+                let maxCount = stats.toolUsage.map(\.count).max() ?? 1
                 VStack(spacing: AppSpacing.sm) {
                     ForEach(stats.toolUsage, id: \.0) { tool, count in
                         HStack(spacing: AppSpacing.sm) {

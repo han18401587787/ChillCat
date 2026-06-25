@@ -62,24 +62,28 @@ final class CCLogger: CCLoggerProtocol {
         queue.sync { moduleLevelOverrides[module] = level }
     }
 
+    @MainActor
     func debug(_ message: String, module: CCLogModule = .default, category: String = "General",
                file: String = #file, function: String = #function, line: Int = #line) {
         log(level: .debug, message: message, module: module, category: category,
             file: file, function: function, line: line, error: nil)
     }
 
+    @MainActor
     func info(_ message: String, module: CCLogModule = .default, category: String = "General",
               file: String = #file, function: String = #function, line: Int = #line) {
         log(level: .info, message: message, module: module, category: category,
             file: file, function: function, line: line, error: nil)
     }
 
+    @MainActor
     func warning(_ message: String, module: CCLogModule = .default, category: String = "General",
                  file: String = #file, function: String = #function, line: Int = #line) {
         log(level: .warning, message: message, module: module, category: category,
             file: file, function: function, line: line, error: nil)
     }
 
+    @MainActor
     func error(_ message: String, module: CCLogModule = .default, category: String = "General",
                file: String = #file, function: String = #function, line: Int = #line, error: Error? = nil) {
         log(level: .error, message: message, module: module, category: category,
