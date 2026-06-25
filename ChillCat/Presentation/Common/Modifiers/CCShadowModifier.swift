@@ -11,34 +11,31 @@ import SwiftUI
 // MARK: - 柔和阴影
 
 struct CCXuanShadowSM: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
         content.shadow(
-            color: theme.shadowColor.opacity(theme.shadowOpacitySM),
-            radius: theme.shadowRadiusSM,
-            y: theme.shadowYSM
+            color: Color.black.opacity(0.08),
+            radius: 8,
+            y: 2
         )
     }
 }
 
 struct CCXuanShadowMD: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
         content.shadow(
-            color: theme.shadowColor.opacity(theme.shadowOpacityMD),
-            radius: theme.shadowRadiusMD,
-            y: theme.shadowYMD
+            color: Color.black.opacity(0.1),
+            radius: 12,
+            y: 4
         )
     }
 }
 
 struct CCXuanShadowLG: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
         content.shadow(
-            color: theme.shadowColor.opacity(theme.shadowOpacityLG),
-            radius: theme.shadowRadiusLG,
-            y: theme.shadowYLG
+            color: Color.black.opacity(0.12),
+            radius: 16,
+            y: 6
         )
     }
 }
@@ -46,23 +43,21 @@ struct CCXuanShadowLG: ViewModifier {
 // MARK: - 卡片悬浮阴影（带微上移）
 
 struct CCXuanCardShadow: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
         content.shadow(
-            color: theme.shadowColor.opacity(theme.shadowOpacityMD),
-            radius: theme.shadowRadiusMD,
-            y: theme.shadowYMD
+            color: Color.black.opacity(0.1),
+            radius: 12,
+            y: 4
         )
     }
 }
 
 struct CCXuanCardHoverShadow: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
         content.shadow(
-            color: theme.shadowColor.opacity(theme.shadowOpacityLG),
-            radius: theme.shadowRadiusLG,
-            y: theme.shadowYLG
+            color: Color.black.opacity(0.12),
+            radius: 16,
+            y: 6
         )
         .offset(y: -2)
     }
@@ -71,7 +66,6 @@ struct CCXuanCardHoverShadow: ViewModifier {
 // MARK: - 底部导航栏阴影
 
 struct CCXuanBottomShadow: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
         content.shadow(
             color: Color.black.opacity(0.06),

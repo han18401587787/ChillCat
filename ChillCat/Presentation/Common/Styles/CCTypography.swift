@@ -11,65 +11,56 @@ import SwiftUI
 // MARK: - 排版修饰器
 
 struct CCXuanDisplay: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
-        content.font(theme.fontDisplay)
+        content.font(AppFont.largeTitle.weight(.bold))
     }
 }
 
 struct CCXuanH1: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
-        content.font(theme.fontH1)
+        content.font(AppFont.largeTitle)
     }
 }
 
 struct CCXuanH2: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
-        content.font(theme.fontH2)
+        content.font(AppFont.title1)
     }
 }
 
 struct CCXuanH3: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
-        content.font(theme.fontH3)
+        content.font(AppFont.title3)
     }
 }
 
 struct CCXuanBodyL: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
-        content.font(theme.fontBodyL)
+        content.font(AppFont.body.weight(.medium))
     }
 }
 
 struct CCXuanBody: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
-        content.font(theme.fontBody)
+        content.font(AppFont.body)
     }
 }
 
 struct CCXuanBodyS: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
-        content.font(theme.fontBodyS)
+        content.font(AppFont.footnote)
     }
 }
 
 struct CCXuanCaption: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
-        content.font(theme.fontCaption)
+        content.font(AppFont.caption)
     }
 }
 
 struct CCXuanLabel: ViewModifier {
-    @Environment(\.ccAppTheme) private var theme
     func body(content: Content) -> some View {
-        content.font(theme.fontLabel)
+        content.font(AppFont.caption)
     }
 }
 
