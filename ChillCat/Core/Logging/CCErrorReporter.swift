@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 protocol CCErrorReporterProtocol {
     func report(_ error: CCAppError, context: [String: Any]?)
     func report(_ error: Error, context: [String: Any]?)
