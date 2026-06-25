@@ -11,14 +11,13 @@ import SwiftUI
 // MARK: - Behavioral Activation View
 
 struct CCBehavioralActivationView: View {
-    @Environment(\.ccAppTheme) private var theme
-    @Environment(CCAppCoordinator.self) private var coordinator
+        @Environment(CCAppCoordinator.self) private var coordinator
     @State private var viewModel = CCBehavioralActivationViewModel()
 
     var body: some View {
         ZStack {
             ScrollView {
-                VStack(spacing: theme.spacingXL) {
+                VStack(spacing: AppSpacing.xl) {
                     // View mode selector
                     viewModePicker
 
@@ -35,11 +34,11 @@ struct CCBehavioralActivationView: View {
                     // Add button
                     addActivityButton
                 }
-                .padding(.horizontal, theme.spacingLG)
-                .padding(.top, theme.spacingSM)
-                .padding(.bottom, theme.spacing3XL)
+                .padding(.horizontal, AppSpacing.lg)
+                .padding(.top, AppSpacing.sm)
+                .padding(.bottom, AppSpacing.xl)
             }
-            .background(theme.background.ignoresSafeArea())
+            .background(AppTheme.background.ignoresSafeArea())
 
             // New activity sheet overlay
             if viewModel.showNewActivityForm {
@@ -56,7 +55,7 @@ struct CCBehavioralActivationView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
-                    .foregroundColor(theme.primary)
+                    .foregroundColor(AppTheme.primary)
             }
         }
     }
@@ -72,63 +71,63 @@ struct CCBehavioralActivationView: View {
                     }
                 } label: {
                     Text(mode.rawValue)
-                        .font(theme.fontBodyS.weight(.medium))
+                        .font(AppFont.footnote.weight(.medium))
                         .foregroundColor(
-                            viewModel.selectedViewMode == mode ? .white : theme.textSecondary
+                            viewModel.selectedViewMode == mode ? .white : AppTheme.textSecondary
                         )
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, theme.spacingSM)
+                        .padding(.vertical, AppSpacing.sm)
                         .background(
                             viewModel.selectedViewMode == mode
-                                ? theme.warm : Color.clear
+                                ? Color(hex: "8B6F47") : Color.clear
                         )
-                        .cornerRadius(theme.radiusSM)
+                        .cornerRadius(AppRadius.sm)
                 }
             }
         }
         .padding(4)
-        .background(theme.surface)
-        .cornerRadius(theme.radiusSM)
+        .background(AppTheme.surface)
+        .cornerRadius(AppRadius.sm)
     }
 
     // MARK: - Today View
 
     private var todayView: some View {
-        VStack(spacing: theme.spacingXL) {
+        VStack(spacing: AppSpacing.xl) {
             if viewModel.isEmpty {
                 emptyState
             } else {
                 // Completion summary
                 if !viewModel.plannedActivities.isEmpty {
-                    HStack(spacing: theme.spacingSM) {
+                    HStack(spacing: AppSpacing.sm) {
                         statBadge(
                             label: "完成",
                             value: "\(viewModel.completedActivities.count)/\(viewModel.plannedActivities.count)",
-                            color: theme.softGreen
+                            color: Color(hex: "66BB6A")
                         )
                         statBadge(
                             label: "完成率",
                             value: "\(Int(viewModel.completionRate * 100))%",
-                            color: theme.warm
+                            color: Color(hex: "8B6F47")
                         )
                         statBadge(
                             label: "预期提升",
                             value: String(format: "%.1f", viewModel.averageExpectedBoost),
-                            color: theme.primary
+                            color: AppTheme.primary
                         )
                     }
                 }
 
                 // Today's activity list
-                VStack(alignment: .leading, spacing: theme.spacingSM) {
+                VStack(alignment: .leading, spacing: AppSpacing.sm) {
                     Text("今日活动")
-                        .font(theme.fontH2)
-                        .foregroundColor(theme.textPrimary)
+                        .font(AppFont.title1)
+                        .foregroundColor(AppTheme.textPrimary)
 
                     if viewModel.todaysActivities.isEmpty && !viewModel.plannedActivities.isEmpty {
                         Text("今天没有安排活动，可以查看周视图")
-                            .font(theme.fontBody)
-                            .foregroundColor(theme.textMuted)
+                            .font(AppFont.body)
+                            .foregroundColor(AppTheme.textSecondary)
                             .padding()
                     }
 
@@ -143,12 +142,12 @@ struct CCBehavioralActivationView: View {
     // MARK: - Weekly View
 
     private var weeklyView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: AppSpacing.lg) {
             if viewModel.isEmpty {
                 emptyState
             } else {
                 ForEach(viewModel.weeklyActivities, id: \.0) { date, activities in
-                    VStack(alignment: .leading, spacing: theme.spacingSM) {
+                    VStack(alignment: .leading, spacing: AppSpacing.sm) {
                         // Day header
                         HStack {
                             let formatter = DateFormatter()
@@ -158,32 +157,32 @@ struct CCBehavioralActivationView: View {
                                 return formatter.string(from: date)
                             }()
                             Text(dayStr)
-                                .font(theme.fontBody.weight(.medium))
-                                .foregroundColor(theme.textPrimary)
+                                .font(AppFont.body.weight(.medium))
+                                .foregroundColor(AppTheme.textPrimary)
 
                             Spacer()
 
                             if !activities.isEmpty {
                                 Text("\(activities.filter(\.isCompleted).count)/\(activities.count) 完成")
-                                    .font(theme.fontCaption)
-                                    .foregroundColor(theme.textMuted)
+                                    .font(AppFont.caption)
+                                    .foregroundColor(AppTheme.textSecondary)
                             }
                         }
 
                         if activities.isEmpty {
                             Text("暂无活动")
-                                .font(theme.fontBodyS)
-                                .foregroundColor(theme.textMuted)
-                                .padding(.vertical, theme.spacingSM)
+                                .font(AppFont.footnote)
+                                .foregroundColor(AppTheme.textSecondary)
+                                .padding(.vertical, AppSpacing.sm)
                         } else {
                             ForEach(activities) { activity in
                                 activityRow(activity)
                             }
                         }
                     }
-                    .padding(theme.spacingLG)
-                    .background(theme.cardBackground)
-                    .cornerRadius(theme.radiusMD)
+                    .padding(AppSpacing.lg)
+                    .background(AppTheme.cardBackground)
+                    .cornerRadius(AppRadius.md)
                 }
             }
         }
@@ -192,102 +191,102 @@ struct CCBehavioralActivationView: View {
     // MARK: - Stats View
 
     private var statsView: some View {
-        VStack(spacing: theme.spacingXL) {
+        VStack(spacing: AppSpacing.xl) {
             if viewModel.completedActivities.isEmpty {
-                VStack(spacing: theme.spacingLG) {
+                VStack(spacing: AppSpacing.lg) {
                     Image(systemName: "chart.bar.xaxis")
                         .font(.system(size: 48))
-                        .foregroundColor(theme.textMuted)
+                        .foregroundColor(AppTheme.textSecondary)
                     Text("完成一些活动后，这里会显示心情对比数据")
-                        .font(theme.fontBody)
-                        .foregroundColor(theme.textSecondary)
+                        .font(AppFont.body)
+                        .foregroundColor(AppTheme.textSecondary)
                         .multilineTextAlignment(.center)
                 }
-                .padding(theme.spacing3XL)
+                .padding(AppSpacing.xl)
             } else {
                 // Mood-energy comparison
-                VStack(spacing: theme.spacingMD) {
+                VStack(spacing: AppSpacing.md) {
                     Text("预期 vs 实际心情提升")
-                        .font(theme.fontH2)
-                        .foregroundColor(theme.textPrimary)
+                        .font(AppFont.title1)
+                        .foregroundColor(AppTheme.textPrimary)
 
                     // Visual comparison bars
-                    HStack(alignment: .bottom, spacing: theme.spacing2XL) {
-                        VStack(spacing: theme.spacingSM) {
+                    HStack(alignment: .bottom, spacing: AppSpacing.xl) {
+                        VStack(spacing: AppSpacing.sm) {
                             Text(String(format: "%.1f", viewModel.averageExpectedBoost))
-                                .font(theme.fontH1)
-                                .foregroundColor(theme.textMuted)
+                                .font(AppFont.largeTitle)
+                                .foregroundColor(AppTheme.textSecondary)
                             RoundedRectangle(cornerRadius: 4)
-                                .fill(theme.textMuted.opacity(0.4))
+                                .fill(AppTheme.textSecondary.opacity(0.4))
                                 .frame(width: 40, height: max(4, CGFloat(viewModel.averageExpectedBoost) * 20))
                             Text("预期")
-                                .font(theme.fontCaption)
-                                .foregroundColor(theme.textMuted)
+                                .font(AppFont.caption)
+                                .foregroundColor(AppTheme.textSecondary)
                         }
 
-                        VStack(spacing: theme.spacingSM) {
+                        VStack(spacing: AppSpacing.sm) {
                             Text(String(format: "%.1f", viewModel.averageActualBoost))
-                                .font(theme.fontH1)
-                                .foregroundColor(theme.warm)
+                                .font(AppFont.largeTitle)
+                                .foregroundColor(Color(hex: "8B6F47"))
                             RoundedRectangle(cornerRadius: 4)
-                                .fill(theme.warm)
+                                .fill(Color(hex: "8B6F47"))
                                 .frame(width: 40, height: max(4, CGFloat(viewModel.averageActualBoost) * 20))
                             Text("实际")
-                                .font(theme.fontCaption)
-                                .foregroundColor(theme.warm)
+                                .font(AppFont.caption)
+                                .foregroundColor(Color(hex: "8B6F47"))
                         }
                     }
                     .frame(height: 220)
 
                     Text(viewModel.moodBoostComparison)
-                        .font(theme.fontBody)
-                        .foregroundColor(theme.textSecondary)
+                        .font(AppFont.body)
+                        .foregroundColor(AppTheme.textSecondary)
                         .multilineTextAlignment(.center)
                 }
-                .padding(theme.spacingLG)
-                .background(theme.cardBackground)
-                .cornerRadius(theme.radiusMD)
+                .padding(AppSpacing.lg)
+                .background(AppTheme.cardBackground)
+                .cornerRadius(AppRadius.md)
 
                 // Per-activity comparison list
-                VStack(alignment: .leading, spacing: theme.spacingSM) {
+                VStack(alignment: .leading, spacing: AppSpacing.sm) {
                     Text("各活动对比")
-                        .font(theme.fontH3)
-                        .foregroundColor(theme.textPrimary)
+                        .font(AppFont.title3)
+                        .foregroundColor(AppTheme.textPrimary)
 
                     ForEach(viewModel.completedActivities) { activity in
-                        HStack(spacing: theme.spacingMD) {
+                        HStack(spacing: AppSpacing.md) {
                             Image(systemName: activity.type.icon)
                                 .foregroundColor(activity.type.color)
                                 .frame(width: 24)
 
                             Text(activity.name)
-                                .font(theme.fontBodyS)
-                                .foregroundColor(theme.textPrimary)
+                                .font(AppFont.footnote)
+                                .foregroundColor(AppTheme.textPrimary)
                                 .lineLimit(1)
 
                             Spacer()
 
                             HStack(spacing: 4) {
                                 Text("预期:\(activity.expectedMoodBoost)")
-                                    .font(theme.fontCaption)
-                                    .foregroundColor(theme.textMuted)
+                                    .font(AppFont.caption)
+                                    .foregroundColor(AppTheme.textSecondary)
                                 Text("→")
-                                    .font(theme.fontCaption)
-                                    .foregroundColor(theme.textMuted)
+                                    .font(AppFont.caption)
+                                    .foregroundColor(AppTheme.textSecondary)
                                 Text("实际:\(activity.actualMoodBoost ?? 0)")
-                                    .font(theme.fontCaption.weight(.medium))
+                                    .font(AppFont.caption.weight(.medium))
                                     .foregroundColor(
                                         (activity.actualMoodBoost ?? 0) >= activity.expectedMoodBoost
-                                            ? theme.softGreen : theme.warm
+                                            ? Color(hex: "66BB6A") : Color(hex: "8B6F47")
                                     )
                             }
                         }
-                        .padding(.vertical, theme.spacingXS)
+                        .padding(.vertical, AppSpacing.xs)
                     }
                 }
-                .padding(theme.spacingLG)
-                .background(theme.cardBackground)
-                .cornerRadius(theme.radiusMD)
+                .padding(AppSpacing.lg)
+                .background(AppTheme.cardBackground)
+                .cornerRadius(AppRadius.md)
             }
         }
     }
@@ -295,7 +294,7 @@ struct CCBehavioralActivationView: View {
     // MARK: - Activity Row
 
     private func activityRow(_ activity: CCActivity) -> some View {
-        HStack(spacing: theme.spacingMD) {
+        HStack(spacing: AppSpacing.md) {
             // Completion checkbox
             Button {
                 CCHaptic.medium()
@@ -303,7 +302,7 @@ struct CCBehavioralActivationView: View {
             } label: {
                 Image(systemName: activity.isCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundColor(activity.isCompleted ? theme.softGreen : theme.textMuted)
+                    .foregroundColor(activity.isCompleted ? Color(hex: "66BB6A") : AppTheme.textSecondary)
             }
 
             // Type icon
@@ -315,30 +314,30 @@ struct CCBehavioralActivationView: View {
             // Info
             VStack(alignment: .leading, spacing: 2) {
                 Text(activity.name)
-                    .font(theme.fontBody.weight(.medium))
+                    .font(AppFont.body.weight(.medium))
                     .foregroundColor(
-                        activity.isCompleted ? theme.textSecondary : theme.textPrimary
+                        activity.isCompleted ? AppTheme.textSecondary : AppTheme.textPrimary
                     )
                     .strikethrough(activity.isCompleted)
 
-                HStack(spacing: theme.spacingSM) {
+                HStack(spacing: AppSpacing.sm) {
                     Text(activity.type.rawValue)
-                        .font(theme.fontLabel)
+                        .font(AppFont.caption)
                         .foregroundColor(activity.type.color)
-                        .padding(.horizontal, theme.spacingXS)
+                        .padding(.horizontal, AppSpacing.xs)
                         .padding(.vertical, 2)
                         .background(activity.type.color.opacity(0.15))
                         .cornerRadius(4)
 
                     Text("预期提升: \(activity.expectedMoodBoost)")
-                        .font(theme.fontLabel)
-                        .foregroundColor(theme.textMuted)
+                        .font(AppFont.caption)
+                        .foregroundColor(AppTheme.textSecondary)
 
                     if let actual = activity.actualMoodBoost {
                         Text("实际: \(actual)")
-                            .font(theme.fontLabel)
+                            .font(AppFont.caption)
                             .foregroundColor(
-                                actual >= activity.expectedMoodBoost ? theme.softGreen : theme.warm
+                                actual >= activity.expectedMoodBoost ? Color(hex: "66BB6A") : Color(hex: "8B6F47")
                             )
                     }
                 }
@@ -352,37 +351,37 @@ struct CCBehavioralActivationView: View {
             } label: {
                 Image(systemName: "trash")
                     .font(.system(size: 12))
-                    .foregroundColor(theme.textMuted)
+                    .foregroundColor(AppTheme.textSecondary)
             }
             .opacity(0.5)
         }
-        .padding(theme.spacingMD)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusSM)
+        .padding(AppSpacing.md)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.sm)
     }
 
     // MARK: - Empty State
 
     private var emptyState: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: AppSpacing.lg) {
             Image(systemName: "sun.max.fill")
                 .font(.system(size: 56))
-                .foregroundColor(theme.warmMuted)
-                .padding(.top, theme.spacing3XL)
+                .foregroundColor(Color(hex: "8B6F47").opacity(0.6))
+                .padding(.top, AppSpacing.xl)
 
             Text("还没有计划")
-                .font(theme.fontH1)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.largeTitle)
+                .foregroundColor(AppTheme.textPrimary)
 
             Text("添加一个让你愉悦的活动吧")
-                .font(theme.fontBodyL)
-                .foregroundColor(theme.textSecondary)
+                .font(AppFont.body.weight(.medium))
+                .foregroundColor(AppTheme.textSecondary)
 
             Text("即使是小事也很重要：喝一杯好咖啡、散步10分钟、给朋友发条消息...")
-                .font(theme.fontBody)
-                .foregroundColor(theme.textMuted)
+                .font(AppFont.body)
+                .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, theme.spacingLG)
+                .padding(.horizontal, AppSpacing.lg)
         }
     }
 
@@ -398,12 +397,12 @@ struct CCBehavioralActivationView: View {
                 Image(systemName: "plus.circle.fill")
                 Text("添加活动")
             }
-            .font(theme.fontBodyL.weight(.medium))
+            .font(AppFont.body.weight(.medium).weight(.medium))
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, theme.spacingMD)
-            .background(theme.warm)
-            .cornerRadius(theme.radiusMD)
+            .padding(.vertical, AppSpacing.md)
+            .background(Color(hex: "8B6F47"))
+            .cornerRadius(AppRadius.md)
         }
     }
 
@@ -419,29 +418,29 @@ struct CCBehavioralActivationView: View {
                     }
                 }
 
-            VStack(spacing: theme.spacingLG) {
+            VStack(spacing: AppSpacing.lg) {
                 Text("添加新活动")
-                    .font(theme.fontH2)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title1)
+                    .foregroundColor(AppTheme.textPrimary)
 
                 // Activity name
-                VStack(alignment: .leading, spacing: theme.spacingXS) {
+                VStack(alignment: .leading, spacing: AppSpacing.xs) {
                     Text("活动名称")
-                        .font(theme.fontBodyS)
-                        .foregroundColor(theme.textSecondary)
+                        .font(AppFont.footnote)
+                        .foregroundColor(AppTheme.textSecondary)
                     TextField("例如：去公园散步20分钟", text: $viewModel.newActivityName)
-                        .font(theme.fontBody)
-                        .padding(theme.spacingMD)
-                        .background(theme.surface)
-                        .cornerRadius(theme.radiusSM)
+                        .font(AppFont.body)
+                        .padding(AppSpacing.md)
+                        .background(AppTheme.surface)
+                        .cornerRadius(AppRadius.sm)
                 }
 
                 // Type selector
-                VStack(alignment: .leading, spacing: theme.spacingXS) {
+                VStack(alignment: .leading, spacing: AppSpacing.xs) {
                     Text("活动类型")
-                        .font(theme.fontBodyS)
-                        .foregroundColor(theme.textSecondary)
-                    HStack(spacing: theme.spacingSM) {
+                        .font(AppFont.footnote)
+                        .foregroundColor(AppTheme.textSecondary)
+                    HStack(spacing: AppSpacing.sm) {
                         ForEach(CCActivityType.allCases) { type in
                             Button {
                                 viewModel.newActivityType = type
@@ -450,35 +449,35 @@ struct CCBehavioralActivationView: View {
                                     Image(systemName: type.icon)
                                         .font(.system(size: 11))
                                     Text(type.rawValue)
-                                        .font(theme.fontCaption)
+                                        .font(AppFont.caption)
                                 }
                                 .foregroundColor(
-                                    viewModel.newActivityType == type ? .white : theme.textSecondary
+                                    viewModel.newActivityType == type ? .white : AppTheme.textSecondary
                                 )
-                                .padding(.horizontal, theme.spacingSM)
-                                .padding(.vertical, theme.spacingXS)
+                                .padding(.horizontal, AppSpacing.sm)
+                                .padding(.vertical, AppSpacing.xs)
                                 .background(
-                                    viewModel.newActivityType == type ? type.color : theme.surface
+                                    viewModel.newActivityType == type ? type.color : AppTheme.surface
                                 )
-                                .cornerRadius(theme.radiusFull)
+                                .cornerRadius(AppRadius.full)
                             }
                         }
                     }
                 }
 
                 // Expected mood boost
-                VStack(alignment: .leading, spacing: theme.spacingXS) {
+                VStack(alignment: .leading, spacing: AppSpacing.xs) {
                     HStack {
                         Text("预期心情提升")
-                            .font(theme.fontBodyS)
-                            .foregroundColor(theme.textSecondary)
+                            .font(AppFont.footnote)
+                            .foregroundColor(AppTheme.textSecondary)
                         Spacer()
                         Text("\(Int(viewModel.newExpectedMoodBoost))/10")
-                            .font(theme.fontBody.weight(.medium))
-                            .foregroundColor(theme.warm)
+                            .font(AppFont.body.weight(.medium))
+                            .foregroundColor(Color(hex: "8B6F47"))
                     }
                     Slider(value: $viewModel.newExpectedMoodBoost, in: 1...10, step: 1)
-                        .tint(theme.warm)
+                        .tint(Color(hex: "8B6F47"))
                 }
 
                 // Scheduled time
@@ -487,49 +486,49 @@ struct CCBehavioralActivationView: View {
                     selection: $viewModel.newScheduledTime,
                     displayedComponents: [.date, .hourAndMinute]
                 )
-                .font(theme.fontBodyS)
-                .foregroundColor(theme.textSecondary)
-                .tint(theme.primary)
+                .font(AppFont.footnote)
+                .foregroundColor(AppTheme.textSecondary)
+                .tint(AppTheme.primary)
 
                 // Action buttons
-                HStack(spacing: theme.spacingMD) {
+                HStack(spacing: AppSpacing.md) {
                     Button {
                         withAnimation {
                             viewModel.showNewActivityForm = false
                         }
                     } label: {
                         Text("取消")
-                            .font(theme.fontBodyL.weight(.medium))
-                            .foregroundColor(theme.textSecondary)
+                            .font(AppFont.body.weight(.medium).weight(.medium))
+                            .foregroundColor(AppTheme.textSecondary)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, theme.spacingMD)
-                            .background(theme.surface)
-                            .cornerRadius(theme.radiusMD)
+                            .padding(.vertical, AppSpacing.md)
+                            .background(AppTheme.surface)
+                            .cornerRadius(AppRadius.md)
                     }
 
                     Button {
                         viewModel.addActivity()
                     } label: {
                         Text("添加")
-                            .font(theme.fontBodyL.weight(.medium))
+                            .font(AppFont.body.weight(.medium).weight(.medium))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, theme.spacingMD)
+                            .padding(.vertical, AppSpacing.md)
                             .background(
                                 viewModel.newActivityName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                    ? theme.textMuted : theme.warm
+                                    ? AppTheme.textSecondary : Color(hex: "8B6F47")
                             )
-                            .cornerRadius(theme.radiusMD)
+                            .cornerRadius(AppRadius.md)
                     }
                     .disabled(viewModel.newActivityName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
-            .padding(theme.spacingXL)
+            .padding(AppSpacing.xl)
             .background(
-                RoundedRectangle(cornerRadius: theme.radiusXL)
-                    .fill(theme.cardBackground)
+                RoundedRectangle(cornerRadius: AppRadius.xl)
+                    .fill(AppTheme.cardBackground)
             )
-            .padding(theme.spacingLG)
+            .padding(AppSpacing.lg)
             .transition(.scale.combined(with: .opacity))
         }
     }
@@ -544,51 +543,51 @@ struct CCBehavioralActivationView: View {
                     viewModel.submitRating()
                 }
 
-            VStack(spacing: theme.spacingLG) {
+            VStack(spacing: AppSpacing.lg) {
                 Text("实际心情提升")
-                    .font(theme.fontH2)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title1)
+                    .foregroundColor(AppTheme.textPrimary)
 
                 Text("完成活动后，你的心情提升了多少？")
-                    .font(theme.fontBody)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.body)
+                    .foregroundColor(AppTheme.textSecondary)
                     .multilineTextAlignment(.center)
 
                 HStack {
                     Text("没变化")
-                        .font(theme.fontCaption)
-                        .foregroundColor(theme.textMuted)
+                        .font(AppFont.caption)
+                        .foregroundColor(AppTheme.textSecondary)
                     Spacer()
                     Text("\(Int(viewModel.ratingValue))/10")
-                        .font(theme.fontH1)
-                        .foregroundColor(theme.softGreen)
+                        .font(AppFont.largeTitle)
+                        .foregroundColor(Color(hex: "66BB6A"))
                     Spacer()
                     Text("非常大")
-                        .font(theme.fontCaption)
-                        .foregroundColor(theme.textMuted)
+                        .font(AppFont.caption)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
 
                 Slider(value: $viewModel.ratingValue, in: 1...10, step: 1)
-                    .tint(theme.softGreen)
+                    .tint(Color(hex: "66BB6A"))
 
                 Button {
                     viewModel.submitRating()
                 } label: {
                     Text("确认")
-                        .font(theme.fontBodyL.weight(.medium))
+                        .font(AppFont.body.weight(.medium).weight(.medium))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, theme.spacingMD)
-                        .background(theme.softGreen)
-                        .cornerRadius(theme.radiusMD)
+                        .padding(.vertical, AppSpacing.md)
+                        .background(Color(hex: "66BB6A"))
+                        .cornerRadius(AppRadius.md)
                 }
             }
-            .padding(theme.spacingXL)
+            .padding(AppSpacing.xl)
             .background(
-                RoundedRectangle(cornerRadius: theme.radiusXL)
-                    .fill(theme.cardBackground)
+                RoundedRectangle(cornerRadius: AppRadius.xl)
+                    .fill(AppTheme.cardBackground)
             )
-            .padding(theme.spacing2XL)
+            .padding(AppSpacing.xl)
             .transition(.scale.combined(with: .opacity))
         }
     }
@@ -598,16 +597,16 @@ struct CCBehavioralActivationView: View {
     private func statBadge(label: String, value: String, color: Color) -> some View {
         VStack(spacing: 2) {
             Text(value)
-                .font(theme.fontH3)
+                .font(AppFont.title3)
                 .foregroundColor(color)
             Text(label)
-                .font(theme.fontLabel)
-                .foregroundColor(theme.textMuted)
+                .font(AppFont.caption)
+                .foregroundColor(AppTheme.textSecondary)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, theme.spacingSM)
+        .padding(.vertical, AppSpacing.sm)
         .background(color.opacity(0.1))
-        .cornerRadius(theme.radiusSM)
+        .cornerRadius(AppRadius.sm)
     }
 }
 
@@ -615,8 +614,6 @@ struct CCBehavioralActivationView: View {
 
 #Preview {
     NavigationStack {
-        CCBehavioralActivationView()
-            .environment(\.ccAppTheme, CCLightTheme())
-            .environment(CCAppCoordinator())
+        CCBehavioralActivationView().environment(CCAppCoordinator())
     }
 }

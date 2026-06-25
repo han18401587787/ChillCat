@@ -67,8 +67,9 @@ final class CCGrowthArchiveViewModel {
 
         do {
             let serverBadges = try await CCXuanAPI.getAchievements()
-            // Merge server progress into local badge definitions
-            achievements = mergeAchievements(local: CCAchievementBadge.allBadges, server: serverBadges)
+            // Map server VOs to local badge definitions
+            let mapped = serverBadges.compactMap { Self.mapAchievement($0) }
+            achievements = mergeAchievements(local: CCAchievementBadge.allBadges, server: mapped)
             print("✅ [GrowthArchive] loaded \(serverBadges.count) server achievements")
         } catch {
             // Use mock data when API is unavailable
@@ -82,7 +83,7 @@ final class CCGrowthArchiveViewModel {
             if serverMilestones.isEmpty {
                 milestones = CCMilestone.mockMilestones
             } else {
-                milestones = serverMilestones
+                milestones = serverMilestones.map { Self.mapMilestone($0) }
             }
             print("✅ [GrowthArchive] loaded \(serverMilestones.count) server milestones")
         } catch {
@@ -92,7 +93,8 @@ final class CCGrowthArchiveViewModel {
 
         // Load stats
         do {
-            stats = try await CCXuanAPI.getGrowthStats()
+            let serverStats = try await CCXuanAPI.getGrowthStats()
+            stats = Self.mapGrowthStats(serverStats)
             print("✅ [GrowthArchive] loaded stats")
         } catch {
             stats = CCGrowthStats.mock
@@ -144,22 +146,49 @@ final class CCGrowthArchiveViewModel {
     }
 }
 
-// MARK: - API Extensions (to be added to CCXuanAPI)
+// MARK: - CCXuanAPI Bridge Helpers
 
-extension CCXuanAPI {
+private extension CCGrowthArchiveViewModel {
 
-    /// 获取用户成就徽章列表
-    static func getAchievements() async throws -> [CCAchievementBadge] {
-        try await get("/api/v1/growth/achievements")
+    /// Map server AchievementVO → local CCAchievementBadge
+    static func mapAchievement(_ vo: CCXuanAPI.AchievementVO) -> CCAchievementBadge? {
+        guard let badge = CCAchievementBadge.allBadges.first(where: { $0.id == vo.code }) else { return nil }
+        var result = badge
+        result.isUnlocked = vo.isUnlocked
+        result.progress = vo.progress
+        if let unlockedAt = vo.unlockedAt {
+            let formatter = ISO8601DateFormatter()
+            result.unlockedAt = formatter.date(from: unlockedAt)
+        }
+        return result
     }
 
-    /// 获取用户里程碑列表
-    static func getMilestones() async throws -> [CCMilestone] {
-        try await get("/api/v1/growth/milestones")
+    /// Map server MilestoneVO → local CCMilestone
+    static func mapMilestone(_ vo: CCXuanAPI.MilestoneVO) -> CCMilestone {
+        let formatter = ISO8601DateFormatter()
+        return CCMilestone(
+            id: String(vo.id),
+            title: vo.title,
+            description: vo.description,
+            type: CCMilestoneType(rawValue: vo.milestoneType) ?? .personal,
+            date: formatter.date(from: vo.createdAt) ?? Date()
+        )
     }
 
-    /// 获取成长统计数据
-    static func getGrowthStats() async throws -> CCGrowthStats {
-        try await get("/api/v1/growth/stats")
+    /// Map server GrowthStatsVO → local CCGrowthStats
+    static func mapGrowthStats(_ vo: CCXuanAPI.GrowthStatsVO) -> CCGrowthStats {
+        return CCGrowthStats(
+            totalCheckins: Int(vo.totalCheckins),
+            emotionTypes: Int(vo.emotionTypes),
+            toolsUsed: Int(vo.toolUsageCount),
+            communityInteractions: Int(vo.communityInteractions),
+            streakDays: Int(vo.streakDays),
+            totalDiaryEntries: 0,
+            totalMeditationMinutes: 0,
+            aiInsights: [],
+            topEmotions: [],
+            toolUsage: [],
+            growthKeywords: []
+        )
     }
 }

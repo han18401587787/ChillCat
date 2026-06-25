@@ -11,13 +11,12 @@ import SwiftUI
 // MARK: - Values Explorer View
 
 struct CCValuesExplorerView: View {
-    @Environment(\.ccAppTheme) private var theme
-    @Environment(CCAppCoordinator.self) private var coordinator
+        @Environment(CCAppCoordinator.self) private var coordinator
     @State private var viewModel = CCValuesExplorerViewModel()
 
     var body: some View {
         ScrollView {
-            VStack(spacing: theme.spacingXL) {
+            VStack(spacing: AppSpacing.xl) {
                 // Step progress
                 stepProgressBar
 
@@ -49,17 +48,17 @@ struct CCValuesExplorerView: View {
                     navigationButtons
                 }
             }
-            .padding(.horizontal, theme.spacingLG)
-            .padding(.top, theme.spacingSM)
-            .padding(.bottom, theme.spacing3XL)
+            .padding(.horizontal, AppSpacing.lg)
+            .padding(.top, AppSpacing.sm)
+            .padding(.bottom, AppSpacing.xl)
         }
-        .background(theme.background.ignoresSafeArea())
+        .background(AppTheme.background.ignoresSafeArea())
         .navigationTitle("价值观探索")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
-                    .foregroundColor(theme.primary)
+                    .foregroundColor(AppTheme.primary)
             }
         }
     }
@@ -67,17 +66,17 @@ struct CCValuesExplorerView: View {
     // MARK: - Progress Bar
 
     private var stepProgressBar: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             HStack(spacing: 0) {
                 ForEach(CCValuesStep.allCases.dropLast(), id: \.rawValue) { step in
                     Circle()
                         .fill(step.rawValue < viewModel.currentStep.rawValue
-                              ? theme.warm : (step.rawValue == viewModel.currentStep.rawValue
-                                              ? theme.warm : theme.divider))
+                              ? Color(hex: "8B6F47") : (step.rawValue == viewModel.currentStep.rawValue
+                                              ? Color(hex: "8B6F47") : AppTheme.border))
                         .frame(width: 10, height: 10)
                     if step.rawValue < CCValuesStep.completed.rawValue {
                         Rectangle()
-                            .fill(step.rawValue < viewModel.currentStep.rawValue ? theme.warm : theme.divider)
+                            .fill(step.rawValue < viewModel.currentStep.rawValue ? Color(hex: "8B6F47") : AppTheme.border)
                             .frame(height: 2)
                             .frame(maxWidth: .infinity)
                     }
@@ -87,10 +86,10 @@ struct CCValuesExplorerView: View {
             HStack(spacing: 0) {
                 ForEach(CCValuesStep.allCases.dropLast(), id: \.rawValue) { step in
                     Text(step.title)
-                        .font(theme.fontLabel)
+                        .font(AppFont.caption)
                         .foregroundColor(
                             step.rawValue <= viewModel.currentStep.rawValue
-                                ? theme.warm : theme.textMuted
+                                ? Color(hex: "8B6F47") : AppTheme.textSecondary
                         )
                         .frame(maxWidth: .infinity)
                         .lineLimit(1)
@@ -98,29 +97,29 @@ struct CCValuesExplorerView: View {
                 }
             }
         }
-        .padding(theme.spacingLG)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.lg)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     // MARK: - Step 1: Select Values
 
     private var stepSelectValues: some View {
-        VStack(alignment: .leading, spacing: theme.spacingLG) {
+        VStack(alignment: .leading, spacing: AppSpacing.lg) {
             stepHeaderView
 
             Text("已选择 \(viewModel.selectedValues.count)/10")
-                .font(theme.fontBody)
+                .font(AppFont.body)
                 .foregroundColor(
-                    viewModel.selectedValues.count >= 5 ? theme.softGreen : theme.textMuted
+                    viewModel.selectedValues.count >= 5 ? Color(hex: "66BB6A") : AppTheme.textSecondary
                 )
 
             LazyVGrid(
                 columns: [
-                    GridItem(.flexible(), spacing: theme.spacingSM),
-                    GridItem(.flexible(), spacing: theme.spacingSM),
+                    GridItem(.flexible(), spacing: AppSpacing.sm),
+                    GridItem(.flexible(), spacing: AppSpacing.sm),
                 ],
-                spacing: theme.spacingSM
+                spacing: AppSpacing.sm
             ) {
                 ForEach(CCValueCard.all) { value in
                     valueCard(value: value, isSelected: viewModel.selectedValues.contains(value.id))
@@ -134,26 +133,26 @@ struct CCValuesExplorerView: View {
             CCHaptic.light()
             viewModel.toggleValue(value.id)
         } label: {
-            VStack(spacing: theme.spacingXS) {
+            VStack(spacing: AppSpacing.xs) {
                 Text(value.emoji)
                     .font(.system(size: 28))
                 Text(value.name)
-                    .font(theme.fontBodyS.weight(.medium))
-                    .foregroundColor(isSelected ? .white : theme.textPrimary)
+                    .font(AppFont.footnote.weight(.medium))
+                    .foregroundColor(isSelected ? .white : AppTheme.textPrimary)
                 Text(value.description)
-                    .font(theme.fontLabel)
-                    .foregroundColor(isSelected ? .white.opacity(0.8) : theme.textMuted)
+                    .font(AppFont.caption)
+                    .foregroundColor(isSelected ? .white.opacity(0.8) : AppTheme.textSecondary)
                     .lineLimit(1)
             }
-            .padding(theme.spacingMD)
+            .padding(AppSpacing.md)
             .frame(maxWidth: .infinity)
             .background(
-                RoundedRectangle(cornerRadius: theme.radiusSM)
-                    .fill(isSelected ? theme.warm : theme.surface)
+                RoundedRectangle(cornerRadius: AppRadius.sm)
+                    .fill(isSelected ? Color(hex: "8B6F47") : AppTheme.surface)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: theme.radiusSM)
-                    .stroke(isSelected ? theme.warm : theme.divider, lineWidth: 1)
+                RoundedRectangle(cornerRadius: AppRadius.sm)
+                    .stroke(isSelected ? Color(hex: "8B6F47") : AppTheme.border, lineWidth: 1)
             )
             .overlay(alignment: .topTrailing) {
                 if isSelected {
@@ -170,15 +169,15 @@ struct CCValuesExplorerView: View {
     // MARK: - Step 2: Rank Values
 
     private var stepRankValues: some View {
-        VStack(alignment: .leading, spacing: theme.spacingLG) {
+        VStack(alignment: .leading, spacing: AppSpacing.lg) {
             stepHeaderView
 
             Text("拖拽排列最重要的5个价值观（从上到下为最重要到最不重要）")
-                .font(theme.fontBodyS)
-                .foregroundColor(theme.textSecondary)
+                .font(AppFont.footnote)
+                .foregroundColor(AppTheme.textSecondary)
 
             // Show all selected values, let user pick 5 to rank
-            VStack(spacing: theme.spacingSM) {
+            VStack(spacing: AppSpacing.sm) {
                 ForEach(Array(viewModel.selectedValues), id: \.self) { valueId in
                     if let value = CCValueCard.all.first(where: { $0.id == valueId }) {
                         let isInTopFive = viewModel.rankedValues.contains(valueId)
@@ -192,37 +191,37 @@ struct CCValuesExplorerView: View {
                                 viewModel.rankedValues.append(valueId)
                             }
                         } label: {
-                            HStack(spacing: theme.spacingMD) {
+                            HStack(spacing: AppSpacing.md) {
                                 // Rank number or selection indicator
                                 if let rank = rank {
                                     ZStack {
                                         Circle()
-                                            .fill(theme.warm)
+                                            .fill(Color(hex: "8B6F47"))
                                             .frame(width: 28, height: 28)
                                         Text("\(rank)")
-                                            .font(theme.fontBodyS.weight(.bold))
+                                            .font(AppFont.footnote.weight(.bold))
                                             .foregroundColor(.white)
                                     }
                                 } else {
                                     Circle()
-                                        .stroke(theme.divider, lineWidth: 1.5)
+                                        .stroke(AppTheme.border, lineWidth: 1.5)
                                         .frame(width: 28, height: 28)
                                 }
 
                                 Text(value.emoji)
                                     .font(.system(size: 22))
                                 Text(value.name)
-                                    .font(theme.fontBody)
-                                    .foregroundColor(isInTopFive ? theme.textPrimary : theme.textMuted)
+                                    .font(AppFont.body)
+                                    .foregroundColor(isInTopFive ? AppTheme.textPrimary : AppTheme.textSecondary)
                                 Spacer()
                                 Image(systemName: isInTopFive ? "checkmark.circle.fill" : "circle")
-                                    .foregroundColor(isInTopFive ? theme.warm : theme.textMuted)
+                                    .foregroundColor(isInTopFive ? Color(hex: "8B6F47") : AppTheme.textSecondary)
                                     .font(.system(size: 20))
                             }
-                            .padding(theme.spacingMD)
+                            .padding(AppSpacing.md)
                             .background(
-                                RoundedRectangle(cornerRadius: theme.radiusSM)
-                                    .fill(isInTopFive ? theme.warmMuted.opacity(0.5) : theme.surface)
+                                RoundedRectangle(cornerRadius: AppRadius.sm)
+                                    .fill(isInTopFive ? Color(hex: "8B6F47").opacity(0.6).opacity(0.5) : AppTheme.surface)
                             )
                         }
                         .buttonStyle(.plain)
@@ -232,33 +231,33 @@ struct CCValuesExplorerView: View {
 
             // Display current ranking
             if !viewModel.rankedValues.isEmpty {
-                VStack(alignment: .leading, spacing: theme.spacingSM) {
+                VStack(alignment: .leading, spacing: AppSpacing.sm) {
                     Text("当前排序")
-                        .font(theme.fontH3)
-                        .foregroundColor(theme.textPrimary)
+                        .font(AppFont.title3)
+                        .foregroundColor(AppTheme.textPrimary)
                     Text("使用右侧手柄拖拽调整顺序")
-                        .font(theme.fontCaption)
-                        .foregroundColor(theme.textMuted)
+                        .font(AppFont.caption)
+                        .foregroundColor(AppTheme.textSecondary)
 
                     ForEach(Array(viewModel.rankedValues.enumerated()), id: \.element) { index, valueId in
                         if let value = CCValueCard.all.first(where: { $0.id == valueId }) {
-                            HStack(spacing: theme.spacingMD) {
+                            HStack(spacing: AppSpacing.md) {
                                 Text("\(index + 1)")
-                                    .font(theme.fontH2)
-                                    .foregroundColor(theme.warm)
+                                    .font(AppFont.title1)
+                                    .foregroundColor(Color(hex: "8B6F47"))
                                     .frame(width: 28)
                                 Text(value.emoji)
                                     .font(.system(size: 24))
                                 Text(value.name)
-                                    .font(theme.fontBody.weight(.medium))
-                                    .foregroundColor(theme.textPrimary)
+                                    .font(AppFont.body.weight(.medium))
+                                    .foregroundColor(AppTheme.textPrimary)
                                 Spacer()
                                 Image(systemName: "line.3.horizontal")
-                                    .foregroundColor(theme.textMuted)
+                                    .foregroundColor(AppTheme.textSecondary)
                             }
-                            .padding(theme.spacingMD)
-                            .background(theme.cardBackground)
-                            .cornerRadius(theme.radiusSM)
+                            .padding(AppSpacing.md)
+                            .background(AppTheme.cardBackground)
+                            .cornerRadius(AppRadius.sm)
                         }
                     }
                 }
@@ -269,23 +268,23 @@ struct CCValuesExplorerView: View {
     // MARK: - Step 3: Reflect
 
     private var stepReflectValues: some View {
-        VStack(alignment: .leading, spacing: theme.spacingLG) {
+        VStack(alignment: .leading, spacing: AppSpacing.lg) {
             stepHeaderView
 
             ForEach(viewModel.rankedValues, id: \.self) { valueId in
                 if let value = CCValueCard.all.first(where: { $0.id == valueId }) {
-                    VStack(alignment: .leading, spacing: theme.spacingSM) {
+                    VStack(alignment: .leading, spacing: AppSpacing.sm) {
                         HStack {
                             Text(value.emoji)
                                 .font(.system(size: 20))
                             Text(value.name)
-                                .font(theme.fontH3)
-                                .foregroundColor(theme.textPrimary)
+                                .font(AppFont.title3)
+                                .foregroundColor(AppTheme.textPrimary)
                         }
 
                         Text("我在做什么时体现了这个价值？")
-                            .font(theme.fontBodyS)
-                            .foregroundColor(theme.textSecondary)
+                            .font(AppFont.footnote)
+                            .foregroundColor(AppTheme.textSecondary)
 
                         TextField(
                             "例如：当我和家人一起吃饭聊天时...",
@@ -295,15 +294,15 @@ struct CCValuesExplorerView: View {
                             ),
                             axis: .vertical
                         )
-                        .font(theme.fontBody)
-                        .padding(theme.spacingMD)
-                        .background(theme.surface)
-                        .cornerRadius(theme.radiusSM)
+                        .font(AppFont.body)
+                        .padding(AppSpacing.md)
+                        .background(AppTheme.surface)
+                        .cornerRadius(AppRadius.sm)
                         .lineLimit(2...4)
                     }
-                    .padding(theme.spacingLG)
-                    .background(theme.cardBackground)
-                    .cornerRadius(theme.radiusMD)
+                    .padding(AppSpacing.lg)
+                    .background(AppTheme.cardBackground)
+                    .cornerRadius(AppRadius.md)
                 }
             }
         }
@@ -312,219 +311,219 @@ struct CCValuesExplorerView: View {
     // MARK: - Step 4: Rate Alignment
 
     private var stepRateAlignment: some View {
-        VStack(alignment: .leading, spacing: theme.spacingLG) {
+        VStack(alignment: .leading, spacing: AppSpacing.lg) {
             stepHeaderView
 
-            VStack(alignment: .leading, spacing: theme.spacingMD) {
+            VStack(alignment: .leading, spacing: AppSpacing.md) {
                 Text("当前行为与价值观的一致性")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
 
                 Text("1 = 完全不一致，10 = 完全一致")
-                    .font(theme.fontBodyS)
-                    .foregroundColor(theme.textMuted)
+                    .font(AppFont.footnote)
+                    .foregroundColor(AppTheme.textSecondary)
 
                 HStack {
                     Text("不一致")
-                        .font(theme.fontCaption)
-                        .foregroundColor(theme.textMuted)
+                        .font(AppFont.caption)
+                        .foregroundColor(AppTheme.textSecondary)
                     Spacer()
                     Text("\(Int(viewModel.alignmentRating))/10")
-                        .font(theme.fontH1)
-                        .foregroundColor(theme.warm)
+                        .font(AppFont.largeTitle)
+                        .foregroundColor(Color(hex: "8B6F47"))
                     Spacer()
                     Text("完全一致")
-                        .font(theme.fontCaption)
-                        .foregroundColor(theme.textMuted)
+                        .font(AppFont.caption)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
 
                 Slider(value: $viewModel.alignmentRating, in: 1...10, step: 1)
-                    .tint(theme.warm)
+                    .tint(Color(hex: "8B6F47"))
 
                 if !viewModel.alignmentDescription.isEmpty {
                     Text(viewModel.alignmentDescription)
-                        .font(theme.fontBody)
-                        .foregroundColor(theme.textSecondary)
-                        .padding(.top, theme.spacingSM)
+                        .font(AppFont.body)
+                        .foregroundColor(AppTheme.textSecondary)
+                        .padding(.top, AppSpacing.sm)
                 }
             }
-            .padding(theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
         }
     }
 
     // MARK: - Step 5: Action Plan
 
     private var stepActionPlan: some View {
-        VStack(alignment: .leading, spacing: theme.spacingLG) {
+        VStack(alignment: .leading, spacing: AppSpacing.lg) {
             stepHeaderView
 
-            VStack(alignment: .leading, spacing: theme.spacingMD) {
+            VStack(alignment: .leading, spacing: AppSpacing.md) {
                 Text("制定一个小行动")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
 
                 Text("想一个具体的、可以在接下来一周内完成的小行动，让你更靠近你的价值观。")
-                    .font(theme.fontBodyS)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.footnote)
+                    .foregroundColor(AppTheme.textSecondary)
 
                 TextEditor(text: $viewModel.actionPlan)
-                    .font(theme.fontBody)
+                    .font(AppFont.body)
                     .frame(minHeight: 100)
-                    .padding(theme.spacingSM)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusSM)
+                    .padding(AppSpacing.sm)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.sm)
                     .overlay(
-                        RoundedRectangle(cornerRadius: theme.radiusSM)
-                            .stroke(theme.divider, lineWidth: 0.5)
+                        RoundedRectangle(cornerRadius: AppRadius.sm)
+                            .stroke(AppTheme.border, lineWidth: 0.5)
                     )
 
                 Text("例如：这周给妈妈打三次电话（体现「家庭」价值观）")
-                    .font(theme.fontCaption)
-                    .foregroundColor(theme.textMuted)
+                    .font(AppFont.caption)
+                    .foregroundColor(AppTheme.textSecondary)
             }
-            .padding(theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
         }
     }
 
     // MARK: - Completion
 
     private var completionView: some View {
-        VStack(spacing: theme.spacingXL) {
+        VStack(spacing: AppSpacing.xl) {
             ZStack {
                 Circle()
-                    .fill(theme.warmMuted)
+                    .fill(Color(hex: "8B6F47").opacity(0.6))
                     .frame(width: 100, height: 100)
                 Image(systemName: "compass.drawing")
                     .font(.system(size: 44))
-                    .foregroundColor(theme.warm)
+                    .foregroundColor(Color(hex: "8B6F47"))
             }
-            .padding(.top, theme.spacing2XL)
+            .padding(.top, AppSpacing.xl)
 
             Text("价值观探索完成！")
-                .font(theme.fontH1)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.largeTitle)
+                .foregroundColor(AppTheme.textPrimary)
 
             Text(viewModel.completionMessage)
-                .font(theme.fontBodyL)
-                .foregroundColor(theme.textSecondary)
+                .font(AppFont.body.weight(.medium))
+                .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, theme.spacingLG)
+                .padding(.horizontal, AppSpacing.lg)
 
             // Top 5 summary
-            VStack(alignment: .leading, spacing: theme.spacingSM) {
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
                 Text("你的核心价值观")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
 
                 ForEach(Array(viewModel.rankedValues.enumerated()), id: \.element) { index, valueId in
                     if let value = CCValueCard.all.first(where: { $0.id == valueId }) {
-                        HStack(spacing: theme.spacingMD) {
+                        HStack(spacing: AppSpacing.md) {
                             Text("\(index + 1)")
-                                .font(theme.fontH2)
-                                .foregroundColor(theme.warm)
+                                .font(AppFont.title1)
+                                .foregroundColor(Color(hex: "8B6F47"))
                                 .frame(width: 28)
                             Text(value.emoji)
                                 .font(.system(size: 24))
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(value.name)
-                                    .font(theme.fontBody.weight(.medium))
-                                    .foregroundColor(theme.textPrimary)
+                                    .font(AppFont.body.weight(.medium))
+                                    .foregroundColor(AppTheme.textPrimary)
                                 if let reflection = viewModel.valueReflections[valueId], !reflection.isEmpty {
                                     Text(reflection)
-                                        .font(theme.fontCaption)
-                                        .foregroundColor(theme.textSecondary)
+                                        .font(AppFont.caption)
+                                        .foregroundColor(AppTheme.textSecondary)
                                         .lineLimit(2)
                                 }
                             }
                         }
-                        .padding(theme.spacingSM)
+                        .padding(AppSpacing.sm)
                     }
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
 
             // Alignment rating
-            VStack(spacing: theme.spacingSM) {
+            VStack(spacing: AppSpacing.sm) {
                 Text("行为与价值观一致性")
-                    .font(theme.fontBodyS)
-                    .foregroundColor(theme.textMuted)
+                    .font(AppFont.footnote)
+                    .foregroundColor(AppTheme.textSecondary)
                 Text("\(Int(viewModel.alignmentRating))/10")
-                    .font(theme.fontH1)
-                    .foregroundColor(theme.warm)
+                    .font(AppFont.largeTitle)
+                    .foregroundColor(Color(hex: "8B6F47"))
                 Text(viewModel.alignmentDescription)
-                    .font(theme.fontBody)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.body)
+                    .foregroundColor(AppTheme.textSecondary)
                     .multilineTextAlignment(.center)
             }
-            .padding(theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
 
             // Action plan
             if !viewModel.actionPlan.isEmpty {
-                VStack(alignment: .leading, spacing: theme.spacingSM) {
+                VStack(alignment: .leading, spacing: AppSpacing.sm) {
                     Text("你的行动方案")
-                        .font(theme.fontH3)
-                        .foregroundColor(theme.textPrimary)
+                        .font(AppFont.title3)
+                        .foregroundColor(AppTheme.textPrimary)
                     Text(viewModel.actionPlan)
-                        .font(theme.fontBody)
-                        .foregroundColor(theme.textSecondary)
+                        .font(AppFont.body)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(theme.spacingLG)
-                .background(theme.cardBackground)
-                .cornerRadius(theme.radiusMD)
+                .padding(AppSpacing.lg)
+                .background(AppTheme.cardBackground)
+                .cornerRadius(AppRadius.md)
             }
 
             // Actions
-            VStack(spacing: theme.spacingSM) {
+            VStack(spacing: AppSpacing.sm) {
                 Button {
                     viewModel.reset()
                 } label: {
                     Text("重新探索")
-                        .font(theme.fontBodyL.weight(.medium))
+                        .font(AppFont.body.weight(.medium).weight(.medium))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, theme.spacingMD)
-                        .background(theme.warm)
-                        .cornerRadius(theme.radiusMD)
+                        .padding(.vertical, AppSpacing.md)
+                        .background(Color(hex: "8B6F47"))
+                        .cornerRadius(AppRadius.md)
                 }
 
                 Button {
                     coordinator.dismiss()
                 } label: {
                     Text("返回工具箱")
-                        .font(theme.fontBodyL)
-                        .foregroundColor(theme.textSecondary)
+                        .font(AppFont.body.weight(.medium))
+                        .foregroundColor(AppTheme.textSecondary)
                 }
             }
-            .padding(.top, theme.spacingLG)
+            .padding(.top, AppSpacing.lg)
         }
     }
 
     // MARK: - Shared
 
     private var stepHeaderView: some View {
-        VStack(alignment: .leading, spacing: theme.spacingXS) {
+        VStack(alignment: .leading, spacing: AppSpacing.xs) {
             Text(viewModel.currentStep.title)
-                .font(theme.fontH1)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.largeTitle)
+                .foregroundColor(AppTheme.textPrimary)
             Text(viewModel.currentStep.subtitle)
-                .font(theme.fontBodyL)
-                .foregroundColor(theme.textSecondary)
+                .font(AppFont.body.weight(.medium))
+                .foregroundColor(AppTheme.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var navigationButtons: some View {
-        HStack(spacing: theme.spacingMD) {
+        HStack(spacing: AppSpacing.md) {
             if viewModel.currentStep.rawValue > 0 {
                 Button {
                     viewModel.goToPreviousStep()
@@ -533,12 +532,12 @@ struct CCValuesExplorerView: View {
                         Image(systemName: "chevron.left")
                         Text("上一步")
                     }
-                    .font(theme.fontBodyL.weight(.medium))
-                    .foregroundColor(theme.warm)
+                    .font(AppFont.body.weight(.medium).weight(.medium))
+                    .foregroundColor(Color(hex: "8B6F47"))
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, theme.spacingMD)
-                    .background(theme.warm.opacity(0.1))
-                    .cornerRadius(theme.radiusMD)
+                    .padding(.vertical, AppSpacing.md)
+                    .background(Color(hex: "8B6F47").opacity(0.1))
+                    .cornerRadius(AppRadius.md)
                 }
             }
 
@@ -549,12 +548,12 @@ struct CCValuesExplorerView: View {
                     Text(viewModel.currentStep == .actionPlan ? "完成探索" : "下一步")
                     Image(systemName: viewModel.currentStep == .actionPlan ? "checkmark" : "chevron.right")
                 }
-                .font(theme.fontBodyL.weight(.medium))
+                .font(AppFont.body.weight(.medium).weight(.medium))
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, theme.spacingMD)
-                .background(canProceed ? theme.warm : theme.textMuted)
-                .cornerRadius(theme.radiusMD)
+                .padding(.vertical, AppSpacing.md)
+                .background(canProceed ? Color(hex: "8B6F47") : AppTheme.textSecondary)
+                .cornerRadius(AppRadius.md)
             }
             .disabled(!canProceed)
         }
@@ -576,8 +575,6 @@ struct CCValuesExplorerView: View {
 
 #Preview {
     NavigationStack {
-        CCValuesExplorerView()
-            .environment(\.ccAppTheme, CCLightTheme())
-            .environment(CCAppCoordinator())
+        CCValuesExplorerView().environment(CCAppCoordinator())
     }
 }

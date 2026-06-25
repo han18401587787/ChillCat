@@ -11,14 +11,13 @@ import SwiftUI
 // MARK: - Gratitude Journal View
 
 struct CCGratitudeJournalView: View {
-    @Environment(\.ccAppTheme) private var theme
-    @Environment(CCAppCoordinator.self) private var coordinator
+        @Environment(CCAppCoordinator.self) private var coordinator
     @State private var viewModel = CCGratitudeJournalViewModel()
 
     var body: some View {
         ZStack {
             ScrollView {
-                VStack(spacing: theme.spacingXL) {
+                VStack(spacing: AppSpacing.xl) {
                     // Streak counter
                     streakBanner
 
@@ -34,11 +33,11 @@ struct CCGratitudeJournalView: View {
                     // History
                     historySection
                 }
-                .padding(.horizontal, theme.spacingLG)
-                .padding(.top, theme.spacingSM)
-                .padding(.bottom, theme.spacing3XL)
+                .padding(.horizontal, AppSpacing.lg)
+                .padding(.top, AppSpacing.sm)
+                .padding(.bottom, AppSpacing.xl)
             }
-            .background(theme.background.ignoresSafeArea())
+            .background(AppTheme.background.ignoresSafeArea())
 
             // Completion animation overlay
             if viewModel.showCompletionAnimation {
@@ -50,7 +49,7 @@ struct CCGratitudeJournalView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
-                    .foregroundColor(theme.primary)
+                    .foregroundColor(AppTheme.primary)
             }
         }
         .cc_emojiPickerOverlay(isShowing: $viewModel.showEmojiPicker) { emoji in
@@ -64,26 +63,26 @@ struct CCGratitudeJournalView: View {
     // MARK: - Streak Banner
 
     private var streakBanner: some View {
-        HStack(spacing: theme.spacingSM) {
+        HStack(spacing: AppSpacing.sm) {
             Image(systemName: "flame.fill")
                 .font(.system(size: 24))
-                .foregroundColor(theme.warm)
+                .foregroundColor(Color(hex: "8B6F47"))
             VStack(alignment: .leading, spacing: 2) {
                 Text("连续 \(viewModel.streakCount) 天")
-                    .font(theme.fontH2)
-                    .foregroundColor(theme.warm)
+                    .font(AppFont.title1)
+                    .foregroundColor(Color(hex: "8B6F47"))
                 Text("坚持感恩记录")
-                    .font(theme.fontCaption)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.caption)
+                    .foregroundColor(AppTheme.textSecondary)
             }
             Spacer()
             Text("🔥")
                 .font(.system(size: 36))
         }
-        .padding(theme.spacingLG)
+        .padding(AppSpacing.lg)
         .background(
-            RoundedRectangle(cornerRadius: theme.radiusMD)
-                .fill(theme.warmMuted.opacity(0.3))
+            RoundedRectangle(cornerRadius: AppRadius.md)
+                .fill(Color(hex: "8B6F47").opacity(0.6).opacity(0.3))
         )
     }
 
@@ -92,33 +91,33 @@ struct CCGratitudeJournalView: View {
     private var dateSection: some View {
         HStack {
             Image(systemName: "calendar")
-                .foregroundColor(theme.primary)
+                .foregroundColor(AppTheme.primary)
             DatePicker(
                 "选择日期",
                 selection: $viewModel.selectedDate,
                 displayedComponents: [.date]
             )
             .labelsHidden()
-            .tint(theme.primary)
+            .tint(AppTheme.primary)
 
             Text(viewModel.formattedDate)
-                .font(theme.fontBody)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.body)
+                .foregroundColor(AppTheme.textPrimary)
 
             Spacer()
         }
-        .padding(theme.spacingMD)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.md)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     // MARK: - Three Things
 
     private var threeThingsSection: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: AppSpacing.lg) {
             Text("今天的三件好事")
-                .font(theme.fontH1)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.largeTitle)
+                .foregroundColor(AppTheme.textPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             goodThingCard(
@@ -127,7 +126,7 @@ struct CCGratitudeJournalView: View {
                 reason: $viewModel.thing1Reason,
                 emoji: $viewModel.thing1Emoji,
                 label: "今天发生的第一件好事",
-                color: theme.softGreen
+                color: Color(hex: "66BB6A")
             )
 
             goodThingCard(
@@ -136,7 +135,7 @@ struct CCGratitudeJournalView: View {
                 reason: $viewModel.thing2Reason,
                 emoji: $viewModel.thing2Emoji,
                 label: "第二件好事",
-                color: theme.warm
+                color: Color(hex: "8B6F47")
             )
 
             goodThingCard(
@@ -145,7 +144,7 @@ struct CCGratitudeJournalView: View {
                 reason: $viewModel.thing3Reason,
                 emoji: $viewModel.thing3Emoji,
                 label: "第三件好事",
-                color: theme.softPurple
+                color: Color(hex: "D4C8E8")
             )
         }
     }
@@ -158,7 +157,7 @@ struct CCGratitudeJournalView: View {
         label: String,
         color: Color
     ) -> some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
             HStack {
                 // Emoji button
                 Button {
@@ -168,44 +167,44 @@ struct CCGratitudeJournalView: View {
                         .font(.system(size: 32))
                         .frame(width: 48, height: 48)
                         .background(color.opacity(0.15))
-                        .cornerRadius(theme.radiusSM)
+                        .cornerRadius(AppRadius.sm)
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(label)
-                        .font(theme.fontBodyL.weight(.medium))
-                        .foregroundColor(theme.textPrimary)
+                        .font(AppFont.body.weight(.medium).weight(.medium))
+                        .foregroundColor(AppTheme.textPrimary)
                     Text("什么事让你感到感恩？")
-                        .font(theme.fontCaption)
-                        .foregroundColor(theme.textMuted)
+                        .font(AppFont.caption)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
 
                 Spacer()
             }
 
             TextField("记录这件好事...", text: title)
-                .font(theme.fontBody)
-                .padding(theme.spacingSM)
-                .background(theme.surface)
-                .cornerRadius(theme.radiusSM)
+                .font(AppFont.body)
+                .padding(AppSpacing.sm)
+                .background(AppTheme.surface)
+                .cornerRadius(AppRadius.sm)
 
-            VStack(alignment: .leading, spacing: theme.spacingXS) {
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
                 Text("原因是什么？")
-                    .font(theme.fontCaption)
-                    .foregroundColor(theme.textMuted)
+                    .font(AppFont.caption)
+                    .foregroundColor(AppTheme.textSecondary)
                 TextField("为什么会发生这件好事？它对你意味着什么？", text: reason, axis: .vertical)
-                    .font(theme.fontBodyS)
-                    .padding(theme.spacingSM)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusSM)
+                    .font(AppFont.footnote)
+                    .padding(AppSpacing.sm)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.sm)
                     .lineLimit(2...4)
             }
         }
-        .padding(theme.spacingLG)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.lg)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
         .overlay(
-            RoundedRectangle(cornerRadius: theme.radiusMD)
+            RoundedRectangle(cornerRadius: AppRadius.md)
                 .stroke(color.opacity(0.3), lineWidth: 1)
         )
     }
@@ -220,24 +219,24 @@ struct CCGratitudeJournalView: View {
                 Image(systemName: "heart.fill")
                 Text("记录今天的好事")
             }
-            .font(theme.fontBodyL.weight(.medium))
+            .font(AppFont.body.weight(.medium).weight(.medium))
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, theme.spacingMD)
+            .padding(.vertical, AppSpacing.md)
             .background(
                 viewModel.canSubmit
                     ? LinearGradient(
-                        colors: [theme.softGreen, theme.warm],
+                        colors: [Color(hex: "66BB6A"), Color(hex: "8B6F47")],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
                     : LinearGradient(
-                        colors: [theme.textMuted, theme.textMuted],
+                        colors: [AppTheme.textSecondary, AppTheme.textSecondary],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
             )
-            .cornerRadius(theme.radiusMD)
+            .cornerRadius(AppRadius.md)
         }
         .disabled(!viewModel.canSubmit)
     }
@@ -245,11 +244,11 @@ struct CCGratitudeJournalView: View {
     // MARK: - History
 
     private var historySection: some View {
-        VStack(alignment: .leading, spacing: theme.spacingLG) {
+        VStack(alignment: .leading, spacing: AppSpacing.lg) {
             if !viewModel.pastEntries.isEmpty {
                 Text("感恩记录")
-                    .font(theme.fontH2)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title1)
+                    .foregroundColor(AppTheme.textPrimary)
 
                 ForEach(viewModel.pastEntries) { entry in
                     historyEntryCard(entry)
@@ -259,7 +258,7 @@ struct CCGratitudeJournalView: View {
     }
 
     private func historyEntryCard(_ entry: CCGratitudeEntry) -> some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
             // Date header
             HStack {
                 let formatter = DateFormatter()
@@ -271,27 +270,27 @@ struct CCGratitudeJournalView: View {
 
                 Image(systemName: "calendar")
                     .font(.system(size: 12))
-                    .foregroundColor(theme.textMuted)
+                    .foregroundColor(AppTheme.textSecondary)
                 Text(dateStr)
-                    .font(theme.fontBodyS.weight(.medium))
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.footnote.weight(.medium))
+                    .foregroundColor(AppTheme.textSecondary)
                 Spacer()
             }
 
             // Three things
             ForEach(entry.things) { thing in
-                HStack(alignment: .top, spacing: theme.spacingSM) {
+                HStack(alignment: .top, spacing: AppSpacing.sm) {
                     Text(thing.emoji)
                         .font(.system(size: 18))
                         .frame(width: 28)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(thing.title)
-                            .font(theme.fontBodyS.weight(.medium))
-                            .foregroundColor(theme.textPrimary)
+                            .font(AppFont.footnote.weight(.medium))
+                            .foregroundColor(AppTheme.textPrimary)
                         if !thing.reason.isEmpty {
                             Text(thing.reason)
-                                .font(theme.fontCaption)
-                                .foregroundColor(theme.textMuted)
+                                .font(AppFont.caption)
+                                .foregroundColor(AppTheme.textSecondary)
                                 .lineLimit(2)
                         }
                     }
@@ -299,9 +298,9 @@ struct CCGratitudeJournalView: View {
                 .padding(.vertical, 2)
             }
         }
-        .padding(theme.spacingLG)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.lg)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     // MARK: - Completion Overlay
@@ -316,7 +315,7 @@ struct CCGratitudeJournalView: View {
                     }
                 }
 
-            VStack(spacing: theme.spacingXL) {
+            VStack(spacing: AppSpacing.xl) {
                 // Confetti-like emoji burst
                 ZStack {
                     ForEach(0..<12, id: \.self) { i in
@@ -339,22 +338,22 @@ struct CCGratitudeJournalView: View {
                 .frame(height: 160)
 
                 Text("记录完成！")
-                    .font(theme.fontH1)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.largeTitle)
+                    .foregroundColor(AppTheme.textPrimary)
 
                 Text(viewModel.completionMessage)
-                    .font(theme.fontBodyL)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.body.weight(.medium))
+                    .foregroundColor(AppTheme.textSecondary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, theme.spacingLG)
+                    .padding(.horizontal, AppSpacing.lg)
             }
-            .padding(theme.spacing2XL)
+            .padding(AppSpacing.xl)
             .background(
-                RoundedRectangle(cornerRadius: theme.radiusXL)
-                    .fill(theme.cardBackground)
+                RoundedRectangle(cornerRadius: AppRadius.xl)
+                    .fill(AppTheme.cardBackground)
                     .shadow(color: .black.opacity(0.1), radius: 20, y: 10)
             )
-            .padding(theme.spacing2XL)
+            .padding(AppSpacing.xl)
             .transition(.scale.combined(with: .opacity))
         }
     }
@@ -364,8 +363,6 @@ struct CCGratitudeJournalView: View {
 
 #Preview {
     NavigationStack {
-        CCGratitudeJournalView()
-            .environment(\.ccAppTheme, CCLightTheme())
-            .environment(CCAppCoordinator())
+        CCGratitudeJournalView().environment(CCAppCoordinator())
     }
 }

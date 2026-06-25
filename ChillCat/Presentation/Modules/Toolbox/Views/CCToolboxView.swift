@@ -85,8 +85,7 @@ private struct CCToolItem: Identifiable {
 // MARK: - Toolbox View
 
 struct CCToolboxView: View {
-    @Environment(\.ccAppTheme) private var theme
-    @State private var appeared = false
+        @State private var appeared = false
 
     private let columns = [
         GridItem(.flexible(), spacing: 12),
@@ -95,15 +94,15 @@ struct CCToolboxView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: theme.spacingXL) {
+            VStack(alignment: .leading, spacing: AppSpacing.xl) {
                 headerSection
                 toolGrid
                 bottomPadding
             }
-            .padding(.horizontal, theme.spacingLG)
-            .padding(.top, theme.spacingSM)
+            .padding(.horizontal, AppSpacing.lg)
+            .padding(.top, AppSpacing.sm)
         }
-        .background(theme.background.ignoresSafeArea())
+        .background(AppTheme.background.ignoresSafeArea())
         .navigationTitle("心理工具箱")
         .navigationBarTitleDisplayMode(.large)
         .onAppear { withAnimation(.easeOut(duration: 0.4)) { appeared = true } }
@@ -112,13 +111,13 @@ struct CCToolboxView: View {
     // MARK: - Header
 
     private var headerSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacingXS) {
+        VStack(alignment: .leading, spacing: AppSpacing.xs) {
             Text("心理工具箱")
-                .font(theme.fontDisplay)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.largeTitle.weight(.bold))
+                .foregroundColor(AppTheme.textPrimary)
             Text("选择一项练习，开始关爱自己")
-                .font(theme.fontBodyL)
-                .foregroundColor(theme.textSecondary)
+                .font(AppFont.body.weight(.medium))
+                .foregroundColor(AppTheme.textSecondary)
         }
         .opacity(appeared ? 1 : 0)
         .offset(y: appeared ? 0 : 12)
@@ -150,7 +149,7 @@ struct CCToolboxView: View {
     // MARK: - Single Card
 
     private func toolCard(item: CCToolItem) -> some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             // Icon
             ZStack {
                 Circle()
@@ -163,21 +162,21 @@ struct CCToolboxView: View {
 
             // Name
             Text(item.name)
-                .font(theme.fontH3)
+                .font(AppFont.title3)
                 .foregroundColor(.white)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
 
             // Description
             Text(item.description)
-                .font(theme.fontCaption)
+                .font(AppFont.caption)
                 .foregroundColor(.white.opacity(0.85))
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, theme.spacingXL)
-        .padding(.horizontal, theme.spacingSM)
+        .padding(.vertical, AppSpacing.xl)
+        .padding(.horizontal, AppSpacing.sm)
         .background(
             LinearGradient(
                 gradient: Gradient(colors: item.gradientColors),
@@ -185,21 +184,21 @@ struct CCToolboxView: View {
                 endPoint: .bottomTrailing
             )
         )
-        .clipShape(RoundedRectangle(cornerRadius: theme.radiusLG))
+        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
         .shadow(
             color: item.gradientColors.first?.opacity(0.3) ?? .clear,
-            radius: theme.shadowRadiusMD,
+            radius: 12,
             x: 0,
-            y: theme.shadowYMD
+            y: 4
         )
-        .contentShape(.hoverEffect, RoundedRectangle(cornerRadius: theme.radiusLG))
+        .contentShape(.hoverEffect, RoundedRectangle(cornerRadius: AppRadius.lg))
         .hoverEffect(.highlight)
     }
 
     // MARK: - Bottom Spacer
 
     private var bottomPadding: some View {
-        Color.clear.frame(height: theme.spacing2XL)
+        Color.clear.frame(height: AppSpacing.xl)
     }
 }
 
@@ -207,7 +206,5 @@ struct CCToolboxView: View {
 
 #Preview {
     NavigationStack {
-        CCToolboxView()
-            .environment(\.ccAppTheme, CCLightTheme())
-    }
+        CCToolboxView()}
 }

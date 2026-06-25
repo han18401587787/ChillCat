@@ -223,8 +223,8 @@ struct BadgeCard: View {
                 )
                 .multilineTextAlignment(.center)
             
-            if badge.isUnlocked {
-                Text(badge.unlockDate)
+            if badge.isUnlocked, let date = badge.unlockDate {
+                Text(date)
                     .font(.system(size: 10))
                     .foregroundColor(AppTheme.textTertiary)
             }

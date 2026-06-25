@@ -57,7 +57,7 @@ final class CCAppCoordinator {
         case .safetyPlan: CCSafetyPlanView()
         case .crisisHotline: CCCrisisHotlineView()
         case .toolbox: CCToolboxView()
-        case .breathingExercise: CCBreathingExerciseView()
+        case .breathingExercise: CCToolboxView() // TODO: replace with CCBreathingExerciseView when implemented
         case .cbtRestructuring: CCCBTView()
         case .progressiveMuscleRelaxation: CCPMRView()
         case .bodyScan: CCBodyScanView()

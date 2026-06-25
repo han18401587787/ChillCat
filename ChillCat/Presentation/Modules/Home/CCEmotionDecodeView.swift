@@ -669,13 +669,13 @@ final class EmotionDecodeViewModel: ObservableObject {
         intensityDistribution = [0.1, 0.15, 0.2, 0.3, 0.5, 0.8, 0.4, 0.2, 0.1, 0.05]
         
         weeklyTrend = [
-            WeeklyTrendData(dayShort: "周三", intensity: 6, emotionEmoji: "😰", emotionColor: EmotionColors.anxiety),
-            WeeklyTrendData(dayShort: "周四", intensity: 7, emotionEmoji: "😰", emotionColor: EmotionColors.anxiety),
-            WeeklyTrendData(dayShort: "周五", intensity: 5, emotionEmoji: "😔", emotionColor: EmotionColors.sad),
+            WeeklyTrendData(dayShort: "周三", intensity: 6, emotionEmoji: "😰", emotionColor: EmotionColors.anxious),
+            WeeklyTrendData(dayShort: "周四", intensity: 7, emotionEmoji: "😰", emotionColor: EmotionColors.anxious),
+            WeeklyTrendData(dayShort: "周五", intensity: 5, emotionEmoji: "😔", emotionColor: EmotionColors.lonely),
             WeeklyTrendData(dayShort: "周六", intensity: 4, emotionEmoji: "😌", emotionColor: EmotionColors.calm),
-            WeeklyTrendData(dayShort: "周日", intensity: 3, emotionEmoji: "😊", emotionColor: EmotionColors.joy),
-            WeeklyTrendData(dayShort: "周一", intensity: 7, emotionEmoji: "😰", emotionColor: EmotionColors.anxiety),
-            WeeklyTrendData(dayShort: "周二", intensity: 8, emotionEmoji: "😰", emotionColor: EmotionColors.anxiety),
+            WeeklyTrendData(dayShort: "周日", intensity: 3, emotionEmoji: "😊", emotionColor: EmotionColors.happy),
+            WeeklyTrendData(dayShort: "周一", intensity: 7, emotionEmoji: "😰", emotionColor: EmotionColors.anxious),
+            WeeklyTrendData(dayShort: "周二", intensity: 8, emotionEmoji: "😰", emotionColor: EmotionColors.anxious),
         ]
     }
 }

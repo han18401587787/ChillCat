@@ -11,26 +11,25 @@ import SwiftUI
 // MARK: - Body Scan View
 
 struct CCBodyScanView: View {
-    @Environment(\.ccAppTheme) private var theme
-    @Environment(CCAppCoordinator.self) private var coordinator
+        @Environment(CCAppCoordinator.self) private var coordinator
     @State private var viewModel = CCBodyScanViewModel()
 
     var body: some View {
         ScrollView {
-            VStack(spacing: theme.spacingXL) {
+            VStack(spacing: AppSpacing.xl) {
                 if case .completed = viewModel.phase {
                     completionContent
                 } else {
                     scanContent
                 }
             }
-            .padding(.horizontal, theme.spacingLG)
-            .padding(.top, theme.spacingSM)
-            .padding(.bottom, theme.spacing3XL)
+            .padding(.horizontal, AppSpacing.lg)
+            .padding(.top, AppSpacing.sm)
+            .padding(.bottom, AppSpacing.xl)
         }
         .background(
             LinearGradient(
-                colors: [theme.softPurpleLight, theme.softPinkLight],
+                colors: [Color(hex: "D4C8E8").opacity(0.3), Color(hex: "E8B8C8").opacity(0.3)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -41,7 +40,7 @@ struct CCBodyScanView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
-                    .foregroundColor(theme.primary)
+                    .foregroundColor(AppTheme.primary)
             }
         }
         .onDisappear {
@@ -54,7 +53,7 @@ struct CCBodyScanView: View {
     // MARK: - Scan Content
 
     private var scanContent: some View {
-        VStack(spacing: theme.spacingXL) {
+        VStack(spacing: AppSpacing.xl) {
             // Timer and progress
             timerSection
 
@@ -85,12 +84,12 @@ struct CCBodyScanView: View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text(viewModel.isActive ? "正在扫描" : "准备开始")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
                 if let region = viewModel.currentRegion, viewModel.isActive {
                     Text("\(region.name) (\(viewModel.currentRegionIndex + 1)/\(viewModel.totalRegions))")
-                        .font(theme.fontBodyS)
-                        .foregroundColor(theme.textSecondary)
+                        .font(AppFont.footnote)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
             }
 
@@ -101,31 +100,31 @@ struct CCBodyScanView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "timer")
                         .font(.system(size: 14))
-                        .foregroundColor(theme.textMuted)
+                        .foregroundColor(AppTheme.textSecondary)
                     Text(viewModel.isActive ? viewModel.formattedRemaining : viewModel.formattedTotal)
-                        .font(theme.fontH2)
-                        .foregroundColor(theme.textPrimary)
+                        .font(AppFont.title1)
+                        .foregroundColor(AppTheme.textPrimary)
                         .monospacedDigit()
                 }
                 if viewModel.isActive {
                     Text("剩余")
-                        .font(theme.fontCaption)
-                        .foregroundColor(theme.textMuted)
+                        .font(AppFont.caption)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
             }
         }
-        .padding(theme.spacingLG)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.lg)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     // MARK: - Body Outline
 
     private var bodyOutlineSection: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             Text("身体地图")
-                .font(theme.fontH3)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.title3)
+                .foregroundColor(AppTheme.textPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             ZStack {
@@ -141,7 +140,7 @@ struct CCBodyScanView: View {
                     Circle()
                         .fill(
                             isActive ? region.color.opacity(0.6) :
-                            (isCompleted ? theme.softGreen.opacity(0.4) : Color.clear)
+                            (isCompleted ? Color(hex: "66BB6A").opacity(0.4) : Color.clear)
                         )
                         .frame(width: isActive ? 36 : (isCompleted ? 24 : 0))
                         .overlay(
@@ -167,9 +166,9 @@ struct CCBodyScanView: View {
             .frame(height: 380)
             .frame(maxWidth: .infinity)
         }
-        .padding(theme.spacingLG)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.lg)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     private var bodyOutline: some View {
@@ -177,57 +176,57 @@ struct CCBodyScanView: View {
         ZStack {
             // Head
             Circle()
-                .stroke(theme.textMuted.opacity(0.4), lineWidth: 1.5)
+                .stroke(AppTheme.textSecondary.opacity(0.4), lineWidth: 1.5)
                 .frame(width: 44, height: 50)
                 .position(x: 120, y: 30)
 
             // Neck
             Rectangle()
-                .fill(theme.textMuted.opacity(0.2))
+                .fill(AppTheme.textSecondary.opacity(0.2))
                 .frame(width: 12, height: 16)
                 .position(x: 120, y: 62)
 
             // Body torso
             RoundedRectangle(cornerRadius: 12)
-                .stroke(theme.textMuted.opacity(0.4), lineWidth: 1.5)
+                .stroke(AppTheme.textSecondary.opacity(0.4), lineWidth: 1.5)
                 .frame(width: 70, height: 130)
                 .position(x: 120, y: 145)
 
             // Left arm
             RoundedRectangle(cornerRadius: 6)
-                .stroke(theme.textMuted.opacity(0.4), lineWidth: 1.5)
+                .stroke(AppTheme.textSecondary.opacity(0.4), lineWidth: 1.5)
                 .frame(width: 12, height: 80)
                 .position(x: 72, y: 145)
                 .rotationEffect(.degrees(10), anchor: .top)
 
             // Right arm
             RoundedRectangle(cornerRadius: 6)
-                .stroke(theme.textMuted.opacity(0.4), lineWidth: 1.5)
+                .stroke(AppTheme.textSecondary.opacity(0.4), lineWidth: 1.5)
                 .frame(width: 12, height: 80)
                 .position(x: 168, y: 145)
                 .rotationEffect(.degrees(-10), anchor: .top)
 
             // Left leg
             RoundedRectangle(cornerRadius: 6)
-                .stroke(theme.textMuted.opacity(0.4), lineWidth: 1.5)
+                .stroke(AppTheme.textSecondary.opacity(0.4), lineWidth: 1.5)
                 .frame(width: 16, height: 100)
                 .position(x: 102, y: 275)
 
             // Right leg
             RoundedRectangle(cornerRadius: 6)
-                .stroke(theme.textMuted.opacity(0.4), lineWidth: 1.5)
+                .stroke(AppTheme.textSecondary.opacity(0.4), lineWidth: 1.5)
                 .frame(width: 16, height: 100)
                 .position(x: 138, y: 275)
 
             // Left foot
             RoundedRectangle(cornerRadius: 4)
-                .stroke(theme.textMuted.opacity(0.4), lineWidth: 1.5)
+                .stroke(AppTheme.textSecondary.opacity(0.4), lineWidth: 1.5)
                 .frame(width: 20, height: 14)
                 .position(x: 102, y: 330)
 
             // Right foot
             RoundedRectangle(cornerRadius: 4)
-                .stroke(theme.textMuted.opacity(0.4), lineWidth: 1.5)
+                .stroke(AppTheme.textSecondary.opacity(0.4), lineWidth: 1.5)
                 .frame(width: 20, height: 14)
                 .position(x: 138, y: 330)
         }
@@ -236,7 +235,7 @@ struct CCBodyScanView: View {
     // MARK: - Guidance Card
 
     private var guidanceCard: some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
             HStack {
                 if let region = viewModel.currentRegion {
                     Circle()
@@ -250,11 +249,11 @@ struct CCBodyScanView: View {
 
                     VStack(alignment: .leading, spacing: 2) {
                         Text(region.name)
-                            .font(theme.fontH2)
-                            .foregroundColor(theme.textPrimary)
+                            .font(AppFont.title1)
+                            .foregroundColor(AppTheme.textPrimary)
                         Text("\(viewModel.secondsInRegion)/\(viewModel.regionDuration)s")
-                            .font(theme.fontCaption)
-                            .foregroundColor(theme.textMuted)
+                            .font(AppFont.caption)
+                            .foregroundColor(AppTheme.textSecondary)
                             .monospacedDigit()
                     }
                 }
@@ -262,7 +261,7 @@ struct CCBodyScanView: View {
 
                 if viewModel.audioGuidanceEnabled {
                     Image(systemName: "speaker.wave.2.fill")
-                        .foregroundColor(theme.primary)
+                        .foregroundColor(AppTheme.primary)
                         .font(.system(size: 18))
                         .opacity(viewModel.isActive ? 1 : 0.3)
                 }
@@ -270,8 +269,8 @@ struct CCBodyScanView: View {
 
             if let region = viewModel.currentRegion {
                 Text(region.question)
-                    .font(theme.fontBodyL)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.body.weight(.medium))
+                    .foregroundColor(AppTheme.textSecondary)
                     .lineSpacing(4)
             }
 
@@ -279,11 +278,11 @@ struct CCBodyScanView: View {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 2)
-                        .fill(theme.divider)
+                        .fill(AppTheme.border)
                         .frame(height: 4)
 
                     RoundedRectangle(cornerRadius: 2)
-                        .fill((viewModel.currentRegion?.color ?? theme.primary))
+                        .fill((viewModel.currentRegion?.color ?? AppTheme.primary))
                         .frame(
                             width: geometry.size.width * Double(viewModel.secondsInRegion) / Double(viewModel.regionDuration),
                             height: 4
@@ -294,10 +293,10 @@ struct CCBodyScanView: View {
             .frame(height: 4)
 
             // Note taking
-            VStack(alignment: .leading, spacing: theme.spacingXS) {
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
                 Text("记录感受（可选）")
-                    .font(theme.fontCaption)
-                    .foregroundColor(theme.textMuted)
+                    .font(AppFont.caption)
+                    .foregroundColor(AppTheme.textSecondary)
                 TextField(
                     "例如：这里有些紧绷...",
                     text: Binding(
@@ -305,46 +304,46 @@ struct CCBodyScanView: View {
                         set: { viewModel.setNote(for: viewModel.currentRegion?.id ?? "", note: $0) }
                     )
                 )
-                .font(theme.fontBody)
+                .font(AppFont.body)
                 .textFieldStyle(.plain)
-                .padding(theme.spacingSM)
-                .background(theme.surface)
-                .cornerRadius(theme.radiusSM)
+                .padding(AppSpacing.sm)
+                .background(AppTheme.surface)
+                .cornerRadius(AppRadius.sm)
             }
         }
-        .padding(theme.spacingLG)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.lg)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     // MARK: - Settings (Idle)
 
     private var settingsCard: some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
             Text("扫描设置")
-                .font(theme.fontH3)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.title3)
+                .foregroundColor(AppTheme.textPrimary)
 
             // Duration picker
-            VStack(alignment: .leading, spacing: theme.spacingSM) {
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
                 Text("每个区域停留时间")
-                    .font(theme.fontBody)
-                    .foregroundColor(theme.textSecondary)
-                HStack(spacing: theme.spacingSM) {
+                    .font(AppFont.body)
+                    .foregroundColor(AppTheme.textSecondary)
+                HStack(spacing: AppSpacing.sm) {
                     ForEach([15, 30, 45, 60], id: \.self) { seconds in
                         Button {
                             viewModel.updateRegionDuration(seconds)
                         } label: {
                             Text("\(seconds)s")
-                                .font(theme.fontBodyS.weight(.medium))
-                                .foregroundColor(viewModel.regionDuration == seconds ? .white : theme.textSecondary)
-                                .padding(.horizontal, theme.spacingMD)
-                                .padding(.vertical, theme.spacingSM)
+                                .font(AppFont.footnote.weight(.medium))
+                                .foregroundColor(viewModel.regionDuration == seconds ? .white : AppTheme.textSecondary)
+                                .padding(.horizontal, AppSpacing.md)
+                                .padding(.vertical, AppSpacing.sm)
                                 .background(
                                     viewModel.regionDuration == seconds
-                                        ? theme.primary : theme.surface
+                                        ? AppTheme.primary : AppTheme.surface
                                 )
-                                .cornerRadius(theme.radiusSM)
+                                .cornerRadius(AppRadius.sm)
                         }
                     }
                 }
@@ -354,42 +353,42 @@ struct CCBodyScanView: View {
             Toggle(isOn: $viewModel.audioGuidanceEnabled) {
                 HStack {
                     Image(systemName: "speaker.wave.2.fill")
-                        .foregroundColor(theme.primary)
+                        .foregroundColor(AppTheme.primary)
                     Text("音频引导")
-                        .font(theme.fontBody)
-                        .foregroundColor(theme.textPrimary)
+                        .font(AppFont.body)
+                        .foregroundColor(AppTheme.textPrimary)
                 }
             }
-            .tint(theme.primary)
+            .tint(AppTheme.primary)
         }
-        .padding(theme.spacingLG)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.lg)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     // MARK: - Region List
 
     private var regionListSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: AppSpacing.sm) {
             Text("扫描区域")
-                .font(theme.fontH3)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.title3)
+                .foregroundColor(AppTheme.textPrimary)
 
             LazyVGrid(
                 columns: [
-                    GridItem(.flexible(), spacing: theme.spacingSM),
-                    GridItem(.flexible(), spacing: theme.spacingSM),
+                    GridItem(.flexible(), spacing: AppSpacing.sm),
+                    GridItem(.flexible(), spacing: AppSpacing.sm),
                 ],
-                spacing: theme.spacingSM
+                spacing: AppSpacing.sm
             ) {
                 ForEach(Array(CCBodyRegion.all.enumerated()), id: \.element.id) { index, region in
                     regionCell(region: region, index: index)
                 }
             }
         }
-        .padding(theme.spacingLG)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.lg)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     private func regionCell(region: CCBodyRegion, index: Int) -> some View {
@@ -397,19 +396,19 @@ struct CCBodyScanView: View {
         let isCompleted = index < viewModel.currentRegionIndex && viewModel.isActive
         let hasNote = !(viewModel.sensationNotes[region.id] ?? "").isEmpty
 
-        return HStack(spacing: theme.spacingSM) {
+        return HStack(spacing: AppSpacing.sm) {
             Circle()
                 .fill(
                     isActive ? region.color :
-                    (isCompleted ? theme.softGreen : theme.divider)
+                    (isCompleted ? Color(hex: "66BB6A") : AppTheme.border)
                 )
                 .frame(width: 10, height: 10)
 
             Text(region.name)
-                .font(theme.fontBodyS)
+                .font(AppFont.footnote)
                 .foregroundColor(
-                    isActive ? theme.textPrimary :
-                    (isCompleted ? theme.softGreen : theme.textMuted)
+                    isActive ? AppTheme.textPrimary :
+                    (isCompleted ? Color(hex: "66BB6A") : AppTheme.textSecondary)
                 )
                 .lineLimit(1)
 
@@ -418,16 +417,16 @@ struct CCBodyScanView: View {
             if hasNote {
                 Image(systemName: "note.text")
                     .font(.system(size: 10))
-                    .foregroundColor(theme.warm)
+                    .foregroundColor(Color(hex: "8B6F47"))
             }
         }
-        .padding(.vertical, theme.spacingXS)
+        .padding(.vertical, AppSpacing.xs)
     }
 
     // MARK: - Controls
 
     private var controlButtons: some View {
-        HStack(spacing: theme.spacingMD) {
+        HStack(spacing: AppSpacing.md) {
             switch viewModel.phase {
             case .idle:
                 Button {
@@ -437,12 +436,12 @@ struct CCBodyScanView: View {
                         Image(systemName: "play.fill")
                         Text("开始扫描")
                     }
-                    .font(theme.fontBodyL.weight(.medium))
+                    .font(AppFont.body.weight(.medium).weight(.medium))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, theme.spacingMD)
-                    .background(theme.primary)
-                    .cornerRadius(theme.radiusMD)
+                    .padding(.vertical, AppSpacing.md)
+                    .background(AppTheme.primary)
+                    .cornerRadius(AppRadius.md)
                 }
 
             case .scanning:
@@ -454,12 +453,12 @@ struct CCBodyScanView: View {
                         Image(systemName: viewModel.isPaused ? "play.fill" : "pause.fill")
                         Text(viewModel.isPaused ? "继续" : "暂停")
                     }
-                    .font(theme.fontBodyL.weight(.medium))
-                    .foregroundColor(theme.primary)
+                    .font(AppFont.body.weight(.medium).weight(.medium))
+                    .foregroundColor(AppTheme.primary)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, theme.spacingMD)
-                    .background(theme.primary.opacity(0.1))
-                    .cornerRadius(theme.radiusMD)
+                    .padding(.vertical, AppSpacing.md)
+                    .background(AppTheme.primary.opacity(0.1))
+                    .cornerRadius(AppRadius.md)
                 }
 
                 // Skip
@@ -470,12 +469,12 @@ struct CCBodyScanView: View {
                         Image(systemName: "forward.fill")
                         Text("跳过")
                     }
-                    .font(theme.fontBodyL.weight(.medium))
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.body.weight(.medium).weight(.medium))
+                    .foregroundColor(AppTheme.textSecondary)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, theme.spacingMD)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .padding(.vertical, AppSpacing.md)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
                 }
 
                 // Reset
@@ -486,12 +485,12 @@ struct CCBodyScanView: View {
                         Image(systemName: "arrow.counterclockwise")
                         Text("重置")
                     }
-                    .font(theme.fontBodyL.weight(.medium))
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.body.weight(.medium).weight(.medium))
+                    .foregroundColor(AppTheme.textSecondary)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, theme.spacingMD)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .padding(.vertical, AppSpacing.md)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
                 }
 
             default:
@@ -503,85 +502,85 @@ struct CCBodyScanView: View {
     // MARK: - Completion
 
     private var completionContent: some View {
-        VStack(spacing: theme.spacingXL) {
+        VStack(spacing: AppSpacing.xl) {
             ZStack {
                 Circle()
-                    .fill(theme.softGreenLight)
+                    .fill(Color(hex: "66BB6A").opacity(0.3))
                     .frame(width: 100, height: 100)
                 Image(systemName: "eye.fill")
                     .font(.system(size: 44))
-                    .foregroundColor(theme.softGreen)
+                    .foregroundColor(Color(hex: "66BB6A"))
             }
-            .padding(.top, theme.spacing2XL)
+            .padding(.top, AppSpacing.xl)
 
             Text("身体扫描完成")
-                .font(theme.fontH1)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.largeTitle)
+                .foregroundColor(AppTheme.textPrimary)
 
             Text("你完成了全部\(viewModel.totalRegions)个身体区域的觉察扫描。每一个区域都是你与自己身体重新连接的一步。")
-                .font(theme.fontBodyL)
-                .foregroundColor(theme.textSecondary)
+                .font(AppFont.body.weight(.medium))
+                .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, theme.spacingLG)
+                .padding(.horizontal, AppSpacing.lg)
 
             // Sensation notes summary
-            VStack(alignment: .leading, spacing: theme.spacingSM) {
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
                 Text("身体觉察记录")
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
 
                 ForEach(CCBodyRegion.all) { region in
                     if let note = viewModel.sensationNotes[region.id], !note.isEmpty {
-                        HStack(alignment: .top, spacing: theme.spacingSM) {
+                        HStack(alignment: .top, spacing: AppSpacing.sm) {
                             Circle()
                                 .fill(region.color)
                                 .frame(width: 8, height: 8)
                                 .padding(.top, 6)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(region.name)
-                                    .font(theme.fontBodyS.weight(.medium))
-                                    .foregroundColor(theme.textPrimary)
+                                    .font(AppFont.footnote.weight(.medium))
+                                    .foregroundColor(AppTheme.textPrimary)
                                 Text(note)
-                                    .font(theme.fontBodyS)
-                                    .foregroundColor(theme.textSecondary)
+                                    .font(AppFont.footnote)
+                                    .foregroundColor(AppTheme.textSecondary)
                             }
                         }
                     }
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(theme.spacingLG)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
 
             Text(viewModel.completionMessage)
-                .font(theme.fontBody)
-                .foregroundColor(theme.textSecondary)
+                .font(AppFont.body)
+                .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
 
             // Actions
-            VStack(spacing: theme.spacingSM) {
+            VStack(spacing: AppSpacing.sm) {
                 Button {
                     viewModel.reset()
                 } label: {
                     Text("再做一次")
-                        .font(theme.fontBodyL.weight(.medium))
+                        .font(AppFont.body.weight(.medium).weight(.medium))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, theme.spacingMD)
-                        .background(theme.primary)
-                        .cornerRadius(theme.radiusMD)
+                        .padding(.vertical, AppSpacing.md)
+                        .background(AppTheme.primary)
+                        .cornerRadius(AppRadius.md)
                 }
 
                 Button {
                     coordinator.dismiss()
                 } label: {
                     Text("返回工具箱")
-                        .font(theme.fontBodyL)
-                        .foregroundColor(theme.textSecondary)
+                        .font(AppFont.body.weight(.medium))
+                        .foregroundColor(AppTheme.textSecondary)
                 }
             }
-            .padding(.top, theme.spacingLG)
+            .padding(.top, AppSpacing.lg)
         }
     }
 }
@@ -590,8 +589,6 @@ struct CCBodyScanView: View {
 
 #Preview {
     NavigationStack {
-        CCBodyScanView()
-            .environment(\.ccAppTheme, CCLightTheme())
-            .environment(CCAppCoordinator())
+        CCBodyScanView().environment(CCAppCoordinator())
     }
 }

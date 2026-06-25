@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct CCSafetyPlanView: View {
-    @Environment(\.ccAppTheme) private var theme
-    @Environment(CCAppCoordinator.self) private var coordinator
+        @Environment(CCAppCoordinator.self) private var coordinator
 
     // MARK: - Warning Signs State
     @State private var warningSigns: [SafetyPlanItem] = [
@@ -49,7 +48,7 @@ struct CCSafetyPlanView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: theme.spacingXL) {
+            VStack(spacing: AppSpacing.xl) {
                 // MARK: - 页面头部
                 headerSection
 
@@ -68,9 +67,9 @@ struct CCSafetyPlanView: View {
                 // MARK: - 分享按钮
                 shareButton
             }
-            .padding(theme.spacingLG)
+            .padding(AppSpacing.lg)
         }
-        .background(theme.background)
+        .background(AppTheme.background)
         .navigationTitle("我的安全计划")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingAddStrategy) {
@@ -84,39 +83,39 @@ struct CCSafetyPlanView: View {
     // MARK: - Header
 
     private var headerSection: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: AppSpacing.sm) {
             Image(systemName: "shield.checkered")
                 .font(.system(size: 36))
-                .foregroundColor(theme.primary)
+                .foregroundColor(AppTheme.primary)
 
             Text("提前准备，从容应对")
-                .font(theme.fontH2)
-                .foregroundColor(theme.textPrimary)
+                .font(AppFont.title1)
+                .foregroundColor(AppTheme.textPrimary)
 
             Text("安全计划是你在情绪危机时可以依靠的个性化方案。花一点时间填写它，未来你会感谢现在的自己。")
-                .font(theme.fontBody)
-                .foregroundColor(theme.textSecondary)
+                .font(AppFont.body)
+                .foregroundColor(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
         }
-        .padding(theme.spacingXL)
+        .padding(AppSpacing.xl)
         .frame(maxWidth: .infinity)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusLG)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.lg)
     }
 
     // MARK: - Warning Signs Section
 
     private var warningSignsSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
             sectionHeader(
                 icon: "exclamationmark.triangle.fill",
                 title: "预警信号",
                 subtitle: "当我出现以下情况时，我知道自己需要寻求帮助",
-                color: theme.warm
+                color: Color(hex: "8B6F47")
             )
 
-            VStack(spacing: theme.spacingSM) {
+            VStack(spacing: AppSpacing.sm) {
                 ForEach($warningSigns) { $item in
                     warningSignRow(item: $item)
                 }
@@ -125,43 +124,43 @@ struct CCSafetyPlanView: View {
     }
 
     private func warningSignRow(item: Binding<SafetyPlanItem>) -> some View {
-        HStack(spacing: theme.spacingMD) {
+        HStack(spacing: AppSpacing.md) {
             Button(action: {
-                withAnimation(.easeInOut(duration: theme.durationNormal)) {
+                withAnimation(.easeInOut(duration: 0.3)) {
                     item.wrappedValue.isChecked.toggle()
                 }
             }) {
                 Image(systemName: item.wrappedValue.isChecked ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundColor(item.wrappedValue.isChecked ? theme.warm : theme.textMuted)
+                    .foregroundColor(item.wrappedValue.isChecked ? Color(hex: "8B6F47") : AppTheme.textSecondary)
             }
 
             Text(item.wrappedValue.text)
-                .font(theme.fontBody)
+                .font(AppFont.body)
                 .foregroundColor(
-                    item.wrappedValue.isChecked ? theme.textSecondary : theme.textPrimary
+                    item.wrappedValue.isChecked ? AppTheme.textSecondary : AppTheme.textPrimary
                 )
                 .strikethrough(item.wrappedValue.isChecked)
 
             Spacer()
         }
-        .padding(theme.spacingMD)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.md)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     // MARK: - Calming Strategies Section
 
     private var calmingStrategiesSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
             sectionHeader(
                 icon: "leaf.fill",
                 title: "安抚策略",
                 subtitle: "当我感到情绪失控时，可以尝试以下方法",
-                color: theme.softGreen
+                color: Color(hex: "66BB6A")
             )
 
-            VStack(spacing: theme.spacingSM) {
+            VStack(spacing: AppSpacing.sm) {
                 ForEach($calmingStrategies) { $item in
                     strategyRow(item: $item)
                 }
@@ -176,55 +175,55 @@ struct CCSafetyPlanView: View {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 16))
                     Text("添加安抚策略")
-                        .font(theme.fontBody)
+                        .font(AppFont.body)
                 }
-                .foregroundColor(theme.softGreen)
+                .foregroundColor(Color(hex: "66BB6A"))
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, theme.spacingSM)
-                .background(theme.softGreen.opacity(0.08))
-                .cornerRadius(theme.radiusSM)
+                .padding(.vertical, AppSpacing.sm)
+                .background(Color(hex: "66BB6A").opacity(0.08))
+                .cornerRadius(AppRadius.sm)
             }
         }
     }
 
     private func strategyRow(item: Binding<SafetyPlanItem>) -> some View {
-        HStack(spacing: theme.spacingMD) {
+        HStack(spacing: AppSpacing.md) {
             Button(action: {
-                withAnimation(.easeInOut(duration: theme.durationNormal)) {
+                withAnimation(.easeInOut(duration: 0.3)) {
                     item.wrappedValue.isChecked.toggle()
                 }
             }) {
                 Image(systemName: item.wrappedValue.isChecked ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundColor(item.wrappedValue.isChecked ? theme.softGreen : theme.textMuted)
+                    .foregroundColor(item.wrappedValue.isChecked ? Color(hex: "66BB6A") : AppTheme.textSecondary)
             }
 
             Text(item.wrappedValue.text)
-                .font(theme.fontBody)
+                .font(AppFont.body)
                 .foregroundColor(
-                    item.wrappedValue.isChecked ? theme.textSecondary : theme.textPrimary
+                    item.wrappedValue.isChecked ? AppTheme.textSecondary : AppTheme.textPrimary
                 )
                 .strikethrough(item.wrappedValue.isChecked)
 
             Spacer()
         }
-        .padding(theme.spacingMD)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.md)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     // MARK: - Support Contacts Section
 
     private var supportContactsSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
             sectionHeader(
                 icon: "person.2.fill",
                 title: "支持联系人",
                 subtitle: "当我需要倾诉时，可以联系这些人",
-                color: theme.softPurple
+                color: Color(hex: "D4C8E8")
             )
 
-            VStack(spacing: theme.spacingSM) {
+            VStack(spacing: AppSpacing.sm) {
                 ForEach($emergencyContacts) { $contact in
                     contactRow(contact: $contact)
                 }
@@ -239,30 +238,30 @@ struct CCSafetyPlanView: View {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 16))
                     Text("添加联系人")
-                        .font(theme.fontBody)
+                        .font(AppFont.body)
                 }
-                .foregroundColor(theme.softPurple)
+                .foregroundColor(Color(hex: "D4C8E8"))
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, theme.spacingSM)
-                .background(theme.softPurple.opacity(0.08))
-                .cornerRadius(theme.radiusSM)
+                .padding(.vertical, AppSpacing.sm)
+                .background(Color(hex: "D4C8E8").opacity(0.08))
+                .cornerRadius(AppRadius.sm)
             }
         }
     }
 
     private func contactRow(contact: Binding<EmergencyContact>) -> some View {
-        HStack(spacing: theme.spacingMD) {
+        HStack(spacing: AppSpacing.md) {
             Image(systemName: "person.crop.circle.fill")
                 .font(.system(size: 28))
-                .foregroundColor(theme.softPurple)
+                .foregroundColor(Color(hex: "D4C8E8"))
 
             VStack(alignment: .leading, spacing: 2) {
                 TextField("联系人姓名", text: contact.name)
-                    .font(theme.fontBody)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.body)
+                    .foregroundColor(AppTheme.textPrimary)
                 TextField("电话号码", text: contact.phone)
-                    .font(theme.fontBodyS)
-                    .foregroundColor(theme.textSecondary)
+                    .font(AppFont.footnote)
+                    .foregroundColor(AppTheme.textSecondary)
                     .keyboardType(.phonePad)
             }
 
@@ -272,30 +271,30 @@ struct CCSafetyPlanView: View {
                 Link(destination: URL(string: "tel:\(contact.wrappedValue.phone.replacingOccurrences(of: " ", with: ""))")!) {
                     Image(systemName: "phone.fill")
                         .font(.system(size: 14))
-                        .foregroundColor(theme.primary)
+                        .foregroundColor(AppTheme.primary)
                         .frame(width: 32, height: 32)
-                        .background(theme.primary.opacity(0.12))
-                        .cornerRadius(theme.radiusSM)
+                        .background(AppTheme.primary.opacity(0.12))
+                        .cornerRadius(AppRadius.sm)
                 }
             }
         }
-        .padding(theme.spacingMD)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(AppSpacing.md)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
     // MARK: - Professional Resources Quick Links
 
     private var professionalResourcesSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
             sectionHeader(
                 icon: "cross.case.fill",
                 title: "专业资源",
                 subtitle: "快速拨打专业援助热线",
-                color: theme.error
+                color: Color.red
             )
 
-            VStack(spacing: theme.spacingSM) {
+            VStack(spacing: AppSpacing.sm) {
                 crisisLink(
                     name: "全国24小时心理援助热线",
                     number: "400-161-9995"
@@ -317,15 +316,15 @@ struct CCSafetyPlanView: View {
             HStack {
                 Image(systemName: "phone.fill")
                     .font(.system(size: 14))
-                    .foregroundColor(theme.error)
+                    .foregroundColor(Color.red)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(name)
-                        .font(theme.fontBody)
-                        .foregroundColor(theme.textPrimary)
+                        .font(AppFont.body)
+                        .foregroundColor(AppTheme.textPrimary)
                     Text(number)
-                        .font(theme.fontCaption)
-                        .foregroundColor(theme.error)
+                        .font(AppFont.caption)
+                        .foregroundColor(Color.red)
                         .fontWeight(.medium)
                 }
 
@@ -333,11 +332,11 @@ struct CCSafetyPlanView: View {
 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(theme.textMuted)
+                    .foregroundColor(AppTheme.textSecondary)
             }
-            .padding(theme.spacingMD)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+            .padding(AppSpacing.md)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
         }
     }
 
@@ -347,37 +346,37 @@ struct CCSafetyPlanView: View {
         Button(action: {
             // Share action — in production this would invoke the system share sheet
         }) {
-            HStack(spacing: theme.spacingSM) {
+            HStack(spacing: AppSpacing.sm) {
                 Image(systemName: "square.and.arrow.up.fill")
                     .font(.system(size: 16))
                 Text("分享安全计划")
-                    .font(theme.fontBodyL)
+                    .font(AppFont.body.weight(.medium))
                     .fontWeight(.medium)
             }
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, theme.spacingMD)
-            .background(theme.primary)
-            .cornerRadius(theme.radiusMD)
+            .padding(.vertical, AppSpacing.md)
+            .background(AppTheme.primary)
+            .cornerRadius(AppRadius.md)
         }
-        .padding(.top, theme.spacingSM)
+        .padding(.top, AppSpacing.sm)
     }
 
     // MARK: - Add Strategy Sheet
 
     private var addStrategySheet: some View {
         NavigationStack {
-            VStack(spacing: theme.spacingLG) {
+            VStack(spacing: AppSpacing.lg) {
                 Text("添加安抚策略")
-                    .font(theme.fontH2)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title1)
+                    .foregroundColor(AppTheme.textPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 TextField("例如：做10个深蹲、喝一杯温水…", text: $newStrategyText, axis: .vertical)
-                    .font(theme.fontBody)
-                    .padding(theme.spacingMD)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .font(AppFont.body)
+                    .padding(AppSpacing.md)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
                     .lineLimit(2...4)
 
                 Button(action: {
@@ -389,21 +388,21 @@ struct CCSafetyPlanView: View {
                         .fontWeight(.medium)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, theme.spacingMD)
+                        .padding(.vertical, AppSpacing.md)
                         .background(newStrategyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            ? theme.primaryMuted : theme.primary)
-                        .cornerRadius(theme.radiusMD)
+                            ? AppTheme.primaryMuted : AppTheme.primary)
+                        .cornerRadius(AppRadius.md)
                 }
                 .disabled(newStrategyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 
                 Spacer()
             }
-            .padding(theme.spacingLG)
-            .background(theme.background)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.background)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("取消") { showingAddStrategy = false }
-                        .foregroundColor(theme.textSecondary)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
             }
         }
@@ -414,23 +413,23 @@ struct CCSafetyPlanView: View {
 
     private var addContactSheet: some View {
         NavigationStack {
-            VStack(spacing: theme.spacingLG) {
+            VStack(spacing: AppSpacing.lg) {
                 Text("添加联系人")
-                    .font(theme.fontH2)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title1)
+                    .foregroundColor(AppTheme.textPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 TextField("联系人姓名", text: $newContactName)
-                    .font(theme.fontBody)
-                    .padding(theme.spacingMD)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .font(AppFont.body)
+                    .padding(AppSpacing.md)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
 
                 TextField("电话号码", text: $newContactPhone)
-                    .font(theme.fontBody)
-                    .padding(theme.spacingMD)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .font(AppFont.body)
+                    .padding(AppSpacing.md)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.md)
                     .keyboardType(.phonePad)
 
                 Button(action: {
@@ -447,21 +446,21 @@ struct CCSafetyPlanView: View {
                         .fontWeight(.medium)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, theme.spacingMD)
+                        .padding(.vertical, AppSpacing.md)
                         .background(newContactName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            ? theme.primaryMuted : theme.primary)
-                        .cornerRadius(theme.radiusMD)
+                            ? AppTheme.primaryMuted : AppTheme.primary)
+                        .cornerRadius(AppRadius.md)
                 }
                 .disabled(newContactName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 
                 Spacer()
             }
-            .padding(theme.spacingLG)
-            .background(theme.background)
+            .padding(AppSpacing.lg)
+            .background(AppTheme.background)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("取消") { showingAddContact = false }
-                        .foregroundColor(theme.textSecondary)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
             }
         }
@@ -471,18 +470,18 @@ struct CCSafetyPlanView: View {
     // MARK: - Helpers
 
     private func sectionHeader(icon: String, title: String, subtitle: String, color: Color) -> some View {
-        VStack(alignment: .leading, spacing: theme.spacingXS) {
-            HStack(spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: AppSpacing.xs) {
+            HStack(spacing: AppSpacing.sm) {
                 Image(systemName: icon)
                     .font(.system(size: 16))
                     .foregroundColor(color)
                 Text(title)
-                    .font(theme.fontH3)
-                    .foregroundColor(theme.textPrimary)
+                    .font(AppFont.title3)
+                    .foregroundColor(AppTheme.textPrimary)
             }
             Text(subtitle)
-                .font(theme.fontBodyS)
-                .foregroundColor(theme.textMuted)
+                .font(AppFont.footnote)
+                .foregroundColor(AppTheme.textSecondary)
         }
     }
 }
