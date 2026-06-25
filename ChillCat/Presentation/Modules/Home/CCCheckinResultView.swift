@@ -395,6 +395,7 @@ struct PublishToResonanceView: View {
     @State private var isAnonymous: Bool = true
     @State private var allowComments: Bool = true
     @State private var selectedEmoji: CCEmotionEmoji?
+    @State private var showEmojiPicker: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -457,7 +458,7 @@ struct PublishToResonanceView: View {
                         .foregroundColor(AppTheme.textTertiary)
 
                     CCEmojiPickerV3(isShowing: $showEmojiPicker, onSelect: { emoji in
-                        selectedEmoji = emoji.displayName
+                        selectedEmoji = emoji
                     })
                 }
 

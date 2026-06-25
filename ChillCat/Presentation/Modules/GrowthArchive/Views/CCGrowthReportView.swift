@@ -178,7 +178,7 @@ struct CCGrowthReportView: View {
                                     RoundedRectangle(cornerRadius: 4)
                                         .fill(Color(hex: "66BB6A"))
                                         .frame(
-                                            width: max(geo.size.width * CGFloat(count) / CGFloat(max(maxCount, 1)), 20),
+                                            width: max(geo.size.width * CGFloat(item.count) / CGFloat(max(maxCount, 1)), 20),
                                             height: 16
                                         )
                                 }

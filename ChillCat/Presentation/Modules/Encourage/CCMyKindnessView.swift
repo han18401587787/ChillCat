@@ -114,9 +114,10 @@ struct MyKindnessView: View {
     private var participatedChainsList: some View {
         Group {
             if viewModel.participatedChains.isEmpty {
-                EmptyStateView(
-                    type: .noMessage,
-                    description: "还没有参与任何鼓励链\n去发现页找到温暖的链吧",
+                CCEmptyStateView(
+                    title: "暂无记录",
+                    message: "还没有参与任何鼓励链\n去发现页找到温暖的链吧",
+                    imageName: "heart.text.clipboard",
                     actionTitle: "去发现",
                     action: {}
                 )
@@ -139,9 +140,10 @@ struct MyKindnessView: View {
     private var initiatedChainsList: some View {
         Group {
             if viewModel.initiatedChains.isEmpty {
-                EmptyStateView(
-                    type: .noMessage,
-                    description: "还没有发起过鼓励链\n发起第一条温暖的链吧",
+                CCEmptyStateView(
+                    title: "暂无记录",
+                    message: "还没有发起过鼓励链\n发起第一条温暖的链吧",
+                    imageName: "heart.text.clipboard",
                     actionTitle: "发起新链",
                     action: {}
                 )
