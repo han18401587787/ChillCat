@@ -29,14 +29,14 @@ echo "" >> "$REPORT_FILE"
 echo "🧪 运行 Go 单元测试..."
 cd "$SERVER_DIR"
 TEST_OUTPUT=$(go test ./internal/service/ -count=1 -v 2>&1)
-SERVICE_PASS=$(echo "$TEST_OUTPUT" | grep -c "--- PASS:" || true)
-SERVICE_FAIL=$(echo "$TEST_OUTPUT" | grep -c "--- FAIL:" || true)
+SERVICE_PASS=$(echo "$TEST_OUTPUT" | grep -c -- "--- PASS:" || true)
+SERVICE_FAIL=$(echo "$TEST_OUTPUT" | grep -c -- "--- FAIL:" || true)
 echo "| Go Service Tests | $SERVICE_PASS PASS | $SERVICE_FAIL FAIL |" >> "$REPORT_FILE"
 PASS=$((PASS + SERVICE_PASS)); FAIL=$((FAIL + SERVICE_FAIL))
 
 INTEG_OUTPUT=$(go test ./tests/integration/ -count=1 -v 2>&1)
-INTEG_PASS=$(echo "$INTEG_OUTPUT" | grep -c "--- PASS:" || true)
-INTEG_FAIL=$(echo "$INTEG_OUTPUT" | grep -c "--- FAIL:" || true)
+INTEG_PASS=$(echo "$INTEG_OUTPUT" | grep -c -- "--- PASS:" || true)
+INTEG_FAIL=$(echo "$INTEG_OUTPUT" | grep -c -- "--- FAIL:" || true)
 echo "| Go Integration Tests | $INTEG_PASS PASS | $INTEG_FAIL FAIL |" >> "$REPORT_FILE"
 PASS=$((PASS + INTEG_PASS)); FAIL=$((FAIL + INTEG_FAIL))
 
