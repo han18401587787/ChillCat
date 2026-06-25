@@ -85,8 +85,8 @@ struct CCGrowthReportView: View {
                 // Bar chart using colored rectangles
                 let maxCount = stats.topEmotions.map(\.count).max() ?? 1
                 VStack(spacing: AppSpacing.sm) {
-                    ForEach(stats.topEmotions, id: \.0) { emotion, count in
-                        emotionBar(emotion: emotion, count: count, maxCount: maxCount)
+                    ForEach(stats.topEmotions, id: \.name) { item in
+                        emotionBar(emotion: item.name, count: item.count, maxCount: maxCount)
                     }
                 }
             } else if viewModel.isLoading {
@@ -160,9 +160,9 @@ struct CCGrowthReportView: View {
             if let stats = viewModel.stats, !stats.toolUsage.isEmpty {
                 let maxCount = stats.toolUsage.map(\.count).max() ?? 1
                 VStack(spacing: AppSpacing.sm) {
-                    ForEach(stats.toolUsage, id: \.0) { tool, count in
+                    ForEach(stats.toolUsage, id: \.name) { item in
                         HStack(spacing: AppSpacing.sm) {
-                            Text(tool)
+                            Text(item.name)
                                 .font(AppFont.footnote)
                                 .foregroundColor(AppTheme.textPrimary)
                                 .frame(width: 80, alignment: .leading)
@@ -185,7 +185,7 @@ struct CCGrowthReportView: View {
                             }
                             .frame(height: 16)
 
-                            Text("\(count)")
+                            Text("\(item.count)")
                                 .font(AppFont.caption)
                                 .foregroundColor(AppTheme.textSecondary)
                                 .frame(width: 24, alignment: .trailing)
