@@ -27,6 +27,7 @@ final class CCErrorReporter: CCErrorReporterProtocol {
     func setSampleRate(_ rate: Double) { sampleRate = max(0.0, min(1.0, rate)) }
     func setEnabled(_ enabled: Bool) { isEnabled = enabled }
 
+    @MainActor
     func report(_ error: CCAppError, context: [String: Any]? = nil) {
         guard isEnabled, shouldSample() else { return }
         var enrichedContext = context ?? [:]

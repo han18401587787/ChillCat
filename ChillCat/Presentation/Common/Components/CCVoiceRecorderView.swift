@@ -280,7 +280,7 @@ final class VoiceRecorderViewModel: ObservableObject {
     @Published var isCancelling: Bool = false
     @Published var waveformAmplitudes: [CGFloat] = Array(repeating: 0.2, count: 30)
 
-    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))
+    private let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))
     private var audioRecorder: AVAudioRecorder?
     private var recordingURL: URL?
     private var timer: Timer?
@@ -327,7 +327,8 @@ final class VoiceRecorderViewModel: ObservableObject {
         let screenHeight = UIScreen.main.bounds.height
         let cancelZone = screenHeight * cancelThreshold
 
-        if state == .idle || state == .completed || state == .cancelled {
+        if state == .idle || state == .cancelled {
+            if case .completed = state { return }
             startRecording()
             isPressed = true
             initialTouchLocation = value.startLocation
@@ -389,8 +390,8 @@ final class VoiceRecorderViewModel: ObservableObject {
         // 启动波形模拟
         startWaveformSimulation()
 
-        // 启动语音识别
-        speechRecognizer.startRecording()
+        // 语音识别在 audioRecorder 录制完成后处理
+        // speechRecognizer 通过 SFSpeechAudioBufferRecognitionRequest 使用
     }
 
     private func stopRecording() {
@@ -423,7 +424,7 @@ final class VoiceRecorderViewModel: ObservableObject {
         waveformTimer?.invalidate()
         waveformTimer = nil
 
-        speechRecognizer.cancelRecording()
+        // speechRecognizer 的识别任务随 audioRecorder 停止而结束
         state = .cancelled
     }
 
