@@ -12,6 +12,8 @@ struct CheckinResultView: View {
     @State private var showPublishSheet: Bool = false
     @State private var showEmotionDecode: Bool = false
     @State private var showHealingOverlay: Bool = false
+    @State private var showEmojiPicker: Bool = false
+    @State private var selectedEmoji: String = ""
 
     var body: some View {
         ScrollView {

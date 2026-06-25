@@ -126,7 +126,7 @@ struct FlowLayout: Layout {
         
         for row in rows {
             var x = bounds.minX
-            for item in row {
+            for item in row.items {
                 item.place(at: CGPoint(x: x, y: y), proposal: .unspecified)
                 x += item.sizeThatFits(.unspecified).width + spacing
             }
