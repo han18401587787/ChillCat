@@ -9,6 +9,7 @@
 import Foundation
 import OSLog
 
+@MainActor
 protocol CCLoggerProtocol {
     func debug(_ message: String, module: CCLogModule, category: String,
                file: String, function: String, line: Int)

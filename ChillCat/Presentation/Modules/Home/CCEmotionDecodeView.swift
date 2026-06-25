@@ -680,6 +680,35 @@ final class EmotionDecodeViewModel: ObservableObject {
     }
 }
 
+// MARK: - DecodeCard
+struct DecodeCard: View {
+    let icon: String
+    let title: String
+    let content: String
+    let color: Color
+    
+    var body: some View {
+        HStack(spacing: AppSpacing.md) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+                .foregroundColor(color)
+                .frame(width: 32)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(AppFont.caption)
+                    .foregroundColor(AppTheme.textSecondary)
+                Text(content)
+                    .font(AppFont.body)
+                    .foregroundColor(AppTheme.textPrimary)
+            }
+            Spacer()
+        }
+        .padding()
+        .background(AppTheme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+    }
+}
+
 #Preview {
     CCEmotionDecodeView(
         emotion: "焦虑",
