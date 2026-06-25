@@ -48,10 +48,74 @@ extension XCUIApplication {
     var tabHome: XCUIElement { tabBars.buttons["首页"].firstMatch }
     /// TabBar - 树洞
     var tabTreeHole: XCUIElement { tabBars.buttons["树洞"].firstMatch }
+    /// TabBar - 工具箱 (v3.0新增)
+    var tabToolbox: XCUIElement { tabBars.buttons["工具箱"].firstMatch }
     /// TabBar - 会员
     var tabVIP: XCUIElement { tabBars.buttons["会员"].firstMatch }
     /// TabBar - 我的
     var tabProfile: XCUIElement { tabBars.buttons["我的"].firstMatch }
+
+    // MARK: - v3.0 新功能页面元素
+
+    /// AI倾听官 - 输入框
+    var aiListenerInput: XCUIElement {
+        textFields.firstMatch
+    }
+
+    /// AI倾听官 - 发送按钮
+    var aiListenerSendButton: XCUIElement {
+        buttons["sparkles"].firstMatch
+    }
+
+    /// 首页 - 工具箱入口卡片
+    var homeToolboxEntry: XCUIElement {
+        buttons["工具箱"].firstMatch
+    }
+
+    /// 首页 - 成长档案入口卡片
+    var homeGrowthArchiveEntry: XCUIElement {
+        buttons["成长档案"].firstMatch
+    }
+
+    /// 首页 - 互助小组入口卡片
+    var homeMutualAidEntry: XCUIElement {
+        buttons["互助小组"].firstMatch
+    }
+
+    /// 首页 - 专业资源入口卡片
+    var homeProfessionalEntry: XCUIElement {
+        buttons["专业资源"].firstMatch
+    }
+
+    /// 工具箱 - 工具卡片 (按名称)
+    func toolboxItem(_ name: String) -> XCUIElement {
+        buttons[name].firstMatch
+    }
+
+    /// 成长档案 - 成就徽章
+    var growthArchiveBadge: XCUIElement {
+        staticTexts["成就徽章"].firstMatch
+    }
+
+    /// 互助小组 - 加入按钮
+    var mutualAidJoinButton: XCUIElement {
+        buttons["加入"].firstMatch
+    }
+
+    /// 专业资源 - 热线链接
+    var professionalHotlineLink: XCUIElement {
+        links.firstMatch
+    }
+
+    /// 个人中心 - 成长档案菜单
+    var profileGrowthArchive: XCUIElement {
+        buttons["成长档案"].firstMatch
+    }
+
+    /// 个人中心 - 安全计划菜单
+    var profileSafetyPlan: XCUIElement {
+        buttons["我的安全计划"].firstMatch
+    }
 
     // MARK: - 页面断言
 
