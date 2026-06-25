@@ -42,7 +42,7 @@ struct CCVoiceCheckinView: View {
                 .padding(.bottom, AppSpacing.xl)
             }
             .scrollDisabled(viewModel.state == .idle || viewModel.isRecording)
-
+        }
         .cc_emojiPickerV3Overlay(isShowing: $showEmojiPicker) { emoji in
             viewModel.editableTranscription += emoji.displayName
         }
