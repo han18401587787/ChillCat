@@ -253,7 +253,7 @@ struct RecommendedChainRow: View {
                         .font(AppFont.bodyBold)
                         .foregroundColor(AppTheme.textPrimary)
                     
-                    Text("\(chain.participantCount)人参与 · 最新：\(chain.latestMessage.truncated(20))")
+                    Text("\(chain.participantCount)人参与 · 最新：\(String(chain.latestMessage.prefix(20)))")
                         .font(AppFont.footnote)
                         .foregroundColor(AppTheme.textSecondary)
                 }
