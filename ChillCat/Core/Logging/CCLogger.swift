@@ -86,6 +86,7 @@ final class CCLogger: CCLoggerProtocol {
             file: file, function: function, line: line, error: error)
     }
 
+    @MainActor
     private func log(level: CCLogLevel, message: String, module: CCLogModule, category: String,
                      file: String, function: String, line: Int, error: Error?) {
         let minLevel = moduleLevelOverrides[module] ?? CCAppEnvironment.current.logLevel
