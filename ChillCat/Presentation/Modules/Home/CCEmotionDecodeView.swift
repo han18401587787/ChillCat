@@ -564,6 +564,15 @@ struct KeywordBubble: View {
 }
 
 // MARK: - Flow Layout
+
+struct DecodeFlowLayout: Layout {
+    var spacing: CGFloat = 8
+    
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let rows = computeRows(proposal: proposal, subviews: subviews)
+        let totalHeight = rows.reduce(0) { $0 + $1.maxHeight + spacing } - (rows.isEmpty ? 0 : spacing)
+        return CGSize(width: proposal.width ?? 0, height: totalHeight)
+    }
     
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
         let rows = computeRows(proposal: proposal, subviews: subviews)

@@ -173,7 +173,7 @@ struct FlowLayout: Layout {
 #Preview("Emotion Tags") {
     VStack(spacing: 20) {
         HStack {
-            CCEmotionTagView(emotion: "喜悦", color: EmotionColors.joy, icon: "sun.max.fill")
+            CCEmotionTagView(emotion: "喜悦", color: EmotionColors.happy, icon: "sun.max.fill")
             CCEmotionTagView(emotion: "平静", color: EmotionColors.calm, icon: "wind")
             CCEmotionTagView(emotion: "焦虑", color: EmotionColors.anxiety, icon: "waveform.path.ecg")
         }
