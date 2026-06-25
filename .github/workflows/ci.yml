@@ -23,7 +23,8 @@ jobs:
         run: |
           xcodebuild build \
             -scheme ChillCat \
-            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
             -quiet \
             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
@@ -42,7 +43,8 @@ jobs:
         run: |
           xcodebuild test \
             -scheme ChillCat \
-            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
             -only-testing:ChillCatUITests/ChillCatV3UITests \
             -resultBundlePath ui-test-results.xcresult \
             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
@@ -68,7 +70,8 @@ jobs:
         run: |
           xcodebuild test \
             -scheme ChillCat \
-            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
             -only-testing:ChillCatTests/CCSnapshotPageTests \
             -resultBundlePath snapshot-results.xcresult \
             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
