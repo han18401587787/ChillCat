@@ -1,8 +1,11 @@
 import XCTest
 import Foundation
+@testable import ChillCat
 
 /// 视觉回归测试引擎
-/// 截取屏幕快照，与基线比对像素差异
+/// 支持两种校验模式：
+/// 1. 像素对比 — 与基线截图逐像素比对
+/// 2. AI 视觉校验 — 调用后端通义千问多模态模型进行语义级 UI 完整度分析
 struct VisualTesting {
 
     /// 允许的最大像素差异百分比（默认 0.5%）
@@ -61,6 +64,74 @@ struct VisualTesting {
         }
 
         return diff
+    }
+
+    // MARK: - AI 视觉完整度校验
+
+    /// AI 视觉完整度分析结果
+    struct AIVisionReport {
+        let score: Double
+        let passed: Bool
+        let issues: [VisionIssue]
+        let elementsFound: [String]
+        let elementsMissing: [String]
+        let suggestion: String
+
+        struct VisionIssue {
+            let type: String
+            let description: String
+            let severity: String
+        }
+    }
+
+    /// 调用后端 AI 视觉分析接口，进行语义级 UI 完整度校验
+    /// - Parameters:
+    ///   - pageName: 页面标识 (home/treehole/toolbox/vip/profile)
+    ///   - app: XCUIApplication 实例
+    ///   - checks: 检查项列表，默认 ["all_elements"]
+    ///   - file: 测试文件路径
+    ///   - line: 测试行号
+    /// - Returns: AI 视觉分析报告
+    @discardableResult
+    static func analyzeWithAI(
+        named pageName: String,
+        in app: XCUIApplication,
+        checks: [String] = ["all_elements"],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) async throws -> AIVisionReport {
+        let screenshot = app.screenshot()
+        let base64 = screenshot.pngRepresentation.base64EncodedString()
+
+        let result = try await CCXuanAPI.analyzeVision(
+            image: base64,
+            page: pageName,
+            checks: checks
+        )
+
+        let report = AIVisionReport(
+            score: result.score,
+            passed: result.passed,
+            issues: result.issues.map { AIVisionReport.VisionIssue(type: $0.type, description: $0.description, severity: $0.severity) },
+            elementsFound: result.elementsFound,
+            elementsMissing: result.elementsMissing,
+            suggestion: result.suggestion
+        )
+
+        if !report.passed {
+            let issueList = report.issues.map { "• [\($0.severity)] \($0.description)" }.joined(separator: "\n")
+            XCTFail("❌ AI 视觉校验未通过 (\(pageName)) 评分: \(String(format: "%.1f", report.score))\n\(issueList)\n💡 \(report.suggestion)", file: file, line: line)
+        } else {
+            print("✅ AI 视觉校验通过 (\(pageName)) 评分: \(String(format: "%.1f", report.score))")
+            if !report.elementsFound.isEmpty {
+                print("   已检测元素: \(report.elementsFound.joined(separator: ", "))")
+            }
+            if !report.suggestion.isEmpty {
+                print("   💡 \(report.suggestion)")
+            }
+        }
+
+        return report
     }
 
     // MARK: - 像素比对引擎

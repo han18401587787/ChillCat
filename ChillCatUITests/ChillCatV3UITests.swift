@@ -147,6 +147,32 @@ final class ChillCatV3UITests: XCTestCase {
         XCTAssertTrue(app.professionalHotlineLink.waitForExistence(timeout: 3))
     }
 
+    // MARK: - AI 视觉完整度校验
+
+    func testVisualIntegrity_HomePage() async throws {
+        app.tabHome.tap()
+        sleep(2)
+        try await VisualTesting.analyzeWithAI(named: "home", in: app)
+    }
+
+    func testVisualIntegrity_ToolboxPage() async throws {
+        app.tabToolbox.tap()
+        sleep(2)
+        try await VisualTesting.analyzeWithAI(named: "toolbox", in: app)
+    }
+
+    func testVisualIntegrity_TreeHolePage() async throws {
+        app.tabTreeHole.tap()
+        sleep(2)
+        try await VisualTesting.analyzeWithAI(named: "treehole", in: app)
+    }
+
+    func testVisualIntegrity_ProfilePage() async throws {
+        app.tabProfile.tap()
+        sleep(2)
+        try await VisualTesting.analyzeWithAI(named: "profile", in: app)
+    }
+
     // MARK: - 性能测试
 
     func testAppLaunchPerformance() throws {

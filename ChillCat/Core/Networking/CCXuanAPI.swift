@@ -599,6 +599,33 @@ enum CCXuanAPI {
         return response.insights
     }
 
+    // MARK: - Vision (视觉分析)
+
+    struct VisionAnalyzeRequest: Encodable {
+        let image: String
+        let page: String
+        let checks: [String]
+    }
+
+    struct VisionAnalyzeResult: Decodable {
+        struct VisionIssue: Decodable {
+            let type: String
+            let description: String
+            let severity: String
+        }
+        let score: Double
+        let passed: Bool
+        let issues: [VisionIssue]
+        let elementsFound: [String]
+        let elementsMissing: [String]
+        let suggestion: String
+    }
+
+    /// 视觉完整度分析（用于 CI 自动化测试）
+    static func analyzeVision(image: String, page: String, checks: [String] = ["all_elements"]) async throws -> VisionAnalyzeResult {
+        try await post("/api/v1/vision/analyze", body: VisionAnalyzeRequest(image: image, page: page, checks: checks))
+    }
+
     // MARK: - Internal helpers
 
     private static let keychain = Keychain(service: "app.xuanpeace.token")
