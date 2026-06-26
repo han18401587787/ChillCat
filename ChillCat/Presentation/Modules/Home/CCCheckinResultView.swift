@@ -457,7 +457,7 @@ struct PublishToResonanceView: View {
                         .font(AppFont.caption)
                         .foregroundColor(AppTheme.textTertiary)
 
-                    CCEmojiPickerV3(isShowing: $showEmojiPicker, onSelect: { emoji in
+                    CCEmojiPicker(isShowing: $showEmojiPicker, onSelect: { emoji in
                         selectedEmoji = emoji
                     })
                 }

@@ -96,7 +96,7 @@ struct CCResonanceDetailView: View {
             }
             .padding()
         }
-        .cc_emojiPickerV3Overlay(isShowing: $showEmoji) { emoji in
+        .cc_emojiPickerOverlay(isShowing: $showEmoji) { emoji in
             newReply += emoji.displayName
         }
         .animation(.easeInOut, value: showEmoji)

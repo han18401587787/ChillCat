@@ -63,7 +63,7 @@ struct CCEmotionDecoderView: View {
             .padding()
         }
         .background(AppTheme.background)
-        .cc_emojiPickerV3Overlay(isShowing: $showEmoji) { emoji in
+        .cc_emojiPickerOverlay(isShowing: $showEmoji) { emoji in
             viewModel.inputText += emoji.displayName
         }
         .animation(.easeInOut, value: showEmoji)

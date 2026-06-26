@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - CCAppTheme v3.0 暖色调全面重构
+// MARK: - CCAppTheme 暖色调全面重构
 /// 绪安设计系统 — 基于色彩心理学（Headspace/Calm 最佳实践）
 /// 从"灰蓝冷色调"全面转向"暖色调温暖治愈"体系
 /// 实现每日主题色切换 + 字体语义化Token + 圆角/阴影升级
@@ -225,8 +225,6 @@ enum AppTheme {
     static let warmGlowDark = Color(hex: "B08A3A")
 
     /// 柔和紫 - 用于冥想/放松场景
-    static let softPurpleV3 = warmPurple
-    static let softPurpleV3Light = warmPurple.opacity(0.25)
 
     /// 宁静蓝 - 用于睡眠/平静场景
     static let calmBlue = warmBlue
@@ -253,7 +251,163 @@ enum AppTheme {
     static let mintGreenLight = warmGreen.opacity(0.15)
 }
 
-// MARK: - Color Extension (defined in CCAppTheme.swift, do not duplicate)
+// MARK: - Color Extension
+
+extension Color {
+    init(hex: String) {
+        let r, g, b: Double
+        let start = hex.hasPrefix("#") ? String(hex.dropFirst()) : hex
+        let scanner = Scanner(string: start)
+        var hexNumber: UInt64 = 0
+        scanner.scanHexInt64(&hexNumber)
+        r = Double((hexNumber & 0xFF0000) >> 16) / 255
+        g = Double((hexNumber & 0x00FF00) >> 8) / 255
+        b = Double(hexNumber & 0x0000FF) / 255
+        self.init(red: r, green: g, blue: b)
+    }
+}
+
+// MARK: - CCAppThemeProtocol（v2 兼容，快照测试使用）
+
+protocol CCAppThemeProtocol {
+    var primary: Color { get }
+    var primaryLight: Color { get }
+    var primaryMuted: Color { get }
+    var warm: Color { get }
+    var warmLight: Color { get }
+    var softPurple: Color { get }
+    var softPurpleLight: Color { get }
+    var softGreen: Color { get }
+    var softGreenLight: Color { get }
+    var softPink: Color { get }
+    var softPinkLight: Color { get }
+    var warmMuted: Color { get }
+    var background: Color { get }
+    var surface: Color { get }
+    var cardBackground: Color { get }
+    var textPrimary: Color { get }
+    var textSecondary: Color { get }
+    var textMuted: Color { get }
+    var error: Color { get }
+    var success: Color { get }
+    var spacingXS: CGFloat { get }
+    var spacingSM: CGFloat { get }
+    var spacingMD: CGFloat { get }
+    var spacingLG: CGFloat { get }
+    var spacingXL: CGFloat { get }
+    var radiusSM: CGFloat { get }
+    var radiusMD: CGFloat { get }
+    var radiusLG: CGFloat { get }
+    var radiusXL: CGFloat { get }
+}
+
+// MARK: - 亮色主题（快照测试兼容）
+
+struct CCLightTheme: CCAppThemeProtocol {
+    let primary = Color(hex: "5A7A8A")
+    let primaryLight = Color(hex: "7A9AAA")
+    let primaryMuted = Color(hex: "B8D4E3")
+    let warm = Color(hex: "8B6F47")
+    let warmLight = Color(hex: "C9A063")
+    let softPurple = Color(hex: "D4C8E8")
+    let softPurpleLight = Color(hex: "E8D9F0")
+    let softGreen = Color(hex: "66BB6A")
+    let softGreenLight = Color(hex: "D5E8D4")
+    let softPink = Color(hex: "E8B8C8")
+    let softPinkLight = Color(hex: "F2D5E0")
+    let warmMuted = Color(hex: "EBE2D5")
+    let background = Color(hex: "F9F6F2")
+    let surface = Color(hex: "F0EDE8")
+    let cardBackground = Color.white
+    let textPrimary = Color(hex: "2D2D2D")
+    let textSecondary = Color(hex: "7A7A7A")
+    let textMuted = Color(hex: "AAAAAA")
+    let error = Color(hex: "E57373")
+    let success = Color(hex: "66BB6A")
+    let spacingXS: CGFloat = 6
+    let spacingSM: CGFloat = 10
+    let spacingMD: CGFloat = 16
+    let spacingLG: CGFloat = 24
+    let spacingXL: CGFloat = 32
+    let radiusSM: CGFloat = 8
+    let radiusMD: CGFloat = 12
+    let radiusLG: CGFloat = 16
+    let radiusXL: CGFloat = 24
+}
+
+// MARK: - 暗色主题（快照测试兼容）
+
+struct CCDarkTheme: CCAppThemeProtocol {
+    let primary = Color(hex: "7A9AAA")
+    let primaryLight = Color(hex: "5A7A8A")
+    let primaryMuted = Color(hex: "3D5560")
+    let warm = Color(hex: "C9A063")
+    let warmLight = Color(hex: "8B6F47")
+    let softPurple = Color(hex: "9B8DB8")
+    let softPurpleLight = Color(hex: "6B5D88")
+    let softGreen = Color(hex: "66BB6A")
+    let softGreenLight = Color(hex: "3D7040")
+    let softPink = Color(hex: "C890A0")
+    let softPinkLight = Color(hex: "A87888")
+    let warmMuted = Color(hex: "3D3528")
+    let background = Color(hex: "1A1D1F")
+    let surface = Color(hex: "242729")
+    let cardBackground = Color(hex: "2D3033")
+    let textPrimary = Color(hex: "E8E8E8")
+    let textSecondary = Color(hex: "999999")
+    let textMuted = Color(hex: "666666")
+    let error = Color(hex: "E57373")
+    let success = Color(hex: "66BB6A")
+    let spacingXS: CGFloat = 6
+    let spacingSM: CGFloat = 10
+    let spacingMD: CGFloat = 16
+    let spacingLG: CGFloat = 24
+    let spacingXL: CGFloat = 32
+    let radiusSM: CGFloat = 8
+    let radiusMD: CGFloat = 12
+    let radiusLG: CGFloat = 16
+    let radiusXL: CGFloat = 24
+}
+
+// MARK: - Environment Key（快照测试兼容）
+
+struct CCAppThemeKey: EnvironmentKey {
+    static let defaultValue: CCAppThemeProtocol = CCLightTheme()
+}
+
+extension EnvironmentValues {
+    var ccAppTheme: CCAppThemeProtocol {
+        get { self[CCAppThemeKey.self] }
+        set { self[CCAppThemeKey.self] = newValue }
+    }
+}
+
+// MARK: - CCThemeManager（v3.0 适配）
+
+/// v3.0 设计系统改为 AppTheme 静态属性，不再通过协议注入
+/// CCThemeManager 保留用于暗色模式切换控制
+@MainActor
+@Observable
+final class CCThemeManager {
+    /// 用户偏好：nil=跟随系统, false=浅色, true=深色
+    var isDarkModeOverride: Bool? = nil
+
+    /// 返回适合 preferredColorScheme 的值
+    var colorScheme: ColorScheme? {
+        guard let override = isDarkModeOverride else { return nil }
+        return override ? .dark : .light
+    }
+
+    var isDarkMode: Bool {
+        get { isDarkModeOverride ?? false }
+        set { isDarkModeOverride = newValue }
+    }
+
+    /// 重置为跟随系统
+    func resetToSystem() {
+        isDarkModeOverride = nil
+    }
+}
 
 // MARK: - 字体系统（保留 v2 兼容）
 

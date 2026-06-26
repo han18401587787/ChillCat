@@ -77,7 +77,7 @@ struct CCEncourageChainView: View {
                 }
             }
         }
-        .cc_emojiPickerV3Overlay(isShowing: $showEmoji) { emoji in
+        .cc_emojiPickerOverlay(isShowing: $showEmoji) { emoji in
             viewModel.relayText += emoji.displayName
         }
         .animation(.easeInOut, value: showEmoji)

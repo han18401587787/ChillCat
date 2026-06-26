@@ -66,10 +66,10 @@ struct CCResonanceView: View {
                 .presentationDetents([.medium])
         }
         // Emoji overlays (V3)
-        .cc_emojiPickerV3Overlay(isShowing: $showComposerEmoji) { emoji in
+        .cc_emojiPickerOverlay(isShowing: $showComposerEmoji) { emoji in
             composerText += emoji.displayName
         }
-        .cc_emojiPickerV3Overlay(isShowing: $showResonateEmoji) { emoji in
+        .cc_emojiPickerOverlay(isShowing: $showResonateEmoji) { emoji in
             resonateMessage += emoji.displayName
         }
         .animation(.easeInOut(duration: 0.25), value: showComposerEmoji)
