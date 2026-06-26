@@ -53,7 +53,7 @@ struct CCGratitudeJournalView: View {
             }
         }
         .cc_emojiPickerOverlay(isShowing: $viewModel.showEmojiPicker) { emoji in
-            viewModel.selectEmoji(emoji)
+            viewModel.selectEmoji(emoji.displayName)
         }
         .task {
             viewModel.loadSampleData()

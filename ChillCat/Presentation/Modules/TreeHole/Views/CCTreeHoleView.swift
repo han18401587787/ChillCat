@@ -70,7 +70,7 @@ struct CCTreeHoleView: View {
         .overlay(alignment: .bottom) {
             if showEmoji {
                 CCEmojiPicker(isShowing: $showEmoji) { emoji in
-                    viewModel.newPostText += emoji
+                    viewModel.newPostText += emoji.displayName
                 }
                 .frame(height: 300)
                 .transition(.move(edge: .bottom))

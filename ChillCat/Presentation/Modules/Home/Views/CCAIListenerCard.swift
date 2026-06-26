@@ -223,7 +223,7 @@ struct CCAIListenerCard: View {
         // Emoji Picker Sheet
         .sheet(isPresented: $showEmojiPicker) {
             CCEmojiPicker(isShowing: $showEmojiPicker) { emoji in
-                viewModel.inputText += emoji
+                viewModel.inputText += emoji.displayName
             }
             .presentationDetents([.medium, .large])
         }

@@ -51,7 +51,7 @@ final class CCTraceManager {
     private var completedSpans: [CCTraceContext] = []
     private let maxSpans = 1000
 
-    private init() {}
+    nonisolated private init() {}
 
     @discardableResult
     func startTrace(operationName: String) -> CCTraceContext {
