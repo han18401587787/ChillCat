@@ -139,13 +139,13 @@ final class CCVoiceDiaryViewModel {
 
     private func performAnalysis() async {
         do {
-            // 调用语音分析 API
-            let analysis = try await CCXuanAPI.analyzeVoiceDiary(duration: recordingDuration)
+            // 调用语音分析 API — Phase 1 模拟，不传音频数据
+            let analysis = try await CCXuanAPI.analyze(text: "语音日记模拟分析")
 
             let result = CCVoiceDiaryResult(
                 emotion: analysis.emotion,
                 confidence: analysis.confidence,
-                transcription: analysis.transcription,
+                transcription: "今天开会又被老板批评了，感觉很委屈，明明不是我的问题...",
                 tags: analysis.tags
             )
             editableTranscription = result.transcription
@@ -173,12 +173,10 @@ final class CCVoiceDiaryViewModel {
         CCHaptic.success()
         state = .saving
         do {
-            try await CCXuanAPI.saveVoiceDiary(
+            // Phase 1: 使用 emotion checkin 替代语音保存
+            try await CCXuanAPI.checkin(
                 emotion: result.emotion,
-                transcription: editableTranscription,
-                tags: editableTags,
-                confidence: result.confidence,
-                duration: recordingDuration
+                note: editableTranscription
             )
             state = .saved
         } catch {

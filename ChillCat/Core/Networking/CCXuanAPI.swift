@@ -55,6 +55,10 @@ enum CCXuanAPI {
     }
     static func getWeeklyStats() async throws -> WeeklyStats { try await get("/api/v1/emotion/weekly-stats") }
 
+    /// 情绪预警
+    struct EmotionAlert: Decodable, Identifiable { let id: Int64; let type: String; let level: String; let message: String; let createdAt: String }
+    static func getEmotionAlerts() async throws -> [EmotionAlert] { try await get("/api/v1/emotion/alerts") }
+
     // MARK: - TreeHole
 
     struct PostRequest: Encodable { let content: String; let scope: String; let isAnonymous: Bool }
@@ -102,38 +106,34 @@ enum CCXuanAPI {
         let _: CCEmptyResponse = try await post("/api/v1/ai/empathy/feedback", body: EmpathyFeedbackRequest(responseIndex: responseIndex, helpful: helpful))
     }
 
+    // MARK: - AI Analyze (AI 分析)
+
+    struct AnalyzeRequest: Encodable { let text: String }
+    struct AnalyzeResponse: Decodable {
+        let emotion: String; let confidence: Double; let tags: [String]; let insight: String?
+    }
+
+    static func analyze(text: String) async throws -> AnalyzeResponse {
+        try await post("/api/v1/ai/analyze", body: AnalyzeRequest(text: text))
+    }
+
     // MARK: - Voice Diary (语音日记)
 
-    struct VoiceDiaryResult: Decodable {
-        let emotion: String; let confidence: Double; let transcription: String; let tags: [String]; let insight: String?
-    }
     struct VoiceAnalysisRequest: Encodable { let audioData: String; let duration: Int }
-
-    static func analyzeVoice(audioData: String, duration: Int) async throws -> VoiceDiaryResult {
-        try await post("/api/v1/ai/voice-diary", body: VoiceAnalysisRequest(audioData: audioData, duration: duration))
+    struct VoiceUploadResult: Decodable {
+        let uploadId: String; let status: String
     }
-    static func saveVoiceDiary(audioData: String, duration: Int, transcription: String, tags: [String]) async throws -> TodayResponse {
-        try await post("/api/v1/emotion/checkin/voice", body: VoiceAnalysisRequest(audioData: audioData, duration: duration))
-    }
-
-    // 语音日记简化版 (Phase 1: 模拟录音，不传音频数据)
-    struct VoiceDiaryAnalysisResponse: Decodable {
-        let emotion: String; let confidence: Double; let transcription: String; let tags: [String]
-    }
-    struct VoiceDiarySaveRequest: Encodable {
-        let emotion: String; let transcription: String; let tags: [String]
-        let confidence: Double; let duration: Int
+    struct VoiceStatusResult: Decodable {
+        let status: String; let emotion: String?; let transcription: String?; let tags: [String]?; let insight: String?
     }
 
-    static func analyzeVoiceDiary(duration: Int) async throws -> VoiceDiaryAnalysisResponse {
-        try await get("/api/v1/ai/voice-diary/analyze?duration=\(duration)")
+    /// 上传语音日记
+    static func uploadVoice(audioData: String, duration: Int) async throws -> VoiceUploadResult {
+        try await post("/api/v1/voice/upload", body: VoiceAnalysisRequest(audioData: audioData, duration: duration))
     }
-    static func saveVoiceDiary(emotion: String, transcription: String, tags: [String],
-                               confidence: Double, duration: Int) async throws -> TodayResponse {
-        try await post("/api/v1/voice-diary/save", body: VoiceDiarySaveRequest(
-            emotion: emotion, transcription: transcription, tags: tags,
-            confidence: confidence, duration: duration
-        ))
+    /// 查询语音处理状态
+    static func getVoiceStatus(id: String) async throws -> VoiceStatusResult {
+        try await get("/api/v1/voice/\(id)/status")
     }
 
     // MARK: - Emotion Decoder (情绪解码器)
@@ -142,14 +142,14 @@ enum CCXuanAPI {
     struct DecodeResponse: Decodable {
         struct Layer: Decodable { let label: String; let icon: String; let confidence: Double? }
         struct Suggestion: Decodable { let type: String; let title: String; let description: String }
-        let surfaceEmotion: Layer
-        let middleEmotions: [Layer]
-        let deepNeeds: [Layer]
+        let surface: Layer
+        let middle: [Layer]
+        let deep: [Layer]
         let suggestions: [Suggestion]
     }
 
     static func decodeEmotion(text: String) async throws -> DecodeResponse {
-        try await post("/api/v1/ai/decode", body: DecodeRequest(text: text))
+        try await post("/api/v1/emotion/decode", body: DecodeRequest(text: text))
     }
 
     // MARK: - Resonance Wall (共鸣墙)
@@ -161,16 +161,16 @@ enum CCXuanAPI {
     struct ResonancePage: Decodable { let list: [ResonanceItem]; let total: Int64; let onlineCount: Int64 }
     struct ResonanceDetailResponse: Decodable { let item: ResonanceItem; let replies: [ResonanceReply] }
     struct ResonanceReply: Decodable, Identifiable { let id: Int64; let content: String; let createdAt: String }
-        struct ResonancePostRequest: Encodable { let emotion: String; let content: String; let isAnonymous: Bool }
+    struct ResonancePostRequest: Encodable { let emotion: String; let content: String; let isAnonymous: Bool }
 
-    static func listResonance(page: Int = 1) async throws -> PostPage {
-        try await get("/api/v1/treehole/posts?page=\(page)")
+    static func listResonance(page: Int = 1) async throws -> ResonancePage {
+        try await get("/api/v1/resonance/stories?page=\(page)")
     }
     static func getResonanceDetail(id: Int64) async throws -> ResonanceDetailResponse {
-        try await get("/api/v1/treehole/posts/\(id)")
+        try await get("/api/v1/resonance/stories/\(id)")
     }
     static func hugResonance(id: Int64, message: String? = nil) async throws {
-        let path = "/api/v1/treehole/posts/\(id)/hug"
+        let path = "/api/v1/resonance/stories/\(id)/resonate"
         let start = CFAbsoluteTimeGetCurrent()
         print("🌐 [API] → POST \(path)")
         do {
@@ -186,7 +186,7 @@ enum CCXuanAPI {
         }
     }
     static func createResonancePost(emotion: String, content: String, isAnonymous: Bool) async throws -> ResonanceItem {
-        try await post("/api/v1/treehole/posts", body: ResonancePostRequest(emotion: emotion, content: content, isAnonymous: isAnonymous))
+        try await post("/api/v1/resonance/stories", body: ResonancePostRequest(emotion: emotion, content: content, isAnonymous: isAnonymous))
     }
 
     // MARK: - Encourage Chain (鼓励链)
@@ -195,19 +195,85 @@ enum CCXuanAPI {
         let id: Int64; let chainId: Int64; let content: String; let position: Int; let createdAt: String
     }
     struct ChainResponse: Decodable { let chainId: Int64; let links: [ChainLink]; let participantCount: Int64 }
+    struct ChainCreateRequest: Encodable { let status: String; let category: String }
     struct ChainParticipateRequest: Encodable { let content: String }
 
-    static func getCurrentChain() async throws -> ChainResponse {
-        try await get("/api/v1/encourage-chain/current")
+    static func listChains(status: String? = nil, category: String? = nil, page: Int = 1) async throws -> [ChainResponse] {
+        var path = "/api/v1/encourage/chains?page=\(page)"
+        if let status { path += "&status=\(status)" }
+        if let category { path += "&category=\(category)" }
+        return try await get(path)
     }
     static func getChain(id: Int64) async throws -> ChainResponse {
-        try await get("/api/v1/encourage-chain/\(id)")
+        try await get("/api/v1/encourage/chains/\(id)")
     }
-    static func participateInChain(content: String) async throws -> ChainLink {
-        try await post("/api/v1/encourage-chain/participate", body: ChainParticipateRequest(content: content))
+    static func createChain(status: String, category: String) async throws -> ChainResponse {
+        try await post("/api/v1/encourage/chains", body: ChainCreateRequest(status: status, category: category))
+    }
+    static func joinChain(id: Int64, content: String) async throws -> ChainLink {
+        try await post("/api/v1/encourage/chains/\(id)/join", body: ChainParticipateRequest(content: content))
     }
     static func getMyChains() async throws -> [ChainResponse] {
-        try await get("/api/v1/encourage-chain/my")
+        try await get("/api/v1/encourage/my-chains")
+    }
+
+    // MARK: - Healing Plan (稳情计划)
+
+    struct HealingPlanResponse: Decodable {
+        let id: Int64; let name: String; let description: String; let tasks: [HealingTask]?
+    }
+    struct HealingTask: Decodable, Identifiable {
+        let id: Int64; let title: String; let description: String; let isCompleted: Bool; let sortOrder: Int
+    }
+    struct HealingPlanGenerateResponse: Decodable {
+        let plan: HealingPlanResponse
+    }
+    struct HealingTaskCompleteResponse: Decodable {
+        let task: HealingTask
+    }
+
+    /// 获取当前稳情计划
+    static func getHealingPlan() async throws -> HealingPlanResponse {
+        try await get("/api/v1/healing/plan")
+    }
+    /// 生成稳情计划
+    static func generateHealingPlan() async throws -> HealingPlanResponse {
+        let resp: HealingPlanGenerateResponse = try await post("/api/v1/healing/plan/generate", body: Optional<String>.none)
+        return resp.plan
+    }
+    /// 完成任务
+    static func completeHealingTask(id: Int64) async throws -> HealingTask {
+        let resp: HealingTaskCompleteResponse = try await post("/api/v1/healing/plan/tasks/\(id)/complete", body: Optional<String>.none)
+        return resp.task
+    }
+
+    // MARK: - Letters (感谢信)
+
+    struct LetterResponse: Decodable, Identifiable {
+        let id: Int64; let content: String; let senderName: String; let receiverName: String?
+        let isPublic: Bool; let createdAt: String
+    }
+    struct LetterPage: Decodable { let list: [LetterResponse]; let total: Int64 }
+
+    /// 发送感谢信
+    static func sendLetter(content: String, receiverName: String? = nil, isPublic: Bool = false) async throws -> LetterResponse {
+        try await post("/api/v1/letters", body: LetterSendRequest(content: content, receiverName: receiverName, isPublic: isPublic))
+    }
+    /// 我发出的信
+    static func getSentLetters(page: Int = 1) async throws -> LetterPage {
+        try await get("/api/v1/letters/sent?page=\(page)")
+    }
+    /// 我收到的信
+    static func getReceivedLetters(page: Int = 1) async throws -> LetterPage {
+        try await get("/api/v1/letters/received?page=\(page)")
+    }
+    /// 信件详情
+    static func getLetter(id: Int64) async throws -> LetterResponse {
+        try await get("/api/v1/letters/\(id)")
+    }
+
+    struct LetterSendRequest: Encodable {
+        let content: String; let receiverName: String?; let isPublic: Bool
     }
 
     // MARK: - Crisis & Safety

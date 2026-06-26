@@ -37,14 +37,14 @@ final class CCEmotionDecoderViewModel {
             let result = try await CCXuanAPI.decodeEmotion(text: text)
             inputText = ""
             surfaceEmotion = DecodeLayer(
-                label: result.surfaceEmotion.label,
-                icon: result.surfaceEmotion.icon,
-                confidence: result.surfaceEmotion.confidence
+                label: result.surface.label,
+                icon: result.surface.icon,
+                confidence: result.surface.confidence
             )
-            middleEmotions = result.middleEmotions.map {
+            middleEmotions = result.middle.map {
                 DecodeLayer(label: $0.label, icon: $0.icon, confidence: $0.confidence)
             }
-            deepNeeds = result.deepNeeds.map {
+            deepNeeds = result.deep.map {
                 DecodeLayer(label: $0.label, icon: $0.icon, confidence: $0.confidence)
             }
             suggestions = result.suggestions.map {

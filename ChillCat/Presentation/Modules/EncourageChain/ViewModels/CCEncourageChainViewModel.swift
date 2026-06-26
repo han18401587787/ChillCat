@@ -29,7 +29,14 @@ final class CCEncourageChainViewModel {
         isLoading = true
         errorMessage = nil
         do {
-            let chain = try await CCXuanAPI.getCurrentChain()
+            let chains = try await CCXuanAPI.listChains(status: "active", page: 1)
+            guard let chain = chains.first else {
+                links = ChainLinkDisplay.sampleLinks
+                chainId = 1
+                participantCount = Int64(links.count)
+                isLoading = false
+                return
+            }
             chainId = chain.chainId
             links = chain.links.map {
                 ChainLinkDisplay(
@@ -82,7 +89,7 @@ final class CCEncourageChainViewModel {
         let text = relayText.trimmingCharacters(in: .whitespacesAndNewlines)
         relayText = ""
         do {
-            let _ = try await CCXuanAPI.participateInChain(content: text)
+            let _ = try await CCXuanAPI.joinChain(id: chainId, content: text)
             await loadCurrentChain()
         } catch {
             errorMessage = "发送失败，请重试"
