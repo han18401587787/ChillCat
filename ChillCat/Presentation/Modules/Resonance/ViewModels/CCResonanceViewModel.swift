@@ -72,16 +72,16 @@ final class CCResonanceViewModel {
         isLoadingMore = false
     }
 
-    private func mapItems(_ list: [CCXuanAPI.PostResponse]) -> [CCResonanceDisplayItem] {
+    private func mapItems(_ list: [CCXuanAPI.ResonanceItem]) -> [CCResonanceDisplayItem] {
         list.map { p in
             CCResonanceDisplayItem(
                 id: String(p.id),
                 content: p.content,
-                emotion: "",
-                emotionColor: "primaryMuted",
+                emotion: p.emotion,
+                emotionColor: p.emotionColor,
                 isAnonymous: p.isAnonymous,
                 displayName: p.displayName,
-                resonanceCount: Int(p.hugs),
+                resonanceCount: Int(p.resonanceCount),
                 createdAt: ISO8601DateFormatter().date(from: p.createdAt) ?? Date()
             )
         }

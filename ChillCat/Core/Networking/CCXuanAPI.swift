@@ -1,6 +1,6 @@
 import Foundation
 import Alamofire
-import KeychainAccess
+@preconcurrency import KeychainAccess
 
 /// 绪安 API 客户端
 /// - Alamofire 处理请求链/重试/响应校验
@@ -670,7 +670,7 @@ final class XuanAuthInterceptor: RequestInterceptor {
 import OSLog
 final class XuanNetworkLogger: EventMonitor {
     private let logger = Logger(subsystem: "app.xuanpeace", category: "API")
-    private var requestStartTimes: [UUID: CFAbsoluteTime] = [:]
+    nonisolated(unsafe) private var requestStartTimes: [UUID: CFAbsoluteTime] = [:]
     private let lock = NSLock()
 
     func request(_ request: Request, didCreateURLRequest urlRequest: URLRequest) {
