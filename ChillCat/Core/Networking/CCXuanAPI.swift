@@ -607,12 +607,13 @@ enum CCXuanAPI {
         let checks: [String]
     }
 
+    struct VisionIssue: Decodable {
+        let type: String
+        let description: String
+        let severity: String
+    }
+
     struct VisionAnalyzeResult: Decodable {
-        struct VisionIssue: Decodable {
-            let type: String
-            let description: String
-            let severity: String
-        }
         let score: Double
         let passed: Bool
         let issues: [VisionIssue]
