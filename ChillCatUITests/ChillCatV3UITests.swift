@@ -156,7 +156,7 @@ final class ChillCatV3UITests: XCTestCase {
     }
 
     func testTabSwitchPerformance() throws {
-        measure(metrics: [XCTOSSignpostMetric()]) {
+        measure(metrics: [XCTClockMetric()]) {
             app.tabTreeHole.tap()
             app.tabToolbox.tap()
             app.tabProfile.tap()
