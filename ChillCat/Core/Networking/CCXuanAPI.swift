@@ -661,29 +661,6 @@ enum CCXuanAPI {
     }
 }
 
-// MARK: - Vision Types (顶级类型，确保 test target 可链接)
-
-struct CCVisionAnalyzeRequest: Encodable {
-    let image: String
-    let page: String
-    let checks: [String]
-}
-
-struct CCVisionIssue: Decodable {
-    let type: String
-    let description: String
-    let severity: String
-}
-
-struct CCVisionAnalyzeResult: Decodable {
-    let score: Double
-    let passed: Bool
-    let issues: [CCVisionIssue]
-    let elementsFound: [String]
-    let elementsMissing: [String]
-    let suggestion: String
-}
-
 // MARK: - Auth Interceptor
 
 final class XuanAuthInterceptor: RequestInterceptor {
