@@ -1,6 +1,5 @@
 import XCTest
 import Foundation
-@testable import ChillCat
 
 /// 视觉回归测试引擎
 /// 支持两种校验模式：
@@ -103,11 +102,8 @@ struct VisualTesting {
         let screenshot = app.screenshot()
         let base64 = screenshot.pngRepresentation.base64EncodedString()
 
-        let result = try await CCXuanAPI.analyzeVision(
-            image: base64,
-            page: pageName,
-            checks: checks
-        )
+        // 直接 HTTP 调用，避免依赖 @testable import ChillCat
+        let result = try await visionAPIRequest(image: base64, page: pageName, checks: checks)
 
         let report = AIVisionReport(
             score: result.score,
@@ -132,6 +128,32 @@ struct VisualTesting {
         }
 
         return report
+    }
+
+    /// 直接 HTTP 调用视觉分析接口
+    private static func visionAPIRequest(image: String, page: String, checks: [String]) async throws -> CCVisionAnalyzeResult {
+        let baseURL = ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://localhost:8080"
+        let url = URL(string: "\(baseURL)/api/v1/vision/analyze")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 60
+
+        let body = CCVisionAnalyzeRequest(image: image, page: page, checks: checks)
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw NSError(domain: "VisionAPI", code: -1, userInfo: [NSLocalizedDescriptionKey: "API 请求失败"])
+        }
+
+        struct APIResponse: Decodable {
+            let code: Int
+            let message: String
+            let data: CCVisionAnalyzeResult
+        }
+        let apiResp = try JSONDecoder().decode(APIResponse.self, from: data)
+        return apiResp.data
     }
 
     // MARK: - 像素比对引擎
