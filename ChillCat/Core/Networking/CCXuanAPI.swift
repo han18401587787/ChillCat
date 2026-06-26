@@ -601,30 +601,9 @@ enum CCXuanAPI {
 
     // MARK: - Vision (视觉分析)
 
-    struct VisionAnalyzeRequest: Encodable {
-        let image: String
-        let page: String
-        let checks: [String]
-    }
-
-    struct VisionIssue: Decodable {
-        let type: String
-        let description: String
-        let severity: String
-    }
-
-    struct VisionAnalyzeResult: Decodable {
-        let score: Double
-        let passed: Bool
-        let issues: [VisionIssue]
-        let elementsFound: [String]
-        let elementsMissing: [String]
-        let suggestion: String
-    }
-
     /// 视觉完整度分析（用于 CI 自动化测试）
-    static func analyzeVision(image: String, page: String, checks: [String] = ["all_elements"]) async throws -> VisionAnalyzeResult {
-        try await post("/api/v1/vision/analyze", body: VisionAnalyzeRequest(image: image, page: page, checks: checks))
+    static func analyzeVision(image: String, page: String, checks: [String] = ["all_elements"]) async throws -> CCVisionAnalyzeResult {
+        try await post("/api/v1/vision/analyze", body: CCVisionAnalyzeRequest(image: image, page: page, checks: checks))
     }
 
     // MARK: - Internal helpers
@@ -680,6 +659,29 @@ enum CCXuanAPI {
             throw error
         }
     }
+}
+
+// MARK: - Vision Types (顶级类型，确保 test target 可链接)
+
+struct CCVisionAnalyzeRequest: Encodable {
+    let image: String
+    let page: String
+    let checks: [String]
+}
+
+struct CCVisionIssue: Decodable {
+    let type: String
+    let description: String
+    let severity: String
+}
+
+struct CCVisionAnalyzeResult: Decodable {
+    let score: Double
+    let passed: Bool
+    let issues: [CCVisionIssue]
+    let elementsFound: [String]
+    let elementsMissing: [String]
+    let suggestion: String
 }
 
 // MARK: - Auth Interceptor
