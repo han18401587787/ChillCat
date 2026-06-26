@@ -279,79 +279,44 @@ final class EncourageDiscoverViewModel: ObservableObject {
     @Published var selectedEmotion: String? = nil
     @Published var activeChains: [EncourageChainData] = []
     @Published var recommendedChains: [EncourageChainData] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
     
     var activeChainCount: Int { activeChains.count }
     
     init() {
-        loadMockData()
+        Task { await loadChains() }
     }
     
-    private func loadMockData() {
-        activeChains = [
-            EncourageChainData(
-                id: "1",
-                theme: "给今天也在努力的你",
-                latestMessage: "你比自己想象的更强大，今天的坚持就是明天的希望",
-                emotionEmoji: "💪",
-                emotionTags: ["希望", "感恩"],
-                participantCount: 47,
-                messages: [],
-                createdAt: "2小时前"
-            ),
-            EncourageChainData(
-                id: "2",
-                theme: "失眠的夜晚有人陪伴",
-                latestMessage: "夜晚的安静是另一种陪伴，明天会是新的一天",
-                emotionEmoji: "🌙",
-                emotionTags: ["焦虑", "平静"],
-                participantCount: 32,
-                messages: [],
-                createdAt: "30分钟前"
-            ),
-            EncourageChainData(
-                id: "3",
-                theme: "考试加油！你一定行",
-                latestMessage: "深呼吸，你已经准备得很充分了，相信自己",
-                emotionEmoji: "📚",
-                emotionTags: ["焦虑", "希望"],
-                participantCount: 89,
-                messages: [],
-                createdAt: "5分钟前"
-            ),
-            EncourageChainData(
-                id: "4",
-                theme: "分手后也要好好爱自己",
-                latestMessage: "所有的经历都会让你成为更好的自己",
-                emotionEmoji: "💔",
-                emotionTags: ["悲伤", "希望"],
-                participantCount: 23,
-                messages: [],
-                createdAt: "1小时前"
-            ),
-        ]
-        
-        recommendedChains = [
-            EncourageChainData(
-                id: "5",
-                theme: "职场压力，一起扛",
-                latestMessage: "工作只是生活的一部分，你的价值远不止于此",
-                emotionEmoji: "🏢",
-                emotionTags: ["焦虑", "感恩"],
-                participantCount: 156,
-                messages: [],
-                createdAt: "3小时前"
-            ),
-            EncourageChainData(
-                id: "6",
-                theme: "每一个清晨都值得期待",
-                latestMessage: "今天会有好事发生，你准备好了吗",
-                emotionEmoji: "🌅",
-                emotionTags: ["希望", "喜悦"],
-                participantCount: 203,
-                messages: [],
-                createdAt: "1小时前"
-            ),
-        ]
+    func loadChains() async {
+        isLoading = true
+        errorMessage = nil
+        do {
+            let chains = try await CCXuanAPI.listChains()
+            let mapped = chains.map { Self.mapToDiscoverChain($0) }
+            activeChains = Array(mapped.prefix(max(0, mapped.count - 2)))
+            recommendedChains = mapped.count >= 2 ? Array(mapped.suffix(2)) : []
+        } catch {
+            activeChains = []
+            recommendedChains = []
+            errorMessage = "鼓励链加载失败"
+            print("⚠️ [EncourageDiscover] API failed: \(error)")
+        }
+        isLoading = false
+    }
+    
+    private static func mapToDiscoverChain(_ chain: CCXuanAPI.ChainResponse) -> EncourageChainData {
+        let latestLink = chain.links.last
+        return EncourageChainData(
+            id: String(chain.chainId),
+            theme: chain.links.first?.content.prefix(15).appending("…") ?? "鼓励链",
+            latestMessage: latestLink?.content ?? "",
+            emotionEmoji: "💪",
+            emotionTags: [],
+            participantCount: Int(chain.participantCount),
+            messages: chain.links.map { EncourageMessageData(id: String($0.id), content: $0.content, from: "参与者", emoji: "💛", timeAgo: $0.createdAt) },
+            createdAt: latestLink?.createdAt ?? ""
+        )
     }
 }
 

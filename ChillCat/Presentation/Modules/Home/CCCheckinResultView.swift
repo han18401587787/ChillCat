@@ -359,11 +359,13 @@ struct EmotionTagEditor: View {
 // MARK: - ViewModel
 @MainActor
 final class CheckinResultViewModel: ObservableObject {
-    @Published var emotionLabel: String = "焦虑"
+    @Published var emotionLabel: String = ""
     @Published var intensity: Double = 6
     @Published var aiSummary: String = ""
     @Published var originalContent: String = ""
     @Published var streakDays: Int = 0
+    @Published var isLoading = false
+    @Published var errorMessage: String?
 
     var formattedDate: String {
         let formatter = DateFormatter()
@@ -379,13 +381,41 @@ final class CheckinResultViewModel: ObservableObject {
     }
 
     init() {
-        loadMockData()
+        Task { await loadCheckinResult() }
     }
 
-    func loadMockData() {
-        streakDays = 7
-        originalContent = "今天上班的时候突然感到一阵焦虑，心跳加速，手心出汗。深呼吸了几次才稍微好一点。可能是因为下周的汇报压力太大了，感觉自己准备得还不够充分。"
-        aiSummary = "你今天的情绪以焦虑为主，可能与工作压力有关。你的身体出现了心跳加速和出汗等生理反应，但通过深呼吸有效缓解了症状。这是一种正常的压力反应，你已经展示了良好的自我调节能力。"
+    func loadCheckinResult() async {
+        isLoading = true
+        errorMessage = nil
+        do {
+            let today = try await CCXuanAPI.getToday()
+            emotionLabel = today.emotion
+            originalContent = today.note
+            streakDays = Int(today.streakDays)
+            
+            // Get AI analysis
+            if !today.note.isEmpty {
+                do {
+                    let analysis = try await CCXuanAPI.analyze(text: today.note)
+                    aiSummary = analysis.insight ?? "今天记录了你的情绪。继续保持这项习惯。"
+                    if !analysis.tags.isEmpty {
+                        emotionLabel = analysis.emotion
+                    }
+                } catch {
+                    aiSummary = "你今天的情绪记录已保存。每一次记录都是对自己的关爱。"
+                    print("⚠️ [CheckinResult] Analyze API failed: \(error)")
+                }
+            } else {
+                aiSummary = "你今天的情绪记录已保存。"
+            }
+        } catch {
+            emotionLabel = ""
+            originalContent = ""
+            aiSummary = ""
+            errorMessage = "加载打卡结果失败"
+            print("⚠️ [CheckinResult] API failed: \(error)")
+        }
+        isLoading = false
     }
 }
 

@@ -284,56 +284,63 @@ struct CompletedChainRow: View {
 // MARK: - ViewModel
 @MainActor
 final class EncourageMuseumViewModel: ObservableObject {
-    @Published var totalKindnessCount: Int = 37
-    @Published var chainsInitiated: Int = 8
-    @Published var chainsJoined: Int = 12
-    @Published var peopleReached: Int = 246
+    @Published var totalKindnessCount: Int = 0
+    @Published var chainsInitiated: Int = 0
+    @Published var chainsJoined: Int = 0
+    @Published var peopleReached: Int = 0
     @Published var badges: [KindnessBadge] = []
     @Published var completedChains: [CompletedChainData] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
     
     init() {
-        loadMockData()
+        Task { await loadData() }
     }
     
-    private func loadMockData() {
-        badges = [
-            KindnessBadge(id: "b1", name: "初次温暖", icon: "hand.wave.fill", color: AppTheme.warmGlow, isUnlocked: true, unlockDate: "2026-06-01"),
-            KindnessBadge(id: "b2", name: "温暖新手", icon: "star.fill", color: AppTheme.warmGlow, isUnlocked: true, unlockDate: "2026-06-05"),
-            KindnessBadge(id: "b3", name: "鼓励达人", icon: "flame.fill", color: AppTheme.vibrantOrange, isUnlocked: false, unlockDate: nil),
-            KindnessBadge(id: "b4", name: "共鸣使者", icon: "waveform.circle.fill", color: AppTheme.primary, isUnlocked: true, unlockDate: "2026-06-10"),
-            KindnessBadge(id: "b5", name: "守护天使", icon: "heart.fill", color: AppTheme.roseGold, isUnlocked: false, unlockDate: nil),
-            KindnessBadge(id: "b6", name: "7天坚持", icon: "7.circle.fill", color: AppTheme.safeGreen, isUnlocked: true, unlockDate: "2026-06-07"),
-            KindnessBadge(id: "b7", name: "善意传播者", icon: "sparkles", color: AppTheme.roseGold, isUnlocked: false, unlockDate: nil),
-            KindnessBadge(id: "b8", name: "深夜守护", icon: "moon.stars.fill", color: AppTheme.softPurple, isUnlocked: true, unlockDate: "2026-06-12"),
-            KindnessBadge(id: "b9", name: "温暖大使", icon: "crown.fill", color: AppTheme.primary, isUnlocked: false, unlockDate: nil),
-        ]
+    func loadData() async {
+        isLoading = true
+        errorMessage = nil
+        do {
+            let chains = try await CCXuanAPI.listChains()
+            totalKindnessCount = chains.reduce(0) { $0 + Int($1.participantCount) }
+            chainsJoined = chains.count
+            peopleReached = chains.reduce(0) { $0 + Int($1.participantCount) }
+            
+            completedChains = chains.compactMap { chain in
+                guard let lastLink = chain.links.last else { return nil }
+                return CompletedChainData(
+                    id: String(chain.chainId),
+                    theme: chain.links.first?.content.prefix(15).appending("…") ?? "鼓励链",
+                    emoji: "💛",
+                    participantCount: Int(chain.participantCount),
+                    messageCount: chain.links.count,
+                    completedDate: lastLink.createdAt
+                )
+            }
+        } catch {
+            completedChains = []
+            errorMessage = "数据加载失败"
+            print("⚠️ [EncourageMuseum] API failed: \(error)")
+        }
         
-        completedChains = [
-            CompletedChainData(
-                id: "c1",
-                theme: "给备考的你加油",
-                emoji: "📚",
-                participantCount: 28,
-                messageCount: 34,
-                completedDate: "2026-06-15"
-            ),
-            CompletedChainData(
-                id: "c2",
-                theme: "失眠夜的陪伴",
-                emoji: "🌙",
-                participantCount: 15,
-                messageCount: 19,
-                completedDate: "2026-06-12"
-            ),
-            CompletedChainData(
-                id: "c3",
-                theme: "周一综合征互助",
-                emoji: "☕️",
-                participantCount: 42,
-                messageCount: 50,
-                completedDate: "2026-06-08"
-            ),
-        ]
+        // Load badges from achievements
+        do {
+            let achievements = try await CCXuanAPI.getAchievements()
+            badges = achievements.map { vo in
+                KindnessBadge(
+                    id: String(vo.id),
+                    name: vo.name,
+                    icon: vo.iconName,
+                    color: AppTheme.warmGlow,
+                    isUnlocked: vo.isUnlocked,
+                    unlockDate: vo.unlockedAt
+                )
+            }
+        } catch {
+            print("⚠️ [EncourageMuseum] Achievements API failed: \(error)")
+        }
+        
+        isLoading = false
     }
 }
 

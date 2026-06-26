@@ -31,18 +31,10 @@ final class CCTrendsViewModel {
             weekData = dayNames.map { ($0, counts[$0] ?? 0) }
             print("✅ [Trends] loadStats done: \(s.totalCount) entries, top=\(s.topEmotion), streak=\(s.streakDays)")
         } catch {
-            // API 不可用时使用 mock 数据
-            let s = CCMockData.generateWeeklyStats()
-            stats = s
-            let dayNames = ["日", "一", "二", "三", "四", "五", "六"]
-            var counts: [String: Int] = [:]
-            for e in s.entries {
-                let idx = dayOfWeek(from: e.checkinDate)
-                counts[dayNames[idx], default: 0] += 1
-            }
-            weekData = dayNames.map { ($0, counts[$0] ?? 0) }
-            errorMessage = nil
-            print("⚠️ [Trends] API failed, using mock data: \(error)")
+            stats = nil
+            weekData = []
+            errorMessage = "数据加载失败，请检查网络后重试"
+            print("⚠️ [Trends] API failed: \(error)")
         }
         isLoading = false
     }

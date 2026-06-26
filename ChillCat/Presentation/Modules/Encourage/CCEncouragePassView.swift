@@ -295,6 +295,7 @@ final class EncouragePassViewModel: ObservableObject {
     
     @Published var encourageText: String = ""
     @Published var chainMessages: [EncourageMessageData] = []
+    @Published var isLoadingMessages = false
     
     let presetPhrases: [String] = [
         "你比自己想象的更勇敢",
@@ -313,37 +314,31 @@ final class EncouragePassViewModel: ObservableObject {
     
     init(chain: EncourageChainData) {
         self.chain = chain
-        loadMockMessages()
+        Task { await loadChainMessages() }
     }
     
     func selectPreset(_ phrase: String) {
         encourageText = phrase
     }
     
-    private func loadMockMessages() {
-        chainMessages = [
-            EncourageMessageData(
-                id: "m1",
-                content: "我知道这不容易，但你已经坚持到现在了，真的很了不起",
-                from: "暖心伙伴",
-                emoji: "💪",
-                timeAgo: "3小时前"
-            ),
-            EncourageMessageData(
-                id: "m2",
-                content: "每个人都有自己的节奏，不必和任何人比较",
-                from: "同行者",
-                emoji: "🌟",
-                timeAgo: "2小时前"
-            ),
-            EncourageMessageData(
-                id: "m3",
-                content: "别忘了，你今天已经完成了那么多事，给自己点个赞吧",
-                from: "阳光使者",
-                emoji: "☀️",
-                timeAgo: "1小时前"
-            ),
-        ]
+    func loadChainMessages() async {
+        guard let chainId = Int64(chain.id) else { return }
+        isLoadingMessages = true
+        do {
+            let chainData = try await CCXuanAPI.getChain(id: chainId)
+            chainMessages = chainData.links.map { link in
+                EncourageMessageData(
+                    id: String(link.id),
+                    content: link.content,
+                    from: "参与者",
+                    emoji: "💛",
+                    timeAgo: link.createdAt
+                )
+            }
+        } catch {
+            print("⚠️ [EncouragePass] API failed: \(error)")
+        }
+        isLoadingMessages = false
     }
 }
 

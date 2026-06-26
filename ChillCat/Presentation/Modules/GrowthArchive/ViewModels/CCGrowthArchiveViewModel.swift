@@ -72,23 +72,18 @@ final class CCGrowthArchiveViewModel {
             achievements = mergeAchievements(local: CCAchievementBadge.allBadges, server: mapped)
             print("✅ [GrowthArchive] loaded \(serverBadges.count) server achievements")
         } catch {
-            // Use mock data when API is unavailable
-            achievements = generateMockAchievementProgress()
-            print("⚠️ [GrowthArchive] API failed, using mock achievements: \(error)")
+            // Keep predefined badges as placeholders; API unavailable
+            print("⚠️ [GrowthArchive] API failed, keeping default badges: \(error)")
         }
 
         // Load milestones
         do {
             let serverMilestones = try await CCXuanAPI.getMilestones()
-            if serverMilestones.isEmpty {
-                milestones = CCMilestone.mockMilestones
-            } else {
-                milestones = serverMilestones.map { Self.mapMilestone($0) }
-            }
+            milestones = serverMilestones.map { Self.mapMilestone($0) }
             print("✅ [GrowthArchive] loaded \(serverMilestones.count) server milestones")
         } catch {
-            milestones = CCMilestone.mockMilestones
-            print("⚠️ [GrowthArchive] API failed, using mock milestones: \(error)")
+            milestones = []
+            print("⚠️ [GrowthArchive] API failed, no milestones loaded: \(error)")
         }
 
         // Load stats
@@ -97,8 +92,9 @@ final class CCGrowthArchiveViewModel {
             stats = Self.mapGrowthStats(serverStats)
             print("✅ [GrowthArchive] loaded stats")
         } catch {
-            stats = CCGrowthStats.mock
-            print("⚠️ [GrowthArchive] API failed, using mock stats: \(error)")
+            stats = nil
+            error = error
+            print("⚠️ [GrowthArchive] API failed: \(error)")
         }
 
         isLoading = false
@@ -119,30 +115,6 @@ final class CCGrowthArchiveViewModel {
             }
         }
         return merged
-    }
-
-    private func generateMockAchievementProgress() -> [CCAchievementBadge] {
-        var badges = CCAchievementBadge.allBadges
-        let unlockedIDs: Set<String> = [
-            "first_checkin", "streak_7", "emotions_5", "tools_3",
-            "posts_1", "safety_plan", "values_done", "meditation_10",
-        ]
-        let progressMap: [String: Int] = [
-            "streak_30": 18, "checkin_100": 32, "emotions_10": 7,
-            "tools_5": 4, "tools_all": 5, "posts_10": 3,
-            "hugs_50": 23, "journal_30": 18, "gratitude_21": 12,
-            "cbt_5": 3, "body_scan_10": 6, "activation_7": 4,
-        ]
-        for i in badges.indices {
-            if unlockedIDs.contains(badges[i].id) {
-                badges[i].isUnlocked = true
-                badges[i].progress = badges[i].targetValue
-                badges[i].unlockedAt = Date().addingTimeInterval(-86400 * Double.random(in: 1...30))
-            } else if let prog = progressMap[badges[i].id] {
-                badges[i].progress = prog
-            }
-        }
-        return badges
     }
 }
 

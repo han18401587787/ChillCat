@@ -641,18 +641,22 @@ final class EmotionDecodeViewModel: ObservableObject {
     @Published var correctedEmotion: String
     @Published var correctedIntensity: Double
     @Published var correctedSummary: String
-    @Published var showLowScoreWarning: Bool = true
-    @Published var lowScoreDays: Int = 3
-    @Published var correctionCount: Int = 1
+    @Published var showLowScoreWarning: Bool = false
+    @Published var lowScoreDays: Int = 0
+    @Published var correctionCount: Int = 0
     @Published var keywords: [String] = []
     @Published var intensityDistribution: [Double] = []
     @Published var weeklyTrend: [WeeklyTrendData] = []
+    @Published var isLoadingDecode = false
     
-    init(emotion: String = "焦虑", intensity: Double = 6, summary: String = "") {
+    init(emotion: String = "", intensity: Double = 0, summary: String = "") {
         self.correctedEmotion = emotion
         self.correctedIntensity = intensity
-        self.correctedSummary = summary.isEmpty ? "你今天的情绪以焦虑为主，可能与工作压力有关。" : summary
-        loadMockData()
+        self.correctedSummary = summary.isEmpty ? "" : summary
+        if !summary.isEmpty {
+            Task { await loadDecodeData() }
+            Task { await loadWeeklyTrend() }
+        }
     }
     
     func applyCorrection(emotion: String, intensity: Double) {
@@ -663,20 +667,46 @@ final class EmotionDecodeViewModel: ObservableObject {
         confidence = min(confidence + 10, 100)
     }
     
-    private func loadMockData() {
-        keywords = ["工作压力", "深呼吸", "心跳加速", "汇报", "紧张", "手心出汗", "准备", "焦虑感"]
-        
-        intensityDistribution = [0.1, 0.15, 0.2, 0.3, 0.5, 0.8, 0.4, 0.2, 0.1, 0.05]
-        
-        weeklyTrend = [
-            WeeklyTrendData(dayShort: "周三", intensity: 6, emotionEmoji: "😰", emotionColor: EmotionColors.anxious),
-            WeeklyTrendData(dayShort: "周四", intensity: 7, emotionEmoji: "😰", emotionColor: EmotionColors.anxious),
-            WeeklyTrendData(dayShort: "周五", intensity: 5, emotionEmoji: "😔", emotionColor: EmotionColors.lonely),
-            WeeklyTrendData(dayShort: "周六", intensity: 4, emotionEmoji: "😌", emotionColor: EmotionColors.calm),
-            WeeklyTrendData(dayShort: "周日", intensity: 3, emotionEmoji: "😊", emotionColor: EmotionColors.happy),
-            WeeklyTrendData(dayShort: "周一", intensity: 7, emotionEmoji: "😰", emotionColor: EmotionColors.anxious),
-            WeeklyTrendData(dayShort: "周二", intensity: 8, emotionEmoji: "😰", emotionColor: EmotionColors.anxious),
-        ]
+    func loadDecodeData() async {
+        isLoadingDecode = true
+        do {
+            let decode = try await CCXuanAPI.decodeEmotion(text: correctedSummary)
+            confidence = decode.surface.confidence ?? 55
+            keywords = decode.middle.map { $0.label } + decode.deep.map { $0.label }
+            intensityDistribution = Array(repeating: 0.1, count: 10)
+            if let idx = Int(correctedIntensity.rounded()), idx >= 1, idx <= 10 {
+                intensityDistribution[idx - 1] = 0.8
+            }
+        } catch {
+            print("⚠️ [EmotionDecode] API failed: \(error)")
+        }
+        isLoadingDecode = false
+    }
+    
+    func loadWeeklyTrend() async {
+        do {
+            let stats = try await CCXuanAPI.getWeeklyStats()
+            let dayNames = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"]
+            let calendar = Calendar.current
+            weeklyTrend = stats.entries.compactMap { entry in
+                let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"
+                guard let date = f.date(from: entry.checkinDate) else { return nil }
+                let weekday = calendar.component(.weekday, from: date) - 1
+                return WeeklyTrendData(
+                    dayShort: dayNames[weekday],
+                    intensity: 5,
+                    emotionEmoji: "😌",
+                    emotionColor: EmotionColors.color(for: entry.emotion)
+                )
+            }
+            // Check for low score warning
+            if weeklyTrend.count >= 3 {
+                lowScoreDays = weeklyTrend.count
+                showLowScoreWarning = weeklyTrend.count >= 3
+            }
+        } catch {
+            print("⚠️ [EmotionDecode] WeeklyStats API failed: \(error)")
+        }
     }
 }
 

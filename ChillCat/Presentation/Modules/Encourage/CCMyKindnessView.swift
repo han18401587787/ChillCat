@@ -283,63 +283,47 @@ enum KindnessSegment: CaseIterable {
 // MARK: - ViewModel
 @MainActor
 final class MyKindnessViewModel: ObservableObject {
-    @Published var totalKindness: Int = 37
-    @Published var sentCount: Int = 22
-    @Published var receivedCount: Int = 15
-    @Published var connectedPeople: Int = 48
+    @Published var totalKindness: Int = 0
+    @Published var sentCount: Int = 0
+    @Published var receivedCount: Int = 0
+    @Published var connectedPeople: Int = 0
     @Published var participatedChains: [MyChainData] = []
     @Published var initiatedChains: [MyChainData] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
     
     init() {
-        loadMockData()
+        Task { await loadData() }
     }
     
-    private func loadMockData() {
-        participatedChains = [
-            MyChainData(
-                id: "p1",
-                theme: "给今天也在努力的你",
-                emoji: "💪",
-                participantCount: 47,
-                lastUpdated: "10分钟前",
-                status: .active
-            ),
-            MyChainData(
-                id: "p2",
-                theme: "失眠的夜晚有人陪伴",
-                emoji: "🌙",
-                participantCount: 32,
-                lastUpdated: "1小时前",
-                status: .active
-            ),
-            MyChainData(
-                id: "p3",
-                theme: "给备考的你加油",
-                emoji: "📚",
-                participantCount: 28,
-                lastUpdated: "昨天",
-                status: .completed
-            ),
-        ]
-        
-        initiatedChains = [
-            MyChainData(
-                id: "i1",
-                theme: "周一加油！",
-                emoji: "☀️",
-                participantCount: 23,
-                lastUpdated: "30分钟前",
-                status: .active
-            ),
-            MyChainData(
-                id: "i2",
-                theme: "难过的时候抱抱自己",
-                emoji: "🤗",
-                participantCount: 15,
-                lastUpdated: "昨天",
-                status: .completed
-            ),
-        ]
+    func loadData() async {
+        isLoading = true
+        errorMessage = nil
+        do {
+            let myChains = try await CCXuanAPI.getMyChains()
+            participatedChains = myChains.map { Self.mapToMyChain($0) }
+            initiatedChains = [] // initiated chains not separately returned by getMyChains
+            totalKindness = myChains.count
+            sentCount = myChains.reduce(0) { $0 + $1.links.count }
+            connectedPeople = myChains.reduce(0) { $0 + Int($1.participantCount) }
+        } catch {
+            participatedChains = []
+            initiatedChains = []
+            errorMessage = "数据加载失败"
+            print("⚠️ [MyKindness] API failed: \(error)")
+        }
+        isLoading = false
+    }
+    
+    private static func mapToMyChain(_ chain: CCXuanAPI.ChainResponse) -> MyChainData {
+        MyChainData(
+            id: String(chain.chainId),
+            theme: chain.links.first?.content.prefix(15).appending("…") ?? "鼓励链",
+            emoji: "💛",
+            participantCount: Int(chain.participantCount),
+            lastUpdated: chain.links.last?.createdAt ?? "",
+            status: .active
+        )
     }
 }
 
