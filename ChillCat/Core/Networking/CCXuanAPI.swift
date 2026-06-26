@@ -599,13 +599,6 @@ enum CCXuanAPI {
         return response.insights
     }
 
-    // MARK: - Vision (视觉分析)
-
-    /// 视觉完整度分析（用于 CI 自动化测试）
-    static func analyzeVision(image: String, page: String, checks: [String] = ["all_elements"]) async throws -> CCVisionAnalyzeResult {
-        try await post("/api/v1/vision/analyze", body: CCVisionAnalyzeRequest(image: image, page: page, checks: checks))
-    }
-
     // MARK: - Internal helpers
 
     private static let keychain = Keychain(service: "app.xuanpeace.token")
