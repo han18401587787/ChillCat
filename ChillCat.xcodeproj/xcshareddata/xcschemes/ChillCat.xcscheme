@@ -41,6 +41,17 @@
                ReferencedContainer = "container:ChillCat.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7A9D2A622FEE66B900288912"
+               BuildableName = "ChillCatTests.xctest"
+               BlueprintName = "ChillCatTests"
+               ReferencedContainer = "container:ChillCat.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
