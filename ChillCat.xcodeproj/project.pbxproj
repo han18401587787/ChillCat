@@ -61,11 +61,6 @@
 			path = ChillCat;
 			sourceTree = "<group>";
 		};
-		7A9D2A642FEE66B900288912 /* ChillCatTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ChillCatTests;
-			sourceTree = "<group>";
-		};
 		7AB3D3522FD7CCD400CCD8A8 /* ChillCatUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -109,7 +104,6 @@
 			children = (
 				7A8F02782FAF1FB3001D0053 /* ChillCat */,
 				7AB3D3522FD7CCD400CCD8A8 /* ChillCatUITests */,
-				7A9D2A642FEE66B900288912 /* ChillCatTests */,
 				7A8F02772FAF1FB3001D0053 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -164,9 +158,6 @@
 			);
 			dependencies = (
 				7A9D2A682FEE66B900288912 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				7A9D2A642FEE66B900288912 /* ChillCatTests */,
 			);
 			name = ChillCatTests;
 			packageProductDependencies = (

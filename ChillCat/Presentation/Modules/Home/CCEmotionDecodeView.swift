@@ -1,5 +1,5 @@
 import Combine
-import SwiftUI
+import SwiftUI 
 
 // MARK: - EmotionDecodeView v3.0 (完善版)
 /// 情绪解码页
@@ -674,7 +674,8 @@ final class EmotionDecodeViewModel: ObservableObject {
             confidence = decode.surface.confidence ?? 55
             keywords = decode.middle.map { $0.label } + decode.deep.map { $0.label }
             intensityDistribution = Array(repeating: 0.1, count: 10)
-            if let idx = Int(correctedIntensity.rounded()), idx >= 1, idx <= 10 {
+            let idx = Int(correctedIntensity.rounded())
+            if idx >= 1, idx <= 10 {
                 intensityDistribution[idx - 1] = 0.8
             }
         } catch {

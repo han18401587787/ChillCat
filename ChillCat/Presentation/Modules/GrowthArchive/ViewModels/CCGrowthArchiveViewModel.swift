@@ -1,5 +1,5 @@
 //
-//  CCGrowthArchiveViewModel.swift
+//  CCGrowthArchiveViewModel.swift 
 //  ChillCat
 //
 //  成长档案 — ViewModel
@@ -93,7 +93,7 @@ final class CCGrowthArchiveViewModel {
             print("✅ [GrowthArchive] loaded stats")
         } catch {
             stats = nil
-            error = error
+            self.error = error
             print("⚠️ [GrowthArchive] API failed: \(error)")
         }
 

@@ -1,5 +1,5 @@
 //
-//  CCJournalViewModel.swift
+//  CCJournalViewModel.swift 
 //  ChillCat - 情绪日记
 //
 
@@ -26,7 +26,7 @@ final class CCJournalViewModel {
             print("✅ [Journal] loadJournal done: \(page.list.count) entries, total=\(page.total)")
         } catch {
             entries = []
-            error = error
+            self.error = error
             print("⚠️ [Journal] API failed: \(error)")
         }
         isLoading = false
