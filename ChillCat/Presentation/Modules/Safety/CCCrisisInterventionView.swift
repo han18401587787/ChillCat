@@ -1,74 +1,69 @@
 import SwiftUI
 
-// MARK: - CrisisInterventionView v3.0
-/// 危机干预页面
-/// 安全协议触发时替换对话区域
-/// 包含：热线电话、稳情练习快捷入口、温暖视觉设计
+// MARK: - CrisisInterventionView v3.0 (Ardot 对照截图 #1 & #11)
+/// 安全守护 — 双模式：标准版(暖色系) + 紧急求助版(红色系)
+/// 截图 #1 = 紧急求助模式 (红色大按钮 + 热线列表 + 紧急联系人 + 安全计划)
+/// 截图 #11 = 标准安全守护 (暖色提示横幅 + 联系人 + 热线 + 练习入口)
 
 struct CCCrisisInterventionView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showHealingPlan = false
     @State private var animateIn = false
-    
+
+    /// 是否为紧急模式 (红色主题)
+    var isEmergency: Bool = false
+
     var body: some View {
         ZStack {
-            // 温暖渐变背景
-            LinearGradient(
-                colors: [
-                    AppTheme.roseGoldLight,
-                    AppTheme.warmGlowLight,
-                    AppTheme.background
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
-            
+            // 背景色
+            (isEmergency ? AppTheme.crisisRedLight : AppTheme.warmGlowLight)
+                .ignoresSafeArea()
+
             ScrollView {
                 VStack(spacing: AppSpacing.xxl) {
                     Spacer(minLength: 20)
-                    
-                    // 温暖图标
-                    warmIcon
+
+                    // 顶部图标
+                    topIcon
                         .opacity(animateIn ? 1 : 0)
                         .scaleEffect(animateIn ? 1 : 0.5)
                         .offset(y: animateIn ? 0 : 30)
-                    
-                    // 标题和正文
-                    VStack(spacing: AppSpacing.md) {
-                        Text("我们注意到你\n可能正在经历困难时刻")
-                            .font(AppFont.title1)
-                            .foregroundColor(AppTheme.textPrimary)
-                            .multilineTextAlignment(.center)
-                            .lineSpacing(8)
-                        
-                        Text("你不是一个人，我们在这里陪伴你\n请给自己一点时间，也请考虑寻求帮助")
-                            .font(AppFont.body)
-                            .foregroundColor(AppTheme.textSecondary)
-                            .multilineTextAlignment(.center)
-                            .lineSpacing(6)
-                    }
-                    .opacity(animateIn ? 1 : 0)
-                    .offset(y: animateIn ? 0 : 20)
-                    
-                    // 热线电话卡片
-                    hotlineCard
+
+                    // 标题
+                    titleSection
                         .opacity(animateIn ? 1 : 0)
                         .offset(y: animateIn ? 0 : 20)
-                    
-                    // 稳情练习快捷入口
+
+                    // 紧急求助大按钮 (紧急模式独有)
+                    if isEmergency {
+                        emergencyButton
+                            .opacity(animateIn ? 1 : 0)
+                    }
+
+                    // 热线电话列表
+                    hotlineList
+                        .opacity(animateIn ? 1 : 0)
+                        .offset(y: animateIn ? 0 : 20)
+
+                    // 紧急联系人 (紧急模式)
+                    if isEmergency {
+                        emergencyContactsSection
+                            .opacity(animateIn ? 1 : 0)
+                    }
+
+                    // 稳情练习
                     healingExercisesSection
                         .opacity(animateIn ? 1 : 0)
                         .offset(y: animateIn ? 0 : 20)
-                    
-                    // 温暖寄语
-                    warmMessage
+
+                    // 安全计划入口
+                    safetyPlanEntry
                         .opacity(animateIn ? 1 : 0)
-                    
+
                     // 底部按钮
-                    bottomButtons
+                    bottomActions
                         .opacity(animateIn ? 1 : 0)
-                    
+
                     Spacer(minLength: 40)
                 }
                 .padding(.horizontal, AppSpacing.lg)
@@ -85,113 +80,202 @@ struct CCCrisisInterventionView: View {
             }
         }
     }
-    
-    // MARK: - Warm Icon
-    private var warmIcon: some View {
+
+    // MARK: - Top Icon
+    private var topIcon: some View {
         ZStack {
-            // 外层柔和光晕
-            ForEach(0..<3) { i in
-                Circle()
-                    .stroke(
-                        AppTheme.warmGlow.opacity(0.15 - Double(i) * 0.05),
-                        lineWidth: 1
-                    )
-                    .frame(width: 120 + CGFloat(i) * 40, height: 120 + CGFloat(i) * 40)
-            }
-            
-            // 心跳动画
             Circle()
                 .fill(
-                    RadialGradient(
-                        colors: [AppTheme.roseGold.opacity(0.2), Color.clear],
-                        center: .center,
-                        startRadius: 0,
-                        endRadius: 60
-                    )
+                    isEmergency
+                        ? AppTheme.crisisRed.opacity(0.12)
+                        : AppTheme.warmGlow.opacity(0.12)
                 )
                 .frame(width: 120, height: 120)
-            
-            // 手中捧着心
-            VStack(spacing: 4) {
-                Image(systemName: "heart.fill")
-                    .font(.system(size: 36))
-                    .foregroundColor(AppTheme.roseGold)
-                    .scaleEffect(animateIn ? 1.05 : 0.95)
-                    .animation(
-                        .easeInOut(duration: 1.5).repeatForever(autoreverses: true),
-                        value: animateIn
-                    )
-                
-                Image(systemName: "hands.and.sparkles.fill")
-                    .font(.system(size: 24))
-                    .foregroundColor(AppTheme.warmGlow)
-            }
-        }
-        .padding(.top, AppSpacing.xxl)
-    }
-    
-    // MARK: - Hotline Card
-    private var hotlineCard: some View {
-        VStack(spacing: AppSpacing.lg) {
-            VStack(spacing: AppSpacing.md) {
-                Image(systemName: "phone.circle.fill")
-                    .font(.system(size: 40))
-                    .foregroundColor(AppTheme.safeGreen)
-                
-                Text("24小时心理援助热线")
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(AppTheme.textPrimary)
-                
-                Text("400-161-9995")
-                    .font(.system(size: 36, weight: .bold, design: .monospaced))
-                    .foregroundColor(AppTheme.primary)
-            }
-            
-            // 一键拨打按钮
-            Link(destination: URL(string: "tel://4001619995")!) {
-                HStack(spacing: AppSpacing.sm) {
-                    Image(systemName: "phone.fill")
-                    Text("一键拨打热线")
-                }
-                .font(AppFont.bodyBold)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(
-                    LinearGradient(
-                        colors: [AppTheme.safeGreen, AppTheme.safeGreenDark],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
+
+            Circle()
+                .stroke(
+                    isEmergency
+                        ? AppTheme.crisisRed.opacity(0.2)
+                        : AppTheme.warmGlow.opacity(0.2),
+                    lineWidth: 1
                 )
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
-                .shadow(color: AppTheme.safeGreen.opacity(0.3), radius: 8, x: 0, y: 4)
-            }
-            
-            Text("免费、保密、24小时在线")
-                .font(AppFont.footnote)
-                .foregroundColor(AppTheme.textTertiary)
+                .frame(width: 160, height: 160)
+
+            Image(systemName: isEmergency ? "heart.circle.fill" : "heart.text.square.fill")
+                .font(.system(size: 48))
+                .foregroundColor(
+                    isEmergency ? AppTheme.crisisRed : AppTheme.warmGlow
+                )
+                .scaleEffect(animateIn ? 1.05 : 0.95)
+                .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: animateIn)
         }
-        .padding(AppSpacing.xl)
-        .background(
-            RoundedRectangle(cornerRadius: AppRadius.xl)
-                .fill(AppTheme.surface)
-                .shadow(color: .black.opacity(0.06), radius: 12, x: 0, y: 4)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: AppRadius.xl)
-                .stroke(AppTheme.safeGreen.opacity(0.2), lineWidth: 1)
-        )
+        .padding(.top, AppSpacing.xl)
     }
-    
+
+    // MARK: - Title
+    private var titleSection: some View {
+        VStack(spacing: AppSpacing.md) {
+            Text(isEmergency
+                 ? "紧急求助"
+                 : "安全守护")
+                .font(AppFont.title1)
+                .foregroundColor(AppTheme.textPrimary)
+
+            Text(isEmergency
+                 ? "你不是一个人，请立即寻求帮助"
+                 : "我们注意到你可能正在经历困难时刻")
+                .font(AppFont.body)
+                .foregroundColor(AppTheme.textSecondary)
+                .multilineTextAlignment(.center)
+                .lineSpacing(6)
+        }
+    }
+
+    // MARK: - Emergency Button (紧急模式)
+    private var emergencyButton: some View {
+        Link(destination: URL(string: "tel://4001619995")!) {
+            HStack(spacing: AppSpacing.sm) {
+                Image(systemName: "phone.fill")
+                    .font(.system(size: 20))
+                Text("一键拨打热线 400-161-9995")
+                    .font(AppFont.buttonLabel)
+            }
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 18)
+            .background(
+                LinearGradient(
+                    colors: [AppTheme.crisisRed, AppTheme.crisisRedDark],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .cornerRadius(AppRadius.lg)
+            .shadow(color: AppTheme.crisisRed.opacity(0.35), radius: 12, x: 0, y: 4)
+        }
+    }
+
+    // MARK: - Hotline List
+    private var hotlineList: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
+            Text(isEmergency ? "心理援助热线" : "专业资源")
+                .font(AppFont.title3)
+                .foregroundColor(AppTheme.textPrimary)
+
+            VStack(spacing: AppSpacing.sm) {
+                hotlineRow(
+                    title: "全国24小时心理援助热线",
+                    number: "400-161-9995",
+                    subtitle: "免费 · 保密 · 全天候"
+                )
+                hotlineRow(
+                    title: "北京心理危机研究与干预中心",
+                    number: "010-82951332",
+                    subtitle: "专业危机干预"
+                )
+                hotlineRow(
+                    title: "生命热线（希望24）",
+                    number: "400-821-1215",
+                    subtitle: "全国通用 · 24小时"
+                )
+            }
+        }
+    }
+
+    private func hotlineRow(title: String, number: String, subtitle: String) -> some View {
+        Link(destination: URL(string: "tel:\(number.filter { $0.isNumber })")!) {
+            HStack(spacing: AppSpacing.md) {
+                ZStack {
+                    Circle()
+                        .fill(
+                            isEmergency
+                                ? AppTheme.crisisRed.opacity(0.12)
+                                : AppTheme.accentMint.opacity(0.12)
+                        )
+                        .frame(width: 44, height: 44)
+
+                    Image(systemName: "phone.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(isEmergency ? AppTheme.crisisRed : AppTheme.accentMint)
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(AppFont.bodyBold)
+                        .foregroundColor(AppTheme.textPrimary)
+                    Text(number)
+                        .font(.system(size: 17, weight: .semibold, design: .monospaced))
+                        .foregroundColor(isEmergency ? AppTheme.crisisRed : AppTheme.primary)
+                    Text(subtitle)
+                        .font(AppFont.caption2)
+                        .foregroundColor(AppTheme.textMuted)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(AppTheme.textMuted)
+            }
+            .padding(AppSpacing.md)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.md)
+        }
+    }
+
+    // MARK: - Emergency Contacts (紧急模式独有)
+    private var emergencyContactsSection: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
+            Text("紧急联系人")
+                .font(AppFont.title3)
+                .foregroundColor(AppTheme.textPrimary)
+
+            VStack(spacing: AppSpacing.sm) {
+                contactRow(name: "信任的朋友", icon: "person.fill")
+                contactRow(name: "家人", icon: "house.fill")
+                contactRow(name: "心理咨询师", icon: "brain.head.profile")
+            }
+        }
+    }
+
+    private func contactRow(name: String, icon: String) -> some View {
+        HStack(spacing: AppSpacing.md) {
+            ZStack {
+                Circle()
+                    .fill(AppTheme.surface)
+                    .frame(width: 44, height: 44)
+
+                Image(systemName: icon)
+                    .font(.system(size: 18))
+                    .foregroundColor(AppTheme.textSecondary)
+            }
+
+            Text(name)
+                .font(AppFont.body)
+                .foregroundColor(AppTheme.textPrimary)
+
+            Spacer()
+
+            Image(systemName: "phone.fill")
+                .font(.system(size: 14))
+                .foregroundColor(AppTheme.primary)
+                .frame(width: 36, height: 36)
+                .background(AppTheme.primary.opacity(0.1))
+                .cornerRadius(AppRadius.sm)
+        }
+        .padding(AppSpacing.md)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
+    }
+
     // MARK: - Healing Exercises
     private var healingExercisesSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
-            Text("也许这些可以帮到你")
+            Text("稳情练习")
                 .font(AppFont.title3)
                 .foregroundColor(AppTheme.textPrimary)
-            
-            VStack(spacing: AppSpacing.md) {
+
+            VStack(spacing: AppSpacing.sm) {
                 HealingExerciseCard(
                     icon: "lungs.fill",
                     title: "4-7-8 呼吸练习",
@@ -199,61 +283,62 @@ struct CCCrisisInterventionView: View {
                     color: AppTheme.calmBlue,
                     action: { showHealingPlan = true }
                 )
-                
                 HealingExerciseCard(
                     icon: "hand.draw.fill",
                     title: "5-4-3-2-1 感官练习",
-                    description: "通过感官重新连接当下，稳定情绪",
-                    color: AppTheme.softPurple,
-                    action: { showHealingPlan = true }
-                )
-                
-                HealingExerciseCard(
-                    icon: "text.book.closed.fill",
-                    title: "安全地带冥想",
-                    description: "在内心构建一个安全舒适的空间",
-                    color: AppTheme.mintGreen,
+                    description: "通过感官重新连接当下",
+                    color: AppTheme.warmPurple,
                     action: { showHealingPlan = true }
                 )
             }
         }
     }
-    
-    // MARK: - Warm Message
-    private var warmMessage: some View {
-        VStack(spacing: AppSpacing.sm) {
-            Image(systemName: "quote.bubble.fill")
-                .font(.system(size: 20))
-                .foregroundColor(AppTheme.warmGlow.opacity(0.5))
-            
-            Text("你很重要，你的感受也很重要。\n所有的情绪都会过去，就像乌云终会散去。\n给自己一些时间和温柔，你已经很勇敢了。")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
-                .multilineTextAlignment(.center)
-                .lineSpacing(6)
-                .italic()
+
+    // MARK: - Safety Plan Entry
+    private var safetyPlanEntry: some View {
+        HStack(spacing: AppSpacing.md) {
+            ZStack {
+                RoundedRectangle(cornerRadius: AppRadius.md)
+                    .fill(AppTheme.accentMint.opacity(0.12))
+                    .frame(width: 44, height: 44)
+
+                Image(systemName: "shield.checkered")
+                    .font(.system(size: 20))
+                    .foregroundColor(AppTheme.accentMint)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("安全计划")
+                    .font(AppFont.bodyBold)
+                    .foregroundColor(AppTheme.textPrimary)
+                Text("提前准备，从容应对")
+                    .font(AppFont.caption2)
+                    .foregroundColor(AppTheme.textMuted)
+            }
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(AppTheme.textMuted)
         }
-        .padding(AppSpacing.xl)
-        .background(AppTheme.warmGlow.opacity(0.05))
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .padding(AppSpacing.lg)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.lg)
     }
-    
-    // MARK: - Bottom Buttons
-    private var bottomButtons: some View {
+
+    // MARK: - Bottom
+    private var bottomActions: some View {
         VStack(spacing: AppSpacing.md) {
-            Button {
-                showHealingPlan = true
-            } label: {
-                HStack {
+            Button(action: { showHealingPlan = true }) {
+                HStack(spacing: AppSpacing.sm) {
                     Image(systemName: "leaf.fill")
                     Text("开始稳情练习")
                 }
             }
             .buttonStyle(ComponentStyles.PrimaryButtonStyle())
-            
-            Button {
-                dismiss()
-            } label: {
+
+            Button(action: { dismiss() }) {
                 Text("返回对话")
                     .font(AppFont.bodyBold)
                     .foregroundColor(AppTheme.textSecondary)
@@ -269,44 +354,43 @@ struct HealingExerciseCard: View {
     let description: String
     let color: Color
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             HStack(spacing: AppSpacing.md) {
                 ZStack {
-                    Circle()
-                        .fill(color.opacity(0.15))
-                        .frame(width: 48, height: 48)
-                    
+                    RoundedRectangle(cornerRadius: AppRadius.sm)
+                        .fill(color.opacity(0.12))
+                        .frame(width: 44, height: 44)
+
                     Image(systemName: icon)
-                        .font(.system(size: 22))
+                        .font(.system(size: 20))
                         .foregroundColor(color)
                 }
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(AppFont.bodyBold)
                         .foregroundColor(AppTheme.textPrimary)
-                    
                     Text(description)
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(AppFont.caption2)
+                        .foregroundColor(AppTheme.textMuted)
                 }
-                
+
                 Spacer()
-                
+
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 14))
-                    .foregroundColor(AppTheme.textTertiary)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(AppTheme.textMuted)
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
-            .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
+            .padding(AppSpacing.md)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.lg)
         }
+        .buttonStyle(.plain)
     }
 }
 
 #Preview {
-    CCCrisisInterventionView()
+    CCCrisisInterventionView(isEmergency: false)
 }
