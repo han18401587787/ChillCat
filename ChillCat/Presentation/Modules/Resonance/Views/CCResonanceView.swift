@@ -224,7 +224,7 @@ struct CCResonanceView: View {
         }
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
-        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
+        .xuanCardShadow()
     }
 
     // MARK: - Floating Compose Button
@@ -241,7 +241,7 @@ struct CCResonanceView: View {
             .padding(.vertical, 12)
             .background(AppTheme.primary)
             .cornerRadius(AppRadius.full)
-            .shadow(color: Color(hex: "2C2416").opacity(0.06), radius: 12, x: 0, y: 2)
+            .xuanCardShadow()
         }
         .padding(.trailing, AppSpacing.lg)
         .padding(.bottom, AppSpacing.lg)

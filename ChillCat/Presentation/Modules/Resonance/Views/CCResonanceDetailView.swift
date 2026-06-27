@@ -194,7 +194,7 @@ struct CCResonanceDetailView: View {
         }
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
-        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
+        .xuanCardShadow()
     }
 
     // MARK: - 回应区

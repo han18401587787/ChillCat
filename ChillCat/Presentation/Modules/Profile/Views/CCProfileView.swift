@@ -100,7 +100,7 @@ struct CCProfileView: View {
         .padding(AppSpacing.lg)
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
-        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
+        .xuanCardShadow()
     }
 
     // MARK: - 统计概览
@@ -136,7 +136,7 @@ struct CCProfileView: View {
         .padding(.vertical, AppSpacing.lg)
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
-        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
+        .xuanCardShadow()
     }
 
     // MARK: - 心光会员大卡片

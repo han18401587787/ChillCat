@@ -153,7 +153,7 @@ struct CCTreeHoleView: View {
             }
             .background(AppTheme.cardBackground)
             .cornerRadius(AppRadius.lg)
-            .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
+            .xuanCardShadow()
 
             // 操作栏 + 发送按钮
             if !viewModel.newPostText.isEmpty {
@@ -189,7 +189,7 @@ struct CCTreeHoleView: View {
                         .padding(.vertical, 12)
                         .background(AppTheme.primary)
                         .cornerRadius(AppRadius.full)
-                        .shadow(color: Color(hex: "2C2416").opacity(0.06), radius: 12, x: 0, y: 2)
+                        .xuanCardShadow()
                     }
                 }
             }

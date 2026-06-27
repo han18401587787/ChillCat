@@ -217,7 +217,7 @@ struct CCHomeView: View {
                 .padding(.vertical, 16)
                 .background(AppTheme.primary)
                 .cornerRadius(AppRadius.lg)
-                .shadow(color: Color(hex: "2C2416").opacity(0.06), radius: 12, x: 0, y: 2)
+                .xuanCardShadow()
             }
         }
     }
@@ -247,7 +247,7 @@ struct CCHomeView: View {
         .padding(AppSpacing.lg)
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
-        .shadow(color: Color(hex: "2C2416").opacity(0.03), radius: 6, y: 1)
+        .xuanCardShadow()
     }
 
     // MARK: - 5. 今日暖心
@@ -290,7 +290,7 @@ struct CCHomeView: View {
         .padding(AppSpacing.lg)
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
-        .shadow(color: Color(hex: "2C2416").opacity(0.03), radius: 6, y: 1)
+        .xuanCardShadow()
     }
 
     // MARK: - 6. 稳情计划预览
@@ -325,7 +325,7 @@ struct CCHomeView: View {
             .padding(AppSpacing.lg)
             .background(AppTheme.cardBackground)
             .cornerRadius(AppRadius.lg)
-            .shadow(color: Color(hex: "2C2416").opacity(0.03), radius: 6, y: 1)
+            .xuanCardShadow()
         }
         .buttonStyle(.plain)
     }
