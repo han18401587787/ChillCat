@@ -102,7 +102,7 @@ enum EmotionColors {
         case "lost", "迷茫": return lost
         case "angry", "易怒": return angry
         case "overthinking", "内耗": return overthinking
-        default: return AppTheme.primary
+        default: return Color.xuanApricot
         }
     }
 }

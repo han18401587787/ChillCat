@@ -48,7 +48,7 @@ struct CCSafetyPlanView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xl) {
+            VStack(spacing: XuanSpacing.xl) {
                 // MARK: - 页面头部
                 headerSection
 
@@ -67,9 +67,9 @@ struct CCSafetyPlanView: View {
                 // MARK: - 分享按钮
                 shareButton
             }
-            .padding(AppSpacing.lg)
+            .padding(XuanSpacing.lg)
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .navigationTitle("我的安全计划")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingAddStrategy) {
@@ -83,39 +83,39 @@ struct CCSafetyPlanView: View {
     // MARK: - Header
 
     private var headerSection: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.sm) {
             Image(systemName: "shield.checkered")
                 .font(.system(size: 36))
-                .foregroundColor(AppTheme.primary)
+                .foregroundColor(Color.xuanApricot)
 
             Text("提前准备，从容应对")
-                .font(AppFont.title1)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h1)
+                .foregroundColor(Color.xuanTextPrimary)
 
             Text("安全计划是你在情绪危机时可以依靠的个性化方案。花一点时间填写它，未来你会感谢现在的自己。")
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
         }
-        .padding(AppSpacing.xl)
+        .padding(XuanSpacing.xl)
         .frame(maxWidth: .infinity)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
     }
 
     // MARK: - Warning Signs Section
 
     private var warningSignsSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             sectionHeader(
                 icon: "exclamationmark.triangle.fill",
                 title: "预警信号",
                 subtitle: "当我出现以下情况时，我知道自己需要寻求帮助",
-                color: AppTheme.warmGold
+                color: Color.xuanApricotDark
             )
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 ForEach($warningSigns) { $item in
                     warningSignRow(item: $item)
                 }
@@ -124,7 +124,7 @@ struct CCSafetyPlanView: View {
     }
 
     private func warningSignRow(item: Binding<SafetyPlanItem>) -> some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     item.wrappedValue.isChecked.toggle()
@@ -132,35 +132,35 @@ struct CCSafetyPlanView: View {
             }) {
                 Image(systemName: item.wrappedValue.isChecked ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundColor(item.wrappedValue.isChecked ? AppTheme.warmGold : AppTheme.textSecondary)
+                    .foregroundColor(item.wrappedValue.isChecked ? Color.xuanApricotDark : Color.xuanTextSecondary)
             }
 
             Text(item.wrappedValue.text)
-                .font(AppFont.body)
+                .font(XuanFont.bodyL)
                 .foregroundColor(
-                    item.wrappedValue.isChecked ? AppTheme.textSecondary : AppTheme.textPrimary
+                    item.wrappedValue.isChecked ? Color.xuanTextSecondary : Color.xuanTextPrimary
                 )
                 .strikethrough(item.wrappedValue.isChecked)
 
             Spacer()
         }
-        .padding(AppSpacing.md)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.md)
+        .padding(XuanSpacing.md)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
     }
 
     // MARK: - Calming Strategies Section
 
     private var calmingStrategiesSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             sectionHeader(
                 icon: "leaf.fill",
                 title: "安抚策略",
                 subtitle: "当我感到情绪失控时，可以尝试以下方法",
-                color: AppTheme.accentMint
+                color: Color.xuanMint
             )
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 ForEach($calmingStrategies) { $item in
                     strategyRow(item: $item)
                 }
@@ -175,19 +175,19 @@ struct CCSafetyPlanView: View {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 16))
                     Text("添加安抚策略")
-                        .font(AppFont.body)
+                        .font(XuanFont.bodyL)
                 }
-                .foregroundColor(AppTheme.accentMint)
+                .foregroundColor(Color.xuanMint)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, AppSpacing.sm)
-                .background(AppTheme.accentMint.opacity(0.08))
-                .cornerRadius(AppRadius.sm)
+                .padding(.vertical, XuanSpacing.sm)
+                .background(Color.xuanMint.opacity(0.08))
+                .cornerRadius(XuanRadius.sm)
             }
         }
     }
 
     private func strategyRow(item: Binding<SafetyPlanItem>) -> some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     item.wrappedValue.isChecked.toggle()
@@ -195,35 +195,35 @@ struct CCSafetyPlanView: View {
             }) {
                 Image(systemName: item.wrappedValue.isChecked ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundColor(item.wrappedValue.isChecked ? AppTheme.accentMint : AppTheme.textSecondary)
+                    .foregroundColor(item.wrappedValue.isChecked ? Color.xuanMint : Color.xuanTextSecondary)
             }
 
             Text(item.wrappedValue.text)
-                .font(AppFont.body)
+                .font(XuanFont.bodyL)
                 .foregroundColor(
-                    item.wrappedValue.isChecked ? AppTheme.textSecondary : AppTheme.textPrimary
+                    item.wrappedValue.isChecked ? Color.xuanTextSecondary : Color.xuanTextPrimary
                 )
                 .strikethrough(item.wrappedValue.isChecked)
 
             Spacer()
         }
-        .padding(AppSpacing.md)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.md)
+        .padding(XuanSpacing.md)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
     }
 
     // MARK: - Support Contacts Section
 
     private var supportContactsSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             sectionHeader(
                 icon: "person.2.fill",
                 title: "支持联系人",
                 subtitle: "当我需要倾诉时，可以联系这些人",
-                color: AppTheme.warmPurple
+                color: Color(hex: "A085C6")
             )
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 ForEach($emergencyContacts) { $contact in
                     contactRow(contact: $contact)
                 }
@@ -238,30 +238,30 @@ struct CCSafetyPlanView: View {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 16))
                     Text("添加联系人")
-                        .font(AppFont.body)
+                        .font(XuanFont.bodyL)
                 }
-                .foregroundColor(AppTheme.warmPurple)
+                .foregroundColor(Color(hex: "A085C6"))
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, AppSpacing.sm)
-                .background(AppTheme.warmPurple.opacity(0.08))
-                .cornerRadius(AppRadius.sm)
+                .padding(.vertical, XuanSpacing.sm)
+                .background(Color(hex: "A085C6").opacity(0.08))
+                .cornerRadius(XuanRadius.sm)
             }
         }
     }
 
     private func contactRow(contact: Binding<EmergencyContact>) -> some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: "person.crop.circle.fill")
                 .font(.system(size: 28))
-                .foregroundColor(AppTheme.warmPurple)
+                .foregroundColor(Color(hex: "A085C6"))
 
             VStack(alignment: .leading, spacing: 2) {
                 TextField("联系人姓名", text: contact.name)
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextPrimary)
                 TextField("电话号码", text: contact.phone)
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .keyboardType(.phonePad)
             }
 
@@ -271,30 +271,30 @@ struct CCSafetyPlanView: View {
                 Link(destination: URL(string: "tel:\(contact.wrappedValue.phone.replacingOccurrences(of: " ", with: ""))")!) {
                     Image(systemName: "phone.fill")
                         .font(.system(size: 14))
-                        .foregroundColor(AppTheme.primary)
+                        .foregroundColor(Color.xuanApricot)
                         .frame(width: 32, height: 32)
-                        .background(AppTheme.primary.opacity(0.12))
-                        .cornerRadius(AppRadius.sm)
+                        .background(Color.xuanApricot.opacity(0.12))
+                        .cornerRadius(XuanRadius.sm)
                 }
             }
         }
-        .padding(AppSpacing.md)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.md)
+        .padding(XuanSpacing.md)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
     }
 
     // MARK: - Professional Resources Quick Links
 
     private var professionalResourcesSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             sectionHeader(
                 icon: "cross.case.fill",
                 title: "专业资源",
                 subtitle: "快速拨打专业援助热线",
-                color: AppTheme.crisisRed
+                color: Color.xuanDanger
             )
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 crisisLink(
                     name: "全国24小时心理援助热线",
                     number: "400-161-9995"
@@ -316,15 +316,15 @@ struct CCSafetyPlanView: View {
             HStack {
                 Image(systemName: "phone.fill")
                     .font(.system(size: 14))
-                    .foregroundColor(AppTheme.crisisRed)
+                    .foregroundColor(Color.xuanDanger)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(name)
-                        .font(AppFont.body)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyL)
+                        .foregroundColor(Color.xuanTextPrimary)
                     Text(number)
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.crisisRed)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanDanger)
                         .fontWeight(.medium)
                 }
 
@@ -332,11 +332,11 @@ struct CCSafetyPlanView: View {
 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
-            .padding(AppSpacing.md)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.md)
+            .padding(XuanSpacing.md)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.md)
         }
     }
 
@@ -346,37 +346,37 @@ struct CCSafetyPlanView: View {
         Button(action: {
             // Share action — in production this would invoke the system share sheet
         }) {
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 Image(systemName: "square.and.arrow.up.fill")
                     .font(.system(size: 16))
                 Text("分享安全计划")
-                    .font(AppFont.body.weight(.medium))
+                    .font(XuanFont.bodyLMedium)
                     .fontWeight(.medium)
             }
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, AppSpacing.md)
-            .background(AppTheme.primary)
-            .cornerRadius(AppRadius.md)
+            .padding(.vertical, XuanSpacing.md)
+            .background(Color.xuanApricot)
+            .cornerRadius(XuanRadius.md)
         }
-        .padding(.top, AppSpacing.sm)
+        .padding(.top, XuanSpacing.sm)
     }
 
     // MARK: - Add Strategy Sheet
 
     private var addStrategySheet: some View {
         NavigationStack {
-            VStack(spacing: AppSpacing.lg) {
+            VStack(spacing: XuanSpacing.lg) {
                 Text("添加安抚策略")
-                    .font(AppFont.title1)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h1)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 TextField("例如：做10个深蹲、喝一杯温水…", text: $newStrategyText, axis: .vertical)
-                    .font(AppFont.body)
-                    .padding(AppSpacing.md)
-                    .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.md)
+                    .font(XuanFont.bodyL)
+                    .padding(XuanSpacing.md)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.md)
                     .lineLimit(2...4)
 
                 Button(action: {
@@ -388,21 +388,21 @@ struct CCSafetyPlanView: View {
                         .fontWeight(.medium)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, AppSpacing.md)
+                        .padding(.vertical, XuanSpacing.md)
                         .background(newStrategyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            ? AppTheme.primaryMuted : AppTheme.primary)
-                        .cornerRadius(AppRadius.md)
+                            ? Color.xuanApricot.opacity(0.6) : Color.xuanApricot)
+                        .cornerRadius(XuanRadius.md)
                 }
                 .disabled(newStrategyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 
                 Spacer()
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.background)
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanApricotBg)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("取消") { showingAddStrategy = false }
-                        .foregroundColor(AppTheme.textSecondary)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
             }
         }
@@ -413,23 +413,23 @@ struct CCSafetyPlanView: View {
 
     private var addContactSheet: some View {
         NavigationStack {
-            VStack(spacing: AppSpacing.lg) {
+            VStack(spacing: XuanSpacing.lg) {
                 Text("添加联系人")
-                    .font(AppFont.title1)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h1)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 TextField("联系人姓名", text: $newContactName)
-                    .font(AppFont.body)
-                    .padding(AppSpacing.md)
-                    .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.md)
+                    .font(XuanFont.bodyL)
+                    .padding(XuanSpacing.md)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.md)
 
                 TextField("电话号码", text: $newContactPhone)
-                    .font(AppFont.body)
-                    .padding(AppSpacing.md)
-                    .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.md)
+                    .font(XuanFont.bodyL)
+                    .padding(XuanSpacing.md)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.md)
                     .keyboardType(.phonePad)
 
                 Button(action: {
@@ -446,21 +446,21 @@ struct CCSafetyPlanView: View {
                         .fontWeight(.medium)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, AppSpacing.md)
+                        .padding(.vertical, XuanSpacing.md)
                         .background(newContactName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            ? AppTheme.primaryMuted : AppTheme.primary)
-                        .cornerRadius(AppRadius.md)
+                            ? Color.xuanApricot.opacity(0.6) : Color.xuanApricot)
+                        .cornerRadius(XuanRadius.md)
                 }
                 .disabled(newContactName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 
                 Spacer()
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.background)
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanApricotBg)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("取消") { showingAddContact = false }
-                        .foregroundColor(AppTheme.textSecondary)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
             }
         }
@@ -470,18 +470,18 @@ struct CCSafetyPlanView: View {
     // MARK: - Helpers
 
     private func sectionHeader(icon: String, title: String, subtitle: String, color: Color) -> some View {
-        VStack(alignment: .leading, spacing: AppSpacing.xs) {
-            HStack(spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.xs) {
+            HStack(spacing: XuanSpacing.sm) {
                 Image(systemName: icon)
                     .font(.system(size: 16))
                     .foregroundColor(color)
                 Text(title)
-                    .font(AppFont.title3)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h3)
+                    .foregroundColor(Color.xuanTextPrimary)
             }
             Text(subtitle)
-                .font(AppFont.footnote)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyS)
+                .foregroundColor(Color.xuanTextSecondary)
         }
     }
 }

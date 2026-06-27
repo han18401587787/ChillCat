@@ -20,19 +20,19 @@ struct CCPrivacyView: View {
                     get: { viewModel.allowDataCollection },
                     set: { viewModel.allowDataCollection = $0 }
                 ))
-                Text("用于改善绪安的情绪分析准确度，不包含个人身份信息").font(.system(size: 12)).foregroundColor(AppTheme.textMuted)
+                Text("用于改善绪安的情绪分析准确度，不包含个人身份信息").font(.system(size: 12)).foregroundColor(Color.xuanTextTertiary)
             }
             Section("加密") {
-                Label("加密", systemImage: "lock.shield.fill").foregroundColor(AppTheme.accentMint)
-                Text("所有日记和语音数据均已端到端加密存储").font(.system(size: 12)).foregroundColor(AppTheme.textMuted)
+                Label("加密", systemImage: "lock.shield.fill").foregroundColor(Color.xuanMint)
+                Text("所有日记和语音数据均已端到端加密存储").font(.system(size: 12)).foregroundColor(Color.xuanTextTertiary)
             }
             Section {
-                Label("匿名已开启", systemImage: "theatermasks.fill").foregroundColor(AppTheme.primaryDark)
+                Label("匿名已开启", systemImage: "theatermasks.fill").foregroundColor(Color.xuanApricotDark)
                 Button("切换为实名") { viewModel.initiateRealNameFlow() }
-                    .foregroundColor(AppTheme.crisisRed)
+                    .foregroundColor(Color.xuanDanger)
             }
         }
         .navigationTitle("隐私设置")
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
     }
 }

@@ -19,7 +19,7 @@ struct CCResonanceDetailView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.background.ignoresSafeArea()
+            Color.xuanApricotBg.ignoresSafeArea()
 
             if let error, replies.isEmpty && !isLoading {
                 CCErrorView(error: error) { await loadDetail() }
@@ -37,18 +37,18 @@ struct CCResonanceDetailView: View {
     private var detailContent: some View {
         ZStack(alignment: .bottom) {
             ScrollView {
-                VStack(spacing: AppSpacing.lg) {
+                VStack(spacing: XuanSpacing.lg) {
                     originalPostCard
                     if !replies.isEmpty { repliesSection }
                     Spacer().frame(height: 80) // 底部操作栏空间
                 }
-                .padding(AppSpacing.lg)
+                .padding(XuanSpacing.lg)
             }
 
             // 底部固定操作栏
             bottomActionBar
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .cc_emojiPickerOverlay(isShowing: $showEmoji) { emoji in
             newReply += emoji.displayName
         }
@@ -58,26 +58,26 @@ struct CCResonanceDetailView: View {
     // MARK: - 底部固定操作栏
     private var bottomActionBar: some View {
         VStack(spacing: 0) {
-            Divider().foregroundColor(AppTheme.border)
+            Divider().foregroundColor(Color.xuanBorder)
 
-            HStack(spacing: AppSpacing.md) {
+            HStack(spacing: XuanSpacing.md) {
                 // 共鸣按钮
                 Button(action: { /* 共鸣 */ }) {
                     HStack(spacing: 6) {
                         Image(systemName: "heart.fill")
                             .font(.system(size: 18))
-                            .foregroundColor(AppTheme.warmPink)
+                            .foregroundColor(Color.xuanPink)
                         Text("共鸣")
-                            .font(AppFont.bodyBold)
-                            .foregroundColor(AppTheme.textPrimary)
+                            .font(XuanFont.bodyLBold)
+                            .foregroundColor(Color.xuanTextPrimary)
                         Text("\(item.resonanceCount)")
-                            .font(AppFont.footnote)
-                            .foregroundColor(AppTheme.textMuted)
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextTertiary)
                     }
-                    .padding(.horizontal, AppSpacing.lg)
-                    .padding(.vertical, AppSpacing.sm)
-                    .background(AppTheme.warmPink.opacity(0.08))
-                    .cornerRadius(AppRadius.full)
+                    .padding(.horizontal, XuanSpacing.lg)
+                    .padding(.vertical, XuanSpacing.sm)
+                    .background(Color.xuanPink.opacity(0.08))
+                    .cornerRadius(XuanRadius.full)
                 }
 
                 // 鼓励按钮
@@ -87,33 +87,33 @@ struct CCResonanceDetailView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "hand.wave.fill")
                             .font(.system(size: 18))
-                            .foregroundColor(AppTheme.warmGold)
+                            .foregroundColor(Color.xuanApricotDark)
                         Text("鼓励")
-                            .font(AppFont.bodyBold)
-                            .foregroundColor(AppTheme.textPrimary)
+                            .font(XuanFont.bodyLBold)
+                            .foregroundColor(Color.xuanTextPrimary)
                         Text("\(replies.count)")
-                            .font(AppFont.footnote)
-                            .foregroundColor(AppTheme.textMuted)
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextTertiary)
                     }
-                    .padding(.horizontal, AppSpacing.lg)
-                    .padding(.vertical, AppSpacing.sm)
-                    .background(AppTheme.warmGold.opacity(0.08))
-                    .cornerRadius(AppRadius.full)
+                    .padding(.horizontal, XuanSpacing.lg)
+                    .padding(.vertical, XuanSpacing.sm)
+                    .background(Color.xuanApricotDark.opacity(0.08))
+                    .cornerRadius(XuanRadius.full)
                 }
 
                 Spacer()
 
                 // 回复输入框
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     TextField("附上一句鼓励...", text: $newReply, axis: .vertical)
                         .focused($isFocused)
-                        .font(AppFont.footnote)
+                        .font(XuanFont.bodyS)
                         .lineLimit(1)
 
                     Button(action: { showEmoji.toggle() }) {
                         Image(systemName: "face.smiling")
                             .font(.system(size: 18))
-                            .foregroundColor(AppTheme.textSecondary)
+                            .foregroundColor(Color.xuanTextSecondary)
                     }
 
                     Button(action: { sendReply() }) {
@@ -123,20 +123,20 @@ struct CCResonanceDetailView: View {
                             .padding(8)
                             .background(
                                 newReply.trimmingCharacters(in: .whitespaces).isEmpty
-                                    ? AppTheme.textMuted
-                                    : AppTheme.primary
+                                    ? Color.xuanTextTertiary
+                                    : Color.xuanApricot
                             )
                             .clipShape(Circle())
                     }
                     .disabled(newReply.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
-                .padding(.horizontal, AppSpacing.md)
-                .padding(.vertical, AppSpacing.xs)
-                .background(AppTheme.surface)
-                .cornerRadius(AppRadius.full)
+                .padding(.horizontal, XuanSpacing.md)
+                .padding(.vertical, XuanSpacing.xs)
+                .background(Color.xuanSurface)
+                .cornerRadius(XuanRadius.full)
             }
-            .padding(.horizontal, AppSpacing.lg)
-            .padding(.vertical, AppSpacing.sm)
+            .padding(.horizontal, XuanSpacing.lg)
+            .padding(.vertical, XuanSpacing.sm)
             .background(.regularMaterial)
         }
     }
@@ -148,62 +148,62 @@ struct CCResonanceDetailView: View {
             RoundedRectangle(cornerRadius: 2)
                 .fill(item.emotionColorValue)
                 .frame(width: 4)
-                .padding(.vertical, AppSpacing.md)
+                .padding(.vertical, XuanSpacing.md)
 
-            VStack(alignment: .leading, spacing: AppSpacing.sm) {
+            VStack(alignment: .leading, spacing: XuanSpacing.sm) {
                 // 头：情绪标签 + 时间
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     HStack(spacing: 4) {
                         Circle().fill(item.emotionColorValue).frame(width: 8, height: 8)
                         Text(item.emotion)
-                            .font(AppFont.footnote)
+                            .font(XuanFont.bodyS)
                             .foregroundColor(item.emotionColorValue)
                     }
                     Spacer()
                     Text(item.timeAgo)
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textMuted)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
 
                 // 内容（全展开）
                 Text(item.content)
                     .font(.system(size: 15))
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .lineSpacing(6)
                     .fixedSize(horizontal: false, vertical: true)
 
                 // 共鸣数
-                HStack(spacing: AppSpacing.lg) {
+                HStack(spacing: XuanSpacing.lg) {
                     Button(action: { /* 共鸣互动 */ }) {
                         HStack(spacing: 4) {
                             Image(systemName: "heart.fill")
                                 .font(.system(size: 14))
-                                .foregroundColor(AppTheme.warmPink)
+                                .foregroundColor(Color.xuanPink)
                             Text("\(item.resonanceCount) 人共鸣")
-                                .font(AppFont.footnote)
-                                .foregroundColor(AppTheme.textSecondary)
+                                .font(XuanFont.bodyS)
+                                .foregroundColor(Color.xuanTextSecondary)
                         }
                     }
                     .buttonStyle(.plain)
                     Spacer()
                 }
             }
-            .padding(.leading, AppSpacing.sm)
-            .padding(.vertical, AppSpacing.md)
-            .padding(.trailing, AppSpacing.md)
+            .padding(.leading, XuanSpacing.sm)
+            .padding(.vertical, XuanSpacing.md)
+            .padding(.trailing, XuanSpacing.md)
         }
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .xuanCardShadow()
     }
 
     // MARK: - 回应区
     private var repliesSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("回应 (\(replies.count))")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
-                .padding(.top, AppSpacing.sm)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
+                .padding(.top, XuanSpacing.sm)
 
             ForEach(replies) { reply in
                 replyRow(reply)
@@ -212,59 +212,59 @@ struct CCResonanceDetailView: View {
     }
 
     private func replyRow(_ reply: CCResonanceReplyDisplay) -> some View {
-        HStack(alignment: .top, spacing: AppSpacing.md) {
+        HStack(alignment: .top, spacing: XuanSpacing.md) {
             // 匿名头像
             ZStack {
                 Circle()
-                    .fill(AppTheme.primary.opacity(0.15))
+                    .fill(Color.xuanApricot.opacity(0.15))
                     .frame(width: 36, height: 36)
 
                 Image(systemName: "person.circle.fill")
                     .font(.system(size: 20))
-                    .foregroundColor(AppTheme.primaryMuted)
+                    .foregroundColor(Color.xuanApricot.opacity(0.6))
             }
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     Text("匿名用户")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextSecondary)
                     Spacer()
                     Text(reply.timeAgo)
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textMuted)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
                 Text(reply.content)
                     .font(.system(size: 14))
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .lineSpacing(4)
             }
         }
-        .padding(AppSpacing.md)
+        .padding(XuanSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.md)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
     }
 
     // MARK: - 回复输入区
     private var replyInputSection: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.sm) {
             Divider()
-                .foregroundColor(AppTheme.border)
+                .foregroundColor(Color.xuanBorder)
 
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 TextField("附上一句鼓励...", text: $newReply, axis: .vertical)
                     .focused($isFocused)
-                    .font(AppFont.body)
-                    .padding(AppSpacing.md)
-                    .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.lg)
+                    .font(XuanFont.bodyL)
+                    .padding(XuanSpacing.md)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.lg)
                     .lineLimit(1...3)
 
                 Button(action: { showEmoji.toggle() }) {
                     Image(systemName: "face.smiling")
                         .font(.system(size: 20))
-                        .foregroundColor(AppTheme.primary)
+                        .foregroundColor(Color.xuanApricot)
                 }
 
                 Button(action: { sendReply() }) {
@@ -274,15 +274,15 @@ struct CCResonanceDetailView: View {
                         .padding(12)
                         .background(
                             newReply.trimmingCharacters(in: .whitespaces).isEmpty
-                                ? AppTheme.textMuted
-                                : AppTheme.primary
+                                ? Color.xuanTextTertiary
+                                : Color.xuanApricot
                         )
                         .clipShape(Circle())
                 }
                 .disabled(newReply.trimmingCharacters(in: .whitespaces).isEmpty)
             }
         }
-        .padding(.top, AppSpacing.sm)
+        .padding(.top, XuanSpacing.sm)
     }
 
     // MARK: - 数据加载

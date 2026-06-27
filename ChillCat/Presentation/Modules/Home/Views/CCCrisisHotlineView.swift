@@ -11,7 +11,7 @@ struct CCCrisisHotlineView: View {
         @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        VStack(spacing: AppSpacing.xl) {
+        VStack(spacing: XuanSpacing.xl) {
             // 关闭按钮（Sheet 模式下使用）
             closeButton
 
@@ -24,9 +24,9 @@ struct CCCrisisHotlineView: View {
             // 紧急情况提示
             emergencyNotice
         }
-        .padding(AppSpacing.xl)
+        .padding(XuanSpacing.xl)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
     }
 
     // MARK: - Close Button
@@ -37,7 +37,7 @@ struct CCCrisisHotlineView: View {
             Button(action: { dismiss() }) {
                 Image(systemName: "xmark.circle.fill")
                     .font(.system(size: 28))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
         }
     }
@@ -45,25 +45,25 @@ struct CCCrisisHotlineView: View {
     // MARK: - Emergency Header
 
     private var emergencyHeader: some View {
-        VStack(spacing: AppSpacing.lg) {
+        VStack(spacing: XuanSpacing.lg) {
             ZStack {
                 Circle()
-                    .fill(AppTheme.warmGold.opacity(0.15))
+                    .fill(Color.xuanApricotDark.opacity(0.15))
                     .frame(width: 100, height: 100)
 
                 Image(systemName: "heart.text.square.fill")
                     .font(.system(size: 44))
-                    .foregroundColor(AppTheme.warmGold)
+                    .foregroundColor(Color.xuanApricotDark)
             }
 
             Text("你并不孤单，帮助就在身边")
-                .font(AppFont.title1)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h1)
+                .foregroundColor(Color.xuanTextPrimary)
                 .multilineTextAlignment(.center)
 
             Text("请勇敢伸出你的手，这些热线24小时有人倾听")
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
         }
@@ -72,47 +72,47 @@ struct CCCrisisHotlineView: View {
     // MARK: - Hotline Buttons
 
     private var hotlineButtons: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             largeCallButton(
                 name: "全国24小时心理援助热线",
                 number: "400-161-9995",
                 icon: "phone.fill",
-                color: AppTheme.primary
+                color: Color.xuanApricot
             )
 
             largeCallButton(
                 name: "北京心理危机研究与干预中心",
                 number: "010-82951332",
                 icon: "phone.fill",
-                color: AppTheme.accentMint
+                color: Color.xuanMint
             )
 
             largeCallButton(
                 name: "生命热线",
                 number: "400-821-1215",
                 icon: "phone.fill",
-                color: AppTheme.warmPurple
+                color: Color(hex: "A085C6")
             )
         }
     }
 
     private func largeCallButton(name: String, number: String, icon: String, color: Color) -> some View {
         Link(destination: URL(string: "tel:\(number.replacingOccurrences(of: "-", with: ""))")!) {
-            HStack(spacing: AppSpacing.md) {
+            HStack(spacing: XuanSpacing.md) {
                 Image(systemName: icon)
                     .font(.system(size: 20))
                     .foregroundColor(.white)
                     .frame(width: 48, height: 48)
                     .background(color)
-                    .cornerRadius(AppRadius.sm)
+                    .cornerRadius(XuanRadius.sm)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(name)
-                        .font(AppFont.body.weight(.medium))
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyLMedium)
+                        .foregroundColor(Color.xuanTextPrimary)
                         .fontWeight(.medium)
                     Text(number)
-                        .font(AppFont.title3)
+                        .font(XuanFont.h3)
                         .foregroundColor(color)
                         .fontWeight(.bold)
                 }
@@ -121,13 +121,13 @@ struct CCCrisisHotlineView: View {
 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.lg)
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.lg)
             .overlay(
-                RoundedRectangle(cornerRadius: AppRadius.lg)
+                RoundedRectangle(cornerRadius: XuanRadius.lg)
                     .stroke(color.opacity(0.15), lineWidth: 1)
             )
         }
@@ -136,40 +136,40 @@ struct CCCrisisHotlineView: View {
     // MARK: - Emergency Notice
 
     private var emergencyNotice: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.sm) {
             Text("紧急情况请立即拨打")
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextSecondary)
 
-            HStack(spacing: AppSpacing.lg) {
+            HStack(spacing: XuanSpacing.lg) {
                 emergencyNumberLink(number: "120", label: "急救")
                 emergencyNumberLink(number: "110", label: "报警")
             }
         }
-        .padding(AppSpacing.xl)
+        .padding(XuanSpacing.xl)
         .frame(maxWidth: .infinity)
         .background(Color.red.opacity(0.3))
-        .cornerRadius(AppRadius.lg)
+        .cornerRadius(XuanRadius.lg)
         .overlay(
-            RoundedRectangle(cornerRadius: AppRadius.lg)
+            RoundedRectangle(cornerRadius: XuanRadius.lg)
                 .stroke(Color.red.opacity(0.3), lineWidth: 1)
         )
     }
 
     private func emergencyNumberLink(number: String, label: String) -> some View {
         Link(destination: URL(string: "tel:\(number)")!) {
-            VStack(spacing: AppSpacing.xs) {
+            VStack(spacing: XuanSpacing.xs) {
                 Text(number)
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(Color.red)
                 Text(label)
-                    .font(AppFont.caption)
+                    .font(XuanFont.bodyM)
                     .foregroundColor(Color.red.opacity(0.8))
             }
             .frame(width: 100)
-            .padding(.vertical, AppSpacing.md)
+            .padding(.vertical, XuanSpacing.md)
             .background(Color.red.opacity(0.08))
-            .cornerRadius(AppRadius.md)
+            .cornerRadius(XuanRadius.md)
         }
     }
 }

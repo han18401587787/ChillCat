@@ -17,11 +17,11 @@ struct EncouragePassView: View {
     
     var body: some View {
         ZStack {
-            AppTheme.background
+            Color.xuanApricotBg
                 .ignoresSafeArea()
             
             ScrollView {
-                VStack(spacing: AppSpacing.xl) {
+                VStack(spacing: XuanSpacing.xl) {
                     // 链主题
                     chainHeader
                     
@@ -39,7 +39,7 @@ struct EncouragePassView: View {
                     
                     Spacer(minLength: 40)
                 }
-                .padding(AppSpacing.lg)
+                .padding(XuanSpacing.lg)
             }
         }
         .navigationTitle("传递鼓励")
@@ -49,7 +49,7 @@ struct EncouragePassView: View {
                 Button("返回") {
                     dismiss()
                 }
-                .foregroundColor(AppTheme.primary)
+                .foregroundColor(Color.xuanApricot)
             }
         }
         .overlay {
@@ -61,79 +61,79 @@ struct EncouragePassView: View {
     
     // MARK: - Chain Header
     private var chainHeader: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             Text(viewModel.chain.emotionEmoji)
                 .font(.system(size: 48))
             
             Text(viewModel.chain.theme)
-                .font(AppFont.title2)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h2)
+                .foregroundColor(Color.xuanTextPrimary)
                 .multilineTextAlignment(.center)
             
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 Image(systemName: "person.3.fill")
                     .font(.system(size: 14))
-                    .foregroundColor(AppTheme.textTertiary)
+                    .foregroundColor(Color.xuanTextTertiary)
                 
                 Text("已有 \(viewModel.chain.participantCount) 人参与")
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
         }
-        .padding(.top, AppSpacing.lg)
+        .padding(.top, XuanSpacing.lg)
     }
     
     // MARK: - Message Chain
     private var messageChain: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("链上的温暖")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textTertiary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextTertiary)
             
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 ForEach(viewModel.chainMessages) { message in
                     ChainMessageBubble(message: message)
                 }
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanSurface)
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
             .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
         }
     }
     
     // MARK: - Preset Phrases
     private var presetPhrasesSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("选择一句鼓励话术")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textTertiary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextTertiary)
             
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: AppSpacing.sm) {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: XuanSpacing.sm) {
                 ForEach(viewModel.presetPhrases, id: \.self) { phrase in
                     Button {
                         viewModel.selectPreset(phrase)
                     } label: {
                         Text(phrase)
-                            .font(AppFont.footnote)
+                            .font(XuanFont.bodyS)
                             .foregroundColor(
                                 viewModel.encourageText == phrase
-                                    ? AppTheme.warmGlowDark
-                                    : AppTheme.textSecondary
+                                    ? Color(hex: "B08A3A")
+                                    : Color.xuanTextSecondary
                             )
-                            .padding(AppSpacing.md)
+                            .padding(XuanSpacing.md)
                             .frame(maxWidth: .infinity)
                             .background(
                                 viewModel.encourageText == phrase
-                                    ? AppTheme.warmGlowLight
-                                    : AppTheme.backgroundSecondary
+                                    ? Color(hex: "FDF0D5")
+                                    : Color.xuanSurface
                             )
-                            .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.md))
                             .overlay(
-                                RoundedRectangle(cornerRadius: AppRadius.md)
+                                RoundedRectangle(cornerRadius: XuanRadius.md)
                                     .stroke(
                                         viewModel.encourageText == phrase
-                                            ? AppTheme.warmGlow.opacity(0.5)
+                                            ? Color.xuanApricotDark.opacity(0.5)
                                             : Color.clear,
                                         lineWidth: 1
                                     )
@@ -146,33 +146,33 @@ struct EncouragePassView: View {
     
     // MARK: - Compose Section
     private var composeSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack {
                 Text("写下你的鼓励")
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textTertiary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextTertiary)
                 
                 Spacer()
                 
                 Text("\(viewModel.encourageText.count)/50")
-                    .font(AppFont.footnote)
+                    .font(XuanFont.bodyS)
                     .foregroundColor(
                         viewModel.encourageText.count > 50
-                            ? AppTheme.crisisRed
-                            : AppTheme.textTertiary
+                            ? Color.xuanDanger
+                            : Color.xuanTextTertiary
                     )
             }
             
             TextEditor(text: $viewModel.encourageText)
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextPrimary)
                 .frame(minHeight: 100)
-                .padding(AppSpacing.md)
-                .background(AppTheme.backgroundSecondary)
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                .padding(XuanSpacing.md)
+                .background(Color.xuanSurface)
+                .clipShape(RoundedRectangle(cornerRadius: XuanRadius.md))
                 .overlay(
-                    RoundedRectangle(cornerRadius: AppRadius.md)
-                        .stroke(AppTheme.border, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: XuanRadius.md)
+                        .stroke(Color.xuanBorder, lineWidth: 1)
                 )
                 .onChange(of: viewModel.encourageText) { newValue in
                     if newValue.count > 50 {
@@ -196,7 +196,7 @@ struct EncouragePassView: View {
                 }
             }
         } label: {
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 if isSending {
                     ProgressView()
                         .tint(.white)
@@ -217,31 +217,31 @@ struct EncouragePassView: View {
             Color.black.opacity(0.3)
                 .ignoresSafeArea()
             
-            VStack(spacing: AppSpacing.xl) {
+            VStack(spacing: XuanSpacing.xl) {
                 ZStack {
                     Circle()
-                        .fill(AppTheme.warmGlow.opacity(0.15))
+                        .fill(Color.xuanApricotDark.opacity(0.15))
                         .frame(width: 100, height: 100)
                     
                     Image(systemName: "heart.fill")
                         .font(.system(size: 40))
-                        .foregroundColor(AppTheme.warmGlow)
+                        .foregroundColor(Color.xuanApricotDark)
                 }
                 
-                VStack(spacing: AppSpacing.sm) {
+                VStack(spacing: XuanSpacing.sm) {
                     Text("温暖已传递")
-                        .font(AppFont.title2)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h2)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
                     Text("你的鼓励会照亮某个人的世界")
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
             }
-            .padding(AppSpacing.xxl)
+            .padding(XuanSpacing.xl2)
             .background(
-                RoundedRectangle(cornerRadius: AppRadius.xl)
-                    .fill(AppTheme.surface)
+                RoundedRectangle(cornerRadius: XuanRadius.xl)
+                    .fill(Color.xuanSurface)
                     .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 8)
             )
         }
@@ -253,38 +253,38 @@ struct ChainMessageBubble: View {
     let message: EncourageMessageData
     
     var body: some View {
-        HStack(alignment: .top, spacing: AppSpacing.md) {
+        HStack(alignment: .top, spacing: XuanSpacing.md) {
             Text(message.emoji)
                 .font(.system(size: 20))
                 .frame(width: 36, height: 36)
-                .background(AppTheme.warmGlowLight)
+                .background(Color(hex: "FDF0D5"))
                 .clipShape(Circle())
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(message.content)
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .lineSpacing(4)
                 
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     Text(message.from)
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
                     
                     Text("·")
-                        .foregroundColor(AppTheme.textTertiary)
+                        .foregroundColor(Color.xuanTextTertiary)
                     
                     Text(message.timeAgo)
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
             }
             
             Spacer()
         }
-        .padding(AppSpacing.md)
-        .background(AppTheme.backgroundSecondary)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+        .padding(XuanSpacing.md)
+        .background(Color.xuanSurface)
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.md))
     }
 }
 

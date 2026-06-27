@@ -16,24 +16,24 @@ struct CCPMRView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xl) {
+            VStack(spacing: XuanSpacing.xl) {
                 if case .completed = viewModel.phase {
                     completionContent
                 } else {
                     exerciseContent
                 }
             }
-            .padding(.horizontal, AppSpacing.lg)
-            .padding(.top, AppSpacing.sm)
-            .padding(.bottom, AppSpacing.xl)
+            .padding(.horizontal, XuanSpacing.lg)
+            .padding(.top, XuanSpacing.sm)
+            .padding(.bottom, XuanSpacing.xl)
         }
-        .background(AppTheme.background.ignoresSafeArea())
+        .background(Color.xuanApricotBg.ignoresSafeArea())
         .navigationTitle("渐进式肌肉放松")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
-                    .foregroundColor(AppTheme.primary)
+                    .foregroundColor(Color.xuanApricot)
             }
         }
         .onDisappear {
@@ -46,7 +46,7 @@ struct CCPMRView: View {
     // MARK: - Exercise Content
 
     private var exerciseContent: some View {
-        VStack(spacing: AppSpacing.xl) {
+        VStack(spacing: XuanSpacing.xl) {
             // Progress bar
             progressSection
 
@@ -67,23 +67,23 @@ struct CCPMRView: View {
     // MARK: - Progress
 
     private var progressSection: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.sm) {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(viewModel.phaseLabel)
-                        .font(AppFont.title3)
-                        .foregroundColor(AppTheme.primary)
+                        .font(XuanFont.h3)
+                        .foregroundColor(Color.xuanApricot)
                     if let group = viewModel.currentMuscleGroup, viewModel.phase != .idle {
                         Text("\(group.name) (\(viewModel.currentGroupIndex + 1)/\(viewModel.totalGroups))")
-                            .font(AppFont.footnote)
-                            .foregroundColor(AppTheme.textSecondary)
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextSecondary)
                     }
                 }
                 Spacer()
                 if viewModel.phase != .idle {
                     Text(viewModel.formattedRemaining)
-                        .font(AppFont.title1)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h1)
+                        .foregroundColor(Color.xuanTextPrimary)
                         .monospacedDigit()
                 }
             }
@@ -92,13 +92,13 @@ struct CCPMRView: View {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(AppTheme.border)
+                        .fill(Color.xuanBorder)
                         .frame(height: 8)
 
                     RoundedRectangle(cornerRadius: 4)
                         .fill(
                             LinearGradient(
-                                colors: [AppTheme.primaryLight, AppTheme.accentMint],
+                                colors: [Color.xuanApricotLight, Color.xuanMint],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -109,20 +109,20 @@ struct CCPMRView: View {
             }
             .frame(height: 8)
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.md)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
     }
 
     // MARK: - Breathing Circle
 
     private var breathingCircle: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             ZStack {
                 // Outer ring
                 Circle()
                     .stroke(
-                        viewModel.isTense ? AppTheme.warmGold.opacity(0.3) : AppTheme.accentMint.opacity(0.3),
+                        viewModel.isTense ? Color.xuanApricotDark.opacity(0.3) : Color.xuanMint.opacity(0.3),
                         lineWidth: 3
                     )
                     .frame(width: 160, height: 160)
@@ -131,7 +131,7 @@ struct CCPMRView: View {
                 Circle()
                     .trim(from: 0, to: viewModel.isTense ? 1 : viewModel.breathingScale)
                     .stroke(
-                        viewModel.isTense ? AppTheme.warmGold : AppTheme.accentMint,
+                        viewModel.isTense ? Color.xuanApricotDark : Color.xuanMint,
                         style: StrokeStyle(lineWidth: 4, lineCap: .round)
                     )
                     .frame(width: 160, height: 160)
@@ -142,8 +142,8 @@ struct CCPMRView: View {
                 Circle()
                     .fill(
                         viewModel.isTense
-                            ? AppTheme.warmGold.opacity(0.15)
-                            : AppTheme.accentMint.opacity(0.15)
+                            ? Color.xuanApricotDark.opacity(0.15)
+                            : Color.xuanMint.opacity(0.15)
                     )
                     .frame(
                         width: 120 * viewModel.breathingScale,
@@ -156,18 +156,18 @@ struct CCPMRView: View {
                     if viewModel.phase == .idle {
                         Image(systemName: "figure.mind.and.body")
                             .font(.system(size: 36))
-                            .foregroundColor(AppTheme.primaryMuted)
+                            .foregroundColor(Color.xuanApricot.opacity(0.6))
                         Text("准备")
-                            .font(AppFont.body.weight(.medium))
-                            .foregroundColor(AppTheme.textSecondary)
+                            .font(XuanFont.bodyLMedium)
+                            .foregroundColor(Color.xuanTextSecondary)
                     } else {
                         Text(viewModel.isTense ? "紧张" : "放松")
-                            .font(AppFont.title1)
-                            .foregroundColor(viewModel.isTense ? AppTheme.warmGold : AppTheme.accentMint)
+                            .font(XuanFont.h1)
+                            .foregroundColor(viewModel.isTense ? Color.xuanApricotDark : Color.xuanMint)
                             .contentTransition(.identity)
                         Text("\(viewModel.secondsInPhase)s")
-                            .font(AppFont.caption)
-                            .foregroundColor(AppTheme.textSecondary)
+                            .font(XuanFont.bodyM)
+                            .foregroundColor(Color.xuanTextSecondary)
                             .monospacedDigit()
                     }
                 }
@@ -179,71 +179,71 @@ struct CCPMRView: View {
     // MARK: - Instruction Card
 
     private var instructionCard: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             if let group = viewModel.currentMuscleGroup, viewModel.phase != .idle {
                 HStack {
                     Image(systemName: group.icon)
                         .font(.system(size: 24))
-                        .foregroundColor(AppTheme.primary)
+                        .foregroundColor(Color.xuanApricot)
                     Text(group.name)
-                        .font(AppFont.title1)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h1)
+                        .foregroundColor(Color.xuanTextPrimary)
                 }
             }
 
             Text(viewModel.phaseDescription)
-                .font(AppFont.body.weight(.medium))
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyLMedium)
+                .foregroundColor(Color.xuanTextSecondary)
                 .lineSpacing(4)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.md)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
     }
 
     // MARK: - Muscle Group List
 
     private var muscleGroupList: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             Text("肌群列表")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
 
             LazyVGrid(
                 columns: [
-                    GridItem(.flexible(), spacing: AppSpacing.sm),
-                    GridItem(.flexible(), spacing: AppSpacing.sm),
+                    GridItem(.flexible(), spacing: XuanSpacing.sm),
+                    GridItem(.flexible(), spacing: XuanSpacing.sm),
                 ],
-                spacing: AppSpacing.sm
+                spacing: XuanSpacing.sm
             ) {
                 ForEach(Array(CCMuscleGroup.all.enumerated()), id: \.element.id) { index, group in
                     muscleGroupCell(group: group, index: index)
                 }
             }
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.md)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
     }
 
     private func muscleGroupCell(group: CCMuscleGroup, index: Int) -> some View {
         let isActive = index == viewModel.currentGroupIndex && viewModel.phase != .idle && viewModel.phase != .completed
         let isDone = index < viewModel.currentGroupIndex
 
-        return HStack(spacing: AppSpacing.sm) {
+        return HStack(spacing: XuanSpacing.sm) {
             if isDone {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(AppTheme.accentMint)
+                    .foregroundColor(Color.xuanMint)
                     .font(.system(size: 14))
             } else if isActive {
                 Circle()
-                    .fill(viewModel.isTense ? AppTheme.warmGold : AppTheme.accentMint)
+                    .fill(viewModel.isTense ? Color.xuanApricotDark : Color.xuanMint)
                     .frame(width: 8, height: 8)
                     .overlay(
                         Circle()
                             .stroke(
-                                viewModel.isTense ? AppTheme.warmGold.opacity(0.3) : AppTheme.accentMint.opacity(0.3),
+                                viewModel.isTense ? Color.xuanApricotDark.opacity(0.3) : Color.xuanMint.opacity(0.3),
                                 lineWidth: 3
                             )
                             .scaleEffect(viewModel.isTense ? 1.5 : 1.0)
@@ -251,26 +251,26 @@ struct CCPMRView: View {
                     )
             } else {
                 Circle()
-                    .fill(AppTheme.border)
+                    .fill(Color.xuanBorder)
                     .frame(width: 8, height: 8)
             }
 
             Image(systemName: group.icon)
                 .font(.system(size: 11))
-                .foregroundColor(isActive ? AppTheme.primary : (isDone ? AppTheme.accentMint : AppTheme.textSecondary))
+                .foregroundColor(isActive ? Color.xuanApricot : (isDone ? Color.xuanMint : Color.xuanTextSecondary))
 
             Text(group.name)
-                .font(AppFont.footnote)
-                .foregroundColor(isActive ? AppTheme.textPrimary : (isDone ? AppTheme.accentMint : AppTheme.textSecondary))
+                .font(XuanFont.bodyS)
+                .foregroundColor(isActive ? Color.xuanTextPrimary : (isDone ? Color.xuanMint : Color.xuanTextSecondary))
                 .lineLimit(1)
         }
-        .padding(.vertical, AppSpacing.xs)
+        .padding(.vertical, XuanSpacing.xs)
     }
 
     // MARK: - Control Buttons
 
     private var controlButtons: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             switch viewModel.phase {
             case .idle:
                 Button {
@@ -280,12 +280,12 @@ struct CCPMRView: View {
                         Image(systemName: "play.fill")
                         Text("开始练习")
                     }
-                    .font(AppFont.body.weight(.medium).weight(.medium))
+                    .font(XuanFont.bodyLMedium)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, AppSpacing.md)
-                    .background(AppTheme.primary)
-                    .cornerRadius(AppRadius.md)
+                    .padding(.vertical, XuanSpacing.md)
+                    .background(Color.xuanApricot)
+                    .cornerRadius(XuanRadius.md)
                 }
 
             default:
@@ -297,12 +297,12 @@ struct CCPMRView: View {
                         Image(systemName: viewModel.isPaused ? "play.fill" : "pause.fill")
                         Text(viewModel.isPaused ? "继续" : "暂停")
                     }
-                    .font(AppFont.body.weight(.medium).weight(.medium))
-                    .foregroundColor(AppTheme.primary)
+                    .font(XuanFont.bodyLMedium)
+                    .foregroundColor(Color.xuanApricot)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, AppSpacing.md)
-                    .background(AppTheme.primary.opacity(0.1))
-                    .cornerRadius(AppRadius.md)
+                    .padding(.vertical, XuanSpacing.md)
+                    .background(Color.xuanApricot.opacity(0.1))
+                    .cornerRadius(XuanRadius.md)
                 }
 
                 // Reset
@@ -313,12 +313,12 @@ struct CCPMRView: View {
                         Image(systemName: "arrow.counterclockwise")
                         Text("重新开始")
                     }
-                    .font(AppFont.body.weight(.medium).weight(.medium))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyLMedium)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, AppSpacing.md)
-                    .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.md)
+                    .padding(.vertical, XuanSpacing.md)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.md)
                 }
             }
         }
@@ -327,115 +327,115 @@ struct CCPMRView: View {
     // MARK: - Completion
 
     private var completionContent: some View {
-        VStack(spacing: AppSpacing.xl) {
+        VStack(spacing: XuanSpacing.xl) {
             // Success icon
             ZStack {
                 Circle()
-                    .fill(AppTheme.accentMint.opacity(0.3))
+                    .fill(Color.xuanMint.opacity(0.3))
                     .frame(width: 100, height: 100)
                 Image(systemName: "figure.mind.and.body")
                     .font(.system(size: 44))
-                    .foregroundColor(AppTheme.accentMint)
+                    .foregroundColor(Color.xuanMint)
             }
-            .padding(.top, AppSpacing.xl)
+            .padding(.top, XuanSpacing.xl)
 
             Text("放松练习完成！")
-                .font(AppFont.largeTitle)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h1)
+                .foregroundColor(Color.xuanTextPrimary)
 
             Text("你完成了全部16个肌群的渐进式放松练习。花一点时间感受身体的感受。")
-                .font(AppFont.body.weight(.medium))
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyLMedium)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, AppSpacing.lg)
+                .padding(.horizontal, XuanSpacing.lg)
 
             // Body feeling rating
-            VStack(alignment: .leading, spacing: AppSpacing.md) {
+            VStack(alignment: .leading, spacing: XuanSpacing.md) {
                 Text("身体感受评分")
-                    .font(AppFont.title3)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h3)
+                    .foregroundColor(Color.xuanTextPrimary)
 
                 HStack {
                     Text("非常紧张")
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanTextSecondary)
                     Spacer()
                     Text("\(Int(viewModel.bodyFeelingRating))/10")
-                        .font(AppFont.title1)
-                        .foregroundColor(AppTheme.accentMint)
+                        .font(XuanFont.h1)
+                        .foregroundColor(Color.xuanMint)
                     Spacer()
                     Text("完全放松")
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
 
                 Slider(value: $viewModel.bodyFeelingRating, in: 1...10, step: 1)
-                    .tint(AppTheme.accentMint)
+                    .tint(Color.xuanMint)
 
                 Text(viewModel.completionMessage)
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .multilineTextAlignment(.center)
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.md)
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.md)
 
             // Muscle groups completed
-            VStack(alignment: .leading, spacing: AppSpacing.sm) {
+            VStack(alignment: .leading, spacing: XuanSpacing.sm) {
                 Text("已完成的肌群")
-                    .font(AppFont.title3)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h3)
+                    .foregroundColor(Color.xuanTextPrimary)
                 LazyVGrid(
                     columns: [
-                        GridItem(.flexible(), spacing: AppSpacing.sm),
-                        GridItem(.flexible(), spacing: AppSpacing.sm),
+                        GridItem(.flexible(), spacing: XuanSpacing.sm),
+                        GridItem(.flexible(), spacing: XuanSpacing.sm),
                     ],
-                    spacing: AppSpacing.sm
+                    spacing: XuanSpacing.sm
                 ) {
                     ForEach(CCMuscleGroup.all) { group in
-                        HStack(spacing: AppSpacing.sm) {
+                        HStack(spacing: XuanSpacing.sm) {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(AppTheme.accentMint)
+                                .foregroundColor(Color.xuanMint)
                                 .font(.system(size: 12))
                             Image(systemName: group.icon)
                                 .font(.system(size: 11))
-                                .foregroundColor(AppTheme.accentMint)
+                                .foregroundColor(Color.xuanMint)
                             Text(group.name)
-                                .font(AppFont.footnote)
-                                .foregroundColor(AppTheme.accentMint)
+                                .font(XuanFont.bodyS)
+                                .foregroundColor(Color.xuanMint)
                         }
                     }
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(AppSpacing.lg)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.md)
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.md)
 
             // Actions
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 Button {
                     viewModel.reset()
                 } label: {
                     Text("再做一次")
-                        .font(AppFont.body.weight(.medium).weight(.medium))
+                        .font(XuanFont.bodyLMedium)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, AppSpacing.md)
-                        .background(AppTheme.primary)
-                        .cornerRadius(AppRadius.md)
+                        .padding(.vertical, XuanSpacing.md)
+                        .background(Color.xuanApricot)
+                        .cornerRadius(XuanRadius.md)
                 }
 
                 Button {
                     coordinator.dismiss()
                 } label: {
                     Text("返回工具箱")
-                        .font(AppFont.body.weight(.medium))
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyLMedium)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
             }
-            .padding(.top, AppSpacing.lg)
+            .padding(.top, XuanSpacing.lg)
         }
     }
 }

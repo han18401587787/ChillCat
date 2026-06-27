@@ -16,11 +16,11 @@ struct CCCrisisInterventionView: View {
     var body: some View {
         ZStack {
             // 背景色
-            (isEmergency ? AppTheme.crisisRedLight : AppTheme.warmGlowLight)
+            (isEmergency ? Color(hex: "FFDAD5") : Color(hex: "FDF0D5"))
                 .ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: AppSpacing.xxl) {
+                VStack(spacing: XuanSpacing.xl2) {
                     Spacer(minLength: 20)
 
                     // 顶部图标
@@ -66,7 +66,7 @@ struct CCCrisisInterventionView: View {
 
                     Spacer(minLength: 40)
                 }
-                .padding(.horizontal, AppSpacing.lg)
+                .padding(.horizontal, XuanSpacing.lg)
             }
         }
         .onAppear {
@@ -87,16 +87,16 @@ struct CCCrisisInterventionView: View {
             Circle()
                 .fill(
                     isEmergency
-                        ? AppTheme.crisisRed.opacity(0.12)
-                        : AppTheme.warmGlow.opacity(0.12)
+                        ? Color.xuanDanger.opacity(0.12)
+                        : Color.xuanApricotDark.opacity(0.12)
                 )
                 .frame(width: 120, height: 120)
 
             Circle()
                 .stroke(
                     isEmergency
-                        ? AppTheme.crisisRed.opacity(0.2)
-                        : AppTheme.warmGlow.opacity(0.2),
+                        ? Color.xuanDanger.opacity(0.2)
+                        : Color.xuanApricotDark.opacity(0.2),
                     lineWidth: 1
                 )
                 .frame(width: 160, height: 160)
@@ -104,28 +104,28 @@ struct CCCrisisInterventionView: View {
             Image(systemName: isEmergency ? "heart.circle.fill" : "heart.text.square.fill")
                 .font(.system(size: 48))
                 .foregroundColor(
-                    isEmergency ? AppTheme.crisisRed : AppTheme.warmGlow
+                    isEmergency ? Color.xuanDanger : Color.xuanApricotDark
                 )
                 .scaleEffect(animateIn ? 1.05 : 0.95)
                 .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: animateIn)
         }
-        .padding(.top, AppSpacing.xl)
+        .padding(.top, XuanSpacing.xl)
     }
 
     // MARK: - Title
     private var titleSection: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             Text(isEmergency
                  ? "紧急求助"
                  : "安全守护")
-                .font(AppFont.title1)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h1)
+                .foregroundColor(Color.xuanTextPrimary)
 
             Text(isEmergency
                  ? "你不是一个人，请立即寻求帮助"
                  : "我们注意到你可能正在经历困难时刻")
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(6)
         }
@@ -134,35 +134,35 @@ struct CCCrisisInterventionView: View {
     // MARK: - Emergency Button (紧急模式)
     private var emergencyButton: some View {
         Link(destination: URL(string: "tel://4001619995")!) {
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 Image(systemName: "phone.fill")
                     .font(.system(size: 20))
                 Text("一键拨打热线 400-161-9995")
-                    .font(AppFont.buttonLabel)
+                    .font(XuanFont.bodyLMedium)
             }
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 18)
             .background(
                 LinearGradient(
-                    colors: [AppTheme.crisisRed, AppTheme.crisisRedDark],
+                    colors: [Color.xuanDanger, Color(hex: "C0503C")],
                     startPoint: .leading,
                     endPoint: .trailing
                 )
             )
-            .cornerRadius(AppRadius.lg)
-            .shadow(color: AppTheme.crisisRed.opacity(0.35), radius: 12, x: 0, y: 4)
+            .cornerRadius(XuanRadius.lg)
+            .shadow(color: Color.xuanDanger.opacity(0.35), radius: 12, x: 0, y: 4)
         }
     }
 
     // MARK: - Hotline List
     private var hotlineList: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text(isEmergency ? "心理援助热线" : "专业资源")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 hotlineRow(
                     title: "全国24小时心理援助热线",
                     number: "400-161-9995",
@@ -184,53 +184,53 @@ struct CCCrisisInterventionView: View {
 
     private func hotlineRow(title: String, number: String, subtitle: String) -> some View {
         Link(destination: URL(string: "tel:\(number.filter { $0.isNumber })")!) {
-            HStack(spacing: AppSpacing.md) {
+            HStack(spacing: XuanSpacing.md) {
                 ZStack {
                     Circle()
                         .fill(
                             isEmergency
-                                ? AppTheme.crisisRed.opacity(0.12)
-                                : AppTheme.accentMint.opacity(0.12)
+                                ? Color.xuanDanger.opacity(0.12)
+                                : Color.xuanMint.opacity(0.12)
                         )
                         .frame(width: 44, height: 44)
 
                     Image(systemName: "phone.fill")
                         .font(.system(size: 16))
-                        .foregroundColor(isEmergency ? AppTheme.crisisRed : AppTheme.accentMint)
+                        .foregroundColor(isEmergency ? Color.xuanDanger : Color.xuanMint)
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(Color.xuanTextPrimary)
                     Text(number)
                         .font(.system(size: 17, weight: .semibold, design: .monospaced))
-                        .foregroundColor(isEmergency ? AppTheme.crisisRed : AppTheme.primary)
+                        .foregroundColor(isEmergency ? Color.xuanDanger : Color.xuanApricot)
                     Text(subtitle)
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textMuted)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
 
                 Spacer()
 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(AppTheme.textMuted)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
-            .padding(AppSpacing.md)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.md)
+            .padding(XuanSpacing.md)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.md)
         }
     }
 
     // MARK: - Emergency Contacts (紧急模式独有)
     private var emergencyContactsSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("紧急联系人")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 contactRow(name: "信任的朋友", icon: "person.fill")
                 contactRow(name: "家人", icon: "house.fill")
                 contactRow(name: "心理咨询师", icon: "brain.head.profile")
@@ -239,55 +239,55 @@ struct CCCrisisInterventionView: View {
     }
 
     private func contactRow(name: String, icon: String) -> some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             ZStack {
                 Circle()
-                    .fill(AppTheme.surface)
+                    .fill(Color.xuanSurface)
                     .frame(width: 44, height: 44)
 
                 Image(systemName: icon)
                     .font(.system(size: 18))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
 
             Text(name)
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextPrimary)
 
             Spacer()
 
             Image(systemName: "phone.fill")
                 .font(.system(size: 14))
-                .foregroundColor(AppTheme.primary)
+                .foregroundColor(Color.xuanApricot)
                 .frame(width: 36, height: 36)
-                .background(AppTheme.primary.opacity(0.1))
-                .cornerRadius(AppRadius.sm)
+                .background(Color.xuanApricot.opacity(0.1))
+                .cornerRadius(XuanRadius.sm)
         }
-        .padding(AppSpacing.md)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.md)
+        .padding(XuanSpacing.md)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
     }
 
     // MARK: - Healing Exercises
     private var healingExercisesSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("稳情练习")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 HealingExerciseCard(
                     icon: "lungs.fill",
                     title: "4-7-8 呼吸练习",
                     description: "跟随节奏调节呼吸，缓解焦虑",
-                    color: AppTheme.calmBlue,
+                    color: Color.xuanInfo,
                     action: { showHealingPlan = true }
                 )
                 HealingExerciseCard(
                     icon: "hand.draw.fill",
                     title: "5-4-3-2-1 感官练习",
                     description: "通过感官重新连接当下",
-                    color: AppTheme.warmPurple,
+                    color: Color(hex: "A085C6"),
                     action: { showHealingPlan = true }
                 )
             }
@@ -296,42 +296,42 @@ struct CCCrisisInterventionView: View {
 
     // MARK: - Safety Plan Entry
     private var safetyPlanEntry: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             ZStack {
-                RoundedRectangle(cornerRadius: AppRadius.md)
-                    .fill(AppTheme.accentMint.opacity(0.12))
+                RoundedRectangle(cornerRadius: XuanRadius.md)
+                    .fill(Color.xuanMint.opacity(0.12))
                     .frame(width: 44, height: 44)
 
                 Image(systemName: "shield.checkered")
                     .font(.system(size: 20))
-                    .foregroundColor(AppTheme.accentMint)
+                    .foregroundColor(Color.xuanMint)
             }
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("安全计划")
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanTextPrimary)
                 Text("提前准备，从容应对")
-                    .font(AppFont.caption2)
-                    .foregroundColor(AppTheme.textMuted)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
 
             Spacer()
 
             Image(systemName: "chevron.right")
                 .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(AppTheme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
     }
 
     // MARK: - Bottom
     private var bottomActions: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             Button(action: { showHealingPlan = true }) {
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     Image(systemName: "leaf.fill")
                     Text("开始稳情练习")
                 }
@@ -340,8 +340,8 @@ struct CCCrisisInterventionView: View {
 
             Button(action: { dismiss() }) {
                 Text("返回对话")
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
         }
     }
@@ -357,9 +357,9 @@ struct HealingExerciseCard: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: AppSpacing.md) {
+            HStack(spacing: XuanSpacing.md) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: AppRadius.sm)
+                    RoundedRectangle(cornerRadius: XuanRadius.sm)
                         .fill(color.opacity(0.12))
                         .frame(width: 44, height: 44)
 
@@ -370,22 +370,22 @@ struct HealingExerciseCard: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(Color.xuanTextPrimary)
                     Text(description)
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textMuted)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
 
                 Spacer()
 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 13, weight: .semibold))
-                    .foregroundColor(AppTheme.textMuted)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
-            .padding(AppSpacing.md)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.lg)
+            .padding(XuanSpacing.md)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.lg)
         }
         .buttonStyle(.plain)
     }

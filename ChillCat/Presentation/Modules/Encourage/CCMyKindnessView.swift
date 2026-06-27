@@ -21,7 +21,7 @@ struct MyKindnessView: View {
             
             // 内容列表
             ScrollView {
-                LazyVStack(spacing: AppSpacing.md) {
+                LazyVStack(spacing: XuanSpacing.md) {
                     switch selectedSegment {
                     case .participated:
                         participatedChainsList
@@ -29,23 +29,23 @@ struct MyKindnessView: View {
                         initiatedChainsList
                     }
                 }
-                .padding(AppSpacing.lg)
+                .padding(XuanSpacing.lg)
             }
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .navigationTitle("我的善意")
         .navigationBarTitleDisplayMode(.large)
     }
     
     // MARK: - Stats Bar
     private var personalStatsBar: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             // 善意传递动画区域
             ZStack {
                 Circle()
                     .fill(
                         RadialGradient(
-                            colors: [AppTheme.warmGlow.opacity(0.15), Color.clear],
+                            colors: [Color.xuanApricotDark.opacity(0.15), Color.clear],
                             center: .center,
                             startRadius: 0,
                             endRadius: 60
@@ -55,24 +55,24 @@ struct MyKindnessView: View {
                 
                 VStack(spacing: 2) {
                     Text("\(viewModel.totalKindness)")
-                        .font(AppFont.largeTitle)
-                        .foregroundColor(AppTheme.warmGlow)
+                        .font(XuanFont.h1)
+                        .foregroundColor(Color.xuanApricotDark)
                     
                     Text("份善意")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
             }
             
-            HStack(spacing: AppSpacing.xxl) {
-                StatPill(icon: "arrow.up.heart.fill", value: "\(viewModel.sentCount)", label: "发出", color: AppTheme.warmGlow)
-                StatPill(icon: "arrow.down.heart.fill", value: "\(viewModel.receivedCount)", label: "收到", color: AppTheme.roseGold)
-                StatPill(icon: "person.2.fill", value: "\(viewModel.connectedPeople)", label: "连接", color: AppTheme.primary)
+            HStack(spacing: XuanSpacing.xl2) {
+                StatPill(icon: "arrow.up.heart.fill", value: "\(viewModel.sentCount)", label: "发出", color: Color.xuanApricotDark)
+                StatPill(icon: "arrow.down.heart.fill", value: "\(viewModel.receivedCount)", label: "收到", color: Color.xuanPink)
+                StatPill(icon: "person.2.fill", value: "\(viewModel.connectedPeople)", label: "连接", color: Color.xuanApricot)
             }
         }
-        .padding(.vertical, AppSpacing.lg)
-        .padding(.horizontal, AppSpacing.lg)
-        .background(AppTheme.surface)
+        .padding(.vertical, XuanSpacing.lg)
+        .padding(.horizontal, XuanSpacing.lg)
+        .background(Color.xuanSurface)
     }
     
     // MARK: - Segment Picker
@@ -84,19 +84,19 @@ struct MyKindnessView: View {
                         selectedSegment = segment
                     }
                 } label: {
-                    VStack(spacing: AppSpacing.sm) {
+                    VStack(spacing: XuanSpacing.sm) {
                         Text(segment.title)
-                            .font(AppFont.bodyBold)
+                            .font(XuanFont.bodyLBold)
                             .foregroundColor(
                                 selectedSegment == segment
-                                    ? AppTheme.primary
-                                    : AppTheme.textTertiary
+                                    ? Color.xuanApricot
+                                    : Color.xuanTextTertiary
                             )
                         
                         Rectangle()
                             .fill(
                                 selectedSegment == segment
-                                    ? AppTheme.primary
+                                    ? Color.xuanApricot
                                     : Color.clear
                             )
                             .frame(height: 2)
@@ -105,9 +105,9 @@ struct MyKindnessView: View {
                 .frame(maxWidth: .infinity)
             }
         }
-        .padding(.horizontal, AppSpacing.lg)
-        .padding(.top, AppSpacing.md)
-        .background(AppTheme.surface)
+        .padding(.horizontal, XuanSpacing.lg)
+        .padding(.top, XuanSpacing.md)
+        .background(Color.xuanSurface)
     }
     
     // MARK: - Participated Chains
@@ -180,20 +180,20 @@ struct StatPill: View {
     let color: Color
     
     var body: some View {
-        VStack(spacing: AppSpacing.xs) {
+        VStack(spacing: XuanSpacing.xs) {
             HStack(spacing: 4) {
                 Image(systemName: icon)
                     .font(.system(size: 12))
                     .foregroundColor(color)
                 
                 Text(value)
-                    .font(AppFont.title3)
+                    .font(XuanFont.h3)
                     .foregroundColor(color)
             }
             
             Text(label)
-                .font(AppFont.caption2)
-                .foregroundColor(AppTheme.textTertiary)
+                .font(XuanFont.caption)
+                .foregroundColor(Color.xuanTextTertiary)
         }
     }
 }
@@ -206,28 +206,28 @@ struct MyChainCard: View {
     
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .leading, spacing: AppSpacing.md) {
+            VStack(alignment: .leading, spacing: XuanSpacing.md) {
                 HStack {
                     Text(chain.emoji)
                         .font(.system(size: 28))
                     
                     VStack(alignment: .leading, spacing: 2) {
                         Text(chain.theme)
-                            .font(AppFont.bodyBold)
-                            .foregroundColor(AppTheme.textPrimary)
+                            .font(XuanFont.bodyLBold)
+                            .foregroundColor(Color.xuanTextPrimary)
                         
                         Text("\(chain.participantCount)人参与 · 最后更新 \(chain.lastUpdated)")
-                            .font(AppFont.caption2)
-                            .foregroundColor(AppTheme.textTertiary)
+                            .font(XuanFont.caption)
+                            .foregroundColor(Color.xuanTextTertiary)
                     }
                     
                     Spacer()
                     
                     VStack(alignment: .trailing, spacing: 2) {
                         Text(chain.statusText)
-                            .font(AppFont.caption2)
+                            .font(XuanFont.caption)
                             .foregroundColor(chain.statusColor)
-                            .padding(.horizontal, AppSpacing.sm)
+                            .padding(.horizontal, XuanSpacing.sm)
                             .padding(.vertical, 2)
                             .background(chain.statusColor.opacity(0.1))
                             .clipShape(Capsule())
@@ -235,11 +235,11 @@ struct MyChainCard: View {
                 }
                 
                 if isAnimating {
-                    HStack(spacing: AppSpacing.sm) {
+                    HStack(spacing: XuanSpacing.sm) {
                         ForEach(0..<5) { i in
                             Image(systemName: "heart.fill")
                                 .font(.system(size: 12))
-                                .foregroundColor(AppTheme.warmGlow)
+                                .foregroundColor(Color.xuanApricotDark)
                                 .offset(y: isAnimating ? -20 : 0)
                                 .opacity(isAnimating ? 0 : 1)
                                 .animation(
@@ -249,19 +249,19 @@ struct MyChainCard: View {
                         }
                         
                         Text("传递中...")
-                            .font(AppFont.caption2)
-                            .foregroundColor(AppTheme.warmGlow)
+                            .font(XuanFont.caption)
+                            .foregroundColor(Color.xuanApricotDark)
                     }
-                    .padding(.top, AppSpacing.xs)
+                    .padding(.top, XuanSpacing.xs)
                 }
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanSurface)
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
             .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
             .overlay(
-                RoundedRectangle(cornerRadius: AppRadius.lg)
-                    .stroke(isAnimating ? AppTheme.warmGlow.opacity(0.3) : Color.clear, lineWidth: 1)
+                RoundedRectangle(cornerRadius: XuanRadius.lg)
+                    .stroke(isAnimating ? Color.xuanApricotDark.opacity(0.3) : Color.clear, lineWidth: 1)
             )
         }
     }
@@ -345,8 +345,8 @@ struct MyChainData: Identifiable {
     
     var statusColor: Color {
         switch status {
-        case .active: return AppTheme.safeGreen
-        case .completed: return AppTheme.textTertiary
+        case .active: return Color.xuanSuccess
+        case .completed: return Color.xuanTextTertiary
         }
     }
 }

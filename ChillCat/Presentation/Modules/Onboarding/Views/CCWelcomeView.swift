@@ -7,15 +7,15 @@ struct CCWelcomeView: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                colors: [AppTheme.warmPurple.opacity(0.3).opacity(0.6), AppTheme.info.opacity(0.4), AppTheme.background],
+                colors: [Color(hex: "A085C6").opacity(0.3).opacity(0.6), Color.xuanInfo.opacity(0.4), Color.xuanApricotBg],
                 startPoint: .topLeading, endPoint: .bottomTrailing
             ).ignoresSafeArea()
 
             VStack(spacing: 32) {
                 Spacer()
-                Image(systemName: "leaf.circle.fill").font(.system(size: 72)).foregroundColor(AppTheme.primaryDark)
+                Image(systemName: "leaf.circle.fill").font(.system(size: 72)).foregroundColor(Color.xuanApricotDark)
                 Text("绪安").font(.system(size: 36, weight: .bold))
-                Text("陪你温柔自愈").font(.system(size: 18)).foregroundColor(AppTheme.info)
+                Text("陪你温柔自愈").font(.system(size: 18)).foregroundColor(Color.xuanInfo)
                 VStack(spacing: 8) {
                     Text("接住所有情绪").font(.system(size: 22, weight: .medium))
                     Text("温柔自愈  自在松弛").font(.system(size: 16)).foregroundColor(.secondary)
@@ -30,13 +30,13 @@ struct CCWelcomeView: View {
                         }
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 16)
-                    .background(AppTheme.primaryDark).foregroundColor(.white).cornerRadius(12)
+                    .background(Color.xuanApricotDark).foregroundColor(.white).cornerRadius(12)
                     .disabled(viewModel.isLoading)
 
                     Button("已有账号登录") {
                         coordinator.hasSeenWelcome = true
                     }
-                    .foregroundColor(AppTheme.primaryDark)
+                    .foregroundColor(Color.xuanApricotDark)
                     .disabled(viewModel.isLoading)
                 }.padding(.horizontal, 32).padding(.bottom, 50)
             }

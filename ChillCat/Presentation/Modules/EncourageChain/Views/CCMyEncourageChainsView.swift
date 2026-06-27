@@ -20,14 +20,14 @@ struct CCMyEncourageChainsView: View {
                 }
             } else {
                 ScrollView {
-                    VStack(spacing: AppSpacing.sm) {
+                    VStack(spacing: XuanSpacing.sm) {
                         ForEach(viewModel.myChains) { chain in
                             chainCard(chain)
                         }
                     }
                     .padding()
                 }
-                .background(AppTheme.background)
+                .background(Color.xuanApricotBg)
             }
         }
         .navigationTitle("我的鼓励链")
@@ -36,14 +36,14 @@ struct CCMyEncourageChainsView: View {
             if let error = viewModel.errorMessageMyChains {
                 HStack {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(AppTheme.error)
+                        .foregroundColor(Color.xuanDanger)
                     Text(error)
-                        .foregroundColor(AppTheme.error)
+                        .foregroundColor(Color.xuanDanger)
                 }
                 .font(.system(size: 14))
                 .padding()
-                .background(AppTheme.error.opacity(0.08))
-                .cornerRadius(AppRadius.sm)
+                .background(Color.xuanDanger.opacity(0.08))
+                .cornerRadius(XuanRadius.sm)
                 .padding(.horizontal)
                 .padding(.top, 8)
                 .transition(.move(edge: .top).combined(with: .opacity))
@@ -57,26 +57,26 @@ struct CCMyEncourageChainsView: View {
             HStack {
                 Text("🌟 鼓励链")
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(AppTheme.warm)
+                    .foregroundColor(Color.xuanApricotDark)
                 Spacer()
                 Text("\(chain.linkCount) 条接力")
                     .font(.system(size: 12))
-                    .foregroundColor(AppTheme.textMuted)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
 
             Text(chain.firstMessage)
                 .font(.system(size: 15))
-                .foregroundColor(AppTheme.textPrimary)
+                .foregroundColor(Color.xuanTextPrimary)
                 .lineSpacing(4)
                 .lineLimit(3)
 
             HStack {
                 Image(systemName: "person.2.fill")
                     .font(.system(size: 12))
-                    .foregroundColor(AppTheme.textMuted)
+                    .foregroundColor(Color.xuanTextTertiary)
                 Text("\(chain.participantCount) 人参与")
                     .font(.system(size: 12))
-                    .foregroundColor(AppTheme.textMuted)
+                    .foregroundColor(Color.xuanTextTertiary)
 
                 Spacer()
 
@@ -86,12 +86,12 @@ struct CCMyEncourageChainsView: View {
                 }) {
                     Text("查看详情")
                         .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(AppTheme.primary)
+                        .foregroundColor(Color.xuanApricot)
                 }
             }
         }
         .padding()
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.md)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
     }
 }

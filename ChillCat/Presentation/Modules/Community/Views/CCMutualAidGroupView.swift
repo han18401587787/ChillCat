@@ -36,7 +36,7 @@ struct CCMutualAidGroupView: View {
                 groupList
             }
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .task { await viewModel.loadGroups() }
     }
 
@@ -47,10 +47,10 @@ struct CCMutualAidGroupView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text("互助小组")
                     .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                 Text("找到理解你的人，一起成长")
                     .font(.system(size: 13))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
             Spacer()
 
@@ -60,12 +60,12 @@ struct CCMutualAidGroupView: View {
                         .font(.system(size: 12))
                     Text("已加入 \(viewModel.myGroups.count) 个")
                         .font(.system(size: 12))
-                        .foregroundColor(AppTheme.accentMint)
+                        .foregroundColor(Color.xuanMint)
                 }
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
-                .background(AppTheme.accentMint.opacity(0.1))
-                .cornerRadius(AppRadius.sm)
+                .background(Color.xuanMint.opacity(0.1))
+                .cornerRadius(XuanRadius.sm)
             }
         }
         .padding(.horizontal)
@@ -85,15 +85,15 @@ struct CCMutualAidGroupView: View {
                     }) {
                         Text(category)
                             .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(isSelected(category) ? .white : AppTheme.textSecondary)
+                            .foregroundColor(isSelected(category) ? .white : Color.xuanTextSecondary)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 6)
                             .background(
                                 isSelected(category)
-                                    ? AppTheme.primary
-                                    : AppTheme.surface
+                                    ? Color.xuanApricot
+                                    : Color.xuanSurface
                             )
-                            .cornerRadius(AppRadius.full)
+                            .cornerRadius(XuanRadius.full)
                     }
                 }
             }
@@ -138,11 +138,11 @@ struct CCMutualAidGroupView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(group.name)
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(AppTheme.textPrimary)
+                        .foregroundColor(Color.xuanTextPrimary)
 
                     Text(group.description)
                         .font(.system(size: 13))
-                        .foregroundColor(AppTheme.textSecondary)
+                        .foregroundColor(Color.xuanTextSecondary)
                         .lineLimit(1)
 
                     // Member count badge
@@ -152,7 +152,7 @@ struct CCMutualAidGroupView: View {
                         Text(formattedMemberCount(group.memberCount) + " 人")
                             .font(.system(size: 11))
                     }
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                 }
 
                 Spacer()
@@ -170,21 +170,21 @@ struct CCMutualAidGroupView: View {
                 }) {
                     Text(group.isJoined ? "已加入" : "加入")
                         .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(group.isJoined ? AppTheme.accentMint : AppTheme.primary)
+                        .foregroundColor(group.isJoined ? Color.xuanMint : Color.xuanApricot)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                         .background(
                             group.isJoined
-                                ? AppTheme.accentMint.opacity(0.1)
-                                : AppTheme.primary.opacity(0.1)
+                                ? Color.xuanMint.opacity(0.1)
+                                : Color.xuanApricot.opacity(0.1)
                         )
-                        .cornerRadius(AppRadius.sm)
+                        .cornerRadius(XuanRadius.sm)
                 }
                 .buttonStyle(.plain)
             }
             .padding(12)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.lg)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.lg)
             .shadow(color: Color.black.opacity(0.03), radius: 4, y: 2)
         }
         .buttonStyle(.plain)
@@ -207,12 +207,12 @@ struct CCMutualAidGroupView: View {
     }
 
     private func iconColor(for iconName: String) -> Color {
-        if iconName.contains("heart") { return AppTheme.warmPink }
-        if iconName.contains("leaf") { return AppTheme.accentMint }
-        if iconName.contains("wind") { return AppTheme.primary }
-        if iconName.contains("cloud") || iconName.contains("moon") || iconName.contains("rain") { return AppTheme.warmPurple }
-        if iconName.contains("briefcase") { return AppTheme.warmGold }
-        if iconName.contains("book") { return AppTheme.primaryLight }
-        return AppTheme.primary
+        if iconName.contains("heart") { return Color.xuanPink }
+        if iconName.contains("leaf") { return Color.xuanMint }
+        if iconName.contains("wind") { return Color.xuanApricot }
+        if iconName.contains("cloud") || iconName.contains("moon") || iconName.contains("rain") { return Color(hex: "A085C6") }
+        if iconName.contains("briefcase") { return Color.xuanApricotDark }
+        if iconName.contains("book") { return Color.xuanApricotLight }
+        return Color.xuanApricot
     }
 }

@@ -108,7 +108,7 @@ struct CCMainTabView: View {
             .tag(CCMainTab.profile)
             .accessibilityIdentifier("tab_profile")
         }
-        .tint(AppTheme.primary)
+        .tint(Color.xuanApricot)
     }
 
     @ViewBuilder

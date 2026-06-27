@@ -12,7 +12,7 @@ struct OnboardingView: View {
     
     var body: some View {
         ZStack {
-            AppTheme.background
+            Color.xuanApricotBg
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
@@ -43,19 +43,19 @@ struct OnboardingView: View {
     
     // MARK: - Progress Bar
     private var progressBar: some View {
-        HStack(spacing: AppSpacing.sm) {
+        HStack(spacing: XuanSpacing.sm) {
             ForEach(OnboardingPage.allCases.filter { $0 != .welcome }, id: \.self) { page in
                 Capsule()
                     .fill(
                         page == currentPage || OnboardingPage.allCases.firstIndex(of: page)! < OnboardingPage.allCases.firstIndex(of: currentPage)!
-                            ? AppTheme.primary
-                            : AppTheme.border
+                            ? Color.xuanApricot
+                            : Color.xuanBorder
                     )
                     .frame(height: 4)
             }
         }
-        .padding(.horizontal, AppSpacing.lg)
-        .padding(.vertical, AppSpacing.md)
+        .padding(.horizontal, XuanSpacing.lg)
+        .padding(.vertical, XuanSpacing.md)
     }
     
     // MARK: - Welcome Pages
@@ -80,7 +80,7 @@ struct OnboardingView: View {
             pageIndicator
             
             // 按钮
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 Button {
                     if viewModel.welcomePageIndex < 2 {
                         withAnimation { viewModel.welcomePageIndex += 1 }
@@ -89,21 +89,21 @@ struct OnboardingView: View {
                     }
                 } label: {
                     Text(viewModel.welcomePageIndex < 2 ? "继续" : "开始评估")
-                        .font(AppFont.bodyBold)
+                        .font(XuanFont.bodyLBold)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(AppTheme.primary)
-                        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+                        .background(Color.xuanApricot)
+                        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
                 }
-                .padding(.horizontal, AppSpacing.xxxl)
+                .padding(.horizontal, XuanSpacing.xl3)
                 
                 if viewModel.welcomePageIndex < 2 {
                     Button("跳过") {
                         withAnimation { currentPage = .assessment }
                     }
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
                 }
             }
             .padding(.bottom, 40)
@@ -112,14 +112,14 @@ struct OnboardingView: View {
     
     // MARK: - Screen 1: Brand Slogan
     private var welcomeScreen1: some View {
-        VStack(spacing: AppSpacing.xxl) {
+        VStack(spacing: XuanSpacing.xl2) {
             Spacer()
             
             ZStack {
                 Circle()
                     .fill(
                         RadialGradient(
-                            colors: [AppTheme.primary.opacity(0.15), AppTheme.calmBlue.opacity(0.05)],
+                            colors: [Color.xuanApricot.opacity(0.15), Color.xuanInfo.opacity(0.05)],
                             center: .center,
                             startRadius: 0,
                             endRadius: 120
@@ -127,12 +127,12 @@ struct OnboardingView: View {
                     )
                     .frame(width: 240, height: 240)
                 
-                VStack(spacing: AppSpacing.md) {
+                VStack(spacing: XuanSpacing.md) {
                     Image(systemName: "heart.circle.fill")
                         .font(.system(size: 64))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [AppTheme.primary, AppTheme.roseGold],
+                                colors: [Color.xuanApricot, Color.xuanPink],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -140,87 +140,87 @@ struct OnboardingView: View {
                     
                     Text("绪安")
                         .font(.system(size: 42, weight: .bold, design: .rounded))
-                        .foregroundColor(AppTheme.textPrimary)
+                        .foregroundColor(Color.xuanTextPrimary)
                 }
             }
             
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 Text("\"接住所有情绪\"")
-                    .font(AppFont.title1)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h1)
+                    .foregroundColor(Color.xuanTextPrimary)
                 
                 Text("你的AI情绪陪伴伙伴\n24小时守护你的心理健康")
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .multilineTextAlignment(.center)
                     .lineSpacing(6)
             }
             
             Spacer()
         }
-        .padding(.horizontal, AppSpacing.xxxl)
+        .padding(.horizontal, XuanSpacing.xl3)
     }
     
     // MARK: - Screen 2: Features
     private var welcomeScreen2: some View {
-        VStack(spacing: AppSpacing.xxxl) {
+        VStack(spacing: XuanSpacing.xl3) {
             Spacer()
             
-            VStack(spacing: AppSpacing.lg) {
+            VStack(spacing: XuanSpacing.lg) {
                 Text("核心功能")
-                    .font(AppFont.title1)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h1)
+                    .foregroundColor(Color.xuanTextPrimary)
                 
-                VStack(spacing: AppSpacing.lg) {
+                VStack(spacing: XuanSpacing.lg) {
                     FeatureIntroRow(
                         icon: "brain.head.profile",
                         title: "AI倾听官",
                         description: "24小时在线的AI倾听伙伴\n随时与你对话",
-                        color: AppTheme.textSecondary
+                        color: Color.xuanTextSecondary
                     )
                     
                     FeatureIntroRow(
                         icon: "waveform.circle.fill",
                         title: "共鸣墙",
                         description: "匿名分享情绪，找到\n与你感同身受的人",
-                        color: AppTheme.primary
+                        color: Color.xuanApricot
                     )
                     
                     FeatureIntroRow(
                         icon: "heart.circle.fill",
                         title: "鼓励链",
                         description: "传递温暖，一句鼓励\n就能照亮他人的世界",
-                        color: AppTheme.warmGlow
+                        color: Color.xuanApricotDark
                     )
                 }
             }
             
             Spacer()
         }
-        .padding(.horizontal, AppSpacing.xxxl)
+        .padding(.horizontal, XuanSpacing.xl3)
     }
     
     // MARK: - Screen 3: Privacy
     private var welcomeScreen3: some View {
-        VStack(spacing: AppSpacing.xxl) {
+        VStack(spacing: XuanSpacing.xl2) {
             Spacer()
             
             ZStack {
                 Circle()
-                    .fill(AppTheme.safeGreen.opacity(0.1))
+                    .fill(Color.xuanSuccess.opacity(0.1))
                     .frame(width: 160, height: 160)
                 
                 Image(systemName: "lock.shield.fill")
                     .font(.system(size: 64))
-                    .foregroundColor(AppTheme.safeGreen)
+                    .foregroundColor(Color.xuanSuccess)
             }
             
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 Text("你的隐私，我们守护")
-                    .font(AppFont.title1)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h1)
+                    .foregroundColor(Color.xuanTextPrimary)
                 
-                VStack(alignment: .leading, spacing: AppSpacing.lg) {
+                VStack(alignment: .leading, spacing: XuanSpacing.lg) {
                     PrivacyPointRow(
                         icon: "lock.fill",
                         text: "所有数据加密存储，只有你能访问"
@@ -241,52 +241,52 @@ struct OnboardingView: View {
                         text: "你可以随时删除所有数据"
                     )
                 }
-                .padding(AppSpacing.xl)
-                .background(AppTheme.surface)
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+                .padding(XuanSpacing.xl)
+                .background(Color.xuanSurface)
+                .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
                 .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
             }
             
             Spacer()
         }
-        .padding(.horizontal, AppSpacing.xxxl)
+        .padding(.horizontal, XuanSpacing.xl3)
     }
     
     // MARK: - Page Indicator
     private var pageIndicator: some View {
-        HStack(spacing: AppSpacing.sm) {
+        HStack(spacing: XuanSpacing.sm) {
             ForEach(0..<3, id: \.self) { index in
                 Circle()
                     .fill(
                         index == viewModel.welcomePageIndex
-                            ? AppTheme.primary
-                            : AppTheme.textTertiary.opacity(0.3)
+                            ? Color.xuanApricot
+                            : Color.xuanTextTertiary.opacity(0.3)
                     )
                     .frame(width: 8, height: 8)
                     .animation(.easeInOut, value: viewModel.welcomePageIndex)
             }
         }
-        .padding(.vertical, AppSpacing.xl)
+        .padding(.vertical, XuanSpacing.xl)
     }
     
     // MARK: - Assessment Page (PHQ-9/GAD-7 简版)
     private var assessmentPage: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xl) {
-                VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.xl) {
+                VStack(spacing: XuanSpacing.md) {
                     Text("初始评估")
-                        .font(AppFont.title1)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h1)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
                     Text("帮助我们更好地了解你的状态\n（可跳过）")
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanTextSecondary)
                         .multilineTextAlignment(.center)
                 }
-                .padding(.top, AppSpacing.xxxl)
+                .padding(.top, XuanSpacing.xl3)
                 
                 // 评估问题
-                VStack(spacing: AppSpacing.lg) {
+                VStack(spacing: XuanSpacing.lg) {
                     ForEach(Array(viewModel.assessmentQuestions.enumerated()), id: \.offset) { index, question in
                         AssessmentQuestionCard(
                             question: question,
@@ -297,80 +297,80 @@ struct OnboardingView: View {
                 }
                 
                 // 按钮
-                VStack(spacing: AppSpacing.md) {
+                VStack(spacing: XuanSpacing.md) {
                     Button {
                         withAnimation { currentPage = .preferences }
                     } label: {
                         Text("下一步")
-                            .font(AppFont.bodyBold)
+                            .font(XuanFont.bodyLBold)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(AppTheme.primary)
-                            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+                            .background(Color.xuanApricot)
+                            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
                     }
                     
                     Button("跳过评估") {
                         withAnimation { currentPage = .preferences }
                     }
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
                 }
-                .padding(.horizontal, AppSpacing.xxxl)
+                .padding(.horizontal, XuanSpacing.xl3)
                 
                 Spacer(minLength: 40)
             }
-            .padding(.horizontal, AppSpacing.lg)
+            .padding(.horizontal, XuanSpacing.lg)
         }
     }
     
     // MARK: - Preferences Page
     private var preferencesPage: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xl) {
-                VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.xl) {
+                VStack(spacing: XuanSpacing.md) {
                     Text("偏好设置")
-                        .font(AppFont.title1)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h1)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
                     Text("个性化你的绪安体验")
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
-                .padding(.top, AppSpacing.xxxl)
+                .padding(.top, XuanSpacing.xl3)
                 
                 // 关注的情绪类型
-                VStack(alignment: .leading, spacing: AppSpacing.md) {
+                VStack(alignment: .leading, spacing: XuanSpacing.md) {
                     Text("你更关注哪些情绪？")
-                        .font(AppFont.title3)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h3)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: AppSpacing.sm) {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: XuanSpacing.sm) {
                         ForEach(EmotionColors.allEmotions, id: \.name) { emotion in
                             Button {
                                 viewModel.toggleEmotionFocus(emotion.chinese)
                             } label: {
-                                HStack(spacing: AppSpacing.sm) {
+                                HStack(spacing: XuanSpacing.sm) {
                                     Image(systemName: emotion.sfSymbol)
                                         .font(.system(size: 14))
                                     
                                     Text(emotion.chinese)
-                                        .font(AppFont.footnote)
+                                        .font(XuanFont.bodyS)
                                 }
                                 .foregroundColor(
                                     viewModel.selectedEmotions.contains(emotion.chinese)
                                         ? .white
                                         : emotion.color
                                 )
-                                .padding(.horizontal, AppSpacing.md)
-                                .padding(.vertical, AppSpacing.sm)
+                                .padding(.horizontal, XuanSpacing.md)
+                                .padding(.vertical, XuanSpacing.sm)
                                 .frame(maxWidth: .infinity)
                                 .background(
                                     viewModel.selectedEmotions.contains(emotion.chinese)
                                         ? emotion.color
                                         : emotion.color.opacity(0.1)
                                 )
-                                .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                                .clipShape(RoundedRectangle(cornerRadius: XuanRadius.md))
                             }
                         }
                     }
@@ -378,29 +378,29 @@ struct OnboardingView: View {
                 .sectionGroup()
                 
                 // 提醒时间
-                VStack(alignment: .leading, spacing: AppSpacing.md) {
+                VStack(alignment: .leading, spacing: XuanSpacing.md) {
                     Text("提醒时间")
-                        .font(AppFont.title3)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h3)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
-                    HStack(spacing: AppSpacing.md) {
+                    HStack(spacing: XuanSpacing.md) {
                         ForEach(viewModel.reminderTimeOptions, id: \.self) { time in
                             Button {
                                 viewModel.selectedReminderTime = time
                             } label: {
                                 Text(time)
-                                    .font(AppFont.footnote)
+                                    .font(XuanFont.bodyS)
                                     .foregroundColor(
                                         viewModel.selectedReminderTime == time
                                             ? .white
-                                            : AppTheme.textSecondary
+                                            : Color.xuanTextSecondary
                                     )
-                                    .padding(.horizontal, AppSpacing.lg)
-                                    .padding(.vertical, AppSpacing.sm)
+                                    .padding(.horizontal, XuanSpacing.lg)
+                                    .padding(.vertical, XuanSpacing.sm)
                                     .background(
                                         viewModel.selectedReminderTime == time
-                                            ? AppTheme.primary
-                                            : AppTheme.backgroundSecondary
+                                            ? Color.xuanApricot
+                                            : Color.xuanSurface
                                     )
                                     .clipShape(Capsule())
                             }
@@ -410,12 +410,12 @@ struct OnboardingView: View {
                 .sectionGroup()
                 
                 // 日记偏好
-                VStack(alignment: .leading, spacing: AppSpacing.md) {
+                VStack(alignment: .leading, spacing: XuanSpacing.md) {
                     Text("日记偏好")
-                        .font(AppFont.title3)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h3)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
-                    VStack(spacing: AppSpacing.md) {
+                    VStack(spacing: XuanSpacing.md) {
                         PreferenceToggle(
                             icon: "mic.fill",
                             title: "语音记录",
@@ -442,28 +442,28 @@ struct OnboardingView: View {
                 
                 // 免责声明
                 Text("绪安不是医疗设备，不能替代专业心理治疗。\n如有严重情绪困扰，请寻求专业帮助。")
-                    .font(AppFont.caption2)
-                    .foregroundColor(AppTheme.textTertiary)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, AppSpacing.xl)
+                    .padding(.horizontal, XuanSpacing.xl)
                 
                 // 完成按钮
                 Button {
                     dismiss()
                 } label: {
                     Text("开始使用绪安")
-                        .font(AppFont.bodyBold)
+                        .font(XuanFont.bodyLBold)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(AppTheme.primary)
-                        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+                        .background(Color.xuanApricot)
+                        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
                 }
-                .padding(.horizontal, AppSpacing.xxxl)
+                .padding(.horizontal, XuanSpacing.xl3)
                 
                 Spacer(minLength: 40)
             }
-            .padding(.horizontal, AppSpacing.lg)
+            .padding(.horizontal, XuanSpacing.lg)
         }
     }
 }
@@ -476,7 +476,7 @@ struct FeatureIntroRow: View {
     let color: Color
     
     var body: some View {
-        HStack(spacing: AppSpacing.lg) {
+        HStack(spacing: XuanSpacing.lg) {
             ZStack {
                 Circle()
                     .fill(color.opacity(0.15))
@@ -489,12 +489,12 @@ struct FeatureIntroRow: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanTextPrimary)
                 
                 Text(description)
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .lineSpacing(4)
             }
             
@@ -509,15 +509,15 @@ struct PrivacyPointRow: View {
     let text: String
     
     var body: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: icon)
                 .font(.system(size: 16))
-                .foregroundColor(AppTheme.safeGreen)
+                .foregroundColor(Color.xuanSuccess)
                 .frame(width: 24)
             
             Text(text)
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextPrimary)
         }
     }
 }
@@ -529,12 +529,12 @@ struct AssessmentQuestionCard: View {
     let index: Int
     
     var body: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("\(index + 1). \(question.text)")
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextPrimary)
             
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 ForEach(0..<question.options.count, id: \.self) { i in
                     Button {
                         selectedAnswer = i
@@ -545,21 +545,21 @@ struct AssessmentQuestionCard: View {
                             
                             Text(question.optionLabels[i])
                                 .font(.system(size: 9))
-                                .foregroundColor(AppTheme.textTertiary)
+                                .foregroundColor(Color.xuanTextTertiary)
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, AppSpacing.sm)
+                        .padding(.vertical, XuanSpacing.sm)
                         .background(
                             selectedAnswer == i
-                                ? AppTheme.primary.opacity(0.15)
-                                : AppTheme.backgroundSecondary
+                                ? Color.xuanApricot.opacity(0.15)
+                                : Color.xuanSurface
                         )
-                        .clipShape(RoundedRectangle(cornerRadius: AppRadius.sm))
+                        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.sm))
                         .overlay(
-                            RoundedRectangle(cornerRadius: AppRadius.sm)
+                            RoundedRectangle(cornerRadius: XuanRadius.sm)
                                 .stroke(
                                     selectedAnswer == i
-                                        ? AppTheme.primary.opacity(0.5)
+                                        ? Color.xuanApricot.opacity(0.5)
                                         : Color.clear,
                                     lineWidth: 1
                                 )
@@ -569,8 +569,8 @@ struct AssessmentQuestionCard: View {
             }
         }
         .padding()
-        .background(AppTheme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .background(Color.xuanSurface)
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
         .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
     }
 }
@@ -583,27 +583,27 @@ struct PreferenceToggle: View {
     @Binding var isOn: Bool
     
     var body: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: icon)
                 .font(.system(size: 18))
-                .foregroundColor(AppTheme.primary)
+                .foregroundColor(Color.xuanApricot)
                 .frame(width: 28)
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextPrimary)
                 
                 Text(subtitle)
-                    .font(AppFont.caption2)
-                    .foregroundColor(AppTheme.textTertiary)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
             
             Spacer()
             
             Toggle("", isOn: $isOn)
                 .labelsHidden()
-                .tint(AppTheme.primary)
+                .tint(Color.xuanApricot)
         }
     }
 }

@@ -30,10 +30,10 @@ enum CCActivityType: String, CaseIterable, Identifiable {
 
     var color: Color {
         switch self {
-        case .pleasure: return AppTheme.warmPink
-        case .mastery: return AppTheme.warning
-        case .social: return AppTheme.info
-        case .physical: return AppTheme.accentMint
+        case .pleasure: return Color.xuanPink
+        case .mastery: return Color.xuanWarning
+        case .social: return Color.xuanInfo
+        case .physical: return Color.xuanMint
         }
     }
 }

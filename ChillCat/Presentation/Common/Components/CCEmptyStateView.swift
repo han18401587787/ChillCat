@@ -30,18 +30,18 @@ struct CCEmptyStateView: View {
     }
 
     var body: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             Image(systemName: imageName)
                 .font(.system(size: 48))
-                .foregroundColor(AppTheme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
 
             Text(title)
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(AppTheme.textPrimary)
+                .foregroundColor(Color.xuanTextPrimary)
 
             Text(message)
                 .font(.system(size: 15))
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
 
             if let actionTitle = actionTitle, let action = action {
@@ -49,12 +49,12 @@ struct CCEmptyStateView: View {
                     Task { await action() }
                 }
                 .buttonStyle(.bordered)
-                .tint(AppTheme.primary)
-                .padding(.top, AppSpacing.sm)
+                .tint(Color.xuanApricot)
+                .padding(.top, XuanSpacing.sm)
             }
         }
-        .padding(AppSpacing.lg)
+        .padding(XuanSpacing.lg)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
     }
 }

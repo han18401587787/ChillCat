@@ -10,39 +10,39 @@ struct CCDataManagementView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("情绪日记").font(.system(size: 15))
                         Text("\(viewModel.moodDiaryCount) · \(viewModel.moodDiarySize)")
-                            .font(.system(size: 12)).foregroundColor(AppTheme.textMuted)
+                            .font(.system(size: 12)).foregroundColor(Color.xuanTextTertiary)
                     }
                     Spacer()
                     Button("导出") { viewModel.exportMoodDiary() }
-                        .font(.system(size: 13)).foregroundColor(AppTheme.primaryDark)
+                        .font(.system(size: 13)).foregroundColor(Color.xuanApricotDark)
                 }
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("语音备忘").font(.system(size: 15))
                         Text("\(viewModel.voiceMemoCount) · \(viewModel.voiceMemoSize)")
-                            .font(.system(size: 12)).foregroundColor(AppTheme.textMuted)
+                            .font(.system(size: 12)).foregroundColor(Color.xuanTextTertiary)
                     }
                     Spacer()
                     Button("导出") { viewModel.exportVoiceMemo() }
-                        .font(.system(size: 13)).foregroundColor(AppTheme.primaryDark)
+                        .font(.system(size: 13)).foregroundColor(Color.xuanApricotDark)
                 }
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("树洞帖子").font(.system(size: 15))
                         Text("\(viewModel.treeHoleCount) · \(viewModel.treeHoleSize)")
-                            .font(.system(size: 12)).foregroundColor(AppTheme.textMuted)
+                            .font(.system(size: 12)).foregroundColor(Color.xuanTextTertiary)
                     }
                     Spacer()
                     Button("导出") { viewModel.exportTreeHolePosts() }
-                        .font(.system(size: 13)).foregroundColor(AppTheme.primaryDark)
+                        .font(.system(size: 13)).foregroundColor(Color.xuanApricotDark)
                 }
             } header: { Text("数据存储") }
 
             Section {
                 Button("清除缓存") { viewModel.clearCache() }
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                 Button("导出所有数据") { viewModel.exportAllData() }
-                    .foregroundColor(AppTheme.primaryDark)
+                    .foregroundColor(Color.xuanApricotDark)
             }
 
             Section {
@@ -51,7 +51,7 @@ struct CCDataManagementView: View {
             } header: { Text("危险操作") }
         }
         .navigationTitle("数据管理")
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .task { await viewModel.loadDataMetrics() }
     }
 }

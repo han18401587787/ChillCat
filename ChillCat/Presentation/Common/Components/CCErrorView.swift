@@ -13,26 +13,26 @@ struct CCErrorView: View {
     let retryAction: (() async -> Void)?
 
     var body: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             Image(systemName: "exclamationmark.triangle")
                 .font(.system(size: 48))
-                .foregroundColor(AppTheme.error)
+                .foregroundColor(Color.xuanDanger)
 
             Text(error.localizedDescription)
                 .font(.system(size: 15))
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, AppSpacing.xl)
+                .padding(.horizontal, XuanSpacing.xl)
 
             if let retryAction = retryAction {
                 Button("重试") {
                     Task { await retryAction() }
                 }
                 .buttonStyle(.bordered)
-                .tint(AppTheme.primary)
+                .tint(Color.xuanApricot)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
     }
 }

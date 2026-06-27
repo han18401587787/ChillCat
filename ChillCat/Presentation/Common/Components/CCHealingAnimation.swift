@@ -18,8 +18,8 @@ struct ResonanceRippleView: View {
 
     init(
         size: CGFloat = 200,
-        primaryColor: Color = AppTheme.warmGlow,
-        secondaryColor: Color = AppTheme.roseGold
+        primaryColor: Color = Color.xuanApricotDark,
+        secondaryColor: Color = Color.xuanPink
     ) {
         self.size = size
         self.primaryColor = primaryColor
@@ -95,7 +95,7 @@ struct BreathingAnimationView: View {
 
     init(
         size: CGFloat = 200,
-        color: Color = AppTheme.calmBlue,
+        color: Color = Color.xuanInfo,
         duration: TimeInterval = 4.0,
         targetCycles: Int = 5,
         onPhaseChange: ((BreathingPhase, Int) -> Void)? = nil,
@@ -110,7 +110,7 @@ struct BreathingAnimationView: View {
     }
 
     var body: some View {
-        VStack(spacing: AppSpacing.xl) {
+        VStack(spacing: XuanSpacing.xl) {
             ZStack {
                 // 外层光环
                 Circle()
@@ -138,15 +138,15 @@ struct BreathingAnimationView: View {
                     .opacity(opacity)
 
                 // 引导文字
-                VStack(spacing: AppSpacing.sm) {
+                VStack(spacing: XuanSpacing.sm) {
                     Text(phaseText)
-                        .font(AppFont.title2)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h2)
+                        .foregroundColor(Color.xuanTextPrimary)
 
                     if targetCycles > 1 {
                         Text("\(min(cycleCount, targetCycles))/\(targetCycles)")
-                            .font(AppFont.footnote)
-                            .foregroundColor(AppTheme.textTertiary)
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextTertiary)
                     }
                 }
             }
@@ -167,7 +167,7 @@ struct BreathingAnimationView: View {
                 }
             }
             .frame(height: 6)
-            .padding(.horizontal, AppSpacing.xl)
+            .padding(.horizontal, XuanSpacing.xl)
         }
         .onAppear {
             startBreathingCycle()
@@ -252,7 +252,7 @@ struct CheckinCompleteAnimation: View {
 
     init(
         size: CGFloat = 120,
-        color: Color = AppTheme.safeGreen,
+        color: Color = Color.xuanSuccess,
         onComplete: (() -> Void)? = nil
     ) {
         self.size = size
@@ -348,9 +348,9 @@ struct CheckinCompleteAnimation: View {
     private func particleColor(_ particle: Particle) -> Color {
         let colors: [Color] = [
             color,
-            AppTheme.warmGlow,
-            AppTheme.roseGold,
-            AppTheme.hopeCyan
+            Color.xuanApricotDark,
+            Color.xuanPink,
+            Color(hex: "7CB8B0")
         ]
         return colors[particle.colorIndex % colors.count]
     }
@@ -373,7 +373,7 @@ struct HealingPulseView: View {
     let color: Color
     let size: CGFloat
 
-    init(color: Color = AppTheme.softPurple, size: CGFloat = 60) {
+    init(color: Color = Color(hex: "A085C6").opacity(0.5), size: CGFloat = 60) {
         self.color = color
         self.size = size
     }
@@ -435,7 +435,7 @@ struct HealingOverlayView: View {
                     dismiss()
                 }
 
-            VStack(spacing: AppSpacing.xl) {
+            VStack(spacing: XuanSpacing.xl) {
                 // 共鸣波纹
                 ResonanceRippleView(size: 120)
 
@@ -443,26 +443,26 @@ struct HealingOverlayView: View {
                 CheckinCompleteAnimation(size: 100)
 
                 // 文字
-                VStack(spacing: AppSpacing.sm) {
+                VStack(spacing: XuanSpacing.sm) {
                     Text(title)
-                        .font(AppFont.title2)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h2)
+                        .foregroundColor(Color.xuanTextPrimary)
 
                     Text(subtitle)
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanTextSecondary)
                         .multilineTextAlignment(.center)
                 }
                 .opacity(showContent ? 1 : 0)
                 .offset(y: showContent ? 0 : 20)
             }
-            .padding(AppSpacing.xxl)
+            .padding(XuanSpacing.xl2)
             .background(
-                RoundedRectangle(cornerRadius: AppRadius.xl)
-                    .fill(AppTheme.surface)
+                RoundedRectangle(cornerRadius: XuanRadius.xl)
+                    .fill(Color.xuanSurface)
                     .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 8)
             )
-            .padding(AppSpacing.xl)
+            .padding(XuanSpacing.xl)
             .scaleEffect(showContent ? 1 : 0.8)
             .opacity(showContent ? 1 : 0)
             .contentShape(Rectangle())
@@ -502,5 +502,5 @@ struct HealingOverlayView: View {
         HealingPulseView()
     }
     .padding()
-    .background(AppTheme.background)
+    .background(Color.xuanApricotBg)
 }

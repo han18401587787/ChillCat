@@ -37,7 +37,7 @@ struct VoiceRecorderView: View {
     }
 
     var body: some View {
-        VStack(spacing: AppSpacing.xl) {
+        VStack(spacing: XuanSpacing.xl) {
             // 状态提示文字
             statusLabel
 
@@ -47,9 +47,9 @@ struct VoiceRecorderView: View {
             // 操作提示
             hintText
         }
-        .padding(AppSpacing.xl)
-        .background(AppTheme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.xl))
+        .padding(XuanSpacing.xl)
+        .background(Color.xuanSurface)
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.xl))
         .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 4)
         .onAppear {
             viewModel.checkMicrophonePermission()
@@ -69,50 +69,50 @@ struct VoiceRecorderView: View {
         switch viewModel.state {
         case .idle:
             Text("按住说话")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextSecondary)
 
         case .recording(let duration):
-            HStack(spacing: AppSpacing.sm) {
-                ComponentStyles.PulseIndicator(color: AppTheme.crisisRed)
+            HStack(spacing: XuanSpacing.sm) {
+                ComponentStyles.PulseIndicator(color: Color.xuanDanger)
 
                 Text(formatDuration(duration))
                     .font(.system(size: 32, weight: .medium, design: .monospaced))
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
             }
 
         case .transcribing:
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: AppTheme.primary))
+                    .progressViewStyle(CircularProgressViewStyle(tint: Color.xuanApricot))
 
                 Text("转写中...")
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
 
         case .completed(let transcription):
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 32))
-                    .foregroundColor(AppTheme.safeGreen)
+                    .foregroundColor(Color.xuanSuccess)
 
                 Text(transcription)
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .multilineTextAlignment(.center)
                     .lineLimit(3)
             }
 
         case .cancelled:
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 Image(systemName: "xmark.circle.fill")
                     .font(.system(size: 32))
-                    .foregroundColor(AppTheme.textTertiary)
+                    .foregroundColor(Color.xuanTextTertiary)
 
                 Text("已取消")
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textTertiary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
 
         case .unauthorized:
@@ -122,42 +122,42 @@ struct VoiceRecorderView: View {
 
     // MARK: - Unauthorized View
     private var unauthorizedView: some View {
-        VStack(spacing: AppSpacing.lg) {
+        VStack(spacing: XuanSpacing.lg) {
             Image(systemName: "mic.slash.fill")
                 .font(.system(size: 40))
-                .foregroundColor(AppTheme.textTertiary)
+                .foregroundColor(Color.xuanTextTertiary)
 
             Text("需要麦克风权限")
-                .font(AppFont.bodyBold)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.bodyLBold)
+                .foregroundColor(Color.xuanTextPrimary)
 
             Text("绪安需要访问麦克风来进行语音记录，\n请在系统设置中开启")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
 
             Button {
                 viewModel.openSystemSettings()
             } label: {
                 Text("前往设置")
-                    .font(AppFont.bodyBold)
+                    .font(XuanFont.bodyLBold)
                     .foregroundColor(.white)
-                    .padding(.horizontal, AppSpacing.xl)
-                    .padding(.vertical, AppSpacing.md)
-                    .background(AppTheme.primary)
-                    .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                    .padding(.horizontal, XuanSpacing.xl)
+                    .padding(.vertical, XuanSpacing.md)
+                    .background(Color.xuanApricot)
+                    .clipShape(RoundedRectangle(cornerRadius: XuanRadius.md))
             }
         }
     }
 
     // MARK: - Record Button Area
     private var recordButtonArea: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             // 波形动画
             if case .recording = viewModel.state {
                 WaveformAnimation(
                     amplitudes: viewModel.waveformAmplitudes,
-                    color: AppTheme.primary
+                    color: Color.xuanApricot
                 )
                 .frame(height: 60)
             }
@@ -172,7 +172,7 @@ struct VoiceRecorderView: View {
             // 外圈光晕
             if case .recording = viewModel.state {
                 Circle()
-                    .fill(AppTheme.primary.opacity(0.15))
+                    .fill(Color.xuanApricot.opacity(0.15))
                     .frame(width: 100, height: 100)
                     .scaleEffect(viewModel.isPressed ? 1.2 : 1.0)
                     .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: viewModel.isPressed)
@@ -207,11 +207,11 @@ struct VoiceRecorderView: View {
     private var recordButtonColor: Color {
         switch viewModel.state {
         case .idle, .transcribing, .completed, .unauthorized:
-            return AppTheme.primary
+            return Color.xuanApricot
         case .recording:
-            return viewModel.isCancelling ? AppTheme.crisisRed : AppTheme.primary
+            return viewModel.isCancelling ? Color.xuanDanger : Color.xuanApricot
         case .cancelled:
-            return AppTheme.textTertiary
+            return Color.xuanTextTertiary
         }
     }
 
@@ -250,7 +250,7 @@ struct VoiceRecorderView: View {
             case .recording:
                 if viewModel.isCancelling {
                     Text("松手取消录音")
-                        .foregroundColor(AppTheme.crisisRed)
+                        .foregroundColor(Color.xuanDanger)
                 } else {
                     Text("上滑取消 · 松手结束")
                 }
@@ -260,8 +260,8 @@ struct VoiceRecorderView: View {
                 EmptyView()
             }
         }
-        .font(AppFont.footnote)
-        .foregroundColor(AppTheme.textTertiary)
+        .font(XuanFont.bodyS)
+        .foregroundColor(Color.xuanTextTertiary)
     }
 
     // MARK: - Helpers
@@ -476,5 +476,5 @@ struct WaveformAnimation: View {
         Spacer()
     }
     .padding()
-    .background(AppTheme.background)
+    .background(Color.xuanApricotBg)
 }

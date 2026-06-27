@@ -11,14 +11,14 @@ struct CCFAQView: View {
             faqSection(q: "树洞是什么？", a: "树洞是一个匿名倾诉社区。你可以随便说什么，没有评判，只有温柔回应。")
         }
         .navigationTitle("常见问题")
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
     }
 
     func faqSection(q: String, a: String) -> some View {
         Section {
-            Text(a).font(.system(size: 14)).foregroundColor(AppTheme.textSecondary).lineSpacing(4)
+            Text(a).font(.system(size: 14)).foregroundColor(Color.xuanTextSecondary).lineSpacing(4)
         } header: {
-            Text(q).font(.system(size: 15, weight: .medium)).foregroundColor(AppTheme.textPrimary)
+            Text(q).font(.system(size: 15, weight: .medium)).foregroundColor(Color.xuanTextPrimary)
         }
     }
 }

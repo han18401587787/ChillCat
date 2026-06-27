@@ -12,55 +12,55 @@ import SwiftUI
 
 struct CCXuanDisplay: ViewModifier {
     func body(content: Content) -> some View {
-        content.font(AppFont.largeTitle.weight(.bold))
+        content.font(XuanFont.h1)
     }
 }
 
 struct CCXuanH1: ViewModifier {
     func body(content: Content) -> some View {
-        content.font(AppFont.largeTitle)
+        content.font(XuanFont.h1)
     }
 }
 
 struct CCXuanH2: ViewModifier {
     func body(content: Content) -> some View {
-        content.font(AppFont.title1)
+        content.font(XuanFont.h1)
     }
 }
 
 struct CCXuanH3: ViewModifier {
     func body(content: Content) -> some View {
-        content.font(AppFont.title3)
+        content.font(XuanFont.h3)
     }
 }
 
 struct CCXuanBodyL: ViewModifier {
     func body(content: Content) -> some View {
-        content.font(AppFont.body.weight(.medium))
+        content.font(XuanFont.bodyLMedium)
     }
 }
 
 struct CCXuanBody: ViewModifier {
     func body(content: Content) -> some View {
-        content.font(AppFont.body)
+        content.font(XuanFont.bodyL)
     }
 }
 
 struct CCXuanBodyS: ViewModifier {
     func body(content: Content) -> some View {
-        content.font(AppFont.footnote)
+        content.font(XuanFont.bodyS)
     }
 }
 
 struct CCXuanCaption: ViewModifier {
     func body(content: Content) -> some View {
-        content.font(AppFont.caption)
+        content.font(XuanFont.bodyM)
     }
 }
 
 struct CCXuanLabel: ViewModifier {
     func body(content: Content) -> some View {
-        content.font(AppFont.caption)
+        content.font(XuanFont.bodyM)
     }
 }
 

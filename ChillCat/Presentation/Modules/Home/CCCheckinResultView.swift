@@ -17,7 +17,7 @@ struct CheckinResultView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xl) {
+            VStack(spacing: XuanSpacing.xl) {
                 // 打卡成功动效区域
                 successHeader
 
@@ -39,9 +39,9 @@ struct CheckinResultView: View {
                 // 操作按钮
                 actionButtons
             }
-            .padding(AppSpacing.lg)
+            .padding(XuanSpacing.lg)
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .navigationTitle("打卡结果")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -74,18 +74,18 @@ struct CheckinResultView: View {
 
     // MARK: - Success Header
     private var successHeader: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             CheckinCompleteAnimation(size: 100)
 
             Text("记录成功")
-                .font(AppFont.title2)
-                .foregroundColor(AppTheme.safeGreen)
+                .font(XuanFont.h2)
+                .foregroundColor(Color.xuanSuccess)
 
             Text("你已连续打卡 \(viewModel.streakDays) 天")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
         }
-        .padding(.vertical, AppSpacing.lg)
+        .padding(.vertical, XuanSpacing.lg)
     }
 
     // MARK: - Date Section
@@ -93,26 +93,26 @@ struct CheckinResultView: View {
         HStack {
             Image(systemName: "calendar")
                 .font(.system(size: 16))
-                .foregroundColor(AppTheme.textTertiary)
+                .foregroundColor(Color.xuanTextTertiary)
 
             Text(viewModel.formattedDate)
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextPrimary)
 
             Spacer()
 
             Text(viewModel.timeString)
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textTertiary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextTertiary)
         }
         .padding()
-        .background(AppTheme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .background(Color.xuanSurface)
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
     }
 
     // MARK: - Emotion Tag Section
     private var emotionTagSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             sectionHeader(title: "情绪标签", icon: "tag.fill")
 
             // 可编辑标签
@@ -123,20 +123,20 @@ struct CheckinResultView: View {
 
             // 备选标签
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     ForEach(EmotionColors.allEmotions, id: \.name) { emotion in
                         Button {
                             viewModel.emotionLabel = emotion.chinese
                         } label: {
                             Text(emotion.chinese)
-                                .font(AppFont.footnote)
+                                .font(XuanFont.bodyS)
                                 .foregroundColor(
                                     viewModel.emotionLabel == emotion.chinese
                                         ? .white
                                         : emotion.color
                                 )
-                                .padding(.horizontal, AppSpacing.md)
-                                .padding(.vertical, AppSpacing.xs)
+                                .padding(.horizontal, XuanSpacing.md)
+                                .padding(.vertical, XuanSpacing.xs)
                                 .background(
                                     viewModel.emotionLabel == emotion.chinese
                                         ? emotion.color
@@ -153,39 +153,39 @@ struct CheckinResultView: View {
 
     // MARK: - Intensity Section
     private var intensitySection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             sectionHeader(title: "情绪强度", icon: "speedometer")
 
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 // 强度值显示
                 HStack {
                     Text("强度：\(Int(viewModel.intensity))/10")
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(Color.xuanTextPrimary)
 
                     Spacer()
 
                     Text(intensityLabel)
-                        .font(AppFont.caption)
+                        .font(XuanFont.bodyM)
                         .foregroundColor(intensityColor)
-                        .padding(.horizontal, AppSpacing.md)
-                        .padding(.vertical, AppSpacing.xs)
+                        .padding(.horizontal, XuanSpacing.md)
+                        .padding(.vertical, XuanSpacing.xs)
                         .background(intensityColor.opacity(0.1))
                         .clipShape(Capsule())
                 }
 
                 // 滑块
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     Text("1")
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
 
                     Slider(value: $viewModel.intensity, in: 1...10, step: 1)
                         .tint(intensityColor)
 
                     Text("10")
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
 
                 // 强度条可视化
@@ -200,24 +200,24 @@ struct CheckinResultView: View {
 
     // MARK: - AI Summary Section
     private var aiSummarySection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             sectionHeader(title: "AI 情绪摘要", icon: "brain.head.profile")
 
-            HStack(alignment: .top, spacing: AppSpacing.md) {
+            HStack(alignment: .top, spacing: XuanSpacing.md) {
                 ZStack {
                     Circle()
-                        .fill(AppTheme.textSecondary.opacity(0.15))
+                        .fill(Color.xuanTextSecondary.opacity(0.15))
                         .frame(width: 32, height: 32)
 
                     Image(systemName: "sparkles")
                         .font(.system(size: 14))
-                        .foregroundColor(AppTheme.textSecondary)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
 
-                VStack(alignment: .leading, spacing: AppSpacing.sm) {
+                VStack(alignment: .leading, spacing: XuanSpacing.sm) {
                     Text(viewModel.aiSummary)
-                        .font(AppFont.body)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyL)
+                        .foregroundColor(Color.xuanTextPrimary)
                         .lineSpacing(4)
 
                     Button {
@@ -228,8 +228,8 @@ struct CheckinResultView: View {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 10))
                         }
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.primary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanApricot)
                     }
                 }
             }
@@ -239,23 +239,23 @@ struct CheckinResultView: View {
 
     // MARK: - Original Content Section
     private var originalContentSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             sectionHeader(title: "原始内容", icon: "text.quote")
 
             Text(viewModel.originalContent)
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextSecondary)
                 .lineSpacing(6)
                 .padding()
-                .background(AppTheme.backgroundSecondary)
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                .background(Color.xuanSurface)
+                .clipShape(RoundedRectangle(cornerRadius: XuanRadius.md))
         }
         .sectionGroup()
     }
 
     // MARK: - Action Buttons
     private var actionButtons: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             // 发布到共鸣墙
             Button {
                 showPublishSheet = true
@@ -265,11 +265,11 @@ struct CheckinResultView: View {
                     Text("发布到共鸣墙")
                     Spacer()
                     Text("默认匿名")
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textTertiary)
-                        .padding(.horizontal, AppSpacing.sm)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
+                        .padding(.horizontal, XuanSpacing.sm)
                         .padding(.vertical, 2)
-                        .background(AppTheme.backgroundSecondary)
+                        .background(Color.xuanSurface)
                         .clipShape(Capsule())
                 }
             }
@@ -298,11 +298,11 @@ struct CheckinResultView: View {
         HStack(spacing: 6) {
             Image(systemName: icon)
                 .font(.system(size: 14))
-                .foregroundColor(AppTheme.textTertiary)
+                .foregroundColor(Color.xuanTextTertiary)
 
             Text(title)
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textTertiary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextTertiary)
         }
     }
 
@@ -320,10 +320,10 @@ struct CheckinResultView: View {
     private var intensityColor: Color {
         switch Int(viewModel.intensity) {
         case 1...3: return EmotionColors.calm
-        case 4...6: return AppTheme.warmGlow
-        case 7...8: return AppTheme.vibrantOrange
-        case 9...10: return AppTheme.crisisRed
-        default: return AppTheme.textTertiary
+        case 4...6: return Color.xuanApricotDark
+        case 7...8: return Color.xuanWarning
+        case 9...10: return Color.xuanDanger
+        default: return Color.xuanTextTertiary
         }
     }
 }
@@ -334,12 +334,12 @@ struct EmotionTagEditor: View {
     let emotionColor: Color
 
     var body: some View {
-        HStack(spacing: AppSpacing.sm) {
+        HStack(spacing: XuanSpacing.sm) {
             Text(selectedEmotion)
-                .font(AppFont.title3)
+                .font(XuanFont.h3)
                 .foregroundColor(emotionColor)
-                .padding(.horizontal, AppSpacing.lg)
-                .padding(.vertical, AppSpacing.sm)
+                .padding(.horizontal, XuanSpacing.lg)
+                .padding(.vertical, XuanSpacing.sm)
                 .background(emotionColor.opacity(0.1))
                 .clipShape(Capsule())
                 .overlay(
@@ -351,7 +351,7 @@ struct EmotionTagEditor: View {
 
             Image(systemName: "pencil")
                 .font(.system(size: 14))
-                .foregroundColor(AppTheme.textTertiary)
+                .foregroundColor(Color.xuanTextTertiary)
         }
     }
 }
@@ -429,42 +429,42 @@ struct PublishToResonanceView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: AppSpacing.xl) {
+            VStack(spacing: XuanSpacing.xl) {
                 // 预览卡片
-                VStack(alignment: .leading, spacing: AppSpacing.md) {
+                VStack(alignment: .leading, spacing: XuanSpacing.md) {
                     Text("分享预览")
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanTextTertiary)
 
-                    VStack(alignment: .leading, spacing: AppSpacing.md) {
+                    VStack(alignment: .leading, spacing: XuanSpacing.md) {
                         HStack {
                             Image(systemName: "person.circle.fill")
                                 .font(.system(size: 24))
-                                .foregroundColor(AppTheme.textTertiary)
+                                .foregroundColor(Color.xuanTextTertiary)
                             Text(isAnonymous ? "匿名用户" : "我")
-                                .font(AppFont.footnote)
-                                .foregroundColor(AppTheme.textSecondary)
+                                .font(XuanFont.bodyS)
+                                .foregroundColor(Color.xuanTextSecondary)
                             Spacer()
                             Text("刚刚")
-                                .font(AppFont.caption2)
-                                .foregroundColor(AppTheme.textTertiary)
+                                .font(XuanFont.caption)
+                                .foregroundColor(Color.xuanTextTertiary)
                         }
 
                         Text("今天的心情：焦虑")
-                            .font(AppFont.body)
-                            .foregroundColor(AppTheme.textPrimary)
+                            .font(XuanFont.bodyL)
+                            .foregroundColor(Color.xuanTextPrimary)
 
                         Text("有时候焦虑并不是软弱，而是因为在乎。")
-                            .font(AppFont.caption)
-                            .foregroundColor(AppTheme.textSecondary)
+                            .font(XuanFont.bodyM)
+                            .foregroundColor(Color.xuanTextSecondary)
                     }
                     .padding()
-                    .background(AppTheme.backgroundSecondary)
-                    .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+                    .background(Color.xuanSurface)
+                    .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
                 }
 
                 // 发布选项
-                VStack(spacing: AppSpacing.md) {
+                VStack(spacing: XuanSpacing.md) {
                     ToggleRow(
                         icon: "theatermasks.fill",
                         title: "匿名发布",
@@ -482,10 +482,10 @@ struct PublishToResonanceView: View {
                 .sectionGroup()
 
                 // 添加表情
-                VStack(alignment: .leading, spacing: AppSpacing.md) {
+                VStack(alignment: .leading, spacing: XuanSpacing.md) {
                     Text("添加心情表情")
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanTextTertiary)
 
                     CCEmojiPicker(isShowing: $showEmojiPicker, onSelect: { emoji in
                         selectedEmoji = emoji
@@ -505,7 +505,7 @@ struct PublishToResonanceView: View {
                 }
                 .buttonStyle(ComponentStyles.PrimaryButtonStyle())
             }
-            .padding(AppSpacing.lg)
+            .padding(XuanSpacing.lg)
             .navigationTitle("发布到共鸣墙")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -527,27 +527,27 @@ struct ToggleRow: View {
     @Binding var isOn: Bool
 
     var body: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: icon)
                 .font(.system(size: 18))
-                .foregroundColor(AppTheme.textTertiary)
+                .foregroundColor(Color.xuanTextTertiary)
                 .frame(width: 28)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextPrimary)
 
                 Text(subtitle)
-                    .font(AppFont.caption2)
-                    .foregroundColor(AppTheme.textTertiary)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
 
             Spacer()
 
             Toggle("", isOn: $isOn)
                 .labelsHidden()
-                .tint(AppTheme.primary)
+                .tint(Color.xuanApricot)
         }
     }
 }

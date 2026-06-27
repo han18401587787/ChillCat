@@ -12,8 +12,8 @@ struct PrivacyPolicyView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     // 最后更新日期
                     Text("最后更新日期：2026年6月17日")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextTertiary)
                     
                     PrivacySection(title: "一、信息收集") {
                         PrivacyItem("我们会收集您主动提供的信息，包括：")
@@ -106,8 +106,8 @@ struct PrivacyPolicyView: View {
                     // 心理援助热线
                     VStack(alignment: .leading, spacing: 12) {
                         Text("🆘 心理援助热线")
-                            .font(AppFont.title3)
-                            .foregroundColor(AppTheme.primary)
+                            .font(XuanFont.h3)
+                            .foregroundColor(Color.xuanApricot)
                         
                         CrisisHotlineRow(name: "全国心理援助热线", number: "400-161-9995")
                         CrisisHotlineRow(name: "北京心理危机研究与干预中心", number: "010-82951332")
@@ -115,12 +115,12 @@ struct PrivacyPolicyView: View {
                         CrisisHotlineRow(name: "青少年心理援助热线", number: "12355")
                     }
                     .padding()
-                    .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.md)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.md)
                 }
                 .padding(24)
             }
-            .background(AppTheme.background)
+            .background(Color.xuanApricotBg)
             .navigationTitle("隐私政策")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -141,8 +141,8 @@ struct UserAgreementView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("最后更新日期：2026年6月17日")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextTertiary)
                     
                     PrivacySection(title: "一、服务说明") {
                         PrivacyItem("绪安（ChillCat）是一款 AI 情绪陪伴应用，提供以下服务：")
@@ -201,7 +201,7 @@ struct UserAgreementView: View {
                 }
                 .padding(24)
             }
-            .background(AppTheme.background)
+            .background(Color.xuanApricotBg)
             .navigationTitle("用户协议")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -227,15 +227,15 @@ struct PrivacyConsentView: View {
             // Logo
             Image(systemName: "cat.fill")
                 .font(.system(size: 60))
-                .foregroundColor(AppTheme.primary)
+                .foregroundColor(Color.xuanApricot)
             
             Text("绪安 ChillCat")
-                .font(AppFont.title1)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h1)
+                .foregroundColor(Color.xuanTextPrimary)
             
             Text("接住所有情绪，温柔自愈，自在松弛")
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
             
             Spacer()
@@ -248,30 +248,30 @@ struct PrivacyConsentView: View {
                     } label: {
                         Image(systemName: isAgreed ? "checkmark.circle.fill" : "circle")
                             .font(.system(size: 22))
-                            .foregroundColor(isAgreed ? AppTheme.primary : AppTheme.textTertiary)
+                            .foregroundColor(isAgreed ? Color.xuanApricot : Color.xuanTextTertiary)
                     }
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text("我已阅读并同意")
-                            .font(AppFont.body)
-                            .foregroundColor(AppTheme.textSecondary)
+                            .font(XuanFont.bodyL)
+                            .foregroundColor(Color.xuanTextSecondary)
                         
                         HStack(spacing: 4) {
                             Button("《隐私政策》") {
                                 showPrivacy = true
                             }
-                            .font(AppFont.body)
-                            .foregroundColor(AppTheme.primary)
+                            .font(XuanFont.bodyL)
+                            .foregroundColor(Color.xuanApricot)
                             
                             Text("和")
-                                .font(AppFont.body)
-                                .foregroundColor(AppTheme.textSecondary)
+                                .font(XuanFont.bodyL)
+                                .foregroundColor(Color.xuanTextSecondary)
                             
                             Button("《用户协议》") {
                                 showAgreement = true
                             }
-                            .font(AppFont.body)
-                            .foregroundColor(AppTheme.primary)
+                            .font(XuanFont.bodyL)
+                            .foregroundColor(Color.xuanApricot)
                         }
                     }
                 }
@@ -281,22 +281,22 @@ struct PrivacyConsentView: View {
                     UserDefaults.standard.set(true, forKey: "privacy_consent_accepted")
                 } label: {
                     Text("同意并继续")
-                        .font(AppFont.title3)
+                        .font(XuanFont.h3)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(isAgreed ? AppTheme.primary : AppTheme.textTertiary)
-                        .cornerRadius(AppRadius.md)
+                        .background(isAgreed ? Color.xuanApricot : Color.xuanTextTertiary)
+                        .cornerRadius(XuanRadius.md)
                 }
                 .disabled(!isAgreed)
             }
             .padding(24)
-            .background(AppTheme.surface)
-            .cornerRadius(AppRadius.lg)
+            .background(Color.xuanSurface)
+            .cornerRadius(XuanRadius.lg)
             .padding(.horizontal, 24)
         }
         .padding(.bottom, 40)
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .sheet(isPresented: $showPrivacy) {
             PrivacyPolicyView()
         }
@@ -315,8 +315,8 @@ private struct PrivacySection<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(title)
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
             
             content()
         }
@@ -333,8 +333,8 @@ private struct PrivacyItem: View {
     
     var body: some View {
         Text(text)
-            .font(AppFont.body)
-            .foregroundColor(AppTheme.textSecondary)
+            .font(XuanFont.bodyL)
+            .foregroundColor(Color.xuanTextSecondary)
             .lineSpacing(4)
     }
 }
@@ -351,10 +351,10 @@ private struct BulletList: View {
             ForEach(items, id: \.self) { item in
                 HStack(alignment: .top, spacing: 8) {
                     Text("•")
-                        .foregroundColor(AppTheme.primary)
+                        .foregroundColor(Color.xuanApricot)
                     Text(item)
-                        .font(AppFont.body)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyL)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
             }
         }
@@ -369,11 +369,11 @@ private struct ContactRow: View {
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: icon)
-                .foregroundColor(AppTheme.primary)
+                .foregroundColor(Color.xuanApricot)
                 .frame(width: 20)
             Text(text)
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextSecondary)
         }
     }
 }
@@ -385,16 +385,16 @@ private struct CrisisHotlineRow: View {
     var body: some View {
         HStack {
             Text(name)
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextPrimary)
             Spacer()
             Button(number) {
                 if let url = URL(string: "tel://\(number.replacingOccurrences(of: "-", with: ""))") {
                     UIApplication.shared.open(url)
                 }
             }
-            .font(AppFont.footnote.monospacedDigit())
-            .foregroundColor(AppTheme.primary)
+            .font(XuanFont.bodyS.monospacedDigit())
+            .foregroundColor(Color.xuanApricot)
         }
         .padding(.vertical, 4)
     }

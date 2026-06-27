@@ -24,11 +24,11 @@ struct CCTransactionHistoryView: View {
                 List {
                     ForEach(viewModel.transactions) { transaction in
                         transactionRow(transaction)
-                            .listRowBackground(AppTheme.surface)
+                            .listRowBackground(Color.xuanSurface)
                     }
                 }
                 .scrollContentBackground(.hidden)
-                .background(AppTheme.background)
+                .background(Color.xuanApricotBg)
             }
         }
         .navigationTitle("购买记录")
@@ -47,7 +47,7 @@ struct CCTransactionHistoryView: View {
     }
 
     private func transactionRow(_ transaction: CCTransaction) -> some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: transaction.status.systemImage)
                 .font(.title3)
                 .foregroundColor(statusColor(transaction.status))
@@ -59,7 +59,7 @@ struct CCTransactionHistoryView: View {
 
                 Text(transaction.purchaseDate.cc_formatted("yyyy-MM-dd HH:mm"))
                     .font(.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
 
             Spacer()
@@ -79,10 +79,10 @@ struct CCTransactionHistoryView: View {
 
     private func statusColor(_ status: CCTransactionStatus) -> Color {
         switch status {
-        case .pending:   return AppTheme.warm
-        case .completed: return AppTheme.success
-        case .failed:    return AppTheme.error
-        case .refunded:  return AppTheme.textMuted
+        case .pending:   return Color.xuanApricotDark
+        case .completed: return Color.xuanSuccess
+        case .failed:    return Color.xuanDanger
+        case .refunded:  return Color.xuanTextTertiary
         }
     }
 }

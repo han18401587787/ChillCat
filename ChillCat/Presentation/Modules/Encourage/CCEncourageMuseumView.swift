@@ -10,7 +10,7 @@ struct EncourageMuseumView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xl) {
+            VStack(spacing: XuanSpacing.xl) {
                 // 头部统计
                 statsHeader
                 
@@ -25,55 +25,55 @@ struct EncourageMuseumView: View {
                 
                 Spacer(minLength: 40)
             }
-            .padding(.horizontal, AppSpacing.lg)
+            .padding(.horizontal, XuanSpacing.lg)
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .navigationTitle("善意博物馆")
         .navigationBarTitleDisplayMode(.large)
     }
     
     // MARK: - Stats Header
     private var statsHeader: some View {
-        VStack(spacing: AppSpacing.lg) {
+        VStack(spacing: XuanSpacing.lg) {
             Text("🏛️")
                 .font(.system(size: 48))
             
             Text("你已传递 \(viewModel.totalKindnessCount) 份善意")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
             
-            HStack(spacing: AppSpacing.xxl) {
-                StatItem(value: "\(viewModel.chainsInitiated)", label: "发起链", color: AppTheme.primary)
-                StatItem(value: "\(viewModel.chainsJoined)", label: "参与链", color: AppTheme.warmGlow)
-                StatItem(value: "\(viewModel.peopleReached)", label: "触达人数", color: AppTheme.roseGold)
+            HStack(spacing: XuanSpacing.xl2) {
+                StatItem(value: "\(viewModel.chainsInitiated)", label: "发起链", color: Color.xuanApricot)
+                StatItem(value: "\(viewModel.chainsJoined)", label: "参与链", color: Color.xuanApricotDark)
+                StatItem(value: "\(viewModel.peopleReached)", label: "触达人数", color: Color.xuanPink)
             }
         }
-        .padding(AppSpacing.xl)
+        .padding(XuanSpacing.xl)
         .background(
             LinearGradient(
-                colors: [AppTheme.warmGlowLight, AppTheme.roseGoldLight],
+                colors: [Color(hex: "FDF0D5"), Color.xuanPink.opacity(0.2)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
         )
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
     }
     
     // MARK: - Milestones
     private var milestonesSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("里程碑")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
             
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 MilestoneRow(
                     icon: "star.fill",
                     title: "温暖新手",
                     subtitle: "完成10次鼓励传递",
                     progress: Double(viewModel.totalKindnessCount) / 10.0,
                     isCompleted: viewModel.totalKindnessCount >= 10,
-                    color: AppTheme.warmGlow
+                    color: Color.xuanApricotDark
                 )
                 
                 MilestoneRow(
@@ -82,7 +82,7 @@ struct EncourageMuseumView: View {
                     subtitle: "完成50次鼓励传递",
                     progress: Double(viewModel.totalKindnessCount) / 50.0,
                     isCompleted: viewModel.totalKindnessCount >= 50,
-                    color: AppTheme.roseGold
+                    color: Color.xuanPink
                 )
                 
                 MilestoneRow(
@@ -91,7 +91,7 @@ struct EncourageMuseumView: View {
                     subtitle: "完成100次鼓励传递",
                     progress: Double(viewModel.totalKindnessCount) / 100.0,
                     isCompleted: viewModel.totalKindnessCount >= 100,
-                    color: AppTheme.primary
+                    color: Color.xuanApricot
                 )
             }
             .sectionGroup()
@@ -100,12 +100,12 @@ struct EncourageMuseumView: View {
     
     // MARK: - Badges
     private var badgesSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("善意勋章")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
             
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: AppSpacing.md) {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: XuanSpacing.md) {
                 ForEach(viewModel.badges) { badge in
                     BadgeCard(badge: badge)
                 }
@@ -115,12 +115,12 @@ struct EncourageMuseumView: View {
     
     // MARK: - Completed Chains
     private var completedChainsSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("已完成的链")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
             
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 ForEach(viewModel.completedChains) { chain in
                     CompletedChainRow(chain: chain)
                 }
@@ -136,14 +136,14 @@ struct StatItem: View {
     let color: Color
     
     var body: some View {
-        VStack(spacing: AppSpacing.xs) {
+        VStack(spacing: XuanSpacing.xs) {
             Text(value)
-                .font(AppFont.title2)
+                .font(XuanFont.h2)
                 .foregroundColor(color)
             
             Text(label)
-                .font(AppFont.caption2)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.caption)
+                .foregroundColor(Color.xuanTextSecondary)
         }
     }
 }
@@ -158,7 +158,7 @@ struct MilestoneRow: View {
     let color: Color
     
     var body: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             ZStack {
                 Circle()
                     .fill(isCompleted ? color : color.opacity(0.15))
@@ -171,12 +171,12 @@ struct MilestoneRow: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanTextPrimary)
                 
                 Text(subtitle)
-                    .font(AppFont.caption2)
-                    .foregroundColor(AppTheme.textTertiary)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
                 
                 GeometryReader { geometry in
                     ZStack(alignment: .leading) {
@@ -200,38 +200,38 @@ struct BadgeCard: View {
     let badge: KindnessBadge
     
     var body: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.sm) {
             ZStack {
                 Circle()
                     .fill(
                         badge.isUnlocked
                             ? badge.color.opacity(0.15)
-                            : AppTheme.backgroundSecondary
+                            : Color.xuanSurface
                     )
                     .frame(width: 64, height: 64)
                 
                 Image(systemName: badge.icon)
                     .font(.system(size: 28))
-                    .foregroundColor(badge.isUnlocked ? badge.color : AppTheme.textTertiary)
+                    .foregroundColor(badge.isUnlocked ? badge.color : Color.xuanTextTertiary)
                     .opacity(badge.isUnlocked ? 1.0 : 0.4)
             }
             
             Text(badge.name)
-                .font(AppFont.caption2)
+                .font(XuanFont.caption)
                 .foregroundColor(
-                    badge.isUnlocked ? AppTheme.textPrimary : AppTheme.textTertiary
+                    badge.isUnlocked ? Color.xuanTextPrimary : Color.xuanTextTertiary
                 )
                 .multilineTextAlignment(.center)
             
             if badge.isUnlocked, let date = badge.unlockDate {
                 Text(date)
                     .font(.system(size: 10))
-                    .foregroundColor(AppTheme.textTertiary)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
         }
-        .padding(AppSpacing.md)
-        .background(AppTheme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .padding(XuanSpacing.md)
+        .background(Color.xuanSurface)
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
         .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
     }
 }
@@ -241,42 +241,42 @@ struct CompletedChainRow: View {
     let chain: CompletedChainData
     
     var body: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack {
                 Text(chain.emoji)
                     .font(.system(size: 24))
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(chain.theme)
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
                     Text("\(chain.participantCount)人参与 · \(chain.messageCount)条鼓励")
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
                 
                 Spacer()
                 
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(chain.completedDate)
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
                     
                     HStack(spacing: 2) {
                         Image(systemName: "star.fill")
                             .font(.system(size: 10))
-                            .foregroundColor(AppTheme.warmGlow)
+                            .foregroundColor(Color.xuanApricotDark)
                         Text("已完成")
                             .font(.system(size: 10))
-                            .foregroundColor(AppTheme.safeGreen)
+                            .foregroundColor(Color.xuanSuccess)
                     }
                 }
             }
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanSurface)
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
         .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
     }
 }
@@ -331,7 +331,7 @@ final class EncourageMuseumViewModel: ObservableObject {
                     id: String(vo.id),
                     name: vo.name,
                     icon: vo.iconName,
-                    color: AppTheme.warmGlow,
+                    color: Color.xuanApricotDark,
                     isUnlocked: vo.isUnlocked,
                     unlockDate: vo.unlockedAt
                 )

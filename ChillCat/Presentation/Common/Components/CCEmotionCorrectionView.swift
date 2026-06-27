@@ -16,7 +16,7 @@ struct CCEmotionCorrectionView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: AppSpacing.xl) {
+                VStack(spacing: XuanSpacing.xl) {
                     // 标题
                     headerSection
                     
@@ -39,9 +39,9 @@ struct CCEmotionCorrectionView: View {
                     
                     Spacer(minLength: 20)
                 }
-                .padding(AppSpacing.lg)
+                .padding(XuanSpacing.lg)
             }
-            .background(AppTheme.background)
+            .background(Color.xuanApricotBg)
             .navigationTitle("纠错")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -56,70 +56,70 @@ struct CCEmotionCorrectionView: View {
     
     // MARK: - Header
     private var headerSection: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             Image(systemName: "pencil.circle.fill")
                 .font(.system(size: 40))
-                .foregroundColor(AppTheme.primary)
+                .foregroundColor(Color.xuanApricot)
             
             Text("帮助AI更懂你")
-                .font(AppFont.title2)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h2)
+                .foregroundColor(Color.xuanTextPrimary)
             
             Text("选择更符合你感受的情绪和强度\n这能帮助我们提升识别准确度")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
         }
-        .padding(.top, AppSpacing.lg)
+        .padding(.top, XuanSpacing.lg)
     }
     
     // MARK: - Current Result
     private var currentResultSection: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.sm) {
             Text("当前识别结果")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textTertiary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextTertiary)
             
-            HStack(spacing: AppSpacing.md) {
-                HStack(spacing: AppSpacing.xs) {
+            HStack(spacing: XuanSpacing.md) {
+                HStack(spacing: XuanSpacing.xs) {
                     Text(emotionEmoji(for: currentEmotion))
                         .font(.system(size: 28))
                     
                     Text(currentEmotion)
-                        .font(AppFont.bodyBold)
+                        .font(XuanFont.bodyLBold)
                         .foregroundColor(EmotionColors.color(for: currentEmotion))
                 }
-                .padding(.horizontal, AppSpacing.lg)
-                .padding(.vertical, AppSpacing.sm)
+                .padding(.horizontal, XuanSpacing.lg)
+                .padding(.vertical, XuanSpacing.sm)
                 .background(EmotionColors.color(for: currentEmotion).opacity(0.1))
                 .clipShape(Capsule())
                 
                 Text("强度 \(Int(currentIntensity))/10")
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
         }
         .padding()
-        .background(AppTheme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .background(Color.xuanSurface)
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
     }
     
     // MARK: - Emotion Selection
     private var emotionSelectionSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("选择正确的情绪")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
             
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: AppSpacing.sm) {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: XuanSpacing.sm) {
                 ForEach(EmotionColors.allEmotions, id: \.name) { emotion in
                     Button {
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                             viewModel.selectedEmotion = emotion.chinese
                         }
                     } label: {
-                        HStack(spacing: AppSpacing.sm) {
+                        HStack(spacing: XuanSpacing.sm) {
                             Image(systemName: emotion.sfSymbol)
                                 .font(.system(size: 16))
                                 .foregroundColor(
@@ -129,23 +129,23 @@ struct CCEmotionCorrectionView: View {
                                 )
                             
                             Text(emotion.chinese)
-                                .font(AppFont.body)
+                                .font(XuanFont.bodyL)
                                 .foregroundColor(
                                     viewModel.selectedEmotion == emotion.chinese
                                         ? .white
-                                        : AppTheme.textPrimary
+                                        : Color.xuanTextPrimary
                                 )
                             
                             Spacer()
                         }
-                        .padding(.horizontal, AppSpacing.lg)
-                        .padding(.vertical, AppSpacing.md)
+                        .padding(.horizontal, XuanSpacing.lg)
+                        .padding(.vertical, XuanSpacing.md)
                         .background(
                             viewModel.selectedEmotion == emotion.chinese
                                 ? emotion.color
-                                : AppTheme.surface
+                                : Color.xuanSurface
                         )
-                        .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.md))
                         .shadow(
                             color: viewModel.selectedEmotion == emotion.chinese
                                 ? emotion.color.opacity(0.3)
@@ -162,39 +162,39 @@ struct CCEmotionCorrectionView: View {
     
     // MARK: - Intensity Section
     private var intensitySection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("情绪强度")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
             
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 HStack {
                     Text("强度：\(Int(viewModel.selectedIntensity))/10")
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
                     Spacer()
                     
                     Text(intensityLabel(for: viewModel.selectedIntensity))
-                        .font(AppFont.caption)
+                        .font(XuanFont.bodyM)
                         .foregroundColor(intensityColor(for: viewModel.selectedIntensity))
-                        .padding(.horizontal, AppSpacing.md)
-                        .padding(.vertical, AppSpacing.xs)
+                        .padding(.horizontal, XuanSpacing.md)
+                        .padding(.vertical, XuanSpacing.xs)
                         .background(intensityColor(for: viewModel.selectedIntensity).opacity(0.1))
                         .clipShape(Capsule())
                 }
                 
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     Text("1")
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
                     
                     Slider(value: $viewModel.selectedIntensity, in: 1...10, step: 1)
                         .tint(intensityColor(for: viewModel.selectedIntensity))
                     
                     Text("10")
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
                 
                 // 强度可视化
@@ -204,43 +204,43 @@ struct CCEmotionCorrectionView: View {
                             .fill(
                                 Double(level) <= viewModel.selectedIntensity
                                     ? intensityColor(for: viewModel.selectedIntensity)
-                                    : AppTheme.backgroundSecondary
+                                    : Color.xuanSurface
                             )
                             .frame(height: 8)
                     }
                 }
             }
             .padding()
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+            .background(Color.xuanSurface)
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
             .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
         }
     }
     
     // MARK: - Adjustment Notice
     private var adjustmentNotice: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: "gearshape.2.fill")
                 .font(.system(size: 20))
-                .foregroundColor(AppTheme.primary)
+                .foregroundColor(Color.xuanApricot)
             
             VStack(alignment: .leading, spacing: 4) {
                 Text("我们将调整识别方式")
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(AppTheme.primary)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanApricot)
                 
                 Text("你已连续纠错\(viewModel.correctionCount)次，AI会重新校准你的情绪模型以提供更准确的解读。")
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .lineSpacing(4)
             }
         }
         .padding()
-        .background(AppTheme.primary.opacity(0.06))
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .background(Color.xuanApricot.opacity(0.06))
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
         .overlay(
-            RoundedRectangle(cornerRadius: AppRadius.lg)
-                .stroke(AppTheme.primary.opacity(0.15), lineWidth: 1)
+            RoundedRectangle(cornerRadius: XuanRadius.lg)
+                .stroke(Color.xuanApricot.opacity(0.15), lineWidth: 1)
         )
     }
     
@@ -291,10 +291,10 @@ struct CCEmotionCorrectionView: View {
     private func intensityColor(for value: Double) -> Color {
         switch Int(value) {
         case 1...3: return EmotionColors.calm
-        case 4...6: return AppTheme.warmGlow
-        case 7...8: return AppTheme.vibrantOrange
-        case 9...10: return AppTheme.crisisRed
-        default: return AppTheme.textTertiary
+        case 4...6: return Color.xuanApricotDark
+        case 7...8: return Color.xuanWarning
+        case 9...10: return Color.xuanDanger
+        default: return Color.xuanTextTertiary
         }
     }
 }

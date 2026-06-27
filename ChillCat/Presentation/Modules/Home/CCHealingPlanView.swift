@@ -12,7 +12,7 @@ struct CCHealingPlanView: View {
     
     var body: some View {
         ZStack {
-            AppTheme.background
+            Color.xuanApricotBg
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
@@ -55,7 +55,7 @@ struct CCHealingPlanView: View {
                     Button("退出") {
                         showInterruptAlert = true
                     }
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                 }
             }
         }
@@ -74,27 +74,27 @@ struct CCHealingPlanView: View {
     
     // MARK: - Progress Header
     private var progressHeader: some View {
-        VStack(spacing: AppSpacing.md) {
-            HStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.md) {
+            HStack(spacing: XuanSpacing.sm) {
                 ForEach(0..<4) { index in
                     Capsule()
                         .fill(
                             index <= viewModel.currentStep
-                                ? AppTheme.accentMint
-                                : AppTheme.border
+                                ? Color.xuanMint
+                                : Color.xuanBorder
                         )
                         .frame(height: 4)
                         .animation(.easeInOut(duration: 0.3), value: viewModel.currentStep)
                 }
             }
-            .padding(.horizontal, AppSpacing.lg)
-            .padding(.top, AppSpacing.md)
+            .padding(.horizontal, XuanSpacing.lg)
+            .padding(.top, XuanSpacing.md)
             
             Text(stepTitle)
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
         }
-        .padding(.bottom, AppSpacing.md)
+        .padding(.bottom, XuanSpacing.md)
     }
     
     private var stepTitle: String {
@@ -113,7 +113,7 @@ struct StepIntroView: View {
     let nextAction: () -> Void
     
     var body: some View {
-        VStack(spacing: AppSpacing.xxl) {
+        VStack(spacing: XuanSpacing.xl2) {
             Spacer()
             
             // 图标
@@ -121,7 +121,7 @@ struct StepIntroView: View {
                 Circle()
                     .fill(
                         RadialGradient(
-                            colors: [AppTheme.accentMint.opacity(0.2), AppTheme.accentMint.opacity(0.05)],
+                            colors: [Color.xuanMint.opacity(0.2), Color.xuanMint.opacity(0.05)],
                             center: .center,
                             startRadius: 0,
                             endRadius: 100
@@ -133,60 +133,60 @@ struct StepIntroView: View {
                     .font(.system(size: 64))
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [AppTheme.accentMint, AppTheme.primary],
+                            colors: [Color.xuanMint, Color.xuanApricot],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
             }
             
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 Text("稳情练习")
-                    .font(AppFont.title1)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h1)
+                    .foregroundColor(Color.xuanTextPrimary)
                 
                 Text("通过4-7-8呼吸法和白噪音\n帮助你缓解焦虑、稳定情绪")
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .multilineTextAlignment(.center)
                     .lineSpacing(6)
             }
             
-            VStack(alignment: .leading, spacing: AppSpacing.md) {
+            VStack(alignment: .leading, spacing: XuanSpacing.md) {
                 StepInfoRow(
                     icon: "1.circle.fill",
                     title: "呼吸练习",
                     description: "跟随引导进行4-7-8呼吸法",
-                    color: AppTheme.accentMint
+                    color: Color.xuanMint
                 )
                 
                 StepInfoRow(
                     icon: "2.circle.fill",
                     title: "白噪音放松",
                     description: "选择你喜欢的自然声音",
-                    color: AppTheme.softPurple
+                    color: Color(hex: "A085C6").opacity(0.5)
                 )
                 
                 StepInfoRow(
                     icon: "3.circle.fill",
                     title: "练习评分",
                     description: "记录练习后的感受",
-                    color: AppTheme.warmGlow
+                    color: Color.xuanApricotDark
                 )
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanSurface)
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
             .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
             
             Spacer()
             
             // 免责声明
             Text("本练习仅供参考，不能替代专业心理治疗")
-                .font(AppFont.footnote)
-                .foregroundColor(AppTheme.textTertiary)
+                .font(XuanFont.bodyS)
+                .foregroundColor(Color.xuanTextTertiary)
                 .multilineTextAlignment(.center)
-                .padding(.bottom, AppSpacing.md)
+                .padding(.bottom, XuanSpacing.md)
             
             Button {
                 nextAction()
@@ -197,11 +197,11 @@ struct StepIntroView: View {
                 }
             }
             .buttonStyle(ComponentStyles.PrimaryButtonStyle())
-            .padding(.horizontal, AppSpacing.xxxl)
+            .padding(.horizontal, XuanSpacing.xl3)
             
             Spacer(minLength: 40)
         }
-        .padding(.horizontal, AppSpacing.lg)
+        .padding(.horizontal, XuanSpacing.lg)
     }
 }
 
@@ -213,19 +213,19 @@ struct StepInfoRow: View {
     let color: Color
     
     var body: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: icon)
                 .font(.system(size: 24))
                 .foregroundColor(color)
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanTextPrimary)
                 
                 Text(description)
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
             
             Spacer()
@@ -239,17 +239,17 @@ struct StepBreathingView: View {
     let nextAction: () -> Void
     
     var body: some View {
-        VStack(spacing: AppSpacing.xl) {
+        VStack(spacing: XuanSpacing.xl) {
             Spacer()
             
             // 呼吸动画
-            VStack(spacing: AppSpacing.xxl) {
+            VStack(spacing: XuanSpacing.xl2) {
                 ZStack {
                     // 外层光环
                     Circle()
                         .stroke(
                             LinearGradient(
-                                colors: [AppTheme.accentMint.opacity(0.3), AppTheme.softPurple.opacity(0.1)],
+                                colors: [Color.xuanMint.opacity(0.3), Color(hex: "A085C6").opacity(0.5).opacity(0.1)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -280,26 +280,26 @@ struct StepBreathingView: View {
                         .animation(.easeInOut(duration: viewModel.currentPhaseDuration), value: viewModel.breathScale)
                     
                     // 中心文字
-                    VStack(spacing: AppSpacing.sm) {
+                    VStack(spacing: XuanSpacing.sm) {
                         Text(viewModel.currentPhaseText)
-                            .font(AppFont.title1)
-                            .foregroundColor(AppTheme.textPrimary)
+                            .font(XuanFont.h1)
+                            .foregroundColor(Color.xuanTextPrimary)
                         
                         Text(viewModel.phaseCountdownText)
-                            .font(AppFont.largeTitle)
+                            .font(XuanFont.h1)
                             .foregroundColor(viewModel.currentPhaseColor)
                             .monospacedDigit()
                         
                         Text("\(viewModel.completedCycles)/\(viewModel.totalCycles) 轮")
-                            .font(AppFont.footnote)
-                            .foregroundColor(AppTheme.textTertiary)
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextTertiary)
                     }
                 }
                 
                 // 呼吸指导文字
                 Text(viewModel.currentPhaseInstruction)
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .multilineTextAlignment(.center)
             }
             
@@ -307,12 +307,12 @@ struct StepBreathingView: View {
             
             // 免责声明
             Text("如有任何身体不适，请立即停止练习")
-                .font(AppFont.footnote)
-                .foregroundColor(AppTheme.textTertiary)
-                .padding(.bottom, AppSpacing.md)
+                .font(XuanFont.bodyS)
+                .foregroundColor(Color.xuanTextTertiary)
+                .padding(.bottom, XuanSpacing.md)
             
             // 按钮区域
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 if viewModel.isBreathingCompleted {
                     Button {
                         nextAction()
@@ -345,11 +345,11 @@ struct StepBreathingView: View {
                     .buttonStyle(ComponentStyles.PrimaryButtonStyle())
                 }
             }
-            .padding(.horizontal, AppSpacing.xxxl)
+            .padding(.horizontal, XuanSpacing.xl3)
             
             Spacer(minLength: 40)
         }
-        .padding(.horizontal, AppSpacing.lg)
+        .padding(.horizontal, XuanSpacing.lg)
     }
 }
 
@@ -359,7 +359,7 @@ struct StepWhiteNoiseView: View {
     let nextAction: () -> Void
     
     var body: some View {
-        VStack(spacing: AppSpacing.xxl) {
+        VStack(spacing: XuanSpacing.xl2) {
             Spacer()
             
             // 白噪音图标动画
@@ -404,29 +404,29 @@ struct StepWhiteNoiseView: View {
                 }
             }
             
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 Text(viewModel.selectedWhiteNoise.name)
-                    .font(AppFont.title2)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h2)
+                    .foregroundColor(Color.xuanTextPrimary)
                 
                 Text(viewModel.isWhiteNoisePlaying ? "正在播放..." : "点击播放放松")
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
             
             // 白噪音选择
-            HStack(spacing: AppSpacing.lg) {
+            HStack(spacing: XuanSpacing.lg) {
                 ForEach(WhiteNoiseOption.allCases, id: \.self) { option in
                     Button {
                         viewModel.selectWhiteNoise(option)
                     } label: {
-                        VStack(spacing: AppSpacing.sm) {
+                        VStack(spacing: XuanSpacing.sm) {
                             ZStack {
                                 Circle()
                                     .fill(
                                         viewModel.selectedWhiteNoise == option
                                             ? option.color.opacity(0.15)
-                                            : AppTheme.backgroundSecondary
+                                            : Color.xuanSurface
                                     )
                                     .frame(width: 64, height: 64)
                                 
@@ -435,24 +435,24 @@ struct StepWhiteNoiseView: View {
                                     .foregroundColor(
                                         viewModel.selectedWhiteNoise == option
                                             ? option.color
-                                            : AppTheme.textTertiary
+                                            : Color.xuanTextTertiary
                                     )
                             }
                             
                             Text(option.name)
-                                .font(AppFont.footnote)
+                                .font(XuanFont.bodyS)
                                 .foregroundColor(
                                     viewModel.selectedWhiteNoise == option
-                                        ? AppTheme.textPrimary
-                                        : AppTheme.textTertiary
+                                        ? Color.xuanTextPrimary
+                                        : Color.xuanTextTertiary
                                 )
                         }
                     }
                 }
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanSurface)
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
             .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
             
             Spacer()
@@ -467,11 +467,11 @@ struct StepWhiteNoiseView: View {
                 }
             }
             .buttonStyle(ComponentStyles.PrimaryButtonStyle())
-            .padding(.horizontal, AppSpacing.xxxl)
+            .padding(.horizontal, XuanSpacing.xl3)
             
             Spacer(minLength: 40)
         }
-        .padding(.horizontal, AppSpacing.lg)
+        .padding(.horizontal, XuanSpacing.lg)
     }
 }
 
@@ -484,16 +484,16 @@ struct StepRatingView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xxl) {
+            VStack(spacing: XuanSpacing.xl2) {
                 Spacer(minLength: 40)
                 
                 // 完成图标
-                VStack(spacing: AppSpacing.md) {
+                VStack(spacing: XuanSpacing.md) {
                     ZStack {
                         Circle()
                             .fill(
                                 RadialGradient(
-                                    colors: [AppTheme.safeGreen.opacity(0.2), Color.clear],
+                                    colors: [Color.xuanSuccess.opacity(0.2), Color.clear],
                                     center: .center,
                                     startRadius: 0,
                                     endRadius: 80
@@ -504,77 +504,77 @@ struct StepRatingView: View {
                         if showCompletionAnimation {
                             Image(systemName: "checkmark.circle.fill")
                                 .font(.system(size: 64))
-                                .foregroundColor(AppTheme.safeGreen)
+                                .foregroundColor(Color.xuanSuccess)
                                 .transition(.scale.combined(with: .opacity))
                         }
                     }
                     
                     Text("练习完成")
-                        .font(AppFont.title1)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h1)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
                     Text("你今天做得很好\n给这次练习打个分吧")
-                        .font(AppFont.body)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyL)
+                        .foregroundColor(Color.xuanTextSecondary)
                         .multilineTextAlignment(.center)
                         .lineSpacing(6)
                 }
                 
                 // 评分区域
-                VStack(spacing: AppSpacing.md) {
+                VStack(spacing: XuanSpacing.md) {
                     Text("你的感受如何？")
-                        .font(AppFont.title3)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h3)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
-                    HStack(spacing: AppSpacing.lg) {
+                    HStack(spacing: XuanSpacing.lg) {
                         ForEach(1...5, id: \.self) { rating in
                             Button {
                                 withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
                                     viewModel.selectedRating = rating
                                 }
                             } label: {
-                                VStack(spacing: AppSpacing.xs) {
+                                VStack(spacing: XuanSpacing.xs) {
                                     Image(systemName: rating <= viewModel.selectedRating ? "star.fill" : "star")
                                         .font(.system(size: 36))
                                         .foregroundColor(
                                             rating <= viewModel.selectedRating
-                                                ? AppTheme.warmGlow
-                                                : AppTheme.textTertiary.opacity(0.3)
+                                                ? Color.xuanApricotDark
+                                                : Color.xuanTextTertiary.opacity(0.3)
                                         )
                                         .scaleEffect(rating == viewModel.selectedRating ? 1.2 : 1.0)
                                     
                                     Text(ratingText(rating))
-                                        .font(AppFont.caption2)
+                                        .font(XuanFont.caption)
                                         .foregroundColor(
                                             rating == viewModel.selectedRating
-                                                ? AppTheme.textPrimary
-                                                : AppTheme.textTertiary
+                                                ? Color.xuanTextPrimary
+                                                : Color.xuanTextTertiary
                                         )
                                 }
                             }
                         }
                     }
                 }
-                .padding(AppSpacing.xl)
-                .background(AppTheme.surface)
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+                .padding(XuanSpacing.xl)
+                .background(Color.xuanSurface)
+                .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
                 .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
                 
                 // 免责声明
-                VStack(spacing: AppSpacing.sm) {
+                VStack(spacing: XuanSpacing.sm) {
                     Image(systemName: "info.circle")
                         .font(.system(size: 16))
-                        .foregroundColor(AppTheme.textTertiary)
+                        .foregroundColor(Color.xuanTextTertiary)
                     
                     Text("本练习仅供参考，不能替代专业心理治疗\n如情绪持续低落，建议寻求专业帮助")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextTertiary)
                         .multilineTextAlignment(.center)
                         .lineSpacing(4)
                 }
                 .padding()
-                .background(AppTheme.backgroundSecondary)
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                .background(Color.xuanSurface)
+                .clipShape(RoundedRectangle(cornerRadius: XuanRadius.md))
                 
                 Spacer(minLength: 20)
                 
@@ -588,11 +588,11 @@ struct StepRatingView: View {
                     }
                 }
                 .buttonStyle(ComponentStyles.PrimaryButtonStyle())
-                .padding(.horizontal, AppSpacing.xxxl)
+                .padding(.horizontal, XuanSpacing.xl3)
                 
                 Spacer(minLength: 40)
             }
-            .padding(.horizontal, AppSpacing.lg)
+            .padding(.horizontal, XuanSpacing.lg)
         }
         .onAppear {
             withAnimation(.spring(response: 0.5, dampingFraction: 0.6).delay(0.3)) {
@@ -637,9 +637,9 @@ enum WhiteNoiseOption: String, CaseIterable {
     
     var color: Color {
         switch self {
-        case .rain: return AppTheme.accentMint
-        case .ocean: return AppTheme.primary
-        case .forest: return AppTheme.safeGreen
+        case .rain: return Color.xuanMint
+        case .ocean: return Color.xuanApricot
+        case .forest: return Color.xuanSuccess
         }
     }
 }
@@ -684,9 +684,9 @@ final class HealingPlanViewModel: ObservableObject {
     
     var currentPhaseColor: Color {
         switch currentBreathingPhase {
-        case .inhale: return AppTheme.accentMint
-        case .hold: return AppTheme.softPurple
-        case .exhale: return AppTheme.safeGreen
+        case .inhale: return Color.xuanMint
+        case .hold: return Color(hex: "A085C6").opacity(0.5)
+        case .exhale: return Color.xuanSuccess
         }
     }
     

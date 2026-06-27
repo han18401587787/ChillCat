@@ -10,11 +10,11 @@ struct CCEmotionGridView: View {
     // 自适应列数
     private var columns: [GridItem] {
         let count = UIScreen.main.bounds.width < 375 ? 5 : 5
-        return Array(repeating: GridItem(.flexible(), spacing: AppSpacing.sm), count: count)
+        return Array(repeating: GridItem(.flexible(), spacing: XuanSpacing.sm), count: count)
     }
     
     var body: some View {
-        LazyVGrid(columns: columns, spacing: AppSpacing.md) {
+        LazyVGrid(columns: columns, spacing: XuanSpacing.md) {
             ForEach(emotions, id: \.name) { emotion in
                 emotionButton(emotion)
             }
@@ -58,11 +58,11 @@ struct CCEmotionGridView: View {
                 )
                 
                 Text(emotion.chinese)
-                    .font(UIScreen.main.bounds.width < 375 ? AppFont.caption2 : AppFont.caption)
+                    .font(UIScreen.main.bounds.width < 375 ? XuanFont.caption : XuanFont.bodyM)
                     .foregroundColor(
                         selectedEmotion == emotion.chinese
                             ? emotion.color
-                            : AppTheme.textSecondary
+                            : Color.xuanTextSecondary
                     )
             }
         }
@@ -84,11 +84,11 @@ struct EmotionTagView: View {
             Image(systemName: icon)
                 .font(.system(size: 12))
             Text(emotion)
-                .font(AppFont.caption2)
+                .font(XuanFont.caption)
         }
         .foregroundColor(color)
-        .padding(.horizontal, AppSpacing.md)
-        .padding(.vertical, AppSpacing.xs)
+        .padding(.horizontal, XuanSpacing.md)
+        .padding(.vertical, XuanSpacing.xs)
         .background(color.opacity(0.1))
         .clipShape(Capsule())
         .overlay(
@@ -106,18 +106,18 @@ struct EmotionIntensityPicker: View {
     let emotionColor: Color
     
     var body: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.sm) {
             HStack {
                 Text("强度")
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
                 Spacer()
                 Text(intensity.description)
-                    .font(AppFont.caption)
+                    .font(XuanFont.bodyM)
                     .foregroundColor(intensity.color)
             }
             
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 ForEach(EmotionColors.Intensity.allCases, id: \.rawValue) { level in
                     Button {
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
@@ -166,7 +166,7 @@ struct EmotionTimelineView: View {
     var body: some View {
         VStack(spacing: 0) {
             ForEach(Array(entries.enumerated()), id: \.element.id) { index, entry in
-                HStack(alignment: .top, spacing: AppSpacing.md) {
+                HStack(alignment: .top, spacing: XuanSpacing.md) {
                     // 时间线指示器
                     VStack(spacing: 0) {
                         Circle()
@@ -175,7 +175,7 @@ struct EmotionTimelineView: View {
                         
                         if index < entries.count - 1 {
                             Rectangle()
-                                .fill(AppTheme.border)
+                                .fill(Color.xuanBorder)
                                 .frame(width: 2)
                         }
                     }
@@ -183,8 +183,8 @@ struct EmotionTimelineView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         HStack {
                             Text(entry.time)
-                                .font(AppFont.footnote)
-                                .foregroundColor(AppTheme.textSecondary)
+                                .font(XuanFont.bodyS)
+                                .foregroundColor(Color.xuanTextSecondary)
                             
                             EmotionTagView(
                                 emotion: entry.emotion,
@@ -195,14 +195,14 @@ struct EmotionTimelineView: View {
                         
                         if let note = entry.note {
                             Text(note)
-                                .font(AppFont.body)
-                                .foregroundColor(AppTheme.textPrimary)
+                                .font(XuanFont.bodyL)
+                                .foregroundColor(Color.xuanTextPrimary)
                         }
                         
                         ComponentStyles.IntensityBar(value: entry.intensityValue, color: entry.color)
                             .frame(width: 120)
                     }
-                    .padding(.bottom, AppSpacing.lg)
+                    .padding(.bottom, XuanSpacing.lg)
                 }
             }
         }
@@ -233,7 +233,7 @@ struct EmotionCheckinSuccessView: View {
     @State private var rotation: Double = -30
     
     var body: some View {
-        VStack(spacing: AppSpacing.lg) {
+        VStack(spacing: XuanSpacing.lg) {
             ZStack {
                 Circle()
                     .fill(color.opacity(0.15))
@@ -249,13 +249,13 @@ struct EmotionCheckinSuccessView: View {
             }
             
             Text("打卡成功")
-                .font(AppFont.title2)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h2)
+                .foregroundColor(Color.xuanTextPrimary)
                 .opacity(opacity)
             
             Text("已记录「\(emotion)」情绪")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
                 .opacity(opacity)
         }
         .onAppear {

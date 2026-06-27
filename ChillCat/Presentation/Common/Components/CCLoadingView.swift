@@ -16,18 +16,18 @@ struct CCLoadingView: View {
     }
 
     var body: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             ProgressView()
                 .scaleEffect(1.5)
-                .tint(AppTheme.primary)
+                .tint(Color.xuanApricot)
 
             if let message = message {
                 Text(message)
                     .font(.system(size: 15))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
     }
 }

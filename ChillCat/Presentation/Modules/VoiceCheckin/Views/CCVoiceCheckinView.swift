@@ -15,11 +15,11 @@ struct CCVoiceCheckinView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.background.ignoresSafeArea()
+            Color.xuanApricotBg.ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: AppSpacing.lg) {
-                    Spacer().frame(height: AppSpacing.sm)
+                VStack(spacing: XuanSpacing.lg) {
+                    Spacer().frame(height: XuanSpacing.sm)
 
                     switch viewModel.state {
                     case .idle:
@@ -38,8 +38,8 @@ struct CCVoiceCheckinView: View {
                         errorStateView
                     }
                 }
-                .padding(.horizontal, AppSpacing.md)
-                .padding(.bottom, AppSpacing.xl)
+                .padding(.horizontal, XuanSpacing.md)
+                .padding(.bottom, XuanSpacing.xl)
             }
             .scrollDisabled(viewModel.state == .idle || viewModel.isRecording)
         }
@@ -55,18 +55,18 @@ struct CCVoiceCheckinView: View {
     // MARK: - Idle State
 
     private var idleStateView: some View {
-        VStack(spacing: AppSpacing.xl) {
+        VStack(spacing: XuanSpacing.xl) {
             Spacer().frame(height: 40)
 
             Text("随便说什么都好，这里不评判…")
                 .font(.system(size: 18))
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
 
             idleWaveform
                 .frame(height: 80)
 
-            Spacer().frame(height: AppSpacing.sm)
+            Spacer().frame(height: XuanSpacing.sm)
 
             recordButton
                 .simultaneousGesture(
@@ -87,7 +87,7 @@ struct CCVoiceCheckinView: View {
 
             Text("按住说话…")
                 .font(.system(size: 14))
-                .foregroundColor(AppTheme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
 
             Spacer()
         }
@@ -96,42 +96,42 @@ struct CCVoiceCheckinView: View {
     // MARK: - Recording State
 
     private var recordingStateView: some View {
-        VStack(spacing: AppSpacing.lg) {
+        VStack(spacing: XuanSpacing.lg) {
             Spacer().frame(height: 20)
 
             Text("正在聆听…")
                 .font(.system(size: 18))
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
 
             liveWaveform
                 .frame(height: 80)
-                .padding(.vertical, AppSpacing.md)
+                .padding(.vertical, XuanSpacing.md)
 
             Text(viewModel.formattedDuration)
                 .font(.system(size: 32, weight: .light))
-                .foregroundColor(AppTheme.primary)
+                .foregroundColor(Color.xuanApricot)
                 .monospacedDigit()
 
             HStack(spacing: 6) {
                 Circle()
-                    .fill(AppTheme.crisisRed)
+                    .fill(Color.xuanDanger)
                     .frame(width: 8, height: 8)
                     .opacity(viewModel.recordingDuration % 2 == 0 ? 1 : 0.3)
                     .animation(.easeInOut(duration: 0.5), value: viewModel.recordingDuration)
 
                 Text("录制中")
                     .font(.system(size: 13))
-                    .foregroundColor(AppTheme.crisisRed)
+                    .foregroundColor(Color.xuanDanger)
             }
 
-            Spacer().frame(height: AppSpacing.md)
+            Spacer().frame(height: XuanSpacing.md)
 
             ZStack {
                 Circle()
-                    .stroke(AppTheme.primaryMuted, lineWidth: 3)
+                    .stroke(Color.xuanApricot.opacity(0.6), lineWidth: 3)
                     .frame(width: 100, height: 100)
                 Circle()
-                    .fill(AppTheme.crisisRed)
+                    .fill(Color.xuanDanger)
                     .frame(width: 70, height: 70)
             }
             .scaleEffect(isPressed ? 0.92 : 1.0)
@@ -139,7 +139,7 @@ struct CCVoiceCheckinView: View {
 
             Text("松手完成录音")
                 .font(.system(size: 14))
-                .foregroundColor(AppTheme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
 
             Spacer()
         }
@@ -148,13 +148,13 @@ struct CCVoiceCheckinView: View {
     // MARK: - Analyzing State
 
     private var analyzingStateView: some View {
-        VStack(spacing: AppSpacing.lg) {
+        VStack(spacing: XuanSpacing.lg) {
             Spacer().frame(height: 60)
 
             HStack(spacing: 8) {
                 ForEach(0..<3, id: \.self) { i in
                     Circle()
-                        .fill(AppTheme.primaryMuted)
+                        .fill(Color.xuanApricot.opacity(0.6))
                         .frame(width: 12, height: 12)
                         .scaleEffect(viewModel.isAnalyzing ? (i == 0 ? 1.3 : i == 1 ? 1.0 : 0.7) : 0.5)
                         .animation(
@@ -169,11 +169,11 @@ struct CCVoiceCheckinView: View {
 
             Text("AI 正在理解你的情绪…")
                 .font(.system(size: 18))
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
 
             Text("这可能需要 1-2 秒")
                 .font(.system(size: 13))
-                .foregroundColor(AppTheme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
 
             Spacer()
         }
@@ -182,7 +182,7 @@ struct CCVoiceCheckinView: View {
     // MARK: - Result State
 
     private var resultStateView: some View {
-        VStack(spacing: AppSpacing.lg) {
+        VStack(spacing: XuanSpacing.lg) {
             analysisResultCard
             transcriptionEditor
             tagsEditor
@@ -191,17 +191,17 @@ struct CCVoiceCheckinView: View {
     }
 
     private var analysisResultCard: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
-            HStack(spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            HStack(spacing: XuanSpacing.sm) {
                 Image(systemName: "heart.text.clinic.fill")
                     .font(.system(size: 18))
-                    .foregroundColor(AppTheme.accentMint)
+                    .foregroundColor(Color.xuanMint)
                 Text("情绪识别:")
                     .font(.system(size: 15, weight: .medium))
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                 Text(viewModel.resultData?.emotion ?? "")
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(AppTheme.primary)
+                    .foregroundColor(Color.xuanApricot)
                 Spacer()
                 Text(viewModel.confidencePercent)
                     .font(.system(size: 13, weight: .medium))
@@ -209,14 +209,14 @@ struct CCVoiceCheckinView: View {
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
                     .background(viewModel.confidenceColor.opacity(0.12))
-                    .cornerRadius(AppRadius.sm)
+                    .cornerRadius(XuanRadius.sm)
             }
 
             if viewModel.resultData != nil {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 4)
-                            .fill(AppTheme.primaryMuted.opacity(0.3))
+                            .fill(Color.xuanApricot.opacity(0.6).opacity(0.3))
                             .frame(height: 4)
                         RoundedRectangle(cornerRadius: 4)
                             .fill(viewModel.confidenceColor)
@@ -226,49 +226,49 @@ struct CCVoiceCheckinView: View {
                 .frame(height: 4)
             }
 
-            Divider().background(AppTheme.primaryMuted.opacity(0.3))
+            Divider().background(Color.xuanApricot.opacity(0.6).opacity(0.3))
 
-            HStack(alignment: .top, spacing: AppSpacing.sm) {
+            HStack(alignment: .top, spacing: XuanSpacing.sm) {
                 Image(systemName: "doc.text.fill")
                     .font(.system(size: 14))
-                    .foregroundColor(AppTheme.primaryLight)
+                    .foregroundColor(Color.xuanApricotLight)
                     .frame(width: 20)
                 Text("转文字:")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                 Text(viewModel.resultData?.transcription ?? "")
                     .font(.system(size: 14))
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .lineSpacing(4)
             }
 
-            HStack(alignment: .top, spacing: AppSpacing.sm) {
+            HStack(alignment: .top, spacing: XuanSpacing.sm) {
                 Image(systemName: "tag.fill")
                     .font(.system(size: 14))
-                    .foregroundColor(AppTheme.warmLight)
+                    .foregroundColor(Color.xuanApricotLight)
                     .frame(width: 20)
                 Text("标签:")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                 Text(viewModel.resultData?.tags.map { $0 }.joined(separator: " ") ?? "")
                     .font(.system(size: 14))
-                    .foregroundColor(AppTheme.warm)
+                    .foregroundColor(Color.xuanApricotDark)
             }
         }
-        .padding(AppSpacing.md)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.md)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .shadow(color: .black.opacity(0.04), radius: 4, y: 2)
     }
 
     // MARK: - Transcription Editor
 
     private var transcriptionEditor: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             HStack {
                 Text("编辑转文字")
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                 Spacer()
                 Button(action: { showEmojiPicker.toggle() }) {
                     HStack(spacing: 4) {
@@ -277,24 +277,24 @@ struct CCVoiceCheckinView: View {
                         Text("表情")
                             .font(.system(size: 13))
                     }
-                    .foregroundColor(AppTheme.primary)
+                    .foregroundColor(Color.xuanApricot)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .background(AppTheme.primaryMuted.opacity(0.2))
-                    .cornerRadius(AppRadius.sm)
+                    .background(Color.xuanApricot.opacity(0.6).opacity(0.2))
+                    .cornerRadius(XuanRadius.sm)
                 }
             }
 
             TextEditor(text: $viewModel.editableTranscription)
                 .font(.system(size: 15))
                 .focused($transcriptionFocused)
-                .padding(AppSpacing.sm)
+                .padding(XuanSpacing.sm)
                 .frame(minHeight: 80)
-                .background(AppTheme.surface)
-                .cornerRadius(AppRadius.md)
+                .background(Color.xuanSurface)
+                .cornerRadius(XuanRadius.md)
                 .overlay(
-                    RoundedRectangle(cornerRadius: AppRadius.md)
-                        .stroke(transcriptionFocused ? AppTheme.primary.opacity(0.4) : Color.clear, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: XuanRadius.md)
+                        .stroke(transcriptionFocused ? Color.xuanApricot.opacity(0.4) : Color.clear, lineWidth: 1)
                 )
         }
     }
@@ -302,38 +302,38 @@ struct CCVoiceCheckinView: View {
     // MARK: - Tags Editor
 
     private var tagsEditor: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             Text("情绪标签")
                 .font(.system(size: 14, weight: .medium))
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
 
             FlowLayout(spacing: 8) {
                 ForEach(viewModel.editableTags, id: \.self) { tag in
                     HStack(spacing: 4) {
                         Text(tag)
                             .font(.system(size: 13))
-                            .foregroundColor(AppTheme.warm)
+                            .foregroundColor(Color.xuanApricotDark)
                         Button(action: { viewModel.removeTag(tag) }) {
                             Image(systemName: "xmark.circle.fill")
                                 .font(.system(size: 12))
-                                .foregroundColor(AppTheme.textMuted)
+                                .foregroundColor(Color.xuanTextTertiary)
                         }
                     }
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .background(AppTheme.warmLight.opacity(0.12))
-                    .cornerRadius(AppRadius.sm)
+                    .background(Color.xuanApricotLight.opacity(0.12))
+                    .cornerRadius(XuanRadius.sm)
                 }
             }
 
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 TextField("添加标签…", text: $viewModel.newTagInput)
                     .font(.system(size: 14))
                     .focused($tagFocused)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                    .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.md)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.md)
 
                 Button(action: {
                     viewModel.addTag()
@@ -343,7 +343,7 @@ struct CCVoiceCheckinView: View {
                         .font(.system(size: 24))
                         .foregroundColor(
                             viewModel.newTagInput.trimmingCharacters(in: .whitespaces).isEmpty
-                                ? AppTheme.textMuted : AppTheme.primary
+                                ? Color.xuanTextTertiary : Color.xuanApricot
                         )
                 }
                 .disabled(viewModel.newTagInput.trimmingCharacters(in: .whitespaces).isEmpty)
@@ -354,7 +354,7 @@ struct CCVoiceCheckinView: View {
     // MARK: - Action Buttons
 
     private var actionButtons: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Button(action: {
                 CCHaptic.selection()
                 viewModel.reRecord()
@@ -365,11 +365,11 @@ struct CCVoiceCheckinView: View {
                     Text("重新录制")
                         .font(.system(size: 15, weight: .medium))
                 }
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(AppTheme.surface)
-                .cornerRadius(AppRadius.md)
+                .background(Color.xuanSurface)
+                .cornerRadius(XuanRadius.md)
             }
 
             Button(action: {
@@ -384,8 +384,8 @@ struct CCVoiceCheckinView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(AppTheme.primary)
-                .cornerRadius(AppRadius.md)
+                .background(Color.xuanApricot)
+                .cornerRadius(XuanRadius.md)
             }
         }
     }
@@ -393,13 +393,13 @@ struct CCVoiceCheckinView: View {
     // MARK: - Saving State
 
     private var savingStateView: some View {
-        VStack(spacing: AppSpacing.lg) {
+        VStack(spacing: XuanSpacing.lg) {
             Spacer().frame(height: 80)
             ProgressView()
                 .scaleEffect(1.5)
             Text("正在保存日记…")
                 .font(.system(size: 18))
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
             Spacer()
         }
     }
@@ -408,26 +408,26 @@ struct CCVoiceCheckinView: View {
 
     private var savedStateView: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.lg) {
+            VStack(spacing: XuanSpacing.lg) {
                 Spacer().frame(height: 40)
 
                 // 打卡成功图标
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 64))
-                    .foregroundColor(AppTheme.accentMint)
+                    .foregroundColor(Color.xuanMint)
 
                 Text("打卡成功")
-                    .font(AppFont.title2)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h2)
+                    .foregroundColor(Color.xuanTextPrimary)
 
                 if let result = viewModel.resultData {
                     VStack(spacing: 2) {
                         Text("情绪: \(result.emotion)")
-                            .font(AppFont.body)
-                            .foregroundColor(AppTheme.textSecondary)
+                            .font(XuanFont.bodyL)
+                            .foregroundColor(Color.xuanTextSecondary)
                         Text("时长: \(viewModel.formattedDuration)")
-                            .font(AppFont.footnote)
-                            .foregroundColor(AppTheme.textMuted)
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextTertiary)
                     }
                 }
 
@@ -435,104 +435,104 @@ struct CCVoiceCheckinView: View {
                 aiResponseCard
 
                 // 3 个操作按钮
-                actionButtons
+                savedActionButtons
 
                 Spacer(minLength: 20)
             }
-            .padding(.horizontal, AppSpacing.lg)
+            .padding(.horizontal, XuanSpacing.lg)
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
     }
 
     // MARK: - AI 回应卡片
     private var aiResponseCard: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
-            HStack(spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            HStack(spacing: XuanSpacing.sm) {
                 ZStack {
                     Circle()
-                        .fill(AppTheme.accentMint.opacity(0.15))
+                        .fill(Color.xuanMint.opacity(0.15))
                         .frame(width: 36, height: 36)
                     Image(systemName: "brain.head.profile")
                         .font(.system(size: 16))
-                        .foregroundColor(AppTheme.accentMint)
+                        .foregroundColor(Color.xuanMint)
                 }
 
                 Text("AI 倾听官")
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanTextPrimary)
 
                 Spacer()
 
                 Text("刚刚")
-                    .font(AppFont.caption2)
-                    .foregroundColor(AppTheme.textMuted)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
 
             Text("我听到了你的声音，感受到了你的情绪。\n你愿意和我再多聊一会儿吗？")
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextPrimary)
                 .lineSpacing(6)
 
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 Text("💚 温暖陪伴")
-                    .font(AppFont.caption2)
-                    .foregroundColor(AppTheme.accentMint)
-                    .padding(.horizontal, AppSpacing.sm)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanMint)
+                    .padding(.horizontal, XuanSpacing.sm)
                     .padding(.vertical, 2)
-                    .background(AppTheme.accentMint.opacity(0.1))
-                    .cornerRadius(AppRadius.full)
+                    .background(Color.xuanMint.opacity(0.1))
+                    .cornerRadius(XuanRadius.full)
             }
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .xuanCardShadow()
     }
 
-    // MARK: - 操作按钮
-    private var actionButtons: some View {
-        VStack(spacing: AppSpacing.sm) {
+    // MARK: - 操作按钮（已保存状态）
+    private var savedActionButtons: some View {
+        VStack(spacing: XuanSpacing.sm) {
             Button(action: { coordinator.navigate(to: .aiListener) }) {
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     Image(systemName: "brain.head.profile")
                     Text("继续和AI聊聊")
                 }
-                .font(AppFont.buttonLabel)
+                .font(XuanFont.bodyLMedium)
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(AppTheme.primary)
-                .cornerRadius(AppRadius.lg)
+                .background(Color.xuanApricot)
+                .cornerRadius(XuanRadius.lg)
             }
 
             Button(action: { coordinator.navigate(to: .resonanceWall) }) {
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     Image(systemName: "heart.fill")
                     Text("匿名发布到共鸣墙")
                 }
-                .font(AppFont.buttonLabel)
-                .foregroundColor(AppTheme.primary)
+                .font(XuanFont.bodyLMedium)
+                .foregroundColor(Color.xuanApricot)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .background(Color(hex: "F2DBC9"))
-                .cornerRadius(AppRadius.lg)
+                .cornerRadius(XuanRadius.lg)
                 .overlay(
-                    RoundedRectangle(cornerRadius: AppRadius.lg)
+                    RoundedRectangle(cornerRadius: XuanRadius.lg)
                         .stroke(Color(hex: "F2DBC9"), lineWidth: 1)
                 )
             }
 
             Button(action: { coordinator.navigate(to: .emotionDecoder) }) {
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     Image(systemName: "chart.bar.fill")
                     Text("查看情绪解码")
                 }
-                .font(AppFont.buttonLabel)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyLMedium)
+                .foregroundColor(Color.xuanTextSecondary)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(AppTheme.surface)
-                .cornerRadius(AppRadius.lg)
+                .background(Color.xuanSurface)
+                .cornerRadius(XuanRadius.lg)
             }
         }
     }
@@ -540,19 +540,19 @@ struct CCVoiceCheckinView: View {
     // MARK: - Error State
 
     private var errorStateView: some View {
-        VStack(spacing: AppSpacing.lg) {
+        VStack(spacing: XuanSpacing.lg) {
             Spacer().frame(height: 60)
 
             Image(systemName: "exclamationmark.circle.fill")
                 .font(.system(size: 56))
-                .foregroundColor(AppTheme.error)
+                .foregroundColor(Color.xuanDanger)
 
             Text(viewModel.errorMessage ?? "发生未知错误")
                 .font(.system(size: 18))
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
 
-            HStack(spacing: AppSpacing.md) {
+            HStack(spacing: XuanSpacing.md) {
                 Button(action: { viewModel.reRecord() }) {
                     HStack(spacing: 6) {
                         Image(systemName: "arrow.counterclockwise")
@@ -560,11 +560,11 @@ struct CCVoiceCheckinView: View {
                         Text("重新录制")
                             .font(.system(size: 15, weight: .medium))
                     }
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.md)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.md)
                 }
 
                 Button(action: {
@@ -575,8 +575,8 @@ struct CCVoiceCheckinView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(AppTheme.primary)
-                        .cornerRadius(AppRadius.md)
+                        .background(Color.xuanApricot)
+                        .cornerRadius(XuanRadius.md)
                 }
                 .disabled(viewModel.resultData == nil)
             }
@@ -591,7 +591,7 @@ struct CCVoiceCheckinView: View {
         HStack(spacing: 2) {
             ForEach(0..<30, id: \.self) { i in
                 RoundedRectangle(cornerRadius: 2)
-                    .fill(AppTheme.primaryMuted.opacity(0.4))
+                    .fill(Color.xuanApricot.opacity(0.6).opacity(0.4))
                     .frame(width: 3, height: 6)
             }
         }
@@ -603,8 +603,8 @@ struct CCVoiceCheckinView: View {
                 RoundedRectangle(cornerRadius: 2)
                     .fill(
                         viewModel.isRecording
-                            ? AppTheme.primary.opacity(0.5 + Double(viewModel.waveformData[i]) / 120)
-                            : AppTheme.primaryMuted
+                            ? Color.xuanApricot.opacity(0.5 + Double(viewModel.waveformData[i]) / 120)
+                            : Color.xuanApricot.opacity(0.6)
                     )
                     .frame(width: 3, height: max(4, viewModel.waveformData[i]))
                     .animation(.easeInOut(duration: 0.15), value: viewModel.waveformData[i])
@@ -617,11 +617,11 @@ struct CCVoiceCheckinView: View {
     private var recordButton: some View {
         ZStack {
             Circle()
-                .stroke(AppTheme.primaryMuted, lineWidth: 3)
+                .stroke(Color.xuanApricot.opacity(0.6), lineWidth: 3)
                 .frame(width: 100, height: 100)
 
             Circle()
-                .fill(isPressed ? AppTheme.crisisRed : AppTheme.primary)
+                .fill(isPressed ? Color.xuanDanger : Color.xuanApricot)
                 .frame(width: isPressed ? 70 : 80, height: isPressed ? 70 : 80)
                 .animation(.easeInOut(duration: 0.15), value: isPressed)
 

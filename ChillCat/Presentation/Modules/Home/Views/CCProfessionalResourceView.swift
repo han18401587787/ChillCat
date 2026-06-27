@@ -12,7 +12,7 @@ struct CCProfessionalResourceView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xl) {
+            VStack(spacing: XuanSpacing.xl) {
                 // MARK: - 头部说明
                 headerSection
 
@@ -28,9 +28,9 @@ struct CCProfessionalResourceView: View {
                 // MARK: - 免责声明
                 disclaimerSection
             }
-            .padding(AppSpacing.lg)
+            .padding(XuanSpacing.lg)
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .navigationTitle("专业心理资源")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -38,38 +38,38 @@ struct CCProfessionalResourceView: View {
     // MARK: - Header
 
     private var headerSection: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.sm) {
             Image(systemName: "heart.text.square.fill")
                 .font(.system(size: 36))
-                .foregroundColor(AppTheme.warmGold)
+                .foregroundColor(Color.xuanApricotDark)
 
             Text("你不需要独自面对一切")
-                .font(AppFont.title1)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h1)
+                .foregroundColor(Color.xuanTextPrimary)
 
             Text("这里汇集了专业心理援助资源，当你需要更多支持时，请勇敢伸出手。")
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
         }
-        .padding(AppSpacing.xl)
+        .padding(XuanSpacing.xl)
         .frame(maxWidth: .infinity)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
     }
 
     // MARK: - Hotline Section
 
     private var hotlineSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             sectionHeader(
                 icon: "phone.fill",
                 title: "24小时心理援助热线",
-                color: AppTheme.accentMint
+                color: Color.xuanMint
             )
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 hotlineRow(
                     name: "全国24小时心理援助热线",
                     number: "400-161-9995"
@@ -92,41 +92,41 @@ struct CCProfessionalResourceView: View {
 
     private func hotlineRow(name: String, number: String) -> some View {
         Link(destination: URL(string: "tel:\(number.replacingOccurrences(of: "-", with: ""))")!) {
-            HStack(spacing: AppSpacing.md) {
+            HStack(spacing: XuanSpacing.md) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(name)
-                        .font(AppFont.body)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyL)
+                        .foregroundColor(Color.xuanTextPrimary)
                     Text(number)
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.primary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanApricot)
                         .fontWeight(.medium)
                 }
                 Spacer()
                 Image(systemName: "phone.fill")
                     .font(.system(size: 16))
-                    .foregroundColor(AppTheme.primary)
+                    .foregroundColor(Color.xuanApricot)
                     .frame(width: 36, height: 36)
-                    .background(AppTheme.primary.opacity(0.12))
-                    .cornerRadius(AppRadius.sm)
+                    .background(Color.xuanApricot.opacity(0.12))
+                    .cornerRadius(XuanRadius.sm)
             }
-            .padding(AppSpacing.md)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.md)
+            .padding(XuanSpacing.md)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.md)
         }
     }
 
     // MARK: - Online Platform Section
 
     private var onlinePlatformSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             sectionHeader(
                 icon: "globe",
                 title: "在线心理咨询平台",
-                color: AppTheme.warmPurple
+                color: Color(hex: "A085C6")
             )
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 platformRow(
                     name: "壹心理",
                     description: "专业心理咨询师在线预约",
@@ -147,55 +147,55 @@ struct CCProfessionalResourceView: View {
     }
 
     private func platformRow(name: String, description: String, icon: String) -> some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: icon)
                 .font(.system(size: 20))
-                .foregroundColor(AppTheme.warmPurple)
+                .foregroundColor(Color(hex: "A085C6"))
                 .frame(width: 40, height: 40)
-                .background(AppTheme.warmPurple.opacity(0.12))
-                .cornerRadius(AppRadius.sm)
+                .background(Color(hex: "A085C6").opacity(0.12))
+                .cornerRadius(XuanRadius.sm)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(name)
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .fontWeight(.medium)
                 Text(description)
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
 
             Spacer()
 
             Image(systemName: "arrow.up.forward.app.fill")
                 .font(.system(size: 14))
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
         }
-        .padding(AppSpacing.md)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.md)
+        .padding(XuanSpacing.md)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
     }
 
     // MARK: - Safety Plan Card
 
     private var safetyPlanCard: some View {
         NavigationLink(value: CCAppRoute.safetyPlan) {
-            HStack(spacing: AppSpacing.md) {
+            HStack(spacing: XuanSpacing.md) {
                 Image(systemName: "shield.checkered")
                     .font(.system(size: 24))
-                    .foregroundColor(AppTheme.primary)
+                    .foregroundColor(Color.xuanApricot)
                     .frame(width: 48, height: 48)
-                    .background(AppTheme.primary.opacity(0.12))
-                    .cornerRadius(AppRadius.sm)
+                    .background(Color.xuanApricot.opacity(0.12))
+                    .cornerRadius(XuanRadius.sm)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("我的安全计划")
-                        .font(AppFont.body.weight(.medium))
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyLMedium)
+                        .foregroundColor(Color.xuanTextPrimary)
                         .fontWeight(.medium)
                     Text("提前制定危机应对方案，在困难时刻帮助自己")
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanTextSecondary)
                         .lineLimit(2)
                 }
 
@@ -203,35 +203,35 @@ struct CCProfessionalResourceView: View {
 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.md)
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.md)
         }
     }
 
     // MARK: - Disclaimer
 
     private var disclaimerSection: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.sm) {
             Image(systemName: "exclamationmark.shield.fill")
                 .font(.system(size: 20))
                 .foregroundColor(Color.orange)
 
             Text("绪安不是医疗产品，不能替代专业心理咨询与治疗。如果你正处于危机中，请立即拨打120或110。")
-                .font(AppFont.footnote)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyS)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(AppSpacing.lg)
+        .padding(XuanSpacing.lg)
         .frame(maxWidth: .infinity)
         .background(Color.orange.opacity(0.15))
-        .cornerRadius(AppRadius.md)
+        .cornerRadius(XuanRadius.md)
         .overlay(
-            RoundedRectangle(cornerRadius: AppRadius.md)
+            RoundedRectangle(cornerRadius: XuanRadius.md)
                 .stroke(Color.orange.opacity(0.2), lineWidth: 1)
         )
     }
@@ -239,13 +239,13 @@ struct CCProfessionalResourceView: View {
     // MARK: - Helpers
 
     private func sectionHeader(icon: String, title: String, color: Color) -> some View {
-        HStack(spacing: AppSpacing.sm) {
+        HStack(spacing: XuanSpacing.sm) {
             Image(systemName: icon)
                 .font(.system(size: 16))
                 .foregroundColor(color)
             Text(title)
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
         }
     }
 }

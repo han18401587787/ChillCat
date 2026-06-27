@@ -6,8 +6,8 @@ struct CCSkeletonView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                AppTheme.surface
-                AppTheme.background
+                Color.xuanSurface
+                Color.xuanApricotBg
                     .mask(
                         Rectangle()
                             .fill(LinearGradient(
@@ -76,8 +76,8 @@ struct CCSkeletonList: View {
                     }
                 }
                 .padding()
-                .background(AppTheme.cardBackground)
-                .cornerRadius(AppRadius.md)
+                .background(Color.xuanWhite)
+                .cornerRadius(XuanRadius.md)
             }
         }
     }

@@ -11,7 +11,7 @@ struct EncourageDiscoverView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: AppSpacing.xl) {
+            VStack(alignment: .leading, spacing: XuanSpacing.xl) {
                 // 标题区域
                 headerSection
                 
@@ -29,9 +29,9 @@ struct EncourageDiscoverView: View {
                 
                 Spacer(minLength: 40)
             }
-            .padding(.horizontal, AppSpacing.lg)
+            .padding(.horizontal, XuanSpacing.lg)
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .navigationTitle("鼓励链")
         .navigationBarTitleDisplayMode(.large)
         .fullScreenCover(item: $selectedChain) { chain in
@@ -41,47 +41,47 @@ struct EncourageDiscoverView: View {
     
     // MARK: - Header
     private var headerSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             Text("传递温暖")
-                .font(AppFont.title1)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h1)
+                .foregroundColor(Color.xuanTextPrimary)
             
             Text("每一句鼓励都是一束光，照亮他人的世界")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
         }
-        .padding(.top, AppSpacing.sm)
+        .padding(.top, XuanSpacing.sm)
     }
     
     // MARK: - Search Bar
     private var searchBar: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 16))
-                .foregroundColor(AppTheme.textTertiary)
+                .foregroundColor(Color.xuanTextTertiary)
             
             TextField("搜索鼓励语、话题...", text: $viewModel.searchText)
-                .font(AppFont.body)
+                .font(XuanFont.bodyL)
         }
-        .padding(.horizontal, AppSpacing.lg)
-        .padding(.vertical, AppSpacing.md)
-        .background(AppTheme.backgroundSecondary)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.full))
+        .padding(.horizontal, XuanSpacing.lg)
+        .padding(.vertical, XuanSpacing.md)
+        .background(Color.xuanSurface)
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.full))
     }
     
     // MARK: - Emotion Filter
     private var emotionFilterSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("按情绪筛选")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textTertiary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextTertiary)
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     FilterChip(
                         label: "全部",
                         isSelected: viewModel.selectedEmotion == nil,
-                        color: AppTheme.primary
+                        color: Color.xuanApricot
                     ) {
                         viewModel.selectedEmotion = nil
                     }
@@ -102,25 +102,25 @@ struct EncourageDiscoverView: View {
     
     // MARK: - Active Chains
     private var activeChainsSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack {
                 Label("正在发生的温暖", systemImage: "heart.circle.fill")
-                    .font(AppFont.title3)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h3)
+                    .foregroundColor(Color.xuanTextPrimary)
                 
                 Spacer()
                 
                 Text("\(viewModel.activeChainCount)条链")
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.warmGlow)
-                    .padding(.horizontal, AppSpacing.md)
-                    .padding(.vertical, AppSpacing.xs)
-                    .background(AppTheme.warmGlowLight)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanApricotDark)
+                    .padding(.horizontal, XuanSpacing.md)
+                    .padding(.vertical, XuanSpacing.xs)
+                    .background(Color(hex: "FDF0D5"))
                     .clipShape(Capsule())
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: AppSpacing.md) {
+                HStack(spacing: XuanSpacing.md) {
                     ForEach(viewModel.activeChains) { chain in
                         ActiveChainCard(chain: chain)
                             .frame(width: 200)
@@ -135,12 +135,12 @@ struct EncourageDiscoverView: View {
     
     // MARK: - Recommended
     private var recommendedChainsSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("推荐加入")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
             
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 ForEach(viewModel.recommendedChains) { chain in
                     RecommendedChainRow(chain: chain) {
                         selectedChain = chain
@@ -161,10 +161,10 @@ struct FilterChip: View {
     var body: some View {
         Button(action: action) {
             Text(label)
-                .font(AppFont.footnote)
+                .font(XuanFont.bodyS)
                 .foregroundColor(isSelected ? .white : color)
-                .padding(.horizontal, AppSpacing.lg)
-                .padding(.vertical, AppSpacing.sm)
+                .padding(.horizontal, XuanSpacing.lg)
+                .padding(.vertical, XuanSpacing.sm)
                 .background(isSelected ? color : color.opacity(0.1))
                 .clipShape(Capsule())
         }
@@ -176,7 +176,7 @@ struct ActiveChainCard: View {
     let chain: EncourageChainData
     
     var body: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             // 情绪标签
             HStack {
                 Text(chain.emotionEmoji)
@@ -185,23 +185,23 @@ struct ActiveChainCard: View {
                 Spacer()
                 
                 Text("\(chain.participantCount)人")
-                    .font(AppFont.caption2)
-                    .foregroundColor(AppTheme.textTertiary)
-                    .padding(.horizontal, AppSpacing.sm)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
+                    .padding(.horizontal, XuanSpacing.sm)
                     .padding(.vertical, 2)
-                    .background(AppTheme.backgroundSecondary)
+                    .background(Color.xuanSurface)
                     .clipShape(Capsule())
             }
             
-            VStack(alignment: .leading, spacing: AppSpacing.xs) {
+            VStack(alignment: .leading, spacing: XuanSpacing.xs) {
                 Text(chain.theme)
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .lineLimit(2)
                 
                 Text(chain.latestMessage)
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .lineLimit(2)
             }
             
@@ -211,9 +211,9 @@ struct ActiveChainCard: View {
             HStack {
                 ForEach(chain.emotionTags.prefix(2), id: \.self) { tag in
                     Text(tag)
-                        .font(AppFont.caption2)
+                        .font(XuanFont.caption)
                         .foregroundColor(EmotionColors.color(for: tag))
-                        .padding(.horizontal, AppSpacing.sm)
+                        .padding(.horizontal, XuanSpacing.sm)
                         .padding(.vertical, 2)
                         .background(EmotionColors.color(for: tag).opacity(0.1))
                         .clipShape(Capsule())
@@ -222,14 +222,14 @@ struct ActiveChainCard: View {
                 Spacer()
             }
         }
-        .padding(AppSpacing.lg)
+        .padding(XuanSpacing.lg)
         .frame(height: 180)
-        .background(AppTheme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .background(Color.xuanSurface)
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
         .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
         .overlay(
-            RoundedRectangle(cornerRadius: AppRadius.lg)
-                .stroke(AppTheme.warmGlow.opacity(0.15), lineWidth: 1)
+            RoundedRectangle(cornerRadius: XuanRadius.lg)
+                .stroke(Color.xuanApricotDark.opacity(0.15), lineWidth: 1)
         )
     }
 }
@@ -241,32 +241,32 @@ struct RecommendedChainRow: View {
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: AppSpacing.md) {
+            HStack(spacing: XuanSpacing.md) {
                 Text(chain.emotionEmoji)
                     .font(.system(size: 32))
                     .frame(width: 48, height: 48)
-                    .background(AppTheme.warmGlowLight)
-                    .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                    .background(Color(hex: "FDF0D5"))
+                    .clipShape(RoundedRectangle(cornerRadius: XuanRadius.md))
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(chain.theme)
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
                     Text("\(chain.participantCount)人参与 · 最新：\(String(chain.latestMessage.prefix(20)))")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
                 
                 Spacer()
                 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 14))
-                    .foregroundColor(AppTheme.textTertiary)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanSurface)
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
             .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
         }
     }

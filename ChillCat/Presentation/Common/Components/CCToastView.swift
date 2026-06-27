@@ -38,28 +38,28 @@ struct CCToastView: View {
     let type: CCToastType
 
     var body: some View {
-        HStack(spacing: AppSpacing.sm) {
+        HStack(spacing: XuanSpacing.sm) {
             Image(systemName: type.iconName)
                 .foregroundColor(toastColor)
             Text(message)
                 .font(.system(size: 15))
-                .foregroundColor(AppTheme.textPrimary)
+                .foregroundColor(Color.xuanTextPrimary)
                 .lineLimit(3)
         }
-        .padding(.horizontal, AppSpacing.md)
+        .padding(.horizontal, XuanSpacing.md)
         .padding(.vertical, 12)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.sm)
-        .shadow(color: AppTheme.textMuted.opacity(0.2), radius: 4)
-        .padding(.horizontal, AppSpacing.md)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.sm)
+        .shadow(color: Color.xuanTextTertiary.opacity(0.2), radius: 4)
+        .padding(.horizontal, XuanSpacing.md)
     }
 
     private var toastColor: Color {
         switch type {
-        case .success: return AppTheme.success
-        case .error:   return AppTheme.error
-        case .warning: return AppTheme.warm
-        case .info:    return AppTheme.primary
+        case .success: return Color.xuanSuccess
+        case .error:   return Color.xuanDanger
+        case .warning: return Color.xuanApricotDark
+        case .info:    return Color.xuanApricot
         }
     }
 }

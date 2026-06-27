@@ -19,7 +19,7 @@ struct CCEmotionDecodeView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: AppSpacing.xl) {
+                VStack(spacing: XuanSpacing.xl) {
                     // 情绪解码头
                     decodeHeader
                     
@@ -45,9 +45,9 @@ struct CCEmotionDecodeView: View {
                     
                     Spacer(minLength: 40)
                 }
-                .padding(AppSpacing.lg)
+                .padding(XuanSpacing.lg)
             }
-            .background(AppTheme.background)
+            .background(Color.xuanApricotBg)
             .navigationTitle("情绪解码")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -76,7 +76,7 @@ struct CCEmotionDecodeView: View {
     
     // MARK: - Decode Header
     private var decodeHeader: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             ZStack {
                 Circle()
                     .fill(
@@ -92,43 +92,43 @@ struct CCEmotionDecodeView: View {
                     )
                     .frame(width: 140, height: 140)
                 
-                VStack(spacing: AppSpacing.xs) {
+                VStack(spacing: XuanSpacing.xs) {
                     Text(decodeEmoji)
                         .font(.system(size: 48))
                     
                     Text(viewModel.correctedEmotion)
-                        .font(AppFont.title3)
+                        .font(XuanFont.h3)
                         .foregroundColor(EmotionColors.color(for: viewModel.correctedEmotion))
                 }
             }
             
             Text("情绪解码结果")
-                .font(AppFont.title2)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h2)
+                .foregroundColor(Color.xuanTextPrimary)
             
             Text("基于你的记录，AI为你解读今日情绪")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
         }
-        .padding(.top, AppSpacing.lg)
+        .padding(.top, XuanSpacing.lg)
     }
     
     // MARK: - Confidence Badge
     private var confidenceBadge: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: viewModel.confidence >= 60 ? "checkmark.shield.fill" : "exclamationmark.shield.fill")
                 .font(.system(size: 18))
-                .foregroundColor(viewModel.confidence >= 60 ? AppTheme.safeGreen : AppTheme.vibrantOrange)
+                .foregroundColor(viewModel.confidence >= 60 ? Color.xuanSuccess : Color.xuanWarning)
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(viewModel.confidence >= 60 ? "识别置信度：\(Int(viewModel.confidence))%" : "识别置信度较低")
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(viewModel.confidence >= 60 ? AppTheme.safeGreen : AppTheme.vibrantOrange)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(viewModel.confidence >= 60 ? Color.xuanSuccess : Color.xuanWarning)
                 
                 if viewModel.confidence < 60 {
                     Text("AI对本次识别的把握较低，你可以进行纠错帮助提升准确性")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
             }
             
@@ -137,20 +137,20 @@ struct CCEmotionDecodeView: View {
         .padding()
         .background(
             viewModel.confidence >= 60
-                ? AppTheme.safeGreenLight
-                : AppTheme.vibrantOrangeLight
+                ? Color(hex: "D4EDD6")
+                : Color.xuanWarning.opacity(0.2)
         )
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
     }
     
     // MARK: - Dimension Selector
     private var dimensionSelector: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             Text("解读维度")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textTertiary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextTertiary)
             
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 ForEach(DecodeDimension.allCases, id: \.self) { dimension in
                     DimensionTab(
                         dimension: dimension,
@@ -167,7 +167,7 @@ struct CCEmotionDecodeView: View {
     
     // MARK: - Dimension Content
     private var dimensionContent: some View {
-        VStack(spacing: AppSpacing.lg) {
+        VStack(spacing: XuanSpacing.lg) {
             switch selectedDimension {
             case .emotionType:
                 emotionTypeContent
@@ -188,7 +188,7 @@ struct CCEmotionDecodeView: View {
     
     // MARK: - Emotion Type Content
     private var emotionTypeContent: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             DecodeCard(
                 icon: "chart.bar.fill",
                 title: "主要情绪",
@@ -200,46 +200,46 @@ struct CCEmotionDecodeView: View {
                 icon: "text.alignleft",
                 title: "AI分析",
                 content: viewModel.correctedSummary,
-                color: AppTheme.textSecondary
+                color: Color.xuanTextSecondary
             )
             
             DecodeCard(
                 icon: "lightbulb.fill",
                 title: "建议",
                 content: decodeSuggestion,
-                color: AppTheme.warmGlow
+                color: Color.xuanApricotDark
             )
         }
     }
     
     // MARK: - Intensity Content
     private var intensityContent: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             DecodeCard(
                 icon: "speedometer",
                 title: "情绪强度分析",
                 content: intensityAnalysis,
-                color: AppTheme.vibrantOrange
+                color: Color.xuanWarning
             )
             
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 Text("强度分布")
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textTertiary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextTertiary)
                 
                 // 强度可视化
-                VStack(spacing: AppSpacing.sm) {
+                VStack(spacing: XuanSpacing.sm) {
                     ForEach(1...10, id: \.self) { level in
-                        HStack(spacing: AppSpacing.sm) {
+                        HStack(spacing: XuanSpacing.sm) {
                             Text("\(level)")
-                                .font(AppFont.caption2)
-                                .foregroundColor(AppTheme.textTertiary)
+                                .font(XuanFont.caption)
+                                .foregroundColor(Color.xuanTextTertiary)
                                 .frame(width: 20)
                             
                             GeometryReader { geometry in
                                 ZStack(alignment: .leading) {
                                     RoundedRectangle(cornerRadius: 3)
-                                        .fill(AppTheme.backgroundSecondary)
+                                        .fill(Color.xuanSurface)
                                         .frame(height: 10)
                                     
                                     RoundedRectangle(cornerRadius: 3)
@@ -256,54 +256,54 @@ struct CCEmotionDecodeView: View {
                 }
             }
             .padding()
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+            .background(Color.xuanSurface)
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
             .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
         }
     }
     
     // MARK: - Keywords Content
     private var keywordsContent: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             DecodeCard(
                 icon: "tag.fill",
                 title: "情绪关键词",
                 content: "AI从你的记录中提取了以下关键词",
-                color: AppTheme.softPurple
+                color: Color(hex: "A085C6").opacity(0.5)
             )
             
             // 关键词云
-            FlowLayout(spacing: AppSpacing.sm) {
+            FlowLayout(spacing: XuanSpacing.sm) {
                 ForEach(viewModel.keywords, id: \.self) { keyword in
                     KeywordBubble(keyword: keyword)
                 }
             }
             .padding()
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+            .background(Color.xuanSurface)
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
             .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
         }
     }
     
     // MARK: - Trend Content
     private var trendContent: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             DecodeCard(
                 icon: "chart.line.uptrend.xyaxis",
                 title: "情绪趋势",
                 content: trendAnalysis,
-                color: AppTheme.hopeCyan
+                color: Color(hex: "7CB8B0")
             )
             
             // 近7天趋势图
-            VStack(alignment: .leading, spacing: AppSpacing.md) {
+            VStack(alignment: .leading, spacing: XuanSpacing.md) {
                 Text("近7天情绪变化")
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textTertiary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextTertiary)
                 
-                HStack(alignment: .bottom, spacing: AppSpacing.md) {
+                HStack(alignment: .bottom, spacing: XuanSpacing.md) {
                     ForEach(viewModel.weeklyTrend) { day in
-                        VStack(spacing: AppSpacing.xs) {
+                        VStack(spacing: XuanSpacing.xs) {
                             Text(day.emotionEmoji)
                                 .font(.system(size: 20))
                             
@@ -313,15 +313,15 @@ struct CCEmotionDecodeView: View {
                                 .animation(.spring(response: 0.4, dampingFraction: 0.6), value: day.intensity)
                             
                             Text(day.dayShort)
-                                .font(AppFont.caption2)
-                                .foregroundColor(AppTheme.textTertiary)
+                                .font(XuanFont.caption)
+                                .foregroundColor(Color.xuanTextTertiary)
                         }
                     }
                 }
             }
             .padding()
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+            .background(Color.xuanSurface)
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
             .shadow(color: .black.opacity(0.03), radius: 4, x: 0, y: 1)
         }
     }
@@ -331,49 +331,49 @@ struct CCEmotionDecodeView: View {
         Button {
             showCorrection = true
         } label: {
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 Image(systemName: "pencil.circle")
                 Text("这个解读不准，我要纠错")
                 Spacer()
                 Image(systemName: "chevron.right")
                     .font(.system(size: 14))
             }
-            .font(AppFont.body)
-            .foregroundColor(AppTheme.textSecondary)
+            .font(XuanFont.bodyL)
+            .foregroundColor(Color.xuanTextSecondary)
             .padding()
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+            .background(Color.xuanSurface)
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
             .overlay(
-                RoundedRectangle(cornerRadius: AppRadius.lg)
-                    .stroke(AppTheme.border, lineWidth: 1)
+                RoundedRectangle(cornerRadius: XuanRadius.lg)
+                    .stroke(Color.xuanBorder, lineWidth: 1)
             )
         }
     }
     
     // MARK: - Low Score Warning
     private var lowScoreWarning: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.system(size: 20))
-                    .foregroundColor(AppTheme.crisisRed)
+                    .foregroundColor(Color.xuanDanger)
                 
                 Text("情绪健康提醒")
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(AppTheme.crisisRed)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanDanger)
             }
             
             Text("你已经连续\(viewModel.lowScoreDays)天情绪评分偏低，建议关注自己的心理健康状态。如有需要，可以尝试稳情练习或寻求专业帮助。")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
                 .lineSpacing(4)
         }
         .padding()
-        .background(AppTheme.crisisRedLight)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .background(Color(hex: "FFDAD5"))
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
         .overlay(
-            RoundedRectangle(cornerRadius: AppRadius.lg)
-                .stroke(AppTheme.crisisRed.opacity(0.3), lineWidth: 1)
+            RoundedRectangle(cornerRadius: XuanRadius.lg)
+                .stroke(Color.xuanDanger.opacity(0.3), lineWidth: 1)
         )
     }
     
@@ -382,37 +382,37 @@ struct CCEmotionDecodeView: View {
         Button {
             showHealingPlan = true
         } label: {
-            HStack(spacing: AppSpacing.md) {
+            HStack(spacing: XuanSpacing.md) {
                 ZStack {
                     Circle()
-                        .fill(AppTheme.calmBlue.opacity(0.15))
+                        .fill(Color.xuanInfo.opacity(0.15))
                         .frame(width: 48, height: 48)
                     
                     Image(systemName: "lungs.fill")
                         .font(.system(size: 22))
-                        .foregroundColor(AppTheme.calmBlue)
+                        .foregroundColor(Color.xuanInfo)
                 }
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("推荐稳情练习")
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(Color.xuanTextPrimary)
                     
                     Text("4-7-8呼吸法 + 白噪音放松")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
                 
                 Spacer()
                 
                 Image(systemName: "arrow.right.circle.fill")
                     .font(.system(size: 28))
-                    .foregroundColor(AppTheme.calmBlue)
+                    .foregroundColor(Color.xuanInfo)
             }
             .padding()
-            .background(AppTheme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
-            .shadow(color: AppTheme.calmBlue.opacity(0.1), radius: 8, x: 0, y: 2)
+            .background(Color.xuanSurface)
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
+            .shadow(color: Color.xuanInfo.opacity(0.1), radius: 8, x: 0, y: 2)
         }
     }
     
@@ -478,10 +478,10 @@ struct CCEmotionDecodeView: View {
     private func intensityColor(for level: Double) -> Color {
         switch level {
         case 1...3: return EmotionColors.calm
-        case 4...6: return AppTheme.warmGlow
-        case 7...8: return AppTheme.vibrantOrange
-        case 9...10: return AppTheme.crisisRed
-        default: return AppTheme.textTertiary
+        case 4...6: return Color.xuanApricotDark
+        case 7...8: return Color.xuanWarning
+        case 9...10: return Color.xuanDanger
+        default: return Color.xuanTextTertiary
         }
     }
 }
@@ -513,10 +513,10 @@ enum DecodeDimension: CaseIterable {
     
     var color: Color {
         switch self {
-        case .emotionType: return AppTheme.primary
-        case .intensity: return AppTheme.vibrantOrange
-        case .keywords: return AppTheme.softPurple
-        case .trend: return AppTheme.hopeCyan
+        case .emotionType: return Color.xuanApricot
+        case .intensity: return Color.xuanWarning
+        case .keywords: return Color(hex: "A085C6").opacity(0.5)
+        case .trend: return Color(hex: "7CB8B0")
         }
     }
 }
@@ -529,21 +529,21 @@ struct DimensionTab: View {
     
     var body: some View {
         Button(action: action) {
-            VStack(spacing: AppSpacing.xs) {
+            VStack(spacing: XuanSpacing.xs) {
                 Image(systemName: dimension.icon)
                     .font(.system(size: 18))
-                    .foregroundColor(isSelected ? dimension.color : AppTheme.textTertiary)
+                    .foregroundColor(isSelected ? dimension.color : Color.xuanTextTertiary)
                 
                 Text(dimension.title)
-                    .font(AppFont.caption2)
-                    .foregroundColor(isSelected ? AppTheme.textPrimary : AppTheme.textTertiary)
+                    .font(XuanFont.caption)
+                    .foregroundColor(isSelected ? Color.xuanTextPrimary : Color.xuanTextTertiary)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, AppSpacing.md)
+            .padding(.vertical, XuanSpacing.md)
             .background(
                 isSelected ? dimension.color.opacity(0.08) : Color.clear
             )
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+            .clipShape(RoundedRectangle(cornerRadius: XuanRadius.md))
         }
     }
 }
@@ -554,11 +554,11 @@ struct KeywordBubble: View {
     
     var body: some View {
         Text(keyword)
-            .font(AppFont.footnote)
-            .foregroundColor(AppTheme.primary)
-            .padding(.horizontal, AppSpacing.md)
-            .padding(.vertical, AppSpacing.xs)
-            .background(AppTheme.primary.opacity(0.08))
+            .font(XuanFont.bodyS)
+            .foregroundColor(Color.xuanApricot)
+            .padding(.horizontal, XuanSpacing.md)
+            .padding(.vertical, XuanSpacing.xs)
+            .background(Color.xuanApricot.opacity(0.08))
             .clipShape(Capsule())
     }
 }
@@ -719,24 +719,24 @@ struct DecodeCard: View {
     let color: Color
     
     var body: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: icon)
                 .font(.system(size: 20))
                 .foregroundColor(color)
                 .frame(width: 32)
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
                 Text(content)
-                    .font(AppFont.body)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextPrimary)
             }
             Spacer()
         }
         .padding()
-        .background(AppTheme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .background(Color.xuanSurface)
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
     }
 }
 

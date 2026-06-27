@@ -5,23 +5,23 @@ struct CCFeedbackView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.lg) {
+            VStack(spacing: XuanSpacing.lg) {
                 if viewModel.submitted {
-                    VStack(spacing: AppSpacing.md) {
-                        Image(systemName: "checkmark.circle.fill").font(.system(size:64)).foregroundColor(AppTheme.accentMint)
+                    VStack(spacing: XuanSpacing.md) {
+                        Image(systemName: "checkmark.circle.fill").font(.system(size:64)).foregroundColor(Color.xuanMint)
                         Text("感谢反馈！").font(.system(size:22,weight:.bold))
-                        Text("我们会认真阅读每一条意见").foregroundColor(AppTheme.textSecondary)
+                        Text("我们会认真阅读每一条意见").foregroundColor(Color.xuanTextSecondary)
                     }.padding(.top,80)
                 } else {
-                    VStack(alignment:.leading,spacing:AppSpacing.sm) {
+                    VStack(alignment:.leading,spacing:XuanSpacing.sm) {
                         Text("反馈类型").font(.system(size:15,weight:.medium))
                         Picker("", selection: $viewModel.feedbackType) { ForEach(types,id:\.self){Text($0).tag($0)} }.pickerStyle(.segmented)
                     }
-                    VStack(alignment:.leading,spacing:AppSpacing.sm) {
+                    VStack(alignment:.leading,spacing:XuanSpacing.sm) {
                         Text("详细描述").font(.system(size:15,weight:.medium))
-                        TextEditor(text: $viewModel.feedbackContent).frame(minHeight:120).padding(8).background(AppTheme.cardBackground).cornerRadius(AppRadius.md).overlay(RoundedRectangle(cornerRadius:AppRadius.md).stroke(Color.gray.opacity(0.2)))
+                        TextEditor(text: $viewModel.feedbackContent).frame(minHeight:120).padding(8).background(Color.xuanWhite).cornerRadius(XuanRadius.md).overlay(RoundedRectangle(cornerRadius:XuanRadius.md).stroke(Color.gray.opacity(0.2)))
                     }
-                    VStack(alignment:.leading,spacing:AppSpacing.sm) {
+                    VStack(alignment:.leading,spacing:XuanSpacing.sm) {
                         Text("联系方式（选填）").font(.system(size:15,weight:.medium))
                         TextField("邮箱或手机号", text: $viewModel.feedbackContact).textFieldStyle(.roundedBorder)
                     }
@@ -33,13 +33,13 @@ struct CCFeedbackView: View {
                         }
                     }
                     .foregroundColor(.white).frame(maxWidth:.infinity).padding(.vertical,14)
-                    .background(viewModel.feedbackContent.isEmpty || viewModel.isSubmitting ? Color.gray : AppTheme.primaryDark)
-                    .cornerRadius(AppRadius.md)
+                    .background(viewModel.feedbackContent.isEmpty || viewModel.isSubmitting ? Color.gray : Color.xuanApricotDark)
+                    .cornerRadius(XuanRadius.md)
                     .disabled(viewModel.feedbackContent.isEmpty || viewModel.isSubmitting)
                 }
             }.padding()
         }
-        .background(AppTheme.background).navigationTitle("意见反馈")
+        .background(Color.xuanApricotBg).navigationTitle("意见反馈")
         .alert("提交失败", isPresented: Binding(
             get: { viewModel.errorMessage != nil },
             set: { if !$0 { viewModel.errorMessage = nil } }

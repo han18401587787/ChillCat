@@ -8,7 +8,7 @@ struct CCSettingsView: View {
     var body: some View {
         List {
             Section("外观") {
-                Button(action: { themeManager.isDarkMode.toggle() }) {
+                Button(action: { themeManager.toggleTheme() }) {
                     Label("暗色模式", systemImage: themeManager.isDarkMode ? "moon.fill" : "sun.max.fill")
                 }.foregroundColor(.primary)
             }

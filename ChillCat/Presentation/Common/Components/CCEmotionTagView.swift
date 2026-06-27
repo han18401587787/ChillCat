@@ -16,9 +16,9 @@ struct CCEmotionTagView: View {
         
         var font: Font {
             switch self {
-            case .small: return AppFont.caption2
-            case .medium: return AppFont.caption
-            case .large: return AppFont.body
+            case .small: return XuanFont.caption
+            case .medium: return XuanFont.bodyM
+            case .large: return XuanFont.bodyL
             }
         }
         
@@ -32,17 +32,17 @@ struct CCEmotionTagView: View {
         
         var horizontalPadding: CGFloat {
             switch self {
-            case .small: return AppSpacing.sm
-            case .medium: return AppSpacing.md
-            case .large: return AppSpacing.lg
+            case .small: return XuanSpacing.sm
+            case .medium: return XuanSpacing.md
+            case .large: return XuanSpacing.lg
             }
         }
         
         var verticalPadding: CGFloat {
             switch self {
             case .small: return 2
-            case .medium: return AppSpacing.xs
-            case .large: return AppSpacing.sm
+            case .medium: return XuanSpacing.xs
+            case .large: return XuanSpacing.sm
             }
         }
     }
@@ -76,7 +76,7 @@ struct EmotionFlowLayout: View {
     @Binding var selectedEmotions: Set<String>
     
     var body: some View {
-        FlowLayout(spacing: AppSpacing.sm) {
+        FlowLayout(spacing: XuanSpacing.sm) {
             ForEach(emotions, id: \.name) { emotion in
                 Button {
                     if selectedEmotions.contains(emotion.name) {

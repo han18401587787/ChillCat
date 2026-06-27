@@ -17,7 +17,7 @@ struct CCGrowthReportView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xl) {
+            VStack(spacing: XuanSpacing.xl) {
                 periodPicker
                 emotionTrendSection
                 toolUsageSection
@@ -27,10 +27,10 @@ struct CCGrowthReportView: View {
                 shareButton
                 bottomPadding
             }
-            .padding(.horizontal, AppSpacing.lg)
-            .padding(.top, AppSpacing.sm)
+            .padding(.horizontal, XuanSpacing.lg)
+            .padding(.top, XuanSpacing.sm)
         }
-        .background(AppTheme.background.ignoresSafeArea())
+        .background(Color.xuanApricotBg.ignoresSafeArea())
         .navigationTitle("成长报告")
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await viewModel.loadData() }
@@ -54,37 +54,37 @@ struct CCGrowthReportView: View {
                     }
                 }) {
                     Text(periods[period] ?? period)
-                        .font(AppFont.footnote)
+                        .font(XuanFont.bodyS)
                         .fontWeight(selectedPeriod == period ? .semibold : .regular)
-                        .foregroundColor(selectedPeriod == period ? .white : AppTheme.textSecondary)
+                        .foregroundColor(selectedPeriod == period ? .white : Color.xuanTextSecondary)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, AppSpacing.sm)
+                        .padding(.vertical, XuanSpacing.sm)
                         .background(
                             selectedPeriod == period
-                                ? AppTheme.primary
+                                ? Color.xuanApricot
                                 : Color.clear
                         )
                 }
             }
         }
-        .background(AppTheme.surface)
-        .cornerRadius(AppRadius.sm)
+        .background(Color.xuanSurface)
+        .cornerRadius(XuanRadius.sm)
         .overlay(
-            RoundedRectangle(cornerRadius: AppRadius.sm)
-                .stroke(AppTheme.border, lineWidth: 1)
+            RoundedRectangle(cornerRadius: XuanRadius.sm)
+                .stroke(Color.xuanBorder, lineWidth: 1)
         )
     }
 
     // MARK: - Emotion Trend Section
 
     private var emotionTrendSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
-            sectionHeader(title: "情绪趋势", icon: "chart.bar.fill", color: AppTheme.warmPurple)
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            sectionHeader(title: "情绪趋势", icon: "chart.bar.fill", color: Color(hex: "A085C6"))
 
             if let stats = viewModel.stats, !stats.topEmotions.isEmpty {
                 // Bar chart using colored rectangles
                 let maxCount = stats.topEmotions.map(\.count).max() ?? 1
-                VStack(spacing: AppSpacing.sm) {
+                VStack(spacing: XuanSpacing.sm) {
                     ForEach(stats.topEmotions, id: \.name) { item in
                         emotionBar(emotion: item.name, count: item.count, maxCount: maxCount)
                     }
@@ -93,15 +93,15 @@ struct CCGrowthReportView: View {
                 CCSkeletonList(count: 5)
             } else {
                 Text("暂无情绪数据")
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding()
             }
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 2)
     }
 
@@ -109,16 +109,16 @@ struct CCGrowthReportView: View {
         let ratio = CGFloat(count) / CGFloat(max(maxCount, 1))
         let barColor = emotionBarColor(emotion)
 
-        return HStack(spacing: AppSpacing.sm) {
+        return HStack(spacing: XuanSpacing.sm) {
             Text(emotion)
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
                 .frame(width: 40, alignment: .leading)
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(AppTheme.surface)
+                        .fill(Color.xuanSurface)
                         .frame(height: 20)
 
                     RoundedRectangle(cornerRadius: 4)
@@ -129,42 +129,42 @@ struct CCGrowthReportView: View {
             .frame(height: 20)
 
             Text("\(count)次")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
                 .frame(width: 36, alignment: .trailing)
         }
     }
 
     private func emotionBarColor(_ emotion: String) -> Color {
         switch emotion {
-        case "平静": return AppTheme.accentMint
-        case "开心": return AppTheme.warmGold
-        case "焦虑": return AppTheme.warmPurple
-        case "疲惫": return AppTheme.primaryMuted
-        case "孤独": return AppTheme.primaryLight
-        case "委屈": return AppTheme.warmPink
+        case "平静": return Color.xuanMint
+        case "开心": return Color.xuanApricotDark
+        case "焦虑": return Color(hex: "A085C6")
+        case "疲惫": return Color.xuanApricot.opacity(0.6)
+        case "孤独": return Color.xuanApricotLight
+        case "委屈": return Color.xuanPink
         case "烦躁": return Color.red
-        case "迷茫": return AppTheme.warmPurple.opacity(0.3)
-        case "易怒": return AppTheme.warmGold
-        case "内耗": return AppTheme.textSecondary
-        default:     return AppTheme.primary
+        case "迷茫": return Color(hex: "A085C6").opacity(0.3)
+        case "易怒": return Color.xuanApricotDark
+        case "内耗": return Color.xuanTextSecondary
+        default:     return Color.xuanApricot
         }
     }
 
     // MARK: - Tool Usage Section
 
     private var toolUsageSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
-            sectionHeader(title: "工具使用", icon: "wrench.and.screwdriver.fill", color: AppTheme.accentMint)
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            sectionHeader(title: "工具使用", icon: "wrench.and.screwdriver.fill", color: Color.xuanMint)
 
             if let stats = viewModel.stats, !stats.toolUsage.isEmpty {
                 let maxCount = stats.toolUsage.map(\.count).max() ?? 1
-                VStack(spacing: AppSpacing.sm) {
+                VStack(spacing: XuanSpacing.sm) {
                     ForEach(stats.toolUsage, id: \.name) { item in
-                        HStack(spacing: AppSpacing.sm) {
+                        HStack(spacing: XuanSpacing.sm) {
                             Text(item.name)
-                                .font(AppFont.footnote)
-                                .foregroundColor(AppTheme.textPrimary)
+                                .font(XuanFont.bodyS)
+                                .foregroundColor(Color.xuanTextPrimary)
                                 .frame(width: 80, alignment: .leading)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.8)
@@ -172,11 +172,11 @@ struct CCGrowthReportView: View {
                             GeometryReader { geo in
                                 ZStack(alignment: .leading) {
                                     RoundedRectangle(cornerRadius: 4)
-                                        .fill(AppTheme.surface)
+                                        .fill(Color.xuanSurface)
                                         .frame(height: 16)
 
                                     RoundedRectangle(cornerRadius: 4)
-                                        .fill(AppTheme.accentMint)
+                                        .fill(Color.xuanMint)
                                         .frame(
                                             width: max(geo.size.width * CGFloat(item.count) / CGFloat(max(maxCount, 1)), 20),
                                             height: 16
@@ -186,8 +186,8 @@ struct CCGrowthReportView: View {
                             .frame(height: 16)
 
                             Text("\(item.count)")
-                                .font(AppFont.caption)
-                                .foregroundColor(AppTheme.textSecondary)
+                                .font(XuanFont.bodyM)
+                                .foregroundColor(Color.xuanTextSecondary)
                                 .frame(width: 24, alignment: .trailing)
                         }
                     }
@@ -196,26 +196,26 @@ struct CCGrowthReportView: View {
                 CCSkeletonList(count: 4)
             } else {
                 Text("暂无工具使用数据")
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding()
             }
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 2)
     }
 
     // MARK: - Growth Keywords Section
 
     private var growthKeywordsSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
-            sectionHeader(title: "成长关键词", icon: "tag.fill", color: AppTheme.warmGold)
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            sectionHeader(title: "成长关键词", icon: "tag.fill", color: Color.xuanApricotDark)
 
             if let stats = viewModel.stats, !stats.growthKeywords.isEmpty {
-                KeywordFlowLayout(spacing: AppSpacing.sm) {
+                KeywordFlowLayout(spacing: XuanSpacing.sm) {
                     ForEach(stats.growthKeywords, id: \.self) { keyword in
                         keywordChip(keyword)
                     }
@@ -224,135 +224,135 @@ struct CCGrowthReportView: View {
                 CCSkeletonCard()
             } else {
                 Text("暂无关键词")
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 2)
     }
 
     private func keywordChip(_ keyword: String) -> some View {
         let colors: [Color] = [
-            AppTheme.warmPurple.opacity(0.3), AppTheme.accentMint.opacity(0.3), AppTheme.warmPink.opacity(0.3),
-            AppTheme.primaryMuted, AppTheme.warmGold.opacity(0.6), Color.blue.opacity(0.3),
+            Color(hex: "A085C6").opacity(0.3), Color.xuanMint.opacity(0.3), Color.xuanPink.opacity(0.3),
+            Color.xuanApricot.opacity(0.6), Color.xuanApricotDark.opacity(0.6), Color.blue.opacity(0.3),
         ]
         let color = colors[abs(keyword.hashValue) % colors.count]
 
         return Text(keyword)
-            .font(AppFont.caption)
-            .foregroundColor(AppTheme.textPrimary)
-            .padding(.horizontal, AppSpacing.md)
-            .padding(.vertical, AppSpacing.xs + 2)
+            .font(XuanFont.bodyM)
+            .foregroundColor(Color.xuanTextPrimary)
+            .padding(.horizontal, XuanSpacing.md)
+            .padding(.vertical, XuanSpacing.xs + 2)
             .background(color)
-            .cornerRadius(AppRadius.full)
+            .cornerRadius(XuanRadius.full)
     }
 
     // MARK: - Milestone Review Section
 
     private var milestoneReviewSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
-            sectionHeader(title: "里程碑回顾", icon: "flag.fill", color: AppTheme.primary)
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            sectionHeader(title: "里程碑回顾", icon: "flag.fill", color: Color.xuanApricot)
 
             let periodMilestones = viewModel.periodMilestones
             if !periodMilestones.isEmpty {
-                VStack(spacing: AppSpacing.sm) {
+                VStack(spacing: XuanSpacing.sm) {
                     ForEach(periodMilestones) { milestone in
-                        HStack(spacing: AppSpacing.md) {
+                        HStack(spacing: XuanSpacing.md) {
                             Image(systemName: milestone.type.iconName)
                                 .font(.system(size: 14))
                                 .foregroundColor(milestoneTypeColor(milestone.type))
                                 .frame(width: 28, height: 28)
                                 .background(milestoneTypeColor(milestone.type).opacity(0.12))
-                                .cornerRadius(AppRadius.sm)
+                                .cornerRadius(XuanRadius.sm)
 
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(milestone.title)
-                                    .font(AppFont.footnote)
+                                    .font(XuanFont.bodyS)
                                     .fontWeight(.medium)
-                                    .foregroundColor(AppTheme.textPrimary)
+                                    .foregroundColor(Color.xuanTextPrimary)
                                 Text(milestone.description)
-                                    .font(AppFont.caption)
-                                    .foregroundColor(AppTheme.textSecondary)
+                                    .font(XuanFont.bodyM)
+                                    .foregroundColor(Color.xuanTextSecondary)
                             }
 
                             Spacer()
                         }
-                        .padding(AppSpacing.sm)
-                        .background(AppTheme.surface.opacity(0.5))
-                        .cornerRadius(AppRadius.sm)
+                        .padding(XuanSpacing.sm)
+                        .background(Color.xuanSurface.opacity(0.5))
+                        .cornerRadius(XuanRadius.sm)
                     }
                 }
             } else if viewModel.isLoading {
                 CCSkeletonList(count: 3)
             } else {
                 Text("本周期暂无里程碑")
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding()
             }
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 2)
     }
 
     private func milestoneTypeColor(_ type: CCMilestoneType) -> Color {
         switch type {
-        case .streak:    return AppTheme.warmGold
-        case .emotion:   return AppTheme.warmPurple
-        case .tool:      return AppTheme.accentMint
-        case .community: return AppTheme.warmPink
-        case .personal:  return AppTheme.primary
+        case .streak:    return Color.xuanApricotDark
+        case .emotion:   return Color(hex: "A085C6")
+        case .tool:      return Color.xuanMint
+        case .community: return Color.xuanPink
+        case .personal:  return Color.xuanApricot
         }
     }
 
     // MARK: - AI Insight Section
 
     private var aiInsightSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
-            sectionHeader(title: "AI 洞察", icon: "sparkles", color: AppTheme.warmGold)
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            sectionHeader(title: "AI 洞察", icon: "sparkles", color: Color.xuanApricotDark)
 
             let insights = viewModel.periodInsights
             if !insights.isEmpty {
-                VStack(spacing: AppSpacing.sm) {
+                VStack(spacing: XuanSpacing.sm) {
                     ForEach(Array(insights.enumerated()), id: \.offset) { _, insight in
-                        HStack(alignment: .top, spacing: AppSpacing.md) {
+                        HStack(alignment: .top, spacing: XuanSpacing.md) {
                             Image(systemName: "lightbulb.fill")
                                 .font(.system(size: 14))
-                                .foregroundColor(AppTheme.warmGold)
+                                .foregroundColor(Color.xuanApricotDark)
                                 .frame(width: 24, height: 24)
                                 .padding(4)
 
                             Text(insight)
-                                .font(AppFont.footnote)
-                                .foregroundColor(AppTheme.textSecondary)
+                                .font(XuanFont.bodyS)
+                                .foregroundColor(Color.xuanTextSecondary)
                                 .lineSpacing(2)
 
                             Spacer()
                         }
-                        .padding(AppSpacing.md)
-                        .background(AppTheme.warmGold.opacity(0.6).opacity(0.3))
-                        .cornerRadius(AppRadius.sm)
+                        .padding(XuanSpacing.md)
+                        .background(Color.xuanApricotDark.opacity(0.6).opacity(0.3))
+                        .cornerRadius(XuanRadius.sm)
                     }
                 }
             } else if viewModel.isLoading {
                 CCSkeletonCard()
             } else {
                 Text("暂无AI洞察")
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding()
             }
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 2)
     }
 
@@ -363,20 +363,20 @@ struct CCGrowthReportView: View {
             // Share report as image
             shareReport()
         }) {
-            HStack(spacing: AppSpacing.sm) {
+            HStack(spacing: XuanSpacing.sm) {
                 Image(systemName: "square.and.arrow.up")
                     .font(.system(size: 16))
                 Text("分享成长报告")
-                    .font(AppFont.body.weight(.medium))
+                    .font(XuanFont.bodyLMedium)
                     .fontWeight(.medium)
             }
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, AppSpacing.md)
-            .background(AppTheme.primary)
-            .cornerRadius(AppRadius.md)
+            .padding(.vertical, XuanSpacing.md)
+            .background(Color.xuanApricot)
+            .cornerRadius(XuanRadius.md)
         }
-        .padding(.top, AppSpacing.sm)
+        .padding(.top, XuanSpacing.sm)
     }
 
     private func shareReport() {
@@ -387,19 +387,19 @@ struct CCGrowthReportView: View {
     // MARK: - Helpers
 
     private func sectionHeader(title: String, icon: String, color: Color) -> some View {
-        HStack(spacing: AppSpacing.sm) {
+        HStack(spacing: XuanSpacing.sm) {
             Image(systemName: icon)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(color)
             Text(title)
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
             Spacer()
         }
     }
 
     private var bottomPadding: some View {
-        Color.clear.frame(height: AppSpacing.xl)
+        Color.clear.frame(height: XuanSpacing.xl)
     }
 }
 

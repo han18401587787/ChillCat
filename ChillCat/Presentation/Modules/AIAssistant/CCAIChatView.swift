@@ -31,7 +31,7 @@ struct AIChatView: View {
                     inputArea
                 }
             }
-            .background(AppTheme.background)
+            .background(Color.xuanApricotBg)
             .onTapGesture {
                 isInputFocused = false
             }
@@ -55,13 +55,13 @@ struct AIChatView: View {
 
     // MARK: - AI Companion Header
     private var aiCompanionHeader: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             // AI头像
             ZStack {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [AppTheme.textSecondary, AppTheme.softPurple],
+                            colors: [Color.xuanTextSecondary, Color(hex: "A085C6").opacity(0.5)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -75,15 +75,15 @@ struct AIChatView: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("AI 倾听官")
-                    .font(AppFont.bodyBold)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanTextPrimary)
 
                 HStack(spacing: 4) {
-                    ComponentStyles.PulseIndicator(color: AppTheme.safeGreen)
+                    ComponentStyles.PulseIndicator(color: Color.xuanSuccess)
 
                     Text("在线 · 随时倾听")
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.safeGreen)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanSuccess)
                 }
             }
 
@@ -92,18 +92,18 @@ struct AIChatView: View {
             // 对话轮次指示
             if viewModel.userMessageCount > 0 {
                 Text("第\(min(viewModel.userMessageCount, 10))/10轮")
-                    .font(AppFont.caption2)
+                    .font(XuanFont.caption)
                     .foregroundColor(
                         viewModel.userMessageCount >= 10
-                            ? AppTheme.crisisRed
-                            : AppTheme.textTertiary
+                            ? Color.xuanDanger
+                            : Color.xuanTextTertiary
                     )
-                    .padding(.horizontal, AppSpacing.sm)
+                    .padding(.horizontal, XuanSpacing.sm)
                     .padding(.vertical, 2)
                     .background(
                         viewModel.userMessageCount >= 10
-                            ? AppTheme.crisisRedLight
-                            : AppTheme.backgroundSecondary
+                            ? Color(hex: "FFDAD5")
+                            : Color.xuanSurface
                     )
                     .clipShape(Capsule())
             }
@@ -114,12 +114,12 @@ struct AIChatView: View {
             } label: {
                 Image(systemName: "ellipsis.circle")
                     .font(.system(size: 22))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
             .accessibilityLabel("更多选项")
         }
-        .padding(.horizontal, AppSpacing.lg)
-        .padding(.vertical, AppSpacing.md)
+        .padding(.horizontal, XuanSpacing.lg)
+        .padding(.vertical, XuanSpacing.md)
         .background(.regularMaterial)
     }
 
@@ -127,7 +127,7 @@ struct AIChatView: View {
     private var chatList: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack(spacing: AppSpacing.lg) {
+                LazyVStack(spacing: XuanSpacing.lg) {
                     // 欢迎消息（首次）
                     if viewModel.messages.isEmpty {
                         welcomeMessage
@@ -151,10 +151,10 @@ struct AIChatView: View {
                     }
 
                     // 底部间距
-                    Spacer().frame(height: AppSpacing.sm)
+                    Spacer().frame(height: XuanSpacing.sm)
                 }
-                .padding(.horizontal, AppSpacing.lg)
-                .padding(.vertical, AppSpacing.md)
+                .padding(.horizontal, XuanSpacing.lg)
+                .padding(.vertical, XuanSpacing.md)
             }
             .onChange(of: viewModel.messages.count) { _ in
                 scrollToBottom(proxy: proxy)
@@ -167,14 +167,14 @@ struct AIChatView: View {
 
     // MARK: - Welcome Message
     private var welcomeMessage: some View {
-        VStack(spacing: AppSpacing.lg) {
-            Spacer().frame(height: AppSpacing.xxl)
+        VStack(spacing: XuanSpacing.lg) {
+            Spacer().frame(height: XuanSpacing.xl2)
 
             ZStack {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [AppTheme.textSecondary.opacity(0.2), AppTheme.softPurple.opacity(0.1)],
+                            colors: [Color.xuanTextSecondary.opacity(0.2), Color(hex: "A085C6").opacity(0.5).opacity(0.1)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -183,16 +183,16 @@ struct AIChatView: View {
 
                 Image(systemName: "brain.head.profile")
                     .font(.system(size: 36))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
 
             Text("嗨，我在这里")
-                .font(AppFont.title2)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h2)
+                .foregroundColor(Color.xuanTextPrimary)
 
             Text("无论你想说什么，我都会认真倾听\n这里很安全，你可以做真实的自己")
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
 
@@ -204,14 +204,14 @@ struct AIChatView: View {
 
     // MARK: - Quick Topics
     private var quickTopicsSection: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             Text("或许你想聊聊这些？")
-                .font(AppFont.footnote)
-                .foregroundColor(AppTheme.textMuted)
+                .font(XuanFont.bodyS)
+                .foregroundColor(Color.xuanTextTertiary)
 
             LazyVGrid(
                 columns: [GridItem(.flexible()), GridItem(.flexible())],
-                spacing: AppSpacing.sm
+                spacing: XuanSpacing.sm
             ) {
                 ForEach(viewModel.quickTopics, id: \.self) { topic in
                     Button {
@@ -221,22 +221,22 @@ struct AIChatView: View {
                             Image(systemName: topicIcon(for: topic))
                                 .font(.system(size: 13))
                             Text(topic)
-                                .font(AppFont.footnote)
+                                .font(XuanFont.bodyS)
                                 .lineLimit(1)
                         }
-                        .foregroundColor(AppTheme.textPrimary)
+                        .foregroundColor(Color.xuanTextPrimary)
                         .frame(maxWidth: .infinity)
-                        .padding(.horizontal, AppSpacing.md)
-                        .padding(.vertical, AppSpacing.md)
-                        .background(AppTheme.cardBackground)
-                        .cornerRadius(AppRadius.md)
+                        .padding(.horizontal, XuanSpacing.md)
+                        .padding(.vertical, XuanSpacing.md)
+                        .background(Color.xuanWhite)
+                        .cornerRadius(XuanRadius.md)
                         .xuanCardShadow()
                     }
                     .accessibilityHint("双击发送这个话题")
                 }
             }
         }
-        .padding(.top, AppSpacing.sm)
+        .padding(.top, XuanSpacing.sm)
     }
 
     private func topicIcon(for topic: String) -> String {
@@ -251,19 +251,19 @@ struct AIChatView: View {
 
     // MARK: - Context Warning Banner
     private var contextWarningBanner: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Image(systemName: "exclamationmark.bubble.fill")
                 .font(.system(size: 20))
-                .foregroundColor(AppTheme.warmGlow)
+                .foregroundColor(Color.xuanApricotDark)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("对话较长，是否开始新对话？")
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextPrimary)
 
                 Text("已超过10轮，AI的记忆有限")
-                    .font(AppFont.caption2)
-                    .foregroundColor(AppTheme.textTertiary)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
 
             Spacer()
@@ -271,25 +271,25 @@ struct AIChatView: View {
             Button("新对话") {
                 showNewConversationDialog = true
             }
-            .font(AppFont.footnote)
+            .font(XuanFont.bodyS)
             .foregroundColor(.white)
-            .padding(.horizontal, AppSpacing.md)
-            .padding(.vertical, AppSpacing.xs)
-            .background(AppTheme.primary)
+            .padding(.horizontal, XuanSpacing.md)
+            .padding(.vertical, XuanSpacing.xs)
+            .background(Color.xuanApricot)
             .clipShape(Capsule())
         }
         .padding()
-        .background(AppTheme.warmGlowLight)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .background(Color(hex: "FDF0D5"))
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
         .overlay(
-            RoundedRectangle(cornerRadius: AppRadius.lg)
-                .stroke(AppTheme.warmGlow.opacity(0.2), lineWidth: 1)
+            RoundedRectangle(cornerRadius: XuanRadius.lg)
+                .stroke(Color.xuanApricotDark.opacity(0.2), lineWidth: 1)
         )
     }
 
     // MARK: - Safety Protocol View
     private var safetyProtocolView: some View {
-        VStack(spacing: AppSpacing.xxl) {
+        VStack(spacing: XuanSpacing.xl2) {
             Spacer()
 
             // 安全图标
@@ -298,8 +298,8 @@ struct AIChatView: View {
                     .fill(
                         RadialGradient(
                             colors: [
-                                AppTheme.crisisRedLight.opacity(0.6),
-                                AppTheme.crisisRedLight.opacity(0.1)
+                                Color(hex: "FFDAD5").opacity(0.6),
+                                Color(hex: "FFDAD5").opacity(0.1)
                             ],
                             center: .center,
                             startRadius: 0,
@@ -310,42 +310,42 @@ struct AIChatView: View {
 
                 Image(systemName: "heart.text.square.fill")
                     .font(.system(size: 48))
-                    .foregroundColor(AppTheme.crisisRed)
+                    .foregroundColor(Color.xuanDanger)
             }
 
             // 危机响应文本
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 Text("我们注意到你现在的状态")
-                    .font(AppFont.title2)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h2)
+                    .foregroundColor(Color.xuanTextPrimary)
 
                 Text("你并不孤单，这些资源可能对你有帮助：")
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .multilineTextAlignment(.center)
             }
 
             // 紧急资源
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 SafetyResourceCard(
                     title: "全国心理援助热线",
                     subtitle: "24小时免费咨询",
                     number: "400-161-9995",
-                    color: AppTheme.crisisRed
+                    color: Color.xuanDanger
                 )
 
                 SafetyResourceCard(
                     title: "北京心理危机研究与干预中心",
                     subtitle: "专业危机干预",
                     number: "010-82951332",
-                    color: AppTheme.warmGlow
+                    color: Color.xuanApricotDark
                 )
 
                 SafetyResourceCard(
                     title: "生命热线",
                     subtitle: "希望24热线",
                     number: "400-161-9995",
-                    color: AppTheme.hopeCyan
+                    color: Color(hex: "7CB8B0")
                 )
             }
 
@@ -357,45 +357,45 @@ struct AIChatView: View {
                     Image(systemName: "bubble.left.and.bubble.right")
                     Text("返回对话")
                 }
-                .font(AppFont.bodyBold)
-                .foregroundColor(AppTheme.primary)
-                .padding(.horizontal, AppSpacing.xxl)
-                .padding(.vertical, AppSpacing.md)
+                .font(XuanFont.bodyLBold)
+                .foregroundColor(Color.xuanApricot)
+                .padding(.horizontal, XuanSpacing.xl2)
+                .padding(.vertical, XuanSpacing.md)
                 .background(Color(hex: "F2DBC9"))
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                .clipShape(RoundedRectangle(cornerRadius: XuanRadius.md))
             }
 
             Spacer()
         }
-        .padding(AppSpacing.xl)
-        .background(AppTheme.background)
+        .padding(XuanSpacing.xl)
+        .background(Color.xuanApricotBg)
     }
 
     // MARK: - Typing Indicator with Text
     private var typingIndicatorWithText: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.sm) {
-            HStack(alignment: .top, spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
+            HStack(alignment: .top, spacing: XuanSpacing.sm) {
                 // AI头像小
                 ZStack {
                     Circle()
-                        .fill(AppTheme.textSecondary.opacity(0.3))
+                        .fill(Color.xuanTextSecondary.opacity(0.3))
                         .frame(width: 28, height: 28)
 
                     Image(systemName: "brain.head.profile")
                         .font(.system(size: 14))
-                        .foregroundColor(AppTheme.textSecondary)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
 
                 // 加载文字
-                VStack(alignment: .leading, spacing: AppSpacing.sm) {
+                VStack(alignment: .leading, spacing: XuanSpacing.sm) {
                     Text("正在理解你的感受…")
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanTextSecondary)
 
                     HStack(spacing: 4) {
                         ForEach(0..<3) { index in
                             Circle()
-                                .fill(AppTheme.textTertiary)
+                                .fill(Color.xuanTextTertiary)
                                 .frame(width: 7, height: 7)
                                 .opacity(viewModel.typingDotOpacity[index] ? 1 : 0.3)
                                 .animation(
@@ -406,10 +406,10 @@ struct AIChatView: View {
                         }
                     }
                 }
-                .padding(.horizontal, AppSpacing.lg)
-                .padding(.vertical, AppSpacing.md)
-                .background(AppTheme.backgroundSecondary)
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+                .padding(.horizontal, XuanSpacing.lg)
+                .padding(.vertical, XuanSpacing.md)
+                .background(Color.xuanSurface)
+                .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
 
                 Spacer()
             }
@@ -419,8 +419,8 @@ struct AIChatView: View {
 
             // "AI陪伴"标识
             Text("AI陪伴")
-                .font(AppFont.caption2)
-                .foregroundColor(AppTheme.textTertiary)
+                .font(XuanFont.caption)
+                .foregroundColor(Color.xuanTextTertiary)
                 .padding(.leading, 36)
         }
     }
@@ -428,27 +428,27 @@ struct AIChatView: View {
     // MARK: - Input Area
     private var inputArea: some View {
         VStack(spacing: 0) {
-            Divider().foregroundColor(AppTheme.border)
+            Divider().foregroundColor(Color.xuanBorder)
 
-            HStack(alignment: .bottom, spacing: AppSpacing.sm) {
+            HStack(alignment: .bottom, spacing: XuanSpacing.sm) {
                 // 语音输入按钮
                 Button {
                     showVoiceRecorder = true
                 } label: {
                     Image(systemName: "mic.fill")
                         .font(.system(size: 22))
-                        .foregroundColor(AppTheme.textSecondary)
+                        .foregroundColor(Color.xuanTextSecondary)
                         .frame(width: 44, height: 44)
                 }
                 .accessibilityLabel("语音输入")
 
                 // 文字输入框
                 TextField("说说你的想法...", text: $viewModel.inputText, axis: .vertical)
-                    .font(AppFont.body)
-                    .padding(.horizontal, AppSpacing.lg)
-                    .padding(.vertical, AppSpacing.sm)
-                    .background(AppTheme.cardBackground)
-                    .cornerRadius(AppRadius.lg)
+                    .font(XuanFont.bodyL)
+                    .padding(.horizontal, XuanSpacing.lg)
+                    .padding(.vertical, XuanSpacing.sm)
+                    .background(Color.xuanWhite)
+                    .cornerRadius(XuanRadius.lg)
                     .focused($isInputFocused)
                     .lineLimit(1...5)
 
@@ -461,14 +461,14 @@ struct AIChatView: View {
                         .font(.system(size: 34))
                         .foregroundColor(
                             viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                ? AppTheme.textMuted
-                                : AppTheme.primary
+                                ? Color.xuanTextTertiary
+                                : Color.xuanApricot
                         )
                 }
                 .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
-            .padding(.horizontal, AppSpacing.md)
-            .padding(.vertical, AppSpacing.sm)
+            .padding(.horizontal, XuanSpacing.md)
+            .padding(.vertical, XuanSpacing.sm)
         }
         .background(.regularMaterial)
     }
@@ -493,7 +493,7 @@ struct AIChatView: View {
                     showVoiceRecorder = false
                 }
             )
-            .padding(.horizontal, AppSpacing.xl)
+            .padding(.horizontal, XuanSpacing.xl)
         }
     }
 
@@ -517,7 +517,7 @@ struct SafetyResourceCard: View {
     let color: Color
 
     var body: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             Circle()
                 .fill(color.opacity(0.15))
                 .frame(width: 40, height: 40)
@@ -529,11 +529,11 @@ struct SafetyResourceCard: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextPrimary)
                 Text(subtitle)
-                    .font(AppFont.caption2)
-                    .foregroundColor(AppTheme.textTertiary)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
 
             Spacer()
@@ -544,17 +544,17 @@ struct SafetyResourceCard: View {
                 }
             } label: {
                 Text(number)
-                    .font(AppFont.footnote)
+                    .font(XuanFont.bodyS)
                     .foregroundColor(color)
-                    .padding(.horizontal, AppSpacing.md)
-                    .padding(.vertical, AppSpacing.xs)
+                    .padding(.horizontal, XuanSpacing.md)
+                    .padding(.vertical, XuanSpacing.xs)
                     .background(color.opacity(0.1))
                     .clipShape(Capsule())
             }
         }
         .padding()
-        .background(AppTheme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .background(Color.xuanSurface)
+        .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
     }
 }
 
@@ -563,7 +563,7 @@ struct ChatBubble: View {
     let message: ChatMessage
 
     var body: some View {
-        HStack(alignment: .top, spacing: AppSpacing.sm) {
+        HStack(alignment: .top, spacing: XuanSpacing.sm) {
             if message.isFromAI {
                 aiAvatar
             } else {
@@ -572,27 +572,27 @@ struct ChatBubble: View {
 
             VStack(alignment: message.isFromAI ? .leading : .trailing, spacing: 4) {
                 Text(message.content)
-                    .font(AppFont.body)
-                    .foregroundColor(message.isFromAI ? AppTheme.textPrimary : .white)
-                    .padding(.horizontal, AppSpacing.lg)
-                    .padding(.vertical, AppSpacing.md)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(message.isFromAI ? Color.xuanTextPrimary : .white)
+                    .padding(.horizontal, XuanSpacing.lg)
+                    .padding(.vertical, XuanSpacing.md)
                     .background(
                         message.isFromAI
-                            ? AnyView(AppTheme.backgroundSecondary)
-                            : AnyView(AppTheme.primary)
+                            ? AnyView(Color.xuanSurface)
+                            : AnyView(Color.xuanApricot)
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+                    .clipShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
 
                 HStack(spacing: 4) {
                     Text(message.timestamp.formatted(date: .abbreviated, time: .shortened))
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textTertiary)
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanTextTertiary)
 
                     // "AI陪伴"标识在AI消息下方
                     if message.isFromAI {
                         Text("· AI陪伴")
-                            .font(AppFont.caption2)
-                            .foregroundColor(AppTheme.textTertiary)
+                            .font(XuanFont.caption)
+                            .foregroundColor(Color.xuanTextTertiary)
                     }
                 }
             }
@@ -608,12 +608,12 @@ struct ChatBubble: View {
     private var aiAvatar: some View {
         ZStack {
             Circle()
-                .fill(AppTheme.textSecondary.opacity(0.2))
+                .fill(Color.xuanTextSecondary.opacity(0.2))
                 .frame(width: 28, height: 28)
 
             Image(systemName: "brain.head.profile")
                 .font(.system(size: 14))
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
         }
         .accessibilityHidden(true)
     }

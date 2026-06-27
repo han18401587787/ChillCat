@@ -16,24 +16,24 @@ struct CCMeditationPlayerView: View {
     private let timerOptions = [0, 15, 30, 60]
 
     var body: some View {
-        VStack(spacing: AppSpacing.xl) {
+        VStack(spacing: XuanSpacing.xl) {
             Spacer().frame(height: 20)
 
             // 方形封面
             coverImage
 
             // 标题
-            VStack(spacing: AppSpacing.xs) {
+            VStack(spacing: XuanSpacing.xs) {
                 Text(session.title)
                     .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                 Text(session.category.subtitle)
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
 
             // 进度条 + 时间
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 Slider(
                     value: isDragging ? $dragTime : $viewModel.currentTime,
                     in: 0...max(viewModel.duration, 1),
@@ -43,26 +43,26 @@ struct CCMeditationPlayerView: View {
                         else { viewModel.seek(to: dragTime) }
                     }
                 )
-                .accentColor(AppTheme.accentMint)
+                .accentColor(Color.xuanMint)
                 .disabled(viewModel.isLoading || viewModel.duration <= 0)
 
                 HStack {
                     Text(formatTime(isDragging ? dragTime : viewModel.currentTime))
                         .font(.system(size: 13, design: .monospaced))
-                        .foregroundColor(AppTheme.textSecondary)
+                        .foregroundColor(Color.xuanTextSecondary)
                     Spacer()
                     Text(formatTime(viewModel.duration))
                         .font(.system(size: 13, design: .monospaced))
-                        .foregroundColor(AppTheme.textMuted)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
             }
-            .padding(.horizontal, AppSpacing.xxl)
+            .padding(.horizontal, XuanSpacing.xl2)
 
             // 播放/暂停 大按钮
             Button(action: { viewModel.togglePlayPause() }) {
                 ZStack {
                     Circle()
-                        .fill(AppTheme.accentMint.opacity(0.12))
+                        .fill(Color.xuanMint.opacity(0.12))
                         .frame(width: 88, height: 88)
 
                     if viewModel.isLoading {
@@ -71,19 +71,19 @@ struct CCMeditationPlayerView: View {
                     } else {
                         Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
                             .font(.system(size: 36))
-                            .foregroundColor(AppTheme.accentMint)
+                            .foregroundColor(Color.xuanMint)
                     }
                 }
             }
             .disabled(viewModel.isLoading)
 
             // 定时关闭
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 Text("定时关闭")
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textMuted)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextTertiary)
 
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     timerChip(label: "不限", minutes: 0)
                     timerChip(label: "15分钟", minutes: 15)
                     timerChip(label: "30分钟", minutes: 30)
@@ -94,24 +94,24 @@ struct CCMeditationPlayerView: View {
             // 提示文字
             if let error = viewModel.errorMessage {
                 Text(error)
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.error)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanDanger)
             } else if viewModel.isLoading {
                 Text("正在准备音频...")
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
             } else {
                 hintText
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textMuted)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextTertiary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, AppSpacing.xxl)
+                    .padding(.horizontal, XuanSpacing.xl2)
             }
 
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .navigationTitle(session.title)
         .navigationBarTitleDisplayMode(.inline)
         .onDisappear { viewModel.stop() }
@@ -121,13 +121,13 @@ struct CCMeditationPlayerView: View {
     // MARK: - 方形封面
     private var coverImage: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: AppRadius.lg)
+            RoundedRectangle(cornerRadius: XuanRadius.lg)
                 .fill(
                     LinearGradient(
                         colors: [
                             Color(hex: session.category.themeColor).opacity(0.3),
                             Color(hex: session.category.themeColor).opacity(0.1),
-                            AppTheme.background
+                            Color.xuanApricotBg
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -135,7 +135,7 @@ struct CCMeditationPlayerView: View {
                 )
                 .frame(width: 200, height: 200)
 
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: XuanSpacing.md) {
                 Image(systemName: session.category.iconName)
                     .font(.system(size: 48))
                     .foregroundColor(Color(hex: session.category.themeColor))
@@ -163,16 +163,16 @@ struct CCMeditationPlayerView: View {
     private func timerChip(label: String, minutes: Int) -> some View {
         Button(action: { timerOption = minutes }) {
             Text(label)
-                .font(AppFont.caption2)
-                .foregroundColor(timerOption == minutes ? .white : AppTheme.textSecondary)
-                .padding(.horizontal, AppSpacing.md)
-                .padding(.vertical, AppSpacing.xs)
+                .font(XuanFont.caption)
+                .foregroundColor(timerOption == minutes ? .white : Color.xuanTextSecondary)
+                .padding(.horizontal, XuanSpacing.md)
+                .padding(.vertical, XuanSpacing.xs)
                 .background(
                     timerOption == minutes
-                        ? AppTheme.accentMint
-                        : AppTheme.surface
+                        ? Color.xuanMint
+                        : Color.xuanSurface
                 )
-                .cornerRadius(AppRadius.full)
+                .cornerRadius(XuanRadius.full)
         }
         .buttonStyle(.plain)
     }

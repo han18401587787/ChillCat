@@ -93,10 +93,7 @@ extension View {
         modifier(CCXuanShadowLG())
     }
 
-    /// 卡片默认阴影
-    func xuanCardShadow() -> some View {
-        modifier(CCXuanCardShadow())
-    }
+    // 注：xuanCardShadow() 已在 DesignTokens.swift 中定义，此处不重复
 
     /// 卡片悬浮阴影（带微上移）
     func xuanCardHoverShadow() -> some View {

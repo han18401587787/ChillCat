@@ -20,16 +20,16 @@ struct CCEmotionDecoderView: View {
     }
 
     private let radarValues: [RadarData] = [
-        RadarData(label: "焦虑", value: 0.6, color: AppTheme.warmPurple),
-        RadarData(label: "平静", value: 0.8, color: AppTheme.accentMint),
-        RadarData(label: "开心", value: 0.5, color: AppTheme.warmGold),
-        RadarData(label: "委屈", value: 0.35, color: AppTheme.warmPink),
-        RadarData(label: "疲惫", value: 0.55, color: AppTheme.info),
+        RadarData(label: "焦虑", value: 0.6, color: Color(hex: "A085C6")),
+        RadarData(label: "平静", value: 0.8, color: Color.xuanMint),
+        RadarData(label: "开心", value: 0.5, color: Color.xuanApricotDark),
+        RadarData(label: "委屈", value: 0.35, color: Color.xuanPink),
+        RadarData(label: "疲惫", value: 0.55, color: Color.xuanInfo),
     ]
 
     var body: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xxl) {
+            VStack(spacing: XuanSpacing.xl2) {
                 // 周期切换
                 periodSwitcher
 
@@ -44,9 +44,9 @@ struct CCEmotionDecoderView: View {
 
                 Spacer(minLength: 40)
             }
-            .padding(AppSpacing.lg)
+            .padding(XuanSpacing.lg)
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .navigationTitle("情绪地图")
         .navigationBarTitleDisplayMode(.large)
     }
@@ -59,99 +59,126 @@ struct CCEmotionDecoderView: View {
                     withAnimation(.easeInOut(duration: 0.2)) { selectedPeriod = period }
                 }) {
                     Text(period.rawValue)
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(selectedPeriod == period ? .white : AppTheme.textSecondary)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(selectedPeriod == period ? .white : Color.xuanTextSecondary)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, AppSpacing.sm)
+                        .padding(.vertical, XuanSpacing.sm)
                         .background(
                             selectedPeriod == period
-                                ? AppTheme.primary
+                                ? Color.xuanApricot
                                 : Color.clear
                         )
-                        .cornerRadius(AppRadius.full)
+                        .cornerRadius(XuanRadius.full)
                 }
             }
         }
         .padding(4)
-        .background(AppTheme.surface)
-        .cornerRadius(AppRadius.full)
+        .background(Color.xuanSurface)
+        .cornerRadius(XuanRadius.full)
     }
 
     // MARK: - 五维雷达图
     private var radarChartSection: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             Text("情绪分布")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            // 雷达图
-            ZStack {
-                // 背景网格 (5边形)
-                ForEach(1...5, id: \.self) { level in
-                    let scale = CGFloat(level) / 5.0
-                    Pentagon()
-                        .stroke(AppTheme.border.opacity(0.5), lineWidth: 1)
-                        .frame(width: 200 * scale, height: 200 * scale)
-                }
-
-                // 数据多边形
-                Pentagon()
-                    .fill(AppTheme.accentMint.opacity(0.2))
-                    .overlay(
-                        Pentagon()
-                            .stroke(AppTheme.accentMint, lineWidth: 2)
-                    )
-                    .frame(width: 200, height: 200)
-                    .scaleEffect(x: 0.65, y: 0.65, anchor: .center)
-
-                // 标签
-                ForEach(Array(radarValues.enumerated()), id: \.element.id) { index, item in
-                    let angle = Double(index) / Double(radarValues.count) * 2 * .pi - .pi / 2
-                    let radius: CGFloat = 120
-                    Text(item.label)
-                        .font(AppFont.caption2)
-                        .foregroundColor(item.color)
-                        .position(
-                            x: 150 + cos(angle) * radius,
-                            y: 150 + sin(angle) * radius
-                        )
-                }
-            }
-            .frame(width: 300, height: 300)
+            radarChartContent
+                .frame(width: 300, height: 300)
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .xuanCardShadow()
+    }
+
+    private var radarChartContent: some View {
+        AnyView(
+            ZStack {
+                radarGridBackground
+                radarDataOverlay
+                radarLabels
+            }
+        )
+    }
+
+    private var radarGridBackground: some View {
+        Group {
+            gridPentagon(level: 1)
+            gridPentagon(level: 2)
+            gridPentagon(level: 3)
+            gridPentagon(level: 4)
+            gridPentagon(level: 5)
+        }
+    }
+
+    private func gridPentagon(level: Int) -> some View {
+        let scale = CGFloat(level) / 5.0
+        return Pentagon()
+            .stroke(Color.xuanBorder.opacity(0.5), lineWidth: 1)
+            .frame(width: 200 * scale, height: 200 * scale)
+    }
+
+    private var radarDataOverlay: some View {
+        AnyView(
+            Pentagon()
+                .fill(Color.xuanMint.opacity(0.2))
+                .overlay(
+                    Pentagon()
+                        .stroke(Color.xuanMint, lineWidth: 2)
+                )
+                .frame(width: 200, height: 200)
+                .scaleEffect(x: 0.65, y: 0.65, anchor: .center)
+        )
+    }
+
+    private var radarLabels: some View {
+        AnyView(
+            ForEach(Array(radarValues.enumerated()), id: \.element.id) { index, item in
+                radarLabelView(index: index, item: item)
+            }
+        )
+    }
+
+    private func radarLabelView(index: Int, item: RadarData) -> some View {
+        let angle = Double(index) / Double(radarValues.count) * 2 * .pi - .pi / 2
+        let radius: CGFloat = 120
+        let xPos: CGFloat = 150 + cos(angle) * radius
+        let yPos: CGFloat = 150 + sin(angle) * radius
+        return Text(item.label)
+            .font(XuanFont.caption)
+            .foregroundColor(item.color)
+            .position(x: xPos, y: yPos)
     }
 
     // MARK: - 5条进度条
     private var progressBarsSection: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             Text("情绪强度")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             ForEach(radarValues) { item in
-                VStack(spacing: AppSpacing.xs) {
+                VStack(spacing: XuanSpacing.xs) {
                     HStack {
                         Circle()
                             .fill(item.color)
                             .frame(width: 8, height: 8)
                         Text(item.label)
-                            .font(AppFont.footnote)
-                            .foregroundColor(AppTheme.textPrimary)
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextPrimary)
                         Spacer()
                         Text("\(Int(item.value * 100))%")
-                            .font(AppFont.caption2)
-                            .foregroundColor(AppTheme.textMuted)
+                            .font(XuanFont.caption)
+                            .foregroundColor(Color.xuanTextTertiary)
                     }
                     GeometryReader { geo in
                         ZStack(alignment: .leading) {
                             RoundedRectangle(cornerRadius: 3)
-                                .fill(AppTheme.surface)
+                                .fill(Color.xuanSurface)
                                 .frame(height: 6)
                             RoundedRectangle(cornerRadius: 3)
                                 .fill(item.color)
@@ -162,53 +189,53 @@ struct CCEmotionDecoderView: View {
                 }
             }
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .xuanCardShadow()
     }
 
     // MARK: - AI 洞察
     private var aiInsightCard: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
-            HStack(spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            HStack(spacing: XuanSpacing.sm) {
                 ZStack {
                     Circle()
-                        .fill(AppTheme.accentMint.opacity(0.15))
+                        .fill(Color.xuanMint.opacity(0.15))
                         .frame(width: 36, height: 36)
                     Image(systemName: "brain.head.profile")
                         .font(.system(size: 16))
-                        .foregroundColor(AppTheme.accentMint)
+                        .foregroundColor(Color.xuanMint)
                 }
                 Text("AI 洞察")
-                    .font(AppFont.title3)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h3)
+                    .foregroundColor(Color.xuanTextPrimary)
             }
 
             Text("本月你的主导情绪是「平静」，焦虑情绪较上周下降 12%。你正在逐渐找到内心的平衡。建议继续保持每日冥想练习。")
-                .font(AppFont.body)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextSecondary)
                 .lineSpacing(6)
 
-            HStack(spacing: AppSpacing.sm) {
-                insightTag("💪 好转中", color: AppTheme.accentMint)
-                insightTag("🧘 推荐冥想", color: AppTheme.warmPurple)
+            HStack(spacing: XuanSpacing.sm) {
+                insightTag("💪 好转中", color: Color.xuanMint)
+                insightTag("🧘 推荐冥想", color: Color(hex: "A085C6"))
             }
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .xuanCardShadow()
     }
 
     private func insightTag(_ text: String, color: Color) -> some View {
         Text(text)
-            .font(AppFont.caption2)
+            .font(XuanFont.caption)
             .foregroundColor(color)
-            .padding(.horizontal, AppSpacing.sm)
+            .padding(.horizontal, XuanSpacing.sm)
             .padding(.vertical, 2)
             .background(color.opacity(0.1))
-            .cornerRadius(AppRadius.full)
+            .cornerRadius(XuanRadius.full)
     }
 }
 

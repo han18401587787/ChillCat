@@ -14,16 +14,16 @@ enum ComponentStyles {
     struct PrimaryButtonStyle: ButtonStyle {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
-                .font(AppFont.bodyBold)
+                .font(XuanFont.bodyLBold)
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .background(
                     configuration.isPressed
                         ? Color(hex: "C49E7D")
-                        : AppTheme.primary
+                        : Color.xuanApricot
                 )
-                .cornerRadius(AppRadius.lg)
+                .cornerRadius(XuanRadius.lg)
                 .shadow(
                     color: Color(hex: "2C2416").opacity(configuration.isPressed ? 0.08 : 0.06),
                     radius: configuration.isPressed ? 4 : 12,
@@ -39,20 +39,20 @@ enum ComponentStyles {
     struct SecondaryButtonStyle: ButtonStyle {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
-                .font(AppFont.bodyBold)
+                .font(XuanFont.bodyLBold)
                 .foregroundColor(
                     configuration.isPressed
                         ? .white
-                        : AppTheme.warmGold
+                        : Color.xuanApricotDark
                 )
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .background(
                     configuration.isPressed
-                        ? AppTheme.primaryDark
+                        ? Color.xuanApricotDark
                         : Color(hex: "F2DBC9")
                 )
-                .cornerRadius(AppRadius.lg)
+                .cornerRadius(XuanRadius.lg)
                 .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
                 .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
         }
@@ -67,7 +67,7 @@ enum ComponentStyles {
                 .frame(width: size, height: size)
                 .background(
                     Circle()
-                        .fill(configuration.isPressed ? Color(hex: "C49E7D") : AppTheme.primary)
+                        .fill(configuration.isPressed ? Color(hex: "C49E7D") : Color.xuanApricot)
                 )
                 .shadow(
                     color: Color(hex: "2C2416").opacity(configuration.isPressed ? 0.08 : 0.10),
@@ -84,8 +84,8 @@ enum ComponentStyles {
     struct TextButtonStyle: ButtonStyle {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
-                .font(AppFont.bodyBold)
-                .foregroundColor(AppTheme.primary)
+                .font(XuanFont.bodyLBold)
+                .foregroundColor(Color.xuanApricot)
                 .opacity(configuration.isPressed ? 0.6 : 1.0)
         }
     }
@@ -97,9 +97,9 @@ enum ComponentStyles {
         @State private var isPressed = false
         func body(content: Content) -> some View {
             content
-                .padding(AppSpacing.lg)
-                .background(isPressed ? Color(hex: "F5F0EB") : AppTheme.cardBackground)
-                .cornerRadius(AppRadius.lg)
+                .padding(XuanSpacing.lg)
+                .background(isPressed ? Color(hex: "F5F0EB") : Color.xuanWhite)
+                .cornerRadius(XuanRadius.lg)
                 .shadow(
                     color: Color(hex: "2C2416").opacity(isPressed ? 0.08 : 0.06),
                     radius: isPressed ? 4 : 12,
@@ -115,7 +115,7 @@ enum ComponentStyles {
         let color: Color
         func body(content: Content) -> some View {
             content
-                .padding(AppSpacing.lg)
+                .padding(XuanSpacing.lg)
                 .background(
                     LinearGradient(
                         colors: [color.opacity(0.15), color.opacity(0.05)],
@@ -123,9 +123,9 @@ enum ComponentStyles {
                         endPoint: .bottomTrailing
                     )
                 )
-                .cornerRadius(AppRadius.lg)
+                .cornerRadius(XuanRadius.lg)
                 .overlay(
-                    RoundedRectangle(cornerRadius: AppRadius.lg)
+                    RoundedRectangle(cornerRadius: XuanRadius.lg)
                         .stroke(color.opacity(0.3), lineWidth: 1)
                 )
         }
@@ -137,14 +137,14 @@ enum ComponentStyles {
     struct InputField: ViewModifier {
         func body(content: Content) -> some View {
             content
-                .font(AppFont.body)
-                .padding(.horizontal, AppSpacing.lg)
-                .padding(.vertical, AppSpacing.md)
-                .background(AppTheme.cardBackground)
-                .cornerRadius(AppRadius.sm)
+                .font(XuanFont.bodyL)
+                .padding(.horizontal, XuanSpacing.lg)
+                .padding(.vertical, XuanSpacing.md)
+                .background(Color.xuanWhite)
+                .cornerRadius(XuanRadius.sm)
                 .overlay(
-                    RoundedRectangle(cornerRadius: AppRadius.sm)
-                        .stroke(AppTheme.border, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: XuanRadius.sm)
+                        .stroke(Color.xuanBorder, lineWidth: 1)
                 )
         }
     }
@@ -153,14 +153,14 @@ enum ComponentStyles {
     struct SearchField: ViewModifier {
         func body(content: Content) -> some View {
             content
-                .font(AppFont.body)
-                .padding(.horizontal, AppSpacing.lg)
-                .padding(.vertical, AppSpacing.md)
-                .background(AppTheme.cardBackground)
-                .cornerRadius(AppRadius.full)
+                .font(XuanFont.bodyL)
+                .padding(.horizontal, XuanSpacing.lg)
+                .padding(.vertical, XuanSpacing.md)
+                .background(Color.xuanWhite)
+                .cornerRadius(XuanRadius.full)
                 .overlay(
-                    RoundedRectangle(cornerRadius: AppRadius.full)
-                        .stroke(AppTheme.border, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: XuanRadius.full)
+                        .stroke(Color.xuanBorder, lineWidth: 1)
                 )
         }
     }
@@ -173,16 +173,16 @@ enum ComponentStyles {
         let isSelected: Bool
         func body(content: Content) -> some View {
             content
-                .font(AppFont.footnote)
+                .font(XuanFont.bodyS)
                 .foregroundColor(isSelected ? .white : color)
-                .padding(.horizontal, AppSpacing.md)
-                .padding(.vertical, AppSpacing.xs)
-                .background(isSelected ? color : AppTheme.cardBackground)
-                .cornerRadius(AppRadius.full)
+                .padding(.horizontal, XuanSpacing.md)
+                .padding(.vertical, XuanSpacing.xs)
+                .background(isSelected ? color : Color.xuanWhite)
+                .cornerRadius(XuanRadius.full)
                 .overlay(
                     isSelected
                         ? nil
-                        : RoundedRectangle(cornerRadius: AppRadius.full).stroke(color, lineWidth: 1)
+                        : RoundedRectangle(cornerRadius: XuanRadius.full).stroke(color, lineWidth: 1)
                 )
         }
     }
@@ -192,12 +192,12 @@ enum ComponentStyles {
         let color: Color
         func body(content: Content) -> some View {
             content
-                .font(AppFont.footnote)
+                .font(XuanFont.bodyS)
                 .foregroundColor(color)
-                .padding(.horizontal, AppSpacing.md)
-                .padding(.vertical, AppSpacing.xs)
+                .padding(.horizontal, XuanSpacing.md)
+                .padding(.vertical, XuanSpacing.xs)
                 .background(color.opacity(0.1))
-                .cornerRadius(AppRadius.full)
+                .cornerRadius(XuanRadius.full)
         }
     }
 
@@ -206,18 +206,18 @@ enum ComponentStyles {
     struct SettingsRow: ViewModifier {
         func body(content: Content) -> some View {
             content
-                .padding(.vertical, AppSpacing.md)
-                .padding(.horizontal, AppSpacing.lg)
-                .background(AppTheme.surface)
+                .padding(.vertical, XuanSpacing.md)
+                .padding(.horizontal, XuanSpacing.lg)
+                .background(Color.xuanSurface)
         }
     }
 
     struct SectionGroup: ViewModifier {
         func body(content: Content) -> some View {
             content
-                .padding(AppSpacing.lg)
-                .background(AppTheme.cardBackground)
-                .cornerRadius(AppRadius.lg)
+                .padding(XuanSpacing.lg)
+                .background(Color.xuanWhite)
+                .cornerRadius(XuanRadius.lg)
         }
     }
 
@@ -272,7 +272,7 @@ enum ComponentStyles {
         func body(content: Content) -> some View {
             content
                 .background(.ultraThinMaterial)
-                .cornerRadius(AppRadius.lg)
+                .cornerRadius(XuanRadius.lg)
         }
     }
 }

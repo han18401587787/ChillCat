@@ -14,17 +14,17 @@ struct CCGrowthArchiveView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
         var body: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xl) {
+            VStack(spacing: XuanSpacing.xl) {
                 statsSummaryCard
                 achievementSection
                 milestoneTimeline
                 reportEntryCard
                 bottomPadding
             }
-            .padding(.horizontal, AppSpacing.lg)
-            .padding(.top, AppSpacing.sm)
+            .padding(.horizontal, XuanSpacing.lg)
+            .padding(.top, XuanSpacing.sm)
         }
-        .background(AppTheme.background.ignoresSafeArea())
+        .background(Color.xuanApricotBg.ignoresSafeArea())
         .navigationTitle("成长档案")
         .navigationBarTitleDisplayMode(.large)
         .refreshable { await viewModel.loadData() }
@@ -34,11 +34,11 @@ struct CCGrowthArchiveView: View {
     // MARK: - Stats Summary Card
 
     private var statsSummaryCard: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             HStack {
                 Text("成长概览")
-                    .font(AppFont.title3)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h3)
+                    .foregroundColor(Color.xuanTextPrimary)
                 Spacer()
                 if viewModel.isLoading {
                     ProgressView()
@@ -46,75 +46,75 @@ struct CCGrowthArchiveView: View {
                 }
             }
 
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: AppSpacing.sm), count: 4), spacing: AppSpacing.sm) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: XuanSpacing.sm), count: 4), spacing: XuanSpacing.sm) {
                 statItem(
                     value: "\(viewModel.stats?.totalCheckins ?? 0)",
                     label: "累计打卡",
                     icon: "calendar.badge.checkmark",
-                    color: AppTheme.primary
+                    color: Color.xuanApricot
                 )
                 statItem(
                     value: "\(viewModel.stats?.emotionTypes ?? 0)",
                     label: "记录情绪",
                     icon: "chart.pie.fill",
-                    color: AppTheme.warmPurple
+                    color: Color(hex: "A085C6")
                 )
                 statItem(
                     value: "\(viewModel.stats?.toolsUsed ?? 0)",
                     label: "使用工具",
                     icon: "hammer.fill",
-                    color: AppTheme.accentMint
+                    color: Color.xuanMint
                 )
                 statItem(
                     value: "\(viewModel.stats?.communityInteractions ?? 0)",
                     label: "社区互动",
                     icon: "heart.fill",
-                    color: AppTheme.warmPink
+                    color: Color.xuanPink
                 )
             }
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 2)
     }
 
     private func statItem(value: String, label: String, icon: String, color: Color) -> some View {
-        VStack(spacing: AppSpacing.xs) {
+        VStack(spacing: XuanSpacing.xs) {
             Image(systemName: icon)
                 .font(.system(size: 18))
                 .foregroundColor(color)
                 .frame(height: 24)
             Text(value)
                 .font(.system(size: 20, weight: .bold))
-                .foregroundColor(AppTheme.textPrimary)
+                .foregroundColor(Color.xuanTextPrimary)
             Text(label)
-                .font(AppFont.caption)
-                .foregroundColor(AppTheme.textSecondary)
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, AppSpacing.sm)
+        .padding(.vertical, XuanSpacing.sm)
         .background(color.opacity(0.08))
-        .cornerRadius(AppRadius.sm)
+        .cornerRadius(XuanRadius.sm)
     }
 
     // MARK: - Achievement Section
 
     private var achievementSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack {
                 Text("成就徽章")
-                    .font(AppFont.title3)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .font(XuanFont.h3)
+                    .foregroundColor(Color.xuanTextPrimary)
                 Spacer()
                 Text("\(viewModel.unlockedCount)/\(viewModel.totalCount)")
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
 
             // Category filter tabs
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     categoryChip(label: "全部", category: nil)
 
                     ForEach(CCAchievementBadge.CCBadgeCategory.allCases, id: \.self) { cat in
@@ -130,8 +130,8 @@ struct CCGrowthArchiveView: View {
                 CCEmptyStateView(title: "暂无徽章", message: "继续使用绪安，解锁更多成就吧")
             } else {
                 LazyVGrid(
-                    columns: Array(repeating: GridItem(.flexible(), spacing: AppSpacing.sm), count: 4),
-                    spacing: AppSpacing.md
+                    columns: Array(repeating: GridItem(.flexible(), spacing: XuanSpacing.sm), count: 4),
+                    spacing: XuanSpacing.md
                 ) {
                     ForEach(viewModel.filteredAchievements) { badge in
                         badgeCell(badge)
@@ -149,13 +149,13 @@ struct CCGrowthArchiveView: View {
             }
         }) {
             Text(label)
-                .font(AppFont.caption)
+                .font(XuanFont.bodyM)
                 .fontWeight(isSelected ? .semibold : .regular)
-                .foregroundColor(isSelected ? .white : AppTheme.textSecondary)
-                .padding(.horizontal, AppSpacing.md)
-                .padding(.vertical, AppSpacing.xs + 2)
-                .background(isSelected ? AppTheme.primary : AppTheme.surface)
-                .cornerRadius(AppRadius.full)
+                .foregroundColor(isSelected ? .white : Color.xuanTextSecondary)
+                .padding(.horizontal, XuanSpacing.md)
+                .padding(.vertical, XuanSpacing.xs + 2)
+                .background(isSelected ? Color.xuanApricot : Color.xuanSurface)
+                .cornerRadius(XuanRadius.full)
         }
     }
 
@@ -164,7 +164,7 @@ struct CCGrowthArchiveView: View {
             ZStack {
                 // Background circle
                 Circle()
-                    .stroke(badge.isUnlocked ? badgeCategoryColor(badge.category) : AppTheme.border, lineWidth: 2)
+                    .stroke(badge.isUnlocked ? badgeCategoryColor(badge.category) : Color.xuanBorder, lineWidth: 2)
                     .frame(width: 52, height: 52)
 
                 if badge.isUnlocked {
@@ -176,7 +176,7 @@ struct CCGrowthArchiveView: View {
                 // Icon
                 Image(systemName: badge.iconName)
                     .font(.system(size: 20))
-                    .foregroundColor(badge.isUnlocked ? badgeCategoryColor(badge.category) : AppTheme.textSecondary)
+                    .foregroundColor(badge.isUnlocked ? badgeCategoryColor(badge.category) : Color.xuanTextSecondary)
 
                 // Progress ring for in-progress badges
                 if !badge.isUnlocked && badge.progress > 0 {
@@ -190,35 +190,35 @@ struct CCGrowthArchiveView: View {
 
             Text(badge.name)
                 .font(.system(size: 11))
-                .foregroundColor(badge.isUnlocked ? AppTheme.textPrimary : AppTheme.textSecondary)
+                .foregroundColor(badge.isUnlocked ? Color.xuanTextPrimary : Color.xuanTextSecondary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, AppSpacing.sm)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.md)
+        .padding(.vertical, XuanSpacing.sm)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
         .opacity(badge.isUnlocked ? 1.0 : 0.6)
     }
 
     private func badgeCategoryColor(_ category: CCAchievementBadge.CCBadgeCategory) -> Color {
         switch category {
-        case .streak:    return AppTheme.warmGold
-        case .emotion:   return AppTheme.warmPurple
-        case .tool:      return AppTheme.accentMint
-        case .community: return AppTheme.warmPink
-        case .milestone: return AppTheme.primary
+        case .streak:    return Color.xuanApricotDark
+        case .emotion:   return Color(hex: "A085C6")
+        case .tool:      return Color.xuanMint
+        case .community: return Color.xuanPink
+        case .milestone: return Color.xuanApricot
         }
     }
 
     // MARK: - Milestone Timeline
 
     private var milestoneTimeline: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("里程碑")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
 
             if viewModel.isLoading {
                 CCSkeletonList(count: 3)
@@ -235,7 +235,7 @@ struct CCGrowthArchiveView: View {
     }
 
     private func milestoneRow(_ milestone: CCMilestone, isLast: Bool) -> some View {
-        HStack(alignment: .top, spacing: AppSpacing.md) {
+        HStack(alignment: .top, spacing: XuanSpacing.md) {
             // Timeline indicator
             VStack(spacing: 0) {
                 Circle()
@@ -248,7 +248,7 @@ struct CCGrowthArchiveView: View {
 
                 if !isLast {
                     Rectangle()
-                        .fill(AppTheme.border)
+                        .fill(Color.xuanBorder)
                         .frame(width: 2)
                 }
             }
@@ -261,30 +261,30 @@ struct CCGrowthArchiveView: View {
                         .foregroundColor(milestoneTypeColor(milestone.type))
 
                     Text(milestone.title)
-                        .font(AppFont.body.weight(.medium))
+                        .font(XuanFont.bodyLMedium)
                         .fontWeight(.medium)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .foregroundColor(Color.xuanTextPrimary)
                 }
 
                 Text(milestone.description)
-                    .font(AppFont.footnote)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
 
                 Text(formattedDate(milestone.date))
-                    .font(AppFont.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
-            .padding(.bottom, isLast ? 0 : AppSpacing.lg)
+            .padding(.bottom, isLast ? 0 : XuanSpacing.lg)
         }
     }
 
     private func milestoneTypeColor(_ type: CCMilestoneType) -> Color {
         switch type {
-        case .streak:    return AppTheme.warmGold
-        case .emotion:   return AppTheme.warmPurple
-        case .tool:      return AppTheme.accentMint
-        case .community: return AppTheme.warmPink
-        case .personal:  return AppTheme.primary
+        case .streak:    return Color.xuanApricotDark
+        case .emotion:   return Color(hex: "A085C6")
+        case .tool:      return Color.xuanMint
+        case .community: return Color.xuanPink
+        case .personal:  return Color.xuanApricot
         }
     }
 
@@ -300,43 +300,43 @@ struct CCGrowthArchiveView: View {
         Button {
             coordinator.navigate(to: .growthReport)
         } label: {
-            HStack(spacing: AppSpacing.md) {
+            HStack(spacing: XuanSpacing.md) {
                 // Icon
                 ZStack {
                     Circle()
-                        .fill(AppTheme.primary.opacity(0.12))
+                        .fill(Color.xuanApricot.opacity(0.12))
                         .frame(width: 48, height: 48)
                     Image(systemName: "doc.text.magnifyingglass")
                         .font(.system(size: 22))
-                        .foregroundColor(AppTheme.primary)
+                        .foregroundColor(Color.xuanApricot)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("成长报告")
-                        .font(AppFont.title3)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.h3)
+                        .foregroundColor(Color.xuanTextPrimary)
                     Text("查看你的情绪趋势、工具使用和AI洞察")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
 
                 Spacer()
 
                 HStack(spacing: 4) {
                     Text("查看完整报告")
-                        .font(AppFont.caption)
-                        .foregroundColor(AppTheme.primary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanApricot)
                     Image(systemName: "chevron.right")
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(AppTheme.primary)
+                        .foregroundColor(Color.xuanApricot)
                 }
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.lg)
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.lg)
             .overlay(
-                RoundedRectangle(cornerRadius: AppRadius.lg)
-                    .stroke(AppTheme.primary.opacity(0.2), lineWidth: 1)
+                RoundedRectangle(cornerRadius: XuanRadius.lg)
+                    .stroke(Color.xuanApricot.opacity(0.2), lineWidth: 1)
             )
         }
         .buttonStyle(.plain)
@@ -345,7 +345,7 @@ struct CCGrowthArchiveView: View {
     // MARK: - Bottom Padding
 
     private var bottomPadding: some View {
-        Color.clear.frame(height: AppSpacing.xl)
+        Color.clear.frame(height: XuanSpacing.xl)
     }
 }
 

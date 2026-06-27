@@ -18,7 +18,7 @@ struct CCPaymentConfirmSheet: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: AppSpacing.lg) {
+                VStack(spacing: XuanSpacing.lg) {
                     headerSection
                     detailSection
                     Spacer()
@@ -38,10 +38,10 @@ struct CCPaymentConfirmSheet: View {
     }
 
     private var headerSection: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.sm) {
             Image(systemName: "crown.fill")
                 .font(.system(size: 40))
-                .foregroundColor(AppTheme.warm)
+                .foregroundColor(Color.xuanApricotDark)
 
             Text(product.type.displayName)
                 .font(.title3)
@@ -50,12 +50,12 @@ struct CCPaymentConfirmSheet: View {
             Text(product.displayPrice)
                 .font(.largeTitle)
                 .fontWeight(.heavy)
-                .foregroundColor(AppTheme.primary)
+                .foregroundColor(Color.xuanApricot)
 
             if let originalPrice = product.originalPrice {
                 Text("原价 \(originalPrice.formatted())")
                     .font(.caption)
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .strikethrough()
             }
 
@@ -65,18 +65,18 @@ struct CCPaymentConfirmSheet: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 2)
-                    .background(AppTheme.error)
-                    .cornerRadius(AppRadius.sm)
+                    .background(Color.xuanDanger)
+                    .cornerRadius(XuanRadius.sm)
             }
         }
-        .padding(AppSpacing.lg)
+        .padding(XuanSpacing.lg)
         .frame(maxWidth: .infinity)
-        .background(AppTheme.surface)
-        .cornerRadius(AppRadius.lg)
+        .background(Color.xuanSurface)
+        .cornerRadius(XuanRadius.lg)
     }
 
     private var detailSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             Text("购买详情")
                 .font(.headline)
 
@@ -94,30 +94,30 @@ struct CCPaymentConfirmSheet: View {
                     detailRow(icon: "checkmark.shield.fill", title: "购买方式", value: "一次性买断")
                 }
             }
-            .padding(AppSpacing.md)
-            .background(AppTheme.surface)
-            .cornerRadius(AppRadius.md)
+            .padding(XuanSpacing.md)
+            .background(Color.xuanSurface)
+            .cornerRadius(XuanRadius.md)
         }
     }
 
     private func detailRow(icon: String, title: String, value: String) -> some View {
         HStack {
             Image(systemName: icon)
-                .foregroundColor(AppTheme.primary)
+                .foregroundColor(Color.xuanApricot)
                 .frame(width: 24)
             Text(title)
                 .font(.subheadline)
-                .foregroundColor(AppTheme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
             Spacer()
             Text(value)
                 .font(.subheadline)
                 .fontWeight(.medium)
-                .foregroundColor(AppTheme.textPrimary)
+                .foregroundColor(Color.xuanTextPrimary)
         }
     }
 
     private var actionButtons: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: XuanSpacing.sm) {
             Button(action: {
                 isProcessing = true
                 Task {
@@ -136,15 +136,15 @@ struct CCPaymentConfirmSheet: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(isProcessing ? AppTheme.primary.opacity(0.5) : AppTheme.primary)
+                .background(isProcessing ? Color.xuanApricot.opacity(0.5) : Color.xuanApricot)
                 .foregroundColor(.white)
-                .cornerRadius(AppRadius.md)
+                .cornerRadius(XuanRadius.md)
             }
             .disabled(isProcessing)
 
             Text("支付即表示您同意服务条款和隐私政策")
                 .font(.caption2)
-                .foregroundColor(AppTheme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
                 .multilineTextAlignment(.center)
         }
     }

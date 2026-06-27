@@ -33,14 +33,14 @@ struct CCEmojiPicker: View {
         VStack(spacing: 0) {
             // Drag indicator
             Capsule()
-                .fill(AppTheme.textMuted.opacity(0.35))
+                .fill(Color.xuanTextTertiary.opacity(0.35))
                 .frame(width: 36, height: 4)
                 .padding(.top, 10)
                 .padding(.bottom, 6)
 
             // 搜索栏
             searchBar
-                .padding(.horizontal, AppSpacing.md)
+                .padding(.horizontal, XuanSpacing.md)
                 .padding(.bottom, 8)
 
             // 情绪类型 Tab 栏
@@ -49,7 +49,7 @@ struct CCEmojiPicker: View {
 
             // 活跃分类指示条
             activeTypeBar
-                .padding(.horizontal, AppSpacing.md)
+                .padding(.horizontal, XuanSpacing.md)
                 .padding(.bottom, 8)
 
             // 最近使用（仅在非搜索模式下显示）
@@ -63,14 +63,14 @@ struct CCEmojiPicker: View {
             // 强度说明（非搜索模式下）
             if searchText.isEmpty {
                 intensityLegend
-                    .padding(.horizontal, AppSpacing.md)
-                    .padding(.top, AppSpacing.sm)
+                    .padding(.horizontal, XuanSpacing.md)
+                    .padding(.top, XuanSpacing.sm)
                     .padding(.bottom, 4)
             }
         }
         .background(
-            RoundedRectangle(cornerRadius: AppRadius.xl)
-                .fill(AppTheme.background)
+            RoundedRectangle(cornerRadius: XuanRadius.xl)
+                .fill(Color.xuanApricotBg)
                 .shadow(color: .black.opacity(0.08), radius: 12, y: -4)
         )
         .offset(y: appeared ? 0 : 300)
@@ -88,11 +88,11 @@ struct CCEmojiPicker: View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 14))
-                .foregroundColor(AppTheme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
 
             TextField("搜索表情...", text: $searchText)
-                .font(AppFont.footnote)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.bodyS)
+                .foregroundColor(Color.xuanTextPrimary)
 
             if !searchText.isEmpty {
                 Button(action: {
@@ -102,15 +102,15 @@ struct CCEmojiPicker: View {
                 }) {
                     Image(systemName: "xmark.circle.fill")
                         .font(.system(size: 14))
-                        .foregroundColor(AppTheme.textMuted)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
             }
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
         .background(
-            RoundedRectangle(cornerRadius: AppRadius.sm)
-                .fill(AppTheme.backgroundSecondary)
+            RoundedRectangle(cornerRadius: XuanRadius.sm)
+                .fill(Color.xuanSurface)
         )
     }
 
@@ -118,12 +118,12 @@ struct CCEmojiPicker: View {
 
     private var typeTabs: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: AppSpacing.xs) {
+            HStack(spacing: XuanSpacing.xs) {
                 ForEach(CCEmotionType.allCases, id: \.self) { type in
                     typeTab(type)
                 }
             }
-            .padding(.horizontal, AppSpacing.md)
+            .padding(.horizontal, XuanSpacing.md)
         }
     }
 
@@ -139,15 +139,15 @@ struct CCEmojiPicker: View {
             VStack(spacing: 3) {
                 Image(systemName: type.iconName)
                     .font(.system(size: 14))
-                    .foregroundColor(isSelected ? type.color : AppTheme.textMuted)
+                    .foregroundColor(isSelected ? type.color : Color.xuanTextTertiary)
                 Text(type.displayName)
                     .font(.system(size: 10, weight: isSelected ? .semibold : .regular))
-                    .foregroundColor(isSelected ? type.color : AppTheme.textMuted)
+                    .foregroundColor(isSelected ? type.color : Color.xuanTextTertiary)
             }
             .frame(width: 52)
             .padding(.vertical, 6)
             .background(
-                RoundedRectangle(cornerRadius: AppRadius.sm)
+                RoundedRectangle(cornerRadius: XuanRadius.sm)
                     .fill(isSelected ? type.color.opacity(0.1) : Color.clear)
             )
             .animation(.easeInOut(duration: 0.2), value: isSelected)
@@ -157,7 +157,7 @@ struct CCEmojiPicker: View {
     // MARK: - Active Type Bar
 
     private var activeTypeBar: some View {
-        HStack(spacing: AppSpacing.xs) {
+        HStack(spacing: XuanSpacing.xs) {
             ForEach(CCEmotionType.allCases, id: \.self) { type in
                 Rectangle()
                     .fill(selectedType == type && searchText.isEmpty ? type.color : Color.clear)
@@ -175,7 +175,7 @@ struct CCEmojiPicker: View {
             HStack {
                 Text("最近使用")
                     .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(AppTheme.textTertiary)
+                    .foregroundColor(Color.xuanTextTertiary)
 
                 Spacer()
 
@@ -187,18 +187,18 @@ struct CCEmojiPicker: View {
                 }) {
                     Text("清除")
                         .font(.system(size: 10))
-                        .foregroundColor(AppTheme.textMuted)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
             }
-            .padding(.horizontal, AppSpacing.md)
+            .padding(.horizontal, XuanSpacing.md)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: AppSpacing.sm) {
+                HStack(spacing: XuanSpacing.sm) {
                     ForEach(recentEmojis) { emoji in
                         recentEmojiCell(emoji)
                     }
                 }
-                .padding(.horizontal, AppSpacing.md)
+                .padding(.horizontal, XuanSpacing.md)
             }
         }
         .padding(.bottom, 6)
@@ -211,7 +211,7 @@ struct CCEmojiPicker: View {
 
                 Text(emoji.displayName)
                     .font(.system(size: 9))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .lineLimit(1)
             }
             .frame(width: 44)
@@ -226,15 +226,15 @@ struct CCEmojiPicker: View {
                 emptyState
             } else {
                 LazyVGrid(
-                    columns: Array(repeating: GridItem(.flexible(), spacing: AppSpacing.sm), count: 4),
-                    spacing: AppSpacing.md
+                    columns: Array(repeating: GridItem(.flexible(), spacing: XuanSpacing.sm), count: 4),
+                    spacing: XuanSpacing.md
                 ) {
                     ForEach(displayEmojis) { emoji in
                         emotionCell(emoji)
                     }
                 }
-                .padding(.horizontal, AppSpacing.md)
-                .padding(.vertical, AppSpacing.sm)
+                .padding(.horizontal, XuanSpacing.md)
+                .padding(.vertical, XuanSpacing.sm)
             }
         }
         .frame(height: 220)
@@ -244,10 +244,10 @@ struct CCEmojiPicker: View {
         VStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 28))
-                .foregroundColor(AppTheme.textMuted.opacity(0.5))
+                .foregroundColor(Color.xuanTextTertiary.opacity(0.5))
             Text("没有找到匹配的表情")
-                .font(AppFont.footnote)
-                .foregroundColor(AppTheme.textTertiary)
+                .font(XuanFont.bodyS)
+                .foregroundColor(Color.xuanTextTertiary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.top, 40)
@@ -279,21 +279,21 @@ struct CCEmojiPicker: View {
                 // 表情名称
                 Text(emoji.displayName)
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .lineLimit(1)
 
                 // 强度标签
                 intensityBadge(emoji.intensity)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, AppSpacing.sm)
+            .padding(.vertical, XuanSpacing.sm)
             .padding(.horizontal, 4)
             .background(
-                RoundedRectangle(cornerRadius: AppRadius.md)
+                RoundedRectangle(cornerRadius: XuanRadius.md)
                     .fill(emoji.emotionType.color.opacity(isPreviewing ? 0.2 : (isAnimating ? 0.15 : 0.06)))
             )
             .overlay(
-                RoundedRectangle(cornerRadius: AppRadius.md)
+                RoundedRectangle(cornerRadius: XuanRadius.md)
                     .stroke(emoji.emotionType.color.opacity(isPreviewing ? 0.5 : (isAnimating ? 0.4 : 0)), lineWidth: 1.5)
             )
             .animation(.easeInOut(duration: 0.2), value: isAnimating)
@@ -368,25 +368,25 @@ struct CCEmojiPicker: View {
 
         return Text(dots)
             .font(.system(size: 7))
-            .foregroundColor(AppTheme.textTertiary.opacity(0.5))
+            .foregroundColor(Color.xuanTextTertiary.opacity(0.5))
             .tracking(1)
     }
 
     // MARK: - Intensity Legend
 
     private var intensityLegend: some View {
-        HStack(spacing: AppSpacing.md) {
+        HStack(spacing: XuanSpacing.md) {
             ForEach(CCEmotionIntensity.allCases, id: \.self) { intensity in
                 HStack(spacing: 3) {
                     let dots = String(repeating: "●", count: intensity.rawValue)
                     Text(dots)
                         .font(.system(size: 6))
-                        .foregroundColor(AppTheme.textTertiary)
+                        .foregroundColor(Color.xuanTextTertiary)
                         .tracking(0.5)
 
                     Text(intensity.displayName)
                         .font(.system(size: 9))
-                        .foregroundColor(AppTheme.textTertiary)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
             }
         }
@@ -494,24 +494,24 @@ struct CCEmojiPicker_Previews: PreviewProvider {
 
         var body: some View {
             ZStack {
-                AppTheme.background.ignoresSafeArea()
+                Color.xuanApricotBg.ignoresSafeArea()
                 VStack(spacing: 16) {
                     if let emoji = selected {
                         VStack(spacing: 8) {
                             emoji.placeholderView(size: 64)
                             Text(emoji.displayName)
-                                .font(AppFont.title3)
+                                .font(XuanFont.h3)
                             Text(emoji.description)
-                                .font(AppFont.caption)
-                                .foregroundColor(AppTheme.textSecondary)
+                                .font(XuanFont.bodyM)
+                                .foregroundColor(Color.xuanTextSecondary)
                             Text("强度: \(emoji.intensity.displayName)")
-                                .font(AppFont.footnote)
-                                .foregroundColor(AppTheme.textTertiary)
+                                .font(XuanFont.bodyS)
+                                .foregroundColor(Color.xuanTextTertiary)
                         }
                     } else {
                         Text("请选择表情")
-                            .font(AppFont.title3)
-                            .foregroundColor(AppTheme.textTertiary)
+                            .font(XuanFont.h3)
+                            .foregroundColor(Color.xuanTextTertiary)
                     }
                     Button("打开选择器") { withAnimation { show = true } }
                         .buttonStyle(.borderedProminent)

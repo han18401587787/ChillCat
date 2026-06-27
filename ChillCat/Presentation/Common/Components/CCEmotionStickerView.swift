@@ -29,9 +29,9 @@ enum CCLayerDepth: String {
 
     var color: Color {
         switch self {
-        case .surface: return AppTheme.warmPurple   // softPurple
-        case .middle:  return AppTheme.info   // primaryMuted
-        case .deep:    return AppTheme.accentMint    // softGreen
+        case .surface: return Color(hex: "A085C6")   // softPurple
+        case .middle:  return Color.xuanInfo   // primaryMuted
+        case .deep:    return Color.xuanMint    // softGreen
         }
     }
 
@@ -84,17 +84,17 @@ extension CCEmotion {
     /// Returns the mapped theme color for this emotion
     var emotionColor: Color {
         switch colorName {
-        case "softGreen":       return AppTheme.accentMint
-        case "warmLight":       return AppTheme.warmGold
-        case "primaryMuted":    return AppTheme.info
-        case "softPurple":      return AppTheme.warmPurple
-        case "softPink":        return AppTheme.warmPink
-        case "primaryLight":    return AppTheme.info
-        case "error":           return AppTheme.crisisRed
-        case "softPurpleLight": return AppTheme.warmPurple.opacity(0.3)
-        case "warm":            return AppTheme.warmGold
-        case "textMuted":       return AppTheme.textMuted
-        default:                return AppTheme.primaryDark
+        case "softGreen":       return Color.xuanMint
+        case "warmLight":       return Color.xuanApricotDark
+        case "primaryMuted":    return Color.xuanInfo
+        case "softPurple":      return Color(hex: "A085C6")
+        case "softPink":        return Color.xuanPink
+        case "primaryLight":    return Color.xuanInfo
+        case "error":           return Color.xuanDanger
+        case "softPurpleLight": return Color(hex: "A085C6").opacity(0.3)
+        case "warm":            return Color.xuanApricotDark
+        case "textMuted":       return Color.xuanTextTertiary
+        default:                return Color.xuanApricotDark
         }
     }
 }
@@ -185,11 +185,11 @@ struct CCEmotionStickerView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(data.label)
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                 if let desc = data.description {
                     Text(desc)
                         .font(.system(size: 13))
-                        .foregroundColor(AppTheme.textSecondary)
+                        .foregroundColor(Color.xuanTextSecondary)
                         .lineLimit(2)
                 }
             }
@@ -199,7 +199,7 @@ struct CCEmotionStickerView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(AppTheme.background)
+                .fill(Color.xuanApricotBg)
                 .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
         )
         .overlay(
@@ -236,12 +236,12 @@ struct CCEmotionStickerView: View {
 
                 Text(data.label)
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
 
                 if let desc = data.description {
                     Text(desc)
                         .font(.system(size: 13))
-                        .foregroundColor(AppTheme.textSecondary)
+                        .foregroundColor(Color.xuanTextSecondary)
                         .multilineTextAlignment(.center)
                         .lineSpacing(4)
                         .padding(.horizontal, 8)
@@ -273,7 +273,7 @@ struct CCEmotionLayerArrow: View {
                 .font(.system(size: 20, weight: .medium))
                 .offset(y: -8)
         }
-        .foregroundColor(AppTheme.info)
+        .foregroundColor(Color.xuanInfo)
         .scaleEffect(breathing ? 1.15 : 0.9)
         .opacity(breathing ? 1.0 : 0.5)
         .onAppear {
@@ -359,7 +359,7 @@ struct CCEmotionStickerView_Previews: PreviewProvider {
             }
             .padding()
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
     }
 }
 #endif

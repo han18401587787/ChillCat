@@ -16,7 +16,7 @@ struct CCTreeHolePostDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: AppSpacing.lg) {
+            VStack(alignment: .leading, spacing: XuanSpacing.lg) {
                 // Post header
                 HStack {
                     Circle()
@@ -28,25 +28,25 @@ struct CCTreeHolePostDetailView: View {
                     Spacer()
                     Text(post.timeAgo)
                         .font(.system(size: 13))
-                        .foregroundColor(AppTheme.textMuted)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
 
                 // Post content
                 Text(post.content)
                     .font(.system(size: 17))
                     .lineSpacing(6)
-                    .foregroundColor(AppTheme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Divider()
-                    .padding(.vertical, AppSpacing.sm)
+                    .padding(.vertical, XuanSpacing.sm)
 
                 // Resonance section
-                VStack(spacing: AppSpacing.sm) {
+                VStack(spacing: XuanSpacing.sm) {
                     HStack {
                         Text("\(post.formattedResonance) 人共鸣")
                             .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(AppTheme.textPrimary)
+                            .foregroundColor(Color.xuanTextPrimary)
                         Spacer()
                     }
 
@@ -58,11 +58,11 @@ struct CCTreeHolePostDetailView: View {
                             Text(didResonate ? "已共鸣" : "我也有过这种感觉")
                                 .font(.system(size: 15, weight: .medium))
                         }
-                        .foregroundColor(didResonate ? AppTheme.error : AppTheme.primary)
+                        .foregroundColor(didResonate ? Color.xuanDanger : Color.xuanApricot)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
-                        .background(didResonate ? AppTheme.softPink.opacity(0.15) : AppTheme.primary.opacity(0.08))
-                        .cornerRadius(AppRadius.md)
+                        .background(didResonate ? Color.xuanPink.opacity(0.15) : Color.xuanApricot.opacity(0.08))
+                        .cornerRadius(XuanRadius.md)
                     }
 
                     // Resonance replies
@@ -71,29 +71,29 @@ struct CCTreeHolePostDetailView: View {
                     } else if replies.isEmpty {
                         Text("成为第一个表达共鸣的人")
                             .font(.system(size: 14))
-                            .foregroundColor(AppTheme.textMuted)
+                            .foregroundColor(Color.xuanTextTertiary)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, AppSpacing.lg)
+                            .padding(.vertical, XuanSpacing.lg)
                     } else {
-                        VStack(spacing: AppSpacing.sm) {
+                        VStack(spacing: XuanSpacing.sm) {
                             ForEach(replies) { reply in
                                 HStack(alignment: .top, spacing: 10) {
                                     Image(systemName: "heart.fill")
                                         .font(.system(size: 12))
-                                        .foregroundColor(AppTheme.softPink)
+                                        .foregroundColor(Color.xuanPink)
                                         .padding(.top, 2)
                                     Text(reply.content)
                                         .font(.system(size: 14))
-                                        .foregroundColor(AppTheme.textSecondary)
+                                        .foregroundColor(Color.xuanTextSecondary)
                                         .lineSpacing(4)
                                     Spacer()
                                     Text(timeAgo(from: reply.createdAt))
                                         .font(.system(size: 11))
-                                        .foregroundColor(AppTheme.textMuted)
+                                        .foregroundColor(Color.xuanTextTertiary)
                                 }
                                 .padding()
-                                .background(AppTheme.surface)
-                                .cornerRadius(AppRadius.sm)
+                                .background(Color.xuanSurface)
+                                .cornerRadius(XuanRadius.sm)
                             }
                         }
                     }
@@ -101,13 +101,13 @@ struct CCTreeHolePostDetailView: View {
 
                 Text("共鸣墙没有评判，只有温柔理解。")
                     .font(.system(size: 13))
-                    .foregroundColor(AppTheme.textMuted)
-                    .padding(.top, AppSpacing.sm)
+                    .foregroundColor(Color.xuanTextTertiary)
+                    .padding(.top, XuanSpacing.sm)
                     .frame(maxWidth: .infinity)
             }
             .padding()
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .navigationTitle("共鸣详情")
         .sheet(isPresented: $showReplySheet) {
             replySheetView
@@ -122,22 +122,22 @@ struct CCTreeHolePostDetailView: View {
         VStack(spacing: 16) {
             Text("我也有过这种感觉")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(AppTheme.textPrimary)
+                .foregroundColor(Color.xuanTextPrimary)
 
             TextField("说一句鼓励的话吧", text: $replyMessage, axis: .vertical)
                 .font(.system(size: 15))
                 .padding()
-                .background(AppTheme.surface)
-                .cornerRadius(AppRadius.md)
+                .background(Color.xuanSurface)
+                .cornerRadius(XuanRadius.md)
                 .lineLimit(2...4)
 
             HStack(spacing: 12) {
                 Button("取消") { showReplySheet = false }
-                    .foregroundColor(AppTheme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
-                    .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.md)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.md)
 
                 Button(action: {
                     CCHaptic.success()
@@ -167,13 +167,13 @@ struct CCTreeHolePostDetailView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
-                        .background(AppTheme.primary)
-                        .cornerRadius(AppRadius.md)
+                        .background(Color.xuanApricot)
+                        .cornerRadius(XuanRadius.md)
                 }
             }
         }
         .padding()
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
     }
 
     // MARK: - Helpers
@@ -196,16 +196,16 @@ struct CCTreeHolePostDetailView: View {
 
     private func emotionColorFor(_ colorName: String) -> Color {
         switch colorName {
-        case "softGreen": return AppTheme.softGreen
-        case "warmLight": return AppTheme.warmLight
-        case "primaryMuted": return AppTheme.primaryMuted
-        case "softPurple": return AppTheme.softPurple
-        case "softPink": return AppTheme.softPink
-        case "primaryLight": return AppTheme.primaryLight
-        case "error": return AppTheme.error
-        case "softPurpleLight": return AppTheme.softPurpleLight
-        case "warm": return AppTheme.warm
-        default: return AppTheme.primaryMuted
+        case "softGreen": return Color.xuanSuccess
+        case "warmLight": return Color.xuanApricotLight
+        case "primaryMuted": return Color.xuanApricot.opacity(0.6)
+        case "softPurple": return Color(hex: "A085C6").opacity(0.5)
+        case "softPink": return Color.xuanPink
+        case "primaryLight": return Color.xuanApricotLight
+        case "error": return Color.xuanDanger
+        case "softPurpleLight": return Color(hex: "A085C6").opacity(0.25)
+        case "warm": return Color.xuanApricotDark
+        default: return Color.xuanApricot.opacity(0.6)
         }
     }
 }

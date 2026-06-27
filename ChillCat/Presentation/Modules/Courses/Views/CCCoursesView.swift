@@ -5,7 +5,7 @@ struct CCCoursesView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: AppSpacing.lg) {
+            VStack(alignment: .leading, spacing: XuanSpacing.lg) {
                 Text("小课堂").font(.system(size: 24, weight: .bold))
                 switch viewModel.loadState {
                 case .loading:
@@ -23,25 +23,25 @@ struct CCCoursesView: View {
                 }
             }.padding()
         }
-        .background(AppTheme.background).navigationTitle("小课堂")
+        .background(Color.xuanApricotBg).navigationTitle("小课堂")
         .task { await viewModel.loadCourses() }
     }
 
     private var emptyState: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: XuanSpacing.md) {
             Spacer().frame(height: 80)
             Image(systemName: "book.pages")
                 .font(.system(size: 48))
-                .foregroundColor(AppTheme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
             Text("暂无课程")
                 .font(.system(size: 15))
-                .foregroundColor(AppTheme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
         }
         .frame(maxWidth: .infinity)
     }
 
     func categorySection(title: String, icon: String, color: Color, courses: [CCXuanAPI.CourseItem]) -> some View {
-        VStack(alignment: .leading, spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             HStack { Image(systemName: icon).foregroundColor(color); Text(title).font(.system(size: 18, weight: .semibold)) }
             ForEach(courses) { course in
                 NavigationLink(value: CCAppRoute.courseDetail(course)) {
@@ -49,15 +49,15 @@ struct CCCoursesView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(course.title).font(.system(size: 15, weight: .medium))
                             HStack(spacing: 8) {
-                                Text(course.tag).font(.system(size: 11)).foregroundColor(AppTheme.primaryDark)
+                                Text(course.tag).font(.system(size: 11)).foregroundColor(Color.xuanApricotDark)
                                     .padding(.horizontal, 8).padding(.vertical, 2)
-                                    .background(AppTheme.info.opacity(0.3)).cornerRadius(4)
-                                Text("\(course.duration / 60) 分钟").font(.system(size: 11)).foregroundColor(AppTheme.textMuted)
+                                    .background(Color.xuanInfo.opacity(0.3)).cornerRadius(4)
+                                Text("\(course.duration / 60) 分钟").font(.system(size: 11)).foregroundColor(Color.xuanTextTertiary)
                             }
                         }
                         Spacer()
-                        Image(systemName: "chevron.right").font(.system(size: 14)).foregroundColor(AppTheme.textMuted)
-                    }.padding().background(AppTheme.cardBackground).cornerRadius(AppRadius.md)
+                        Image(systemName: "chevron.right").font(.system(size: 14)).foregroundColor(Color.xuanTextTertiary)
+                    }.padding().background(Color.xuanWhite).cornerRadius(XuanRadius.md)
                 }
             }
         }

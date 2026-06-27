@@ -18,7 +18,7 @@ struct CCMeditationView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: AppSpacing.xxl) {
+            VStack(spacing: XuanSpacing.xl2) {
                 // 1. 冥想练习卡片列表
                 meditationSection
 
@@ -28,9 +28,9 @@ struct CCMeditationView: View {
                 // 3. 呼吸训练入口
                 breathingSection
             }
-            .padding(AppSpacing.lg)
+            .padding(XuanSpacing.lg)
         }
-        .background(AppTheme.background)
+        .background(Color.xuanApricotBg)
         .navigationTitle("治愈空间")
         .navigationBarTitleDisplayMode(.large)
         .onDisappear { timerRunning = false; breathing = false }
@@ -46,12 +46,12 @@ struct CCMeditationView: View {
 
     // MARK: - 冥想练习区
     private var meditationSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("冥想练习")
-                .font(AppFont.title2)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h2)
+                .foregroundColor(Color.xuanTextPrimary)
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 ForEach(CCMeditationSession.presets) { session in
                     meditationCard(session: session)
                 }
@@ -61,10 +61,10 @@ struct CCMeditationView: View {
 
     private func meditationCard(session: CCMeditationSession) -> some View {
         NavigationLink(value: CCAppRoute.meditationPlayer(session: session)) {
-            HStack(spacing: AppSpacing.lg) {
+            HStack(spacing: XuanSpacing.lg) {
                 // 左侧图标
                 ZStack {
-                    RoundedRectangle(cornerRadius: AppRadius.md)
+                    RoundedRectangle(cornerRadius: XuanRadius.md)
                         .fill(Color(hex: session.category.themeColor).opacity(0.12))
                         .frame(width: 56, height: 56)
 
@@ -76,11 +76,11 @@ struct CCMeditationView: View {
                 // 中间文字
                 VStack(alignment: .leading, spacing: 4) {
                     Text(session.title)
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(Color.xuanTextPrimary)
                     Text(session.category.subtitle)
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
 
                 Spacer()
@@ -96,21 +96,21 @@ struct CCMeditationView: View {
                         .foregroundColor(Color(hex: session.category.themeColor))
                 }
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.lg)
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.lg)
             .xuanCardShadow()
         }
     }
 
     // MARK: - 治愈音频区
     private var healingAudioSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("治愈音频")
-                .font(AppFont.title2)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h2)
+                .foregroundColor(Color.xuanTextPrimary)
 
-            VStack(spacing: AppSpacing.sm) {
+            VStack(spacing: XuanSpacing.sm) {
                 audioCard(
                     type: .rain,
                     title: "白噪音·雨声",
@@ -141,10 +141,10 @@ struct CCMeditationView: View {
             selectedAudio = type
             // TODO: 播放对应音频
         }) {
-            HStack(spacing: AppSpacing.lg) {
+            HStack(spacing: XuanSpacing.lg) {
                 // 图标
                 ZStack {
-                    RoundedRectangle(cornerRadius: AppRadius.md)
+                    RoundedRectangle(cornerRadius: XuanRadius.md)
                         .fill(color.opacity(0.12))
                         .frame(width: 56, height: 56)
 
@@ -155,11 +155,11 @@ struct CCMeditationView: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.textPrimary)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(Color.xuanTextPrimary)
                     Text(subtitle)
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
 
                 Spacer()
@@ -176,9 +176,9 @@ struct CCMeditationView: View {
                 }
                 .animation(.easeInOut(duration: 0.2), value: selectedAudio)
             }
-            .padding(AppSpacing.lg)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.lg)
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.lg)
             .xuanCardShadow()
         }
         .buttonStyle(.plain)
@@ -186,21 +186,21 @@ struct CCMeditationView: View {
 
     // MARK: - 呼吸训练区
     private var breathingSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("呼吸训练")
-                .font(AppFont.title2)
-                .foregroundColor(AppTheme.textPrimary)
+                .font(XuanFont.h2)
+                .foregroundColor(Color.xuanTextPrimary)
 
-            VStack(spacing: AppSpacing.lg) {
+            VStack(spacing: XuanSpacing.lg) {
                 // 标题行
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("4-7-8 呼吸法")
-                            .font(AppFont.h3)
-                            .foregroundColor(AppTheme.textPrimary)
+                            .font(XuanFont.h3)
+                            .foregroundColor(Color.xuanTextPrimary)
                         Text("经典放松呼吸法，缓解焦虑")
-                            .font(AppFont.footnote)
-                            .foregroundColor(AppTheme.textSecondary)
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextSecondary)
                     }
                     Spacer()
                 }
@@ -209,7 +209,7 @@ struct CCMeditationView: View {
                 ZStack {
                     // 外圈
                     Circle()
-                        .stroke(AppTheme.accentMint.opacity(0.2), lineWidth: 3)
+                        .stroke(Color.xuanMint.opacity(0.2), lineWidth: 3)
                         .frame(width: 200, height: 200)
 
                     // 进度圈
@@ -217,7 +217,7 @@ struct CCMeditationView: View {
                         .trim(from: 0, to: breathing ? 1 : 0.4)
                         .stroke(
                             LinearGradient(
-                                colors: [AppTheme.accentMint, AppTheme.accentMintDark],
+                                colors: [Color.xuanMint, Color.xuanMintDark],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -228,15 +228,15 @@ struct CCMeditationView: View {
                         .animation(breathing ? .easeInOut(duration: 4).repeatForever() : .default, value: breathing)
 
                     // 中心文字
-                    VStack(spacing: AppSpacing.sm) {
+                    VStack(spacing: XuanSpacing.sm) {
                         Text(breathPhase)
                             .font(.system(size: 28, weight: .light))
-                            .foregroundColor(AppTheme.accentMintDark)
+                            .foregroundColor(Color.xuanMintDark)
 
                         if timerRunning {
                             Text("\(secondsElapsed / 60):\(String(format: "%02d", secondsElapsed % 60))")
-                                .font(AppFont.footnote)
-                                .foregroundColor(AppTheme.textSecondary)
+                                .font(XuanFont.bodyS)
+                                .foregroundColor(Color.xuanTextSecondary)
                         }
                     }
                 }
@@ -247,28 +247,28 @@ struct CCMeditationView: View {
                     timerRunning.toggle()
                     if !breathing { secondsElapsed = 0 }
                 }) {
-                    HStack(spacing: AppSpacing.sm) {
+                    HStack(spacing: XuanSpacing.sm) {
                         Image(systemName: breathing ? "stop.fill" : "play.fill")
                             .font(.system(size: 16))
                         Text(breathing ? "结束练习" : "开始练习")
-                            .font(AppFont.buttonLabel)
+                            .font(XuanFont.bodyLMedium)
                     }
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(
                         LinearGradient(
-                            colors: [AppTheme.accentMint, AppTheme.accentMintDark],
+                            colors: [Color.xuanMint, Color.xuanMintDark],
                             startPoint: .leading,
                             endPoint: .trailing
                         )
                     )
-                    .cornerRadius(AppRadius.lg)
+                    .cornerRadius(XuanRadius.lg)
                 }
             }
-            .padding(AppSpacing.xl)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.lg)
+            .padding(XuanSpacing.xl)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.lg)
             .xuanCardShadow()
         }
     }
