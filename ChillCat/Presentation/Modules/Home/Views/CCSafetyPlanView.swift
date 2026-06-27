@@ -177,10 +177,10 @@ struct CCSafetyPlanView: View {
                     Text("添加安抚策略")
                         .font(AppFont.body)
                 }
-                .foregroundColor(Color(hex: "66BB6A"))
+                .foregroundColor(AppTheme.accentMint)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, AppSpacing.sm)
-                .background(Color(hex: "66BB6A").opacity(0.08))
+                .background(AppTheme.accentMint.opacity(0.08))
                 .cornerRadius(AppRadius.sm)
             }
         }
@@ -195,7 +195,7 @@ struct CCSafetyPlanView: View {
             }) {
                 Image(systemName: item.wrappedValue.isChecked ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundColor(item.wrappedValue.isChecked ? Color(hex: "66BB6A") : AppTheme.textSecondary)
+                    .foregroundColor(item.wrappedValue.isChecked ? AppTheme.accentMint : AppTheme.textSecondary)
             }
 
             Text(item.wrappedValue.text)

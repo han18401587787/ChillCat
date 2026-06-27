@@ -14,7 +14,7 @@ struct CCDataManagementView: View {
                     }
                     Spacer()
                     Button("导出") { viewModel.exportMoodDiary() }
-                        .font(.system(size: 13)).foregroundColor(Color(hex: "5A7A8A"))
+                        .font(.system(size: 13)).foregroundColor(AppTheme.primaryDark)
                 }
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
@@ -24,7 +24,7 @@ struct CCDataManagementView: View {
                     }
                     Spacer()
                     Button("导出") { viewModel.exportVoiceMemo() }
-                        .font(.system(size: 13)).foregroundColor(Color(hex: "5A7A8A"))
+                        .font(.system(size: 13)).foregroundColor(AppTheme.primaryDark)
                 }
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
@@ -34,7 +34,7 @@ struct CCDataManagementView: View {
                     }
                     Spacer()
                     Button("导出") { viewModel.exportTreeHolePosts() }
-                        .font(.system(size: 13)).foregroundColor(Color(hex: "5A7A8A"))
+                        .font(.system(size: 13)).foregroundColor(AppTheme.primaryDark)
                 }
             } header: { Text("数据存储") }
 
@@ -42,7 +42,7 @@ struct CCDataManagementView: View {
                 Button("清除缓存") { viewModel.clearCache() }
                     .foregroundColor(AppTheme.textPrimary)
                 Button("导出所有数据") { viewModel.exportAllData() }
-                    .foregroundColor(Color(hex: "5A7A8A"))
+                    .foregroundColor(AppTheme.primaryDark)
             }
 
             Section {

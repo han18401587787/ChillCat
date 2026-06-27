@@ -494,7 +494,7 @@ struct CCEmojiPicker_Previews: PreviewProvider {
 
         var body: some View {
             ZStack {
-                Color(hex: "F9F6F2").ignoresSafeArea()
+                AppTheme.background.ignoresSafeArea()
                 VStack(spacing: 16) {
                     if let emoji = selected {
                         VStack(spacing: 8) {

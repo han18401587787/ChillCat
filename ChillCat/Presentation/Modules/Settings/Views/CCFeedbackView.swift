@@ -8,7 +8,7 @@ struct CCFeedbackView: View {
             VStack(spacing: AppSpacing.lg) {
                 if viewModel.submitted {
                     VStack(spacing: AppSpacing.md) {
-                        Image(systemName: "checkmark.circle.fill").font(.system(size:64)).foregroundColor(Color(hex:"66BB6A"))
+                        Image(systemName: "checkmark.circle.fill").font(.system(size:64)).foregroundColor(AppTheme.accentMint)
                         Text("感谢反馈！").font(.system(size:22,weight:.bold))
                         Text("我们会认真阅读每一条意见").foregroundColor(AppTheme.textSecondary)
                     }.padding(.top,80)
@@ -33,7 +33,7 @@ struct CCFeedbackView: View {
                         }
                     }
                     .foregroundColor(.white).frame(maxWidth:.infinity).padding(.vertical,14)
-                    .background(viewModel.feedbackContent.isEmpty || viewModel.isSubmitting ? Color.gray : Color(hex:"5A7A8A"))
+                    .background(viewModel.feedbackContent.isEmpty || viewModel.isSubmitting ? Color.gray : AppTheme.primaryDark)
                     .cornerRadius(AppRadius.md)
                     .disabled(viewModel.feedbackContent.isEmpty || viewModel.isSubmitting)
                 }
