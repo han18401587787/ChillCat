@@ -93,13 +93,7 @@ struct OnboardingView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(
-                            LinearGradient(
-                                colors: [AppTheme.primary, AppTheme.primaryDark],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .background(AppTheme.primary)
                         .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
                 }
                 .padding(.horizontal, AppSpacing.xxxl)
@@ -462,13 +456,7 @@ struct OnboardingView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(
-                            LinearGradient(
-                                colors: [AppTheme.primary, AppTheme.primaryDark],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .background(AppTheme.primary)
                         .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
                 }
                 .padding(.horizontal, AppSpacing.xxxl)

@@ -215,15 +215,9 @@ struct CCHomeView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
-                .background(
-                    LinearGradient(
-                        colors: [AppTheme.primary, AppTheme.primaryDark],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
+                .background(AppTheme.primary)
                 .cornerRadius(AppRadius.lg)
-                .shadow(color: AppTheme.primary.opacity(0.25), radius: 10, x: 0, y: 3)
+                .shadow(color: Color(hex: "2C2416").opacity(0.06), radius: 12, x: 0, y: 2)
             }
         }
     }

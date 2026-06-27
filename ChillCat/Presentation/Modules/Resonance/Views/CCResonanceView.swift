@@ -239,15 +239,9 @@ struct CCResonanceView: View {
             .foregroundColor(.white)
             .padding(.horizontal, AppSpacing.xl)
             .padding(.vertical, 12)
-            .background(
-                LinearGradient(
-                    colors: [AppTheme.primary, AppTheme.primaryDark],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-            )
+            .background(AppTheme.primary)
             .cornerRadius(AppRadius.full)
-            .shadow(color: AppTheme.primary.opacity(0.3), radius: 8, x: 0, y: 3)
+            .shadow(color: Color(hex: "2C2416").opacity(0.06), radius: 12, x: 0, y: 2)
         }
         .padding(.trailing, AppSpacing.lg)
         .padding(.bottom, AppSpacing.lg)

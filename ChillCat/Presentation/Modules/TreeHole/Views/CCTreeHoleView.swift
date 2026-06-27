@@ -121,7 +121,7 @@ struct CCTreeHoleView: View {
             }
             .padding(.horizontal, AppSpacing.sm)
             .padding(.vertical, 4)
-            .background(AppTheme.primary.opacity(0.1))
+            .background(Color(hex: "F2DBC9"))
             .cornerRadius(AppRadius.sm)
         }
         .padding(.horizontal)
@@ -187,15 +187,9 @@ struct CCTreeHoleView: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, AppSpacing.xl)
                         .padding(.vertical, 12)
-                        .background(
-                            LinearGradient(
-                                colors: [AppTheme.primary, AppTheme.primaryDark],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .background(AppTheme.primary)
                         .cornerRadius(AppRadius.full)
-                        .shadow(color: AppTheme.primary.opacity(0.3), radius: 8, x: 0, y: 3)
+                        .shadow(color: Color(hex: "2C2416").opacity(0.06), radius: 12, x: 0, y: 2)
                     }
                 }
             }
@@ -274,7 +268,7 @@ struct CCTreeHoleView: View {
                                 .foregroundColor(AppTheme.primary)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
-                                .background(AppTheme.primary.opacity(0.1))
+                                .background(Color(hex: "F2DBC9"))
                                 .cornerRadius(AppRadius.sm)
                         }
 

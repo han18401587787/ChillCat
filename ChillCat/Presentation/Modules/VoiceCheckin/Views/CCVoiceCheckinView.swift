@@ -501,13 +501,7 @@ struct CCVoiceCheckinView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(
-                    LinearGradient(
-                        colors: [AppTheme.primary, AppTheme.primaryDark],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
+                .background(AppTheme.primary)
                 .cornerRadius(AppRadius.lg)
             }
 
@@ -520,11 +514,11 @@ struct CCVoiceCheckinView: View {
                 .foregroundColor(AppTheme.primary)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(AppTheme.primary.opacity(0.08))
+                .background(Color(hex: "F2DBC9"))
                 .cornerRadius(AppRadius.lg)
                 .overlay(
                     RoundedRectangle(cornerRadius: AppRadius.lg)
-                        .stroke(AppTheme.primary.opacity(0.3), lineWidth: 1)
+                        .stroke(Color(hex: "F2DBC9"), lineWidth: 1)
                 )
             }
 

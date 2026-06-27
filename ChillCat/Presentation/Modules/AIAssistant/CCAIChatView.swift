@@ -361,7 +361,7 @@ struct AIChatView: View {
                 .foregroundColor(AppTheme.primary)
                 .padding(.horizontal, AppSpacing.xxl)
                 .padding(.vertical, AppSpacing.md)
-                .background(AppTheme.primary.opacity(0.1))
+                .background(Color(hex: "F2DBC9"))
                 .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
             }
 
@@ -579,13 +579,7 @@ struct ChatBubble: View {
                     .background(
                         message.isFromAI
                             ? AnyView(AppTheme.backgroundSecondary)
-                            : AnyView(
-                                LinearGradient(
-                                    colors: [AppTheme.primary, AppTheme.primaryDark],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
+                            : AnyView(AppTheme.primary)
                     )
                     .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
 
