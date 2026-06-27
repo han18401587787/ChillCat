@@ -19,6 +19,10 @@ final class CCEmotionViewModel {
     var dailyTask: String = "记录一件今天微小的开心事"
     var dailyTaskCompleted: Bool = false
     var quote: String = ""
+    var weeklyProgress: Int = 3  // 本周稳情计划完成天数
+
+    // 首页顶部4个核心情绪
+    var topEmotions: [CCEmotion] = [.happy, .calm, .anxious, .wronged]
 
     private let dailyTaskKey = "CCDailyTaskCompleted"
     private let dailyTaskDateKey = "CCDailyTaskDate"
