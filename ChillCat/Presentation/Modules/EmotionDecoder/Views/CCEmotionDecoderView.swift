@@ -123,7 +123,7 @@ struct CCEmotionDecoderView: View {
         .padding(AppSpacing.lg)
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
-        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, y: 2)
+        .xuanCardShadow()
     }
 
     // MARK: - 5条进度条
@@ -165,7 +165,7 @@ struct CCEmotionDecoderView: View {
         .padding(AppSpacing.lg)
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
-        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, y: 2)
+        .xuanCardShadow()
     }
 
     // MARK: - AI 洞察
@@ -198,7 +198,7 @@ struct CCEmotionDecoderView: View {
         .padding(AppSpacing.lg)
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
-        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, y: 2)
+        .xuanCardShadow()
     }
 
     private func insightTag(_ text: String, color: Color) -> some View {

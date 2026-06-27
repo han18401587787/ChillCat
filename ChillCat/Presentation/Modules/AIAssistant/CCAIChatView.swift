@@ -230,7 +230,7 @@ struct AIChatView: View {
                         .padding(.vertical, AppSpacing.md)
                         .background(AppTheme.cardBackground)
                         .cornerRadius(AppRadius.md)
-                        .shadow(color: Color(hex: "2C2416").opacity(0.03), radius: 4, y: 1)
+                        .xuanCardShadow()
                     }
                     .accessibilityHint("双击发送这个话题")
                 }

@@ -199,7 +199,7 @@ struct CCHomeView: View {
                 .background(AppTheme.cardBackground)
                 .cornerRadius(AppRadius.md)
                 .lineLimit(2...4)
-                .shadow(color: Color(hex: "2C2416").opacity(0.03), radius: 4, y: 1)
+                .xuanCardShadow()
 
             // 打卡按钮
             Button(action: {
