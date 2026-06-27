@@ -12,8 +12,9 @@ enum CCXuanAPI {
     private static let session: Session = {
         let interceptor = XuanAuthInterceptor()
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 15
-        config.timeoutIntervalForResource = 30
+        config.timeoutIntervalForRequest = 30   // 增加到30s
+        config.timeoutIntervalForResource = 60  // 增加到60s
+        config.waitsForConnectivity = true      // iOS 11+ 等待网络恢复
         return Session(
             configuration: config,
             interceptor: interceptor,
@@ -664,13 +665,34 @@ final class XuanAuthInterceptor: RequestInterceptor {
         if let token = keychain["access_token"] {
             req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
+        // 添加 Content-Type
+        if req.value(forHTTPHeaderField: "Content-Type") == nil {
+            req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
         completion(.success(req))
     }
 
     func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
-        guard request.retryCount < 3,
-              let afError = error.asAFError,
-              afError.isResponseValidationError || afError.isSessionTaskError else {
+        // 401 时尝试重新匿名登录获取新 token
+        if let statusCode = request.response?.statusCode, statusCode == 401 {
+            if request.retryCount == 0 {
+                print("🔄 [Auth] 401 自动重试匿名登录...")
+                Task {
+                    do {
+                        let resp = try await CCXuanAPI.anonymousLogin()
+                        keychain["access_token"] = resp.token
+                        print("✅ [Auth] 重试登录成功")
+                        completion(.retry)
+                    } catch {
+                        print("❌ [Auth] 重试登录失败: \(error)")
+                        completion(.doNotRetryWithError(error))
+                    }
+                }
+                return
+            }
+        }
+
+        guard request.retryCount < 2 else {
             completion(.doNotRetry); return
         }
         completion(.retryWithDelay(1.0))
