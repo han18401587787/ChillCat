@@ -12,9 +12,9 @@ enum CCXuanAPI {
     private static let session: Session = {
         let interceptor = XuanAuthInterceptor()
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 30   // 增加到30s
-        config.timeoutIntervalForResource = 60  // 增加到60s
-        config.waitsForConnectivity = true      // iOS 11+ 等待网络恢复
+        config.timeoutIntervalForRequest = 15   // 单个请求超时15s
+        config.timeoutIntervalForResource = 30  // 总资源超时30s
+        // 不使用 waitsForConnectivity — 模拟器中不稳定
         return Session(
             configuration: config,
             interceptor: interceptor,
@@ -710,12 +710,31 @@ final class XuanAuthInterceptor: RequestInterceptor {
                 }
                 return
             }
+            completion(.doNotRetry)
+            return
         }
 
-        guard request.retryCount < 2 else {
+        // 只对连接错误重试1次，超时/取消不重试
+        let nsError = error as NSError
+        if nsError.domain == NSURLErrorDomain {
+            switch nsError.code {
+            case NSURLErrorTimedOut,
+                 NSURLErrorCancelled,
+                 NSURLErrorCannotConnectToHost,
+                 NSURLErrorCannotFindHost,
+                 NSURLErrorDNSLookupFailed,
+                 NSURLErrorNotConnectedToInternet:
+                completion(.doNotRetry)  // 超时/DNS/无网络不重试
+                return
+            default:
+                break
+            }
+        }
+
+        guard request.retryCount < 1 else {
             completion(.doNotRetry); return
         }
-        completion(.retryWithDelay(1.0))
+        completion(.retryWithDelay(0.5))
     }
 }
 
