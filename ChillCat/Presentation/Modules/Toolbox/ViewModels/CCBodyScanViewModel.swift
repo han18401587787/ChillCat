@@ -20,16 +20,16 @@ struct CCBodyRegion: Identifiable {
     let color: Color
 
     static let all: [CCBodyRegion] = [
-        .init(id: "head_top", name: "头顶", question: "注意你的头顶，有什么感觉？", position: CGPoint(x: 0.5, y: 0.05), color: Color(hex: "4A90D9")),
-        .init(id: "face", name: "面部", question: "注意你的面部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.14), color: Color(hex: "6BA5E7")),
-        .init(id: "neck", name: "颈部", question: "注意你的颈部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.21), color: Color(hex: "7ED3B2")),
-        .init(id: "shoulders", name: "肩膀", question: "注意你的肩膀，有什么感觉？", position: CGPoint(x: 0.5, y: 0.26), color: Color(hex: "9B8EC4")),
-        .init(id: "chest", name: "胸部", question: "注意你的胸部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.34), color: Color(hex: "F5A623")),
-        .init(id: "abdomen", name: "腹部", question: "注意你的腹部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.42), color: Color(hex: "E8B8C8")),
-        .init(id: "back", name: "背部", question: "注意你的背部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.36), color: Color(hex: "7ED3B2")),
-        .init(id: "hands", name: "双手", question: "注意你的双手，有什么感觉？", position: CGPoint(x: 0.5, y: 0.55), color: Color(hex: "6BA5E7")),
-        .init(id: "legs", name: "双腿", question: "注意你的双腿，有什么感觉？", position: CGPoint(x: 0.5, y: 0.72), color: Color(hex: "9B8EC4")),
-        .init(id: "feet", name: "脚部", question: "注意你的脚部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.93), color: Color(hex: "4A90D9")),
+        .init(id: "head_top", name: "头顶", question: "注意你的头顶，有什么感觉？", position: CGPoint(x: 0.5, y: 0.05), color: AppTheme.info),
+        .init(id: "face", name: "面部", question: "注意你的面部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.14), color: AppTheme.calmBlue),
+        .init(id: "neck", name: "颈部", question: "注意你的颈部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.21), color: AppTheme.accentMint),
+        .init(id: "shoulders", name: "肩膀", question: "注意你的肩膀，有什么感觉？", position: CGPoint(x: 0.5, y: 0.26), color: AppTheme.warmPurple),
+        .init(id: "chest", name: "胸部", question: "注意你的胸部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.34), color: AppTheme.warning),
+        .init(id: "abdomen", name: "腹部", question: "注意你的腹部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.42), color: AppTheme.warmPink),
+        .init(id: "back", name: "背部", question: "注意你的背部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.36), color: AppTheme.accentMint),
+        .init(id: "hands", name: "双手", question: "注意你的双手，有什么感觉？", position: CGPoint(x: 0.5, y: 0.55), color: AppTheme.calmBlue),
+        .init(id: "legs", name: "双腿", question: "注意你的双腿，有什么感觉？", position: CGPoint(x: 0.5, y: 0.72), color: AppTheme.warmPurple),
+        .init(id: "feet", name: "脚部", question: "注意你的脚部，有什么感觉？", position: CGPoint(x: 0.5, y: 0.93), color: AppTheme.info),
     ]
 }
 

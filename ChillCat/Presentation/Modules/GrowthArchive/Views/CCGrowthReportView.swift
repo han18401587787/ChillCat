@@ -79,7 +79,7 @@ struct CCGrowthReportView: View {
 
     private var emotionTrendSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
-            sectionHeader(title: "情绪趋势", icon: "chart.bar.fill", color: Color(hex: "D4C8E8"))
+            sectionHeader(title: "情绪趋势", icon: "chart.bar.fill", color: AppTheme.warmPurple)
 
             if let stats = viewModel.stats, !stats.topEmotions.isEmpty {
                 // Bar chart using colored rectangles
@@ -137,15 +137,15 @@ struct CCGrowthReportView: View {
 
     private func emotionBarColor(_ emotion: String) -> Color {
         switch emotion {
-        case "平静": return Color(hex: "66BB6A")
-        case "开心": return Color(hex: "C9A063")
-        case "焦虑": return Color(hex: "D4C8E8")
+        case "平静": return AppTheme.accentMint
+        case "开心": return AppTheme.warmGold
+        case "焦虑": return AppTheme.warmPurple
         case "疲惫": return AppTheme.primaryMuted
         case "孤独": return AppTheme.primaryLight
-        case "委屈": return Color(hex: "E8B8C8")
+        case "委屈": return AppTheme.warmPink
         case "烦躁": return Color.red
-        case "迷茫": return Color(hex: "D4C8E8").opacity(0.3)
-        case "易怒": return Color(hex: "8B6F47")
+        case "迷茫": return AppTheme.warmPurple.opacity(0.3)
+        case "易怒": return AppTheme.warmGold
         case "内耗": return AppTheme.textSecondary
         default:     return AppTheme.primary
         }
@@ -155,7 +155,7 @@ struct CCGrowthReportView: View {
 
     private var toolUsageSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
-            sectionHeader(title: "工具使用", icon: "wrench.and.screwdriver.fill", color: Color(hex: "66BB6A"))
+            sectionHeader(title: "工具使用", icon: "wrench.and.screwdriver.fill", color: AppTheme.accentMint)
 
             if let stats = viewModel.stats, !stats.toolUsage.isEmpty {
                 let maxCount = stats.toolUsage.map(\.count).max() ?? 1
@@ -176,7 +176,7 @@ struct CCGrowthReportView: View {
                                         .frame(height: 16)
 
                                     RoundedRectangle(cornerRadius: 4)
-                                        .fill(Color(hex: "66BB6A"))
+                                        .fill(AppTheme.accentMint)
                                         .frame(
                                             width: max(geo.size.width * CGFloat(item.count) / CGFloat(max(maxCount, 1)), 20),
                                             height: 16
@@ -212,7 +212,7 @@ struct CCGrowthReportView: View {
 
     private var growthKeywordsSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
-            sectionHeader(title: "成长关键词", icon: "tag.fill", color: Color(hex: "8B6F47"))
+            sectionHeader(title: "成长关键词", icon: "tag.fill", color: AppTheme.warmGold)
 
             if let stats = viewModel.stats, !stats.growthKeywords.isEmpty {
                 KeywordFlowLayout(spacing: AppSpacing.sm) {
@@ -236,8 +236,8 @@ struct CCGrowthReportView: View {
 
     private func keywordChip(_ keyword: String) -> some View {
         let colors: [Color] = [
-            Color(hex: "D4C8E8").opacity(0.3), Color(hex: "66BB6A").opacity(0.3), Color(hex: "E8B8C8").opacity(0.3),
-            AppTheme.primaryMuted, Color(hex: "8B6F47").opacity(0.6), Color.blue.opacity(0.3),
+            AppTheme.warmPurple.opacity(0.3), AppTheme.accentMint.opacity(0.3), AppTheme.warmPink.opacity(0.3),
+            AppTheme.primaryMuted, AppTheme.warmGold.opacity(0.6), Color.blue.opacity(0.3),
         ]
         let color = colors[abs(keyword.hashValue) % colors.count]
 
@@ -303,10 +303,10 @@ struct CCGrowthReportView: View {
 
     private func milestoneTypeColor(_ type: CCMilestoneType) -> Color {
         switch type {
-        case .streak:    return Color(hex: "8B6F47")
-        case .emotion:   return Color(hex: "D4C8E8")
-        case .tool:      return Color(hex: "66BB6A")
-        case .community: return Color(hex: "E8B8C8")
+        case .streak:    return AppTheme.warmGold
+        case .emotion:   return AppTheme.warmPurple
+        case .tool:      return AppTheme.accentMint
+        case .community: return AppTheme.warmPink
         case .personal:  return AppTheme.primary
         }
     }
@@ -315,7 +315,7 @@ struct CCGrowthReportView: View {
 
     private var aiInsightSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
-            sectionHeader(title: "AI 洞察", icon: "sparkles", color: Color(hex: "8B6F47"))
+            sectionHeader(title: "AI 洞察", icon: "sparkles", color: AppTheme.warmGold)
 
             let insights = viewModel.periodInsights
             if !insights.isEmpty {
@@ -324,7 +324,7 @@ struct CCGrowthReportView: View {
                         HStack(alignment: .top, spacing: AppSpacing.md) {
                             Image(systemName: "lightbulb.fill")
                                 .font(.system(size: 14))
-                                .foregroundColor(Color(hex: "8B6F47"))
+                                .foregroundColor(AppTheme.warmGold)
                                 .frame(width: 24, height: 24)
                                 .padding(4)
 
@@ -336,7 +336,7 @@ struct CCGrowthReportView: View {
                             Spacer()
                         }
                         .padding(AppSpacing.md)
-                        .background(Color(hex: "8B6F47").opacity(0.6).opacity(0.3))
+                        .background(AppTheme.warmGold.opacity(0.6).opacity(0.3))
                         .cornerRadius(AppRadius.sm)
                     }
                 }

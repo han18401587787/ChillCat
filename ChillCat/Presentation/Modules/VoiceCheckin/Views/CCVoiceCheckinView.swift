@@ -114,14 +114,14 @@ struct CCVoiceCheckinView: View {
 
             HStack(spacing: 6) {
                 Circle()
-                    .fill(Color(hex: "E57373"))
+                    .fill(AppTheme.crisisRed)
                     .frame(width: 8, height: 8)
                     .opacity(viewModel.recordingDuration % 2 == 0 ? 1 : 0.3)
                     .animation(.easeInOut(duration: 0.5), value: viewModel.recordingDuration)
 
                 Text("录制中")
                     .font(.system(size: 13))
-                    .foregroundColor(Color(hex: "E57373"))
+                    .foregroundColor(AppTheme.crisisRed)
             }
 
             Spacer().frame(height: AppSpacing.md)
@@ -131,7 +131,7 @@ struct CCVoiceCheckinView: View {
                     .stroke(AppTheme.primaryMuted, lineWidth: 3)
                     .frame(width: 100, height: 100)
                 Circle()
-                    .fill(Color(hex: "E57373"))
+                    .fill(AppTheme.crisisRed)
                     .frame(width: 70, height: 70)
             }
             .scaleEffect(isPressed ? 0.92 : 1.0)
@@ -195,7 +195,7 @@ struct CCVoiceCheckinView: View {
             HStack(spacing: AppSpacing.sm) {
                 Image(systemName: "heart.text.clinic.fill")
                     .font(.system(size: 18))
-                    .foregroundColor(Color(hex: "66BB6A"))
+                    .foregroundColor(AppTheme.accentMint)
                 Text("情绪识别:")
                     .font(.system(size: 15, weight: .medium))
                     .foregroundColor(AppTheme.textPrimary)
@@ -551,7 +551,7 @@ struct CCVoiceCheckinView: View {
                 .frame(width: 100, height: 100)
 
             Circle()
-                .fill(isPressed ? Color(hex: "E57373") : AppTheme.primary)
+                .fill(isPressed ? AppTheme.crisisRed : AppTheme.primary)
                 .frame(width: isPressed ? 70 : 80, height: isPressed ? 70 : 80)
                 .animation(.easeInOut(duration: 0.15), value: isPressed)
 

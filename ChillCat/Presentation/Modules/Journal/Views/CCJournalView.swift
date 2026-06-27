@@ -30,10 +30,10 @@ struct CCJournalView: View {
                             VStack(spacing: 2) {
                                 Text("\(day)").font(.system(size: 13))
                                 if hasEntry {
-                                    Circle().fill(Color(hex: "5A7A8A")).frame(width: 4, height: 4)
+                                    Circle().fill(AppTheme.primaryDark).frame(width: 4, height: 4)
                                 }
                             }.frame(height: 40).frame(maxWidth: .infinity)
-                            .background(hasEntry ? Color(hex: "5A7A8A").opacity(0.1) : Color.clear).cornerRadius(6)
+                            .background(hasEntry ? AppTheme.primaryDark.opacity(0.1) : Color.clear).cornerRadius(6)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 guard hasEntry else { return }
@@ -106,13 +106,24 @@ struct CCJournalView: View {
     }
 
     private func emotionColor(_ name: String) -> Color {
-        let map: [String: String] = ["平静": "66BB6A","开心": "C9A063","疲惫": "7A9AAA","焦虑": "D4C8E8","委屈": "E8B8C8","孤独": "A8C9D7","烦躁": "E57373","迷茫": "D9C8E3","易怒": "8B6F47","内耗": "AAAAAA"]
-        return Color(hex: map[name] ?? "B8D4E3")
+        switch name {
+        case "平静": return AppTheme.accentMint
+        case "开心": return AppTheme.warmGold
+        case "疲惫": return AppTheme.info
+        case "焦虑": return AppTheme.warmPurple
+        case "委屈": return AppTheme.warmPink
+        case "烦躁": return AppTheme.crisisRed
+        case "易怒": return AppTheme.warmGold
+        case "内耗": return AppTheme.textMuted
+        case "孤独": return Color(hex: "A8C9D7")
+        case "迷茫": return Color(hex: "D9C8E3")
+        default: return AppTheme.info
+        }
     }
 
     func statCard(title: String, value: String, bg: Color) -> some View {
         VStack(spacing: 4) {
-            Text(value).font(.system(size: 20, weight: .bold)).foregroundColor(Color(hex: "5A7A8A"))
+            Text(value).font(.system(size: 20, weight: .bold)).foregroundColor(AppTheme.primaryDark)
             Text(title).font(.system(size: 12)).foregroundColor(AppTheme.textSecondary)
         }.frame(maxWidth: .infinity).padding(.vertical, 12).background(bg).cornerRadius(AppRadius.md)
     }

@@ -57,19 +57,19 @@ struct CCGrowthArchiveView: View {
                     value: "\(viewModel.stats?.emotionTypes ?? 0)",
                     label: "记录情绪",
                     icon: "chart.pie.fill",
-                    color: Color(hex: "D4C8E8")
+                    color: AppTheme.warmPurple
                 )
                 statItem(
                     value: "\(viewModel.stats?.toolsUsed ?? 0)",
                     label: "使用工具",
                     icon: "hammer.fill",
-                    color: Color(hex: "66BB6A")
+                    color: AppTheme.accentMint
                 )
                 statItem(
                     value: "\(viewModel.stats?.communityInteractions ?? 0)",
                     label: "社区互动",
                     icon: "heart.fill",
-                    color: Color(hex: "E8B8C8")
+                    color: AppTheme.warmPink
                 )
             }
         }
@@ -204,10 +204,10 @@ struct CCGrowthArchiveView: View {
 
     private func badgeCategoryColor(_ category: CCAchievementBadge.CCBadgeCategory) -> Color {
         switch category {
-        case .streak:    return Color(hex: "8B6F47")
-        case .emotion:   return Color(hex: "D4C8E8")
-        case .tool:      return Color(hex: "66BB6A")
-        case .community: return Color(hex: "E8B8C8")
+        case .streak:    return AppTheme.warmGold
+        case .emotion:   return AppTheme.warmPurple
+        case .tool:      return AppTheme.accentMint
+        case .community: return AppTheme.warmPink
         case .milestone: return AppTheme.primary
         }
     }
@@ -280,10 +280,10 @@ struct CCGrowthArchiveView: View {
 
     private func milestoneTypeColor(_ type: CCMilestoneType) -> Color {
         switch type {
-        case .streak:    return Color(hex: "8B6F47")
-        case .emotion:   return Color(hex: "D4C8E8")
-        case .tool:      return Color(hex: "66BB6A")
-        case .community: return Color(hex: "E8B8C8")
+        case .streak:    return AppTheme.warmGold
+        case .emotion:   return AppTheme.warmPurple
+        case .tool:      return AppTheme.accentMint
+        case .community: return AppTheme.warmPink
         case .personal:  return AppTheme.primary
         }
     }

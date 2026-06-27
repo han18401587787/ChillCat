@@ -79,7 +79,7 @@ struct CCBehavioralActivationView: View {
                         .padding(.vertical, AppSpacing.sm)
                         .background(
                             viewModel.selectedViewMode == mode
-                                ? Color(hex: "8B6F47") : Color.clear
+                                ? AppTheme.warmGold : Color.clear
                         )
                         .cornerRadius(AppRadius.sm)
                 }
@@ -103,12 +103,12 @@ struct CCBehavioralActivationView: View {
                         statBadge(
                             label: "完成",
                             value: "\(viewModel.completedActivities.count)/\(viewModel.plannedActivities.count)",
-                            color: Color(hex: "66BB6A")
+                            color: AppTheme.accentMint
                         )
                         statBadge(
                             label: "完成率",
                             value: "\(Int(viewModel.completionRate * 100))%",
-                            color: Color(hex: "8B6F47")
+                            color: AppTheme.warmGold
                         )
                         statBadge(
                             label: "预期提升",
@@ -227,13 +227,13 @@ struct CCBehavioralActivationView: View {
                         VStack(spacing: AppSpacing.sm) {
                             Text(String(format: "%.1f", viewModel.averageActualBoost))
                                 .font(AppFont.largeTitle)
-                                .foregroundColor(Color(hex: "8B6F47"))
+                                .foregroundColor(AppTheme.warmGold)
                             RoundedRectangle(cornerRadius: 4)
-                                .fill(Color(hex: "8B6F47"))
+                                .fill(AppTheme.warmGold)
                                 .frame(width: 40, height: max(4, CGFloat(viewModel.averageActualBoost) * 20))
                             Text("实际")
                                 .font(AppFont.caption)
-                                .foregroundColor(Color(hex: "8B6F47"))
+                                .foregroundColor(AppTheme.warmGold)
                         }
                     }
                     .frame(height: 220)
@@ -277,7 +277,7 @@ struct CCBehavioralActivationView: View {
                                     .font(AppFont.caption.weight(.medium))
                                     .foregroundColor(
                                         (activity.actualMoodBoost ?? 0) >= activity.expectedMoodBoost
-                                            ? Color(hex: "66BB6A") : Color(hex: "8B6F47")
+                                            ? AppTheme.accentMint : AppTheme.warmGold
                                     )
                             }
                         }
@@ -302,7 +302,7 @@ struct CCBehavioralActivationView: View {
             } label: {
                 Image(systemName: activity.isCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundColor(activity.isCompleted ? Color(hex: "66BB6A") : AppTheme.textSecondary)
+                    .foregroundColor(activity.isCompleted ? AppTheme.accentMint : AppTheme.textSecondary)
             }
 
             // Type icon
@@ -337,7 +337,7 @@ struct CCBehavioralActivationView: View {
                         Text("实际: \(actual)")
                             .font(AppFont.caption)
                             .foregroundColor(
-                                actual >= activity.expectedMoodBoost ? Color(hex: "66BB6A") : Color(hex: "8B6F47")
+                                actual >= activity.expectedMoodBoost ? AppTheme.accentMint : AppTheme.warmGold
                             )
                     }
                 }
@@ -366,7 +366,7 @@ struct CCBehavioralActivationView: View {
         VStack(spacing: AppSpacing.lg) {
             Image(systemName: "sun.max.fill")
                 .font(.system(size: 56))
-                .foregroundColor(Color(hex: "8B6F47").opacity(0.6))
+                .foregroundColor(AppTheme.warmGold.opacity(0.6))
                 .padding(.top, AppSpacing.xl)
 
             Text("还没有计划")
@@ -401,7 +401,7 @@ struct CCBehavioralActivationView: View {
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, AppSpacing.md)
-            .background(Color(hex: "8B6F47"))
+            .background(AppTheme.warmGold)
             .cornerRadius(AppRadius.md)
         }
     }
@@ -474,10 +474,10 @@ struct CCBehavioralActivationView: View {
                         Spacer()
                         Text("\(Int(viewModel.newExpectedMoodBoost))/10")
                             .font(AppFont.body.weight(.medium))
-                            .foregroundColor(Color(hex: "8B6F47"))
+                            .foregroundColor(AppTheme.warmGold)
                     }
                     Slider(value: $viewModel.newExpectedMoodBoost, in: 1...10, step: 1)
-                        .tint(Color(hex: "8B6F47"))
+                        .tint(AppTheme.warmGold)
                 }
 
                 // Scheduled time
@@ -516,7 +516,7 @@ struct CCBehavioralActivationView: View {
                             .padding(.vertical, AppSpacing.md)
                             .background(
                                 viewModel.newActivityName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                    ? AppTheme.textSecondary : Color(hex: "8B6F47")
+                                    ? AppTheme.textSecondary : AppTheme.warmGold
                             )
                             .cornerRadius(AppRadius.md)
                     }
@@ -560,7 +560,7 @@ struct CCBehavioralActivationView: View {
                     Spacer()
                     Text("\(Int(viewModel.ratingValue))/10")
                         .font(AppFont.largeTitle)
-                        .foregroundColor(Color(hex: "66BB6A"))
+                        .foregroundColor(AppTheme.accentMint)
                     Spacer()
                     Text("非常大")
                         .font(AppFont.caption)
@@ -568,7 +568,7 @@ struct CCBehavioralActivationView: View {
                 }
 
                 Slider(value: $viewModel.ratingValue, in: 1...10, step: 1)
-                    .tint(Color(hex: "66BB6A"))
+                    .tint(AppTheme.accentMint)
 
                 Button {
                     viewModel.submitRating()
@@ -578,7 +578,7 @@ struct CCBehavioralActivationView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, AppSpacing.md)
-                        .background(Color(hex: "66BB6A"))
+                        .background(AppTheme.accentMint)
                         .cornerRadius(AppRadius.md)
                 }
             }

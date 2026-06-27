@@ -66,11 +66,11 @@ struct CCGratitudeJournalView: View {
         HStack(spacing: AppSpacing.sm) {
             Image(systemName: "flame.fill")
                 .font(.system(size: 24))
-                .foregroundColor(Color(hex: "8B6F47"))
+                .foregroundColor(AppTheme.warmGold)
             VStack(alignment: .leading, spacing: 2) {
                 Text("连续 \(viewModel.streakCount) 天")
                     .font(AppFont.title1)
-                    .foregroundColor(Color(hex: "8B6F47"))
+                    .foregroundColor(AppTheme.warmGold)
                 Text("坚持感恩记录")
                     .font(AppFont.caption)
                     .foregroundColor(AppTheme.textSecondary)
@@ -82,7 +82,7 @@ struct CCGratitudeJournalView: View {
         .padding(AppSpacing.lg)
         .background(
             RoundedRectangle(cornerRadius: AppRadius.md)
-                .fill(Color(hex: "8B6F47").opacity(0.6).opacity(0.3))
+                .fill(AppTheme.warmGold.opacity(0.6).opacity(0.3))
         )
     }
 
@@ -126,7 +126,7 @@ struct CCGratitudeJournalView: View {
                 reason: $viewModel.thing1Reason,
                 emoji: $viewModel.thing1Emoji,
                 label: "今天发生的第一件好事",
-                color: Color(hex: "66BB6A")
+                color: AppTheme.accentMint
             )
 
             goodThingCard(
@@ -135,7 +135,7 @@ struct CCGratitudeJournalView: View {
                 reason: $viewModel.thing2Reason,
                 emoji: $viewModel.thing2Emoji,
                 label: "第二件好事",
-                color: Color(hex: "8B6F47")
+                color: AppTheme.warmGold
             )
 
             goodThingCard(
@@ -144,7 +144,7 @@ struct CCGratitudeJournalView: View {
                 reason: $viewModel.thing3Reason,
                 emoji: $viewModel.thing3Emoji,
                 label: "第三件好事",
-                color: Color(hex: "D4C8E8")
+                color: AppTheme.warmPurple
             )
         }
     }
@@ -226,7 +226,7 @@ struct CCGratitudeJournalView: View {
             .background(
                 viewModel.canSubmit
                     ? LinearGradient(
-                        colors: [Color(hex: "66BB6A"), Color(hex: "8B6F47")],
+                        colors: [AppTheme.accentMint, AppTheme.warmGold],
                         startPoint: .leading,
                         endPoint: .trailing
                     )

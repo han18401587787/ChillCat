@@ -23,13 +23,13 @@ struct CCPrivacyView: View {
                 Text("用于改善绪安的情绪分析准确度，不包含个人身份信息").font(.system(size: 12)).foregroundColor(AppTheme.textMuted)
             }
             Section("加密") {
-                Label("加密", systemImage: "lock.shield.fill").foregroundColor(Color(hex: "66BB6A"))
+                Label("加密", systemImage: "lock.shield.fill").foregroundColor(AppTheme.accentMint)
                 Text("所有日记和语音数据均已端到端加密存储").font(.system(size: 12)).foregroundColor(AppTheme.textMuted)
             }
             Section {
-                Label("匿名已开启", systemImage: "theatermasks.fill").foregroundColor(Color(hex: "5A7A8A"))
+                Label("匿名已开启", systemImage: "theatermasks.fill").foregroundColor(AppTheme.primaryDark)
                 Button("切换为实名") { viewModel.initiateRealNameFlow() }
-                    .foregroundColor(Color(hex: "E57373"))
+                    .foregroundColor(AppTheme.crisisRed)
             }
         }
         .navigationTitle("隐私设置")

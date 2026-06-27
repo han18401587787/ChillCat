@@ -60,11 +60,11 @@ struct CCMutualAidGroupView: View {
                         .font(.system(size: 12))
                     Text("已加入 \(viewModel.myGroups.count) 个")
                         .font(.system(size: 12))
-                        .foregroundColor(Color(hex: "66BB6A"))
+                        .foregroundColor(AppTheme.accentMint)
                 }
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
-                .background(Color(hex: "66BB6A").opacity(0.1))
+                .background(AppTheme.accentMint.opacity(0.1))
                 .cornerRadius(AppRadius.sm)
             }
         }
@@ -170,12 +170,12 @@ struct CCMutualAidGroupView: View {
                 }) {
                     Text(group.isJoined ? "已加入" : "加入")
                         .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(group.isJoined ? Color(hex: "66BB6A") : AppTheme.primary)
+                        .foregroundColor(group.isJoined ? AppTheme.accentMint : AppTheme.primary)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                         .background(
                             group.isJoined
-                                ? Color(hex: "66BB6A").opacity(0.1)
+                                ? AppTheme.accentMint.opacity(0.1)
                                 : AppTheme.primary.opacity(0.1)
                         )
                         .cornerRadius(AppRadius.sm)
@@ -207,11 +207,11 @@ struct CCMutualAidGroupView: View {
     }
 
     private func iconColor(for iconName: String) -> Color {
-        if iconName.contains("heart") { return Color(hex: "E8B8C8") }
-        if iconName.contains("leaf") { return Color(hex: "66BB6A") }
+        if iconName.contains("heart") { return AppTheme.warmPink }
+        if iconName.contains("leaf") { return AppTheme.accentMint }
         if iconName.contains("wind") { return AppTheme.primary }
-        if iconName.contains("cloud") || iconName.contains("moon") || iconName.contains("rain") { return Color(hex: "D4C8E8") }
-        if iconName.contains("briefcase") { return Color(hex: "8B6F47") }
+        if iconName.contains("cloud") || iconName.contains("moon") || iconName.contains("rain") { return AppTheme.warmPurple }
+        if iconName.contains("briefcase") { return AppTheme.warmGold }
         if iconName.contains("book") { return AppTheme.primaryLight }
         return AppTheme.primary
     }

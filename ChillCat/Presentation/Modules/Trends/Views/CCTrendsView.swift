@@ -40,7 +40,7 @@ struct CCTrendsView: View {
                         ForEach(viewModel.weekData, id: \.0) { (day, count) in
                             VStack(spacing: 4) {
                                 RoundedRectangle(cornerRadius: 4)
-                                    .fill(Color(hex: "B8D4E3")).frame(width: 36, height: max(8, CGFloat(count) * 24))
+                                    .fill(AppTheme.info).frame(width: 36, height: max(8, CGFloat(count) * 24))
                                 Text(day).font(.system(size: 11)).foregroundColor(AppTheme.textSecondary)
                             }
                         }
@@ -59,7 +59,7 @@ struct CCTrendsView: View {
             if !viewModel.isLoading, let s = viewModel.stats, !s.insight.isEmpty {
                 VStack(alignment: .leading, spacing: AppSpacing.sm) {
                     Text("绪安洞察").font(.system(size: 16, weight: .semibold))
-                    insightCard(text: s.insight, color: Color(hex: "D4C8E8"))
+                    insightCard(text: s.insight, color: AppTheme.warmPurple)
                 }
             }
         }
@@ -75,7 +75,7 @@ struct CCTrendsView: View {
             } else {
                 HStack(spacing: AppSpacing.sm) {
                     statBox(value: "\(viewModel.stats?.totalCount ?? 0)", label: "打卡", color: AppTheme.softPurpleLight)
-                    statBox(value: viewModel.stats?.topEmotion ?? "—", label: "主要情绪", color: Color(hex: "66BB6A").opacity(0.25))
+                    statBox(value: viewModel.stats?.topEmotion ?? "—", label: "主要情绪", color: AppTheme.accentMint.opacity(0.25))
                     statBox(value: "\(viewModel.stats?.streakDays ?? 0)", label: "连续", color: AppTheme.primaryMuted)
                 }
             }
@@ -115,7 +115,7 @@ struct CCTrendsView: View {
     // MARK: - Components
     func statBox(value: String, label: String, color: Color) -> some View {
         VStack(spacing: 4) {
-            Text(value).font(.system(size: 24, weight: .bold)).foregroundColor(Color(hex: "5A7A8A"))
+            Text(value).font(.system(size: 24, weight: .bold)).foregroundColor(AppTheme.primaryDark)
             Text(label).font(.system(size: 12)).foregroundColor(AppTheme.textSecondary)
         }
         .frame(maxWidth: .infinity).padding(.vertical, 16)
@@ -124,7 +124,7 @@ struct CCTrendsView: View {
 
     func insightCard(text: String, color: Color) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: "sparkles").foregroundColor(Color(hex: "C9A063"))
+            Image(systemName: "sparkles").foregroundColor(AppTheme.warmGold)
             Text(text).font(.system(size: 14)).foregroundColor(AppTheme.textSecondary).lineSpacing(4)
             Spacer()
         }.padding().background(color.opacity(0.25)).cornerRadius(AppRadius.md)
@@ -132,7 +132,7 @@ struct CCTrendsView: View {
 
     func growthRow(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: icon).font(.system(size: 20)).foregroundColor(Color(hex: "5A7A8A")).frame(width: 40)
+            Image(systemName: icon).font(.system(size: 20)).foregroundColor(AppTheme.primaryDark).frame(width: 40)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.system(size: 15, weight: .medium))
                 Text(subtitle).font(.system(size: 12)).foregroundColor(AppTheme.textSecondary)

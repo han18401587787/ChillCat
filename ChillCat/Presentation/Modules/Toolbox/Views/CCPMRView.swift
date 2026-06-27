@@ -98,7 +98,7 @@ struct CCPMRView: View {
                     RoundedRectangle(cornerRadius: 4)
                         .fill(
                             LinearGradient(
-                                colors: [AppTheme.primaryLight, Color(hex: "66BB6A")],
+                                colors: [AppTheme.primaryLight, AppTheme.accentMint],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -122,7 +122,7 @@ struct CCPMRView: View {
                 // Outer ring
                 Circle()
                     .stroke(
-                        viewModel.isTense ? Color(hex: "8B6F47").opacity(0.3) : Color(hex: "66BB6A").opacity(0.3),
+                        viewModel.isTense ? AppTheme.warmGold.opacity(0.3) : AppTheme.accentMint.opacity(0.3),
                         lineWidth: 3
                     )
                     .frame(width: 160, height: 160)
@@ -131,7 +131,7 @@ struct CCPMRView: View {
                 Circle()
                     .trim(from: 0, to: viewModel.isTense ? 1 : viewModel.breathingScale)
                     .stroke(
-                        viewModel.isTense ? Color(hex: "8B6F47") : Color(hex: "66BB6A"),
+                        viewModel.isTense ? AppTheme.warmGold : AppTheme.accentMint,
                         style: StrokeStyle(lineWidth: 4, lineCap: .round)
                     )
                     .frame(width: 160, height: 160)
@@ -142,8 +142,8 @@ struct CCPMRView: View {
                 Circle()
                     .fill(
                         viewModel.isTense
-                            ? Color(hex: "8B6F47").opacity(0.15)
-                            : Color(hex: "66BB6A").opacity(0.15)
+                            ? AppTheme.warmGold.opacity(0.15)
+                            : AppTheme.accentMint.opacity(0.15)
                     )
                     .frame(
                         width: 120 * viewModel.breathingScale,
@@ -163,7 +163,7 @@ struct CCPMRView: View {
                     } else {
                         Text(viewModel.isTense ? "紧张" : "放松")
                             .font(AppFont.title1)
-                            .foregroundColor(viewModel.isTense ? Color(hex: "8B6F47") : Color(hex: "66BB6A"))
+                            .foregroundColor(viewModel.isTense ? AppTheme.warmGold : AppTheme.accentMint)
                             .contentTransition(.identity)
                         Text("\(viewModel.secondsInPhase)s")
                             .font(AppFont.caption)
@@ -234,16 +234,16 @@ struct CCPMRView: View {
         return HStack(spacing: AppSpacing.sm) {
             if isDone {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(Color(hex: "66BB6A"))
+                    .foregroundColor(AppTheme.accentMint)
                     .font(.system(size: 14))
             } else if isActive {
                 Circle()
-                    .fill(viewModel.isTense ? Color(hex: "8B6F47") : Color(hex: "66BB6A"))
+                    .fill(viewModel.isTense ? AppTheme.warmGold : AppTheme.accentMint)
                     .frame(width: 8, height: 8)
                     .overlay(
                         Circle()
                             .stroke(
-                                viewModel.isTense ? Color(hex: "8B6F47").opacity(0.3) : Color(hex: "66BB6A").opacity(0.3),
+                                viewModel.isTense ? AppTheme.warmGold.opacity(0.3) : AppTheme.accentMint.opacity(0.3),
                                 lineWidth: 3
                             )
                             .scaleEffect(viewModel.isTense ? 1.5 : 1.0)
@@ -257,11 +257,11 @@ struct CCPMRView: View {
 
             Image(systemName: group.icon)
                 .font(.system(size: 11))
-                .foregroundColor(isActive ? AppTheme.primary : (isDone ? Color(hex: "66BB6A") : AppTheme.textSecondary))
+                .foregroundColor(isActive ? AppTheme.primary : (isDone ? AppTheme.accentMint : AppTheme.textSecondary))
 
             Text(group.name)
                 .font(AppFont.footnote)
-                .foregroundColor(isActive ? AppTheme.textPrimary : (isDone ? Color(hex: "66BB6A") : AppTheme.textSecondary))
+                .foregroundColor(isActive ? AppTheme.textPrimary : (isDone ? AppTheme.accentMint : AppTheme.textSecondary))
                 .lineLimit(1)
         }
         .padding(.vertical, AppSpacing.xs)
@@ -331,11 +331,11 @@ struct CCPMRView: View {
             // Success icon
             ZStack {
                 Circle()
-                    .fill(Color(hex: "66BB6A").opacity(0.3))
+                    .fill(AppTheme.accentMint.opacity(0.3))
                     .frame(width: 100, height: 100)
                 Image(systemName: "figure.mind.and.body")
                     .font(.system(size: 44))
-                    .foregroundColor(Color(hex: "66BB6A"))
+                    .foregroundColor(AppTheme.accentMint)
             }
             .padding(.top, AppSpacing.xl)
 
@@ -362,7 +362,7 @@ struct CCPMRView: View {
                     Spacer()
                     Text("\(Int(viewModel.bodyFeelingRating))/10")
                         .font(AppFont.title1)
-                        .foregroundColor(Color(hex: "66BB6A"))
+                        .foregroundColor(AppTheme.accentMint)
                     Spacer()
                     Text("完全放松")
                         .font(AppFont.caption)
@@ -370,7 +370,7 @@ struct CCPMRView: View {
                 }
 
                 Slider(value: $viewModel.bodyFeelingRating, in: 1...10, step: 1)
-                    .tint(Color(hex: "66BB6A"))
+                    .tint(AppTheme.accentMint)
 
                 Text(viewModel.completionMessage)
                     .font(AppFont.body)
@@ -396,14 +396,14 @@ struct CCPMRView: View {
                     ForEach(CCMuscleGroup.all) { group in
                         HStack(spacing: AppSpacing.sm) {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(Color(hex: "66BB6A"))
+                                .foregroundColor(AppTheme.accentMint)
                                 .font(.system(size: 12))
                             Image(systemName: group.icon)
                                 .font(.system(size: 11))
-                                .foregroundColor(Color(hex: "66BB6A"))
+                                .foregroundColor(AppTheme.accentMint)
                             Text(group.name)
                                 .font(AppFont.footnote)
-                                .foregroundColor(Color(hex: "66BB6A"))
+                                .foregroundColor(AppTheme.accentMint)
                         }
                     }
                 }

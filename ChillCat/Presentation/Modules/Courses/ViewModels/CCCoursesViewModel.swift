@@ -23,11 +23,11 @@ final class CCCoursesViewModel {
     var categories: [(name: String, icon: String, color: Color, items: [CCXuanAPI.CourseItem])] = []
 
     private let icons: [String: (String, Color)] = [
-        "情绪管理": ("heart.text.clipboard.fill", Color(hex: "D4C8E8")),
-        "焦虑治愈": ("leaf.circle.fill", Color(hex: "D5E8D4")),
-        "睡前助眠": ("moon.stars.fill", Color(hex: "B8D4E3")),
-        "职场解压": ("briefcase.fill", Color(hex: "E8D9F0")),
-        "成长": ("sparkles", Color(hex: "E8D9C8")),
+        "情绪管理": ("heart.text.clipboard.fill", AppTheme.warmPurple),
+        "焦虑治愈": ("leaf.circle.fill", AppTheme.accentMint.opacity(0.3)),
+        "睡前助眠": ("moon.stars.fill", AppTheme.info),
+        "职场解压": ("briefcase.fill", AppTheme.warmPurple.opacity(0.3)),
+        "成长": ("sparkles", AppTheme.warmLight),
     ]
 
     func loadCourses() async {
@@ -42,7 +42,7 @@ final class CCCoursesViewModel {
             } else {
                 let grouped = Dictionary(grouping: all, by: { $0.category })
                 categories = grouped.map { (name, items) in
-                    let (icon, color) = icons[name] ?? ("book.fill", Color(hex: "D4C8E8"))
+                    let (icon, color) = icons[name] ?? ("book.fill", AppTheme.warmPurple)
                     return (name, icon, color, items)
                 }
                 loadState = .loaded

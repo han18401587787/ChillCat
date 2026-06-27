@@ -105,10 +105,10 @@ final class CCVoiceDiaryViewModel {
     }
 
     var confidenceColor: Color {
-        guard let result = resultData else { return Color(hex: "5A7A8A") }
-        if result.confidence >= 0.7 { return Color(hex: "66BB6A") }
-        if result.confidence >= 0.4 { return Color(hex: "C9A063") }
-        return Color(hex: "E57373")
+        guard let result = resultData else { return AppTheme.primaryDark }
+        if result.confidence >= 0.7 { return AppTheme.accentMint }
+        if result.confidence >= 0.4 { return AppTheme.warmGold }
+        return AppTheme.crisisRed
     }
 
     // MARK: - Recording

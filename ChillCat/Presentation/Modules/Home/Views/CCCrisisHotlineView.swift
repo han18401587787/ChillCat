@@ -48,12 +48,12 @@ struct CCCrisisHotlineView: View {
         VStack(spacing: AppSpacing.lg) {
             ZStack {
                 Circle()
-                    .fill(Color(hex: "C9A063").opacity(0.15))
+                    .fill(AppTheme.warmGold.opacity(0.15))
                     .frame(width: 100, height: 100)
 
                 Image(systemName: "heart.text.square.fill")
                     .font(.system(size: 44))
-                    .foregroundColor(Color(hex: "8B6F47"))
+                    .foregroundColor(AppTheme.warmGold)
             }
 
             Text("你并不孤单，帮助就在身边")
@@ -84,14 +84,14 @@ struct CCCrisisHotlineView: View {
                 name: "北京心理危机研究与干预中心",
                 number: "010-82951332",
                 icon: "phone.fill",
-                color: Color(hex: "66BB6A")
+                color: AppTheme.accentMint
             )
 
             largeCallButton(
                 name: "生命热线",
                 number: "400-821-1215",
                 icon: "phone.fill",
-                color: Color(hex: "D4C8E8")
+                color: AppTheme.warmPurple
             )
         }
     }

@@ -49,9 +49,9 @@ struct CCCoursesView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(course.title).font(.system(size: 15, weight: .medium))
                             HStack(spacing: 8) {
-                                Text(course.tag).font(.system(size: 11)).foregroundColor(Color(hex: "5A7A8A"))
+                                Text(course.tag).font(.system(size: 11)).foregroundColor(AppTheme.primaryDark)
                                     .padding(.horizontal, 8).padding(.vertical, 2)
-                                    .background(Color(hex: "B8D4E3").opacity(0.3)).cornerRadius(4)
+                                    .background(AppTheme.info.opacity(0.3)).cornerRadius(4)
                                 Text("\(course.duration / 60) 分钟").font(.system(size: 11)).foregroundColor(AppTheme.textMuted)
                             }
                         }

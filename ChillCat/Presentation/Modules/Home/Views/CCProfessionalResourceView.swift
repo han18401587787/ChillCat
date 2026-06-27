@@ -41,7 +41,7 @@ struct CCProfessionalResourceView: View {
         VStack(spacing: AppSpacing.sm) {
             Image(systemName: "heart.text.square.fill")
                 .font(.system(size: 36))
-                .foregroundColor(Color(hex: "8B6F47"))
+                .foregroundColor(AppTheme.warmGold)
 
             Text("你不需要独自面对一切")
                 .font(AppFont.title1)
@@ -66,7 +66,7 @@ struct CCProfessionalResourceView: View {
             sectionHeader(
                 icon: "phone.fill",
                 title: "24小时心理援助热线",
-                color: Color(hex: "66BB6A")
+                color: AppTheme.accentMint
             )
 
             VStack(spacing: AppSpacing.sm) {
@@ -123,7 +123,7 @@ struct CCProfessionalResourceView: View {
             sectionHeader(
                 icon: "globe",
                 title: "在线心理咨询平台",
-                color: Color(hex: "D4C8E8")
+                color: AppTheme.warmPurple
             )
 
             VStack(spacing: AppSpacing.sm) {
@@ -150,9 +150,9 @@ struct CCProfessionalResourceView: View {
         HStack(spacing: AppSpacing.md) {
             Image(systemName: icon)
                 .font(.system(size: 20))
-                .foregroundColor(Color(hex: "D4C8E8"))
+                .foregroundColor(AppTheme.warmPurple)
                 .frame(width: 40, height: 40)
-                .background(Color(hex: "D4C8E8").opacity(0.12))
+                .background(AppTheme.warmPurple.opacity(0.12))
                 .cornerRadius(AppRadius.sm)
 
             VStack(alignment: .leading, spacing: 2) {

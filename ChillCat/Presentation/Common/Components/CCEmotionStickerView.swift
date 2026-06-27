@@ -29,9 +29,9 @@ enum CCLayerDepth: String {
 
     var color: Color {
         switch self {
-        case .surface: return Color(hex: "D4C8E8")   // softPurple
-        case .middle:  return Color(hex: "B8D4E3")   // primaryMuted
-        case .deep:    return Color(hex: "66BB6A")    // softGreen
+        case .surface: return AppTheme.warmPurple   // softPurple
+        case .middle:  return AppTheme.info   // primaryMuted
+        case .deep:    return AppTheme.accentMint    // softGreen
         }
     }
 
@@ -84,17 +84,17 @@ extension CCEmotion {
     /// Returns the mapped theme color for this emotion
     var emotionColor: Color {
         switch colorName {
-        case "softGreen":       return Color(hex: "66BB6A")
-        case "warmLight":       return Color(hex: "C9A063")
-        case "primaryMuted":    return Color(hex: "B8D4E3")
-        case "softPurple":      return Color(hex: "D4C8E8")
-        case "softPink":        return Color(hex: "E8B8C8")
-        case "primaryLight":    return Color(hex: "7A9AAA")
-        case "error":           return Color(hex: "E57373")
-        case "softPurpleLight": return Color(hex: "E8D9F0")
-        case "warm":            return Color(hex: "8B6F47")
-        case "textMuted":       return Color(hex: "AAAAAA")
-        default:                return Color(hex: "5A7A8A")
+        case "softGreen":       return AppTheme.accentMint
+        case "warmLight":       return AppTheme.warmGold
+        case "primaryMuted":    return AppTheme.info
+        case "softPurple":      return AppTheme.warmPurple
+        case "softPink":        return AppTheme.warmPink
+        case "primaryLight":    return AppTheme.info
+        case "error":           return AppTheme.crisisRed
+        case "softPurpleLight": return AppTheme.warmPurple.opacity(0.3)
+        case "warm":            return AppTheme.warmGold
+        case "textMuted":       return AppTheme.textMuted
+        default:                return AppTheme.primaryDark
         }
     }
 }
@@ -185,11 +185,11 @@ struct CCEmotionStickerView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(data.label)
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(Color(hex: "2D2D2D"))
+                    .foregroundColor(AppTheme.textPrimary)
                 if let desc = data.description {
                     Text(desc)
                         .font(.system(size: 13))
-                        .foregroundColor(Color(hex: "7A7A7A"))
+                        .foregroundColor(AppTheme.textSecondary)
                         .lineLimit(2)
                 }
             }
@@ -199,7 +199,7 @@ struct CCEmotionStickerView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(hex: "F9F6F2"))
+                .fill(AppTheme.background)
                 .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
         )
         .overlay(
@@ -236,12 +236,12 @@ struct CCEmotionStickerView: View {
 
                 Text(data.label)
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(Color(hex: "2D2D2D"))
+                    .foregroundColor(AppTheme.textPrimary)
 
                 if let desc = data.description {
                     Text(desc)
                         .font(.system(size: 13))
-                        .foregroundColor(Color(hex: "7A7A7A"))
+                        .foregroundColor(AppTheme.textSecondary)
                         .multilineTextAlignment(.center)
                         .lineSpacing(4)
                         .padding(.horizontal, 8)
@@ -273,7 +273,7 @@ struct CCEmotionLayerArrow: View {
                 .font(.system(size: 20, weight: .medium))
                 .offset(y: -8)
         }
-        .foregroundColor(Color(hex: "B8D4E3"))
+        .foregroundColor(AppTheme.info)
         .scaleEffect(breathing ? 1.15 : 0.9)
         .opacity(breathing ? 1.0 : 0.5)
         .onAppear {
@@ -359,7 +359,7 @@ struct CCEmotionStickerView_Previews: PreviewProvider {
             }
             .padding()
         }
-        .background(Color(hex: "F9F6F2"))
+        .background(AppTheme.background)
     }
 }
 #endif

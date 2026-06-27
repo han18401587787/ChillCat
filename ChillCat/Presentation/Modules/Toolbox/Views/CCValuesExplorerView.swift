@@ -71,12 +71,12 @@ struct CCValuesExplorerView: View {
                 ForEach(CCValuesStep.allCases.dropLast(), id: \.rawValue) { step in
                     Circle()
                         .fill(step.rawValue < viewModel.currentStep.rawValue
-                              ? Color(hex: "8B6F47") : (step.rawValue == viewModel.currentStep.rawValue
-                                              ? Color(hex: "8B6F47") : AppTheme.border))
+                              ? AppTheme.warmGold : (step.rawValue == viewModel.currentStep.rawValue
+                                              ? AppTheme.warmGold : AppTheme.border))
                         .frame(width: 10, height: 10)
                     if step.rawValue < CCValuesStep.completed.rawValue {
                         Rectangle()
-                            .fill(step.rawValue < viewModel.currentStep.rawValue ? Color(hex: "8B6F47") : AppTheme.border)
+                            .fill(step.rawValue < viewModel.currentStep.rawValue ? AppTheme.warmGold : AppTheme.border)
                             .frame(height: 2)
                             .frame(maxWidth: .infinity)
                     }
@@ -89,7 +89,7 @@ struct CCValuesExplorerView: View {
                         .font(AppFont.caption)
                         .foregroundColor(
                             step.rawValue <= viewModel.currentStep.rawValue
-                                ? Color(hex: "8B6F47") : AppTheme.textSecondary
+                                ? AppTheme.warmGold : AppTheme.textSecondary
                         )
                         .frame(maxWidth: .infinity)
                         .lineLimit(1)
@@ -111,7 +111,7 @@ struct CCValuesExplorerView: View {
             Text("已选择 \(viewModel.selectedValues.count)/10")
                 .font(AppFont.body)
                 .foregroundColor(
-                    viewModel.selectedValues.count >= 5 ? Color(hex: "66BB6A") : AppTheme.textSecondary
+                    viewModel.selectedValues.count >= 5 ? AppTheme.accentMint : AppTheme.textSecondary
                 )
 
             LazyVGrid(
@@ -148,11 +148,11 @@ struct CCValuesExplorerView: View {
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: AppRadius.sm)
-                    .fill(isSelected ? Color(hex: "8B6F47") : AppTheme.surface)
+                    .fill(isSelected ? AppTheme.warmGold : AppTheme.surface)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: AppRadius.sm)
-                    .stroke(isSelected ? Color(hex: "8B6F47") : AppTheme.border, lineWidth: 1)
+                    .stroke(isSelected ? AppTheme.warmGold : AppTheme.border, lineWidth: 1)
             )
             .overlay(alignment: .topTrailing) {
                 if isSelected {
@@ -196,7 +196,7 @@ struct CCValuesExplorerView: View {
                                 if let rank = rank {
                                     ZStack {
                                         Circle()
-                                            .fill(Color(hex: "8B6F47"))
+                                            .fill(AppTheme.warmGold)
                                             .frame(width: 28, height: 28)
                                         Text("\(rank)")
                                             .font(AppFont.footnote.weight(.bold))
@@ -215,13 +215,13 @@ struct CCValuesExplorerView: View {
                                     .foregroundColor(isInTopFive ? AppTheme.textPrimary : AppTheme.textSecondary)
                                 Spacer()
                                 Image(systemName: isInTopFive ? "checkmark.circle.fill" : "circle")
-                                    .foregroundColor(isInTopFive ? Color(hex: "8B6F47") : AppTheme.textSecondary)
+                                    .foregroundColor(isInTopFive ? AppTheme.warmGold : AppTheme.textSecondary)
                                     .font(.system(size: 20))
                             }
                             .padding(AppSpacing.md)
                             .background(
                                 RoundedRectangle(cornerRadius: AppRadius.sm)
-                                    .fill(isInTopFive ? Color(hex: "8B6F47").opacity(0.6).opacity(0.5) : AppTheme.surface)
+                                    .fill(isInTopFive ? AppTheme.warmGold.opacity(0.6).opacity(0.5) : AppTheme.surface)
                             )
                         }
                         .buttonStyle(.plain)
@@ -244,7 +244,7 @@ struct CCValuesExplorerView: View {
                             HStack(spacing: AppSpacing.md) {
                                 Text("\(index + 1)")
                                     .font(AppFont.title1)
-                                    .foregroundColor(Color(hex: "8B6F47"))
+                                    .foregroundColor(AppTheme.warmGold)
                                     .frame(width: 28)
                                 Text(value.emoji)
                                     .font(.system(size: 24))
@@ -330,7 +330,7 @@ struct CCValuesExplorerView: View {
                     Spacer()
                     Text("\(Int(viewModel.alignmentRating))/10")
                         .font(AppFont.largeTitle)
-                        .foregroundColor(Color(hex: "8B6F47"))
+                        .foregroundColor(AppTheme.warmGold)
                     Spacer()
                     Text("完全一致")
                         .font(AppFont.caption)
@@ -338,7 +338,7 @@ struct CCValuesExplorerView: View {
                 }
 
                 Slider(value: $viewModel.alignmentRating, in: 1...10, step: 1)
-                    .tint(Color(hex: "8B6F47"))
+                    .tint(AppTheme.warmGold)
 
                 if !viewModel.alignmentDescription.isEmpty {
                     Text(viewModel.alignmentDescription)
@@ -395,11 +395,11 @@ struct CCValuesExplorerView: View {
         VStack(spacing: AppSpacing.xl) {
             ZStack {
                 Circle()
-                    .fill(Color(hex: "8B6F47").opacity(0.6))
+                    .fill(AppTheme.warmGold.opacity(0.6))
                     .frame(width: 100, height: 100)
                 Image(systemName: "compass.drawing")
                     .font(.system(size: 44))
-                    .foregroundColor(Color(hex: "8B6F47"))
+                    .foregroundColor(AppTheme.warmGold)
             }
             .padding(.top, AppSpacing.xl)
 
@@ -424,7 +424,7 @@ struct CCValuesExplorerView: View {
                         HStack(spacing: AppSpacing.md) {
                             Text("\(index + 1)")
                                 .font(AppFont.title1)
-                                .foregroundColor(Color(hex: "8B6F47"))
+                                .foregroundColor(AppTheme.warmGold)
                                 .frame(width: 28)
                             Text(value.emoji)
                                 .font(.system(size: 24))
@@ -456,7 +456,7 @@ struct CCValuesExplorerView: View {
                     .foregroundColor(AppTheme.textSecondary)
                 Text("\(Int(viewModel.alignmentRating))/10")
                     .font(AppFont.largeTitle)
-                    .foregroundColor(Color(hex: "8B6F47"))
+                    .foregroundColor(AppTheme.warmGold)
                 Text(viewModel.alignmentDescription)
                     .font(AppFont.body)
                     .foregroundColor(AppTheme.textSecondary)
@@ -492,7 +492,7 @@ struct CCValuesExplorerView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, AppSpacing.md)
-                        .background(Color(hex: "8B6F47"))
+                        .background(AppTheme.warmGold)
                         .cornerRadius(AppRadius.md)
                 }
 
@@ -533,10 +533,10 @@ struct CCValuesExplorerView: View {
                         Text("上一步")
                     }
                     .font(AppFont.body.weight(.medium).weight(.medium))
-                    .foregroundColor(Color(hex: "8B6F47"))
+                    .foregroundColor(AppTheme.warmGold)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, AppSpacing.md)
-                    .background(Color(hex: "8B6F47").opacity(0.1))
+                    .background(AppTheme.warmGold.opacity(0.1))
                     .cornerRadius(AppRadius.md)
                 }
             }
@@ -552,7 +552,7 @@ struct CCValuesExplorerView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, AppSpacing.md)
-                .background(canProceed ? Color(hex: "8B6F47") : AppTheme.textSecondary)
+                .background(canProceed ? AppTheme.warmGold : AppTheme.textSecondary)
                 .cornerRadius(AppRadius.md)
             }
             .disabled(!canProceed)

@@ -29,7 +29,7 @@ struct CCBodyScanView: View {
         }
         .background(
             LinearGradient(
-                colors: [Color(hex: "D4C8E8").opacity(0.3), Color(hex: "E8B8C8").opacity(0.3)],
+                colors: [AppTheme.warmPurple.opacity(0.3), AppTheme.warmPink.opacity(0.3)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -140,7 +140,7 @@ struct CCBodyScanView: View {
                     Circle()
                         .fill(
                             isActive ? region.color.opacity(0.6) :
-                            (isCompleted ? Color(hex: "66BB6A").opacity(0.4) : Color.clear)
+                            (isCompleted ? AppTheme.accentMint.opacity(0.4) : Color.clear)
                         )
                         .frame(width: isActive ? 36 : (isCompleted ? 24 : 0))
                         .overlay(
@@ -400,7 +400,7 @@ struct CCBodyScanView: View {
             Circle()
                 .fill(
                     isActive ? region.color :
-                    (isCompleted ? Color(hex: "66BB6A") : AppTheme.border)
+                    (isCompleted ? AppTheme.accentMint : AppTheme.border)
                 )
                 .frame(width: 10, height: 10)
 
@@ -408,7 +408,7 @@ struct CCBodyScanView: View {
                 .font(AppFont.footnote)
                 .foregroundColor(
                     isActive ? AppTheme.textPrimary :
-                    (isCompleted ? Color(hex: "66BB6A") : AppTheme.textSecondary)
+                    (isCompleted ? AppTheme.accentMint : AppTheme.textSecondary)
                 )
                 .lineLimit(1)
 
@@ -417,7 +417,7 @@ struct CCBodyScanView: View {
             if hasNote {
                 Image(systemName: "note.text")
                     .font(.system(size: 10))
-                    .foregroundColor(Color(hex: "8B6F47"))
+                    .foregroundColor(AppTheme.warmGold)
             }
         }
         .padding(.vertical, AppSpacing.xs)
@@ -505,11 +505,11 @@ struct CCBodyScanView: View {
         VStack(spacing: AppSpacing.xl) {
             ZStack {
                 Circle()
-                    .fill(Color(hex: "66BB6A").opacity(0.3))
+                    .fill(AppTheme.accentMint.opacity(0.3))
                     .frame(width: 100, height: 100)
                 Image(systemName: "eye.fill")
                     .font(.system(size: 44))
-                    .foregroundColor(Color(hex: "66BB6A"))
+                    .foregroundColor(AppTheme.accentMint)
             }
             .padding(.top, AppSpacing.xl)
 
