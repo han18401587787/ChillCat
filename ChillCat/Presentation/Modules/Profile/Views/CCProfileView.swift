@@ -141,7 +141,7 @@ struct CCProfileView: View {
         VStack(spacing: AppSpacing.sm) {
             featureRow(
                 icon: "crown.fill",
-                title: "会员中心",
+                title: "心光会员",
                 subtitle: "解锁更多治愈功能",
                 iconColor: Color(hex: "D4A882"),
                 action: { coordinator.navigate(to: .vipCenter) }
@@ -149,26 +149,34 @@ struct CCProfileView: View {
 
             featureRow(
                 icon: "chart.line.uptrend.xyaxis",
-                title: "成长档案",
-                subtitle: "查看情绪变化趋势",
+                title: "情绪趋势",
+                subtitle: "查看情绪变化与洞察",
                 iconColor: AppTheme.accentMint,
-                action: { coordinator.navigate(to: .growthArchive) }
-            )
-
-            featureRow(
-                icon: "book.fill",
-                title: "情绪日记",
-                subtitle: "记录每日心情",
-                iconColor: AppTheme.warmGold,
-                action: { coordinator.navigate(to: .journal) }
+                action: { coordinator.navigate(to: .trends) }
             )
 
             featureRow(
                 icon: "heart.text.square",
-                title: "我的共鸣",
-                subtitle: "查看共鸣记录",
+                title: "治愈记录",
+                subtitle: "冥想/稳情练习记录",
+                iconColor: AppTheme.warmPurple,
+                action: { coordinator.navigate(to: .growthArchive) }
+            )
+
+            featureRow(
+                icon: "envelope.fill",
+                title: "感谢信",
+                subtitle: "来自绪安的温暖信件",
                 iconColor: AppTheme.warmPink,
-                action: { coordinator.navigate(to: .resonanceWall) }
+                action: { coordinator.navigate(to: .journal) }
+            )
+
+            featureRow(
+                icon: "lock.shield.fill",
+                title: "隐私设置",
+                subtitle: "管理数据与隐私偏好",
+                iconColor: AppTheme.info,
+                action: { coordinator.navigate(to: .privacy) }
             )
         }
     }

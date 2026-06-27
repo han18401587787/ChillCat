@@ -412,54 +412,86 @@ struct CCVoiceCheckinView: View {
 
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 72))
-                .foregroundColor(AppTheme.softGreen)
+                .foregroundColor(AppTheme.accentMint)
 
             Text("打卡成功")
-                .font(.system(size: 22, weight: .bold))
+                .font(AppFont.title2)
                 .foregroundColor(AppTheme.textPrimary)
 
             if let result = viewModel.resultData {
                 VStack(spacing: 4) {
                     Text("情绪: \(result.emotion)")
-                        .font(.system(size: 15))
+                        .font(AppFont.body)
                         .foregroundColor(AppTheme.textSecondary)
                     Text("时长: \(viewModel.formattedDuration)")
-                        .font(.system(size: 13))
+                        .font(AppFont.footnote)
                         .foregroundColor(AppTheme.textMuted)
                 }
             }
 
             Spacer().frame(height: AppSpacing.md)
 
-            HStack(spacing: AppSpacing.md) {
-                Button(action: { viewModel.reRecord() }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "mic.fill")
-                            .font(.system(size: 15))
-                        Text("再录一条")
-                            .font(.system(size: 15, weight: .medium))
-                    }
-                    .foregroundColor(AppTheme.textSecondary)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.md)
-                }
-
+            // 3 个操作按钮 — 对照 Ardot 设计图
+            VStack(spacing: AppSpacing.sm) {
+                // 1. 继续和AI聊聊 (主暖杏按钮)
                 Button(action: {
-                    coordinator.pop()
+                    coordinator.navigate(to: .aiListener)
                 }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "house.fill")
-                            .font(.system(size: 15))
-                        Text("返回首页")
-                            .font(.system(size: 15, weight: .semibold))
+                    HStack(spacing: 8) {
+                        Image(systemName: "brain.head.profile")
+                            .font(.system(size: 16))
+                        Text("继续和AI聊聊")
+                            .font(AppFont.buttonLabel)
                     }
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(AppTheme.primary)
-                    .cornerRadius(AppRadius.md)
+                    .background(
+                        LinearGradient(
+                            colors: [AppTheme.primary, AppTheme.primaryDark],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(AppRadius.lg)
+                }
+
+                // 2. 匿名发布到共鸣墙
+                Button(action: {
+                    coordinator.navigate(to: .resonanceWall)
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "heart.fill")
+                            .font(.system(size: 16))
+                        Text("匿名发布到共鸣墙")
+                            .font(AppFont.buttonLabel)
+                            .foregroundColor(AppTheme.primary)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(AppTheme.primary.opacity(0.1))
+                    .cornerRadius(AppRadius.lg)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AppRadius.lg)
+                            .stroke(AppTheme.primary.opacity(0.3), lineWidth: 1)
+                    )
+                }
+
+                // 3. 查看情绪解码
+                Button(action: {
+                    coordinator.navigate(to: .emotionDecoder)
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "chart.bar.fill")
+                            .font(.system(size: 16))
+                        Text("查看情绪解码")
+                            .font(AppFont.buttonLabel)
+                            .foregroundColor(AppTheme.textSecondary)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(AppTheme.surface)
+                    .cornerRadius(AppRadius.lg)
                 }
             }
 
