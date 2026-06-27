@@ -295,13 +295,13 @@ struct CCAIListenerCard: View {
                     Text("感谢反馈")
                         .font(.system(size: 12))
                 }
-                .foregroundColor(Color(hex: "66BB6A"))
+                .foregroundColor(Color(hex: "82C785"))
                 .padding(.top, 4)
             }
         }
         .padding(AppSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(hex: "66BB6A").opacity(0.075))
+        .background(Color(hex: "A8D9BA").opacity(0.12))
         .cornerRadius(AppRadius.md)
     }
 

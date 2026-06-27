@@ -48,7 +48,7 @@ struct CCVoiceCheckinView: View {
         }
         .animation(.easeInOut(duration: 0.3), value: viewModel.state)
         .animation(.easeInOut, value: showEmojiPicker)
-        .navigationTitle("语音打卡")
+        .navigationTitle("语音日记")
         .navigationBarTitleDisplayMode(.inline)
     }
 

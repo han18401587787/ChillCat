@@ -6,26 +6,26 @@ import SwiftUI
 enum EmotionColors {
     // MARK: - 10色情绪色板（Ardot设计规范）
     
-    /// 平静
-    static let calm = Color(hex: "66BB6A")
-    /// 开心
-    static let happy = Color(hex: "C9A063")
+    /// 平静 — Ardot 薄荷绿
+    static let calm = Color(hex: "A8D9BA")
+    /// 开心 — Ardot 暖杏
+    static let happy = Color(hex: "D4A882")
     /// 疲惫
-    static let tired = Color(hex: "B8D4E3")
+    static let tired = Color(hex: "7ABF9E")
     /// 焦虑
-    static let anxious = Color(hex: "D4C8E8")
-    /// 委屈
-    static let wronged = Color(hex: "E8B8C8")
-    /// 孤独
-    static let lonely = Color(hex: "7A9AAA")
-    /// 烦躁
-    static let irritable = Color(hex: "E57373")
+    static let anxious = Color(hex: "A085C6")
+    /// 委屈 — Ardot 樱花粉
+    static let wronged = Color(hex: "F5A6BA")
+    /// 孤独 — Ardot 信息蓝
+    static let lonely = Color(hex: "63B5F5")
+    /// 烦躁 — Ardot 危机红
+    static let irritable = Color(hex: "E67373")
     /// 迷茫
     static let lost = Color(hex: "E8D9F0")
-    /// 易怒
-    static let angry = Color(hex: "8B6F47")
+    /// 易怒 — Ardot 深暖杏
+    static let angry = Color(hex: "D4A882")
     /// 内耗
-    static let overthinking = Color(hex: "AAAAAA")
+    static let overthinking = Color(hex: "8C7D6E")
     
     // MARK: - 情绪列表（Ardot设计规范）
     
