@@ -90,6 +90,7 @@ enum CCAppRoute: Hashable, Identifiable {
     case valuesExplorer
     case gratitudeJournal
     case behavioralActivation
+    case healing
     case growthArchive
     case growthReport
     case mutualAidGroups
@@ -141,6 +142,7 @@ enum CCAppRoute: Hashable, Identifiable {
         case .valuesExplorer: return "valuesExplorer"
         case .gratitudeJournal: return "gratitudeJournal"
         case .behavioralActivation: return "behavioralActivation"
+        case .healing: return "healing"
         case .growthArchive: return "growthArchive"
         case .growthReport: return "growthReport"
         case .mutualAidGroups: return "mutualAidGroups"

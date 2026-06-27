@@ -64,6 +64,7 @@ final class CCAppCoordinator {
         case .valuesExplorer: CCValuesExplorerView()
         case .gratitudeJournal: CCGratitudeJournalView()
         case .behavioralActivation: CCBehavioralActivationView()
+        case .healing: CCMeditationView()
         case .growthArchive: CCGrowthArchiveView()
         case .growthReport: CCGrowthReportView()
         case .mutualAidGroups: CCMutualAidGroupView()
