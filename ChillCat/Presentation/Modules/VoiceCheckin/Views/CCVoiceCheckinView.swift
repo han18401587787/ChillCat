@@ -407,95 +407,139 @@ struct CCVoiceCheckinView: View {
     // MARK: - Saved State
 
     private var savedStateView: some View {
-        VStack(spacing: AppSpacing.lg) {
-            Spacer().frame(height: 60)
+        ScrollView {
+            VStack(spacing: AppSpacing.lg) {
+                Spacer().frame(height: 40)
 
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 72))
-                .foregroundColor(AppTheme.accentMint)
+                // 打卡成功图标
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 64))
+                    .foregroundColor(AppTheme.accentMint)
 
-            Text("打卡成功")
-                .font(AppFont.title2)
-                .foregroundColor(AppTheme.textPrimary)
+                Text("打卡成功")
+                    .font(AppFont.title2)
+                    .foregroundColor(AppTheme.textPrimary)
 
-            if let result = viewModel.resultData {
-                VStack(spacing: 4) {
-                    Text("情绪: \(result.emotion)")
-                        .font(AppFont.body)
-                        .foregroundColor(AppTheme.textSecondary)
-                    Text("时长: \(viewModel.formattedDuration)")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textMuted)
-                }
-            }
-
-            Spacer().frame(height: AppSpacing.md)
-
-            // 3 个操作按钮 — 对照 Ardot 设计图
-            VStack(spacing: AppSpacing.sm) {
-                // 1. 继续和AI聊聊 (主暖杏按钮)
-                Button(action: {
-                    coordinator.navigate(to: .aiListener)
-                }) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "brain.head.profile")
-                            .font(.system(size: 16))
-                        Text("继续和AI聊聊")
-                            .font(AppFont.buttonLabel)
-                    }
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(
-                        LinearGradient(
-                            colors: [AppTheme.primary, AppTheme.primaryDark],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .cornerRadius(AppRadius.lg)
-                }
-
-                // 2. 匿名发布到共鸣墙
-                Button(action: {
-                    coordinator.navigate(to: .resonanceWall)
-                }) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "heart.fill")
-                            .font(.system(size: 16))
-                        Text("匿名发布到共鸣墙")
-                            .font(AppFont.buttonLabel)
-                            .foregroundColor(AppTheme.primary)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(AppTheme.primary.opacity(0.1))
-                    .cornerRadius(AppRadius.lg)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: AppRadius.lg)
-                            .stroke(AppTheme.primary.opacity(0.3), lineWidth: 1)
-                    )
-                }
-
-                // 3. 查看情绪解码
-                Button(action: {
-                    coordinator.navigate(to: .emotionDecoder)
-                }) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "chart.bar.fill")
-                            .font(.system(size: 16))
-                        Text("查看情绪解码")
-                            .font(AppFont.buttonLabel)
+                if let result = viewModel.resultData {
+                    VStack(spacing: 2) {
+                        Text("情绪: \(result.emotion)")
+                            .font(AppFont.body)
                             .foregroundColor(AppTheme.textSecondary)
+                        Text("时长: \(viewModel.formattedDuration)")
+                            .font(AppFont.footnote)
+                            .foregroundColor(AppTheme.textMuted)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.lg)
                 }
+
+                // AI 回应卡片
+                aiResponseCard
+
+                // 3 个操作按钮
+                actionButtons
+
+                Spacer(minLength: 20)
+            }
+            .padding(.horizontal, AppSpacing.lg)
+        }
+        .background(AppTheme.background)
+    }
+
+    // MARK: - AI 回应卡片
+    private var aiResponseCard: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
+            HStack(spacing: AppSpacing.sm) {
+                ZStack {
+                    Circle()
+                        .fill(AppTheme.accentMint.opacity(0.15))
+                        .frame(width: 36, height: 36)
+                    Image(systemName: "brain.head.profile")
+                        .font(.system(size: 16))
+                        .foregroundColor(AppTheme.accentMint)
+                }
+
+                Text("AI 倾听官")
+                    .font(AppFont.bodyBold)
+                    .foregroundColor(AppTheme.textPrimary)
+
+                Spacer()
+
+                Text("刚刚")
+                    .font(AppFont.caption2)
+                    .foregroundColor(AppTheme.textMuted)
             }
 
-            Spacer()
+            Text("我听到了你的声音，感受到了你的情绪。\n你愿意和我再多聊一会儿吗？")
+                .font(AppFont.body)
+                .foregroundColor(AppTheme.textPrimary)
+                .lineSpacing(6)
+
+            HStack(spacing: AppSpacing.sm) {
+                Text("💚 温暖陪伴")
+                    .font(AppFont.caption2)
+                    .foregroundColor(AppTheme.accentMint)
+                    .padding(.horizontal, AppSpacing.sm)
+                    .padding(.vertical, 2)
+                    .background(AppTheme.accentMint.opacity(0.1))
+                    .cornerRadius(AppRadius.full)
+            }
+        }
+        .padding(AppSpacing.lg)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.lg)
+        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
+    }
+
+    // MARK: - 操作按钮
+    private var actionButtons: some View {
+        VStack(spacing: AppSpacing.sm) {
+            Button(action: { coordinator.navigate(to: .aiListener) }) {
+                HStack(spacing: AppSpacing.sm) {
+                    Image(systemName: "brain.head.profile")
+                    Text("继续和AI聊聊")
+                }
+                .font(AppFont.buttonLabel)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(
+                    LinearGradient(
+                        colors: [AppTheme.primary, AppTheme.primaryDark],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .cornerRadius(AppRadius.lg)
+            }
+
+            Button(action: { coordinator.navigate(to: .resonanceWall) }) {
+                HStack(spacing: AppSpacing.sm) {
+                    Image(systemName: "heart.fill")
+                    Text("匿名发布到共鸣墙")
+                }
+                .font(AppFont.buttonLabel)
+                .foregroundColor(AppTheme.primary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(AppTheme.primary.opacity(0.08))
+                .cornerRadius(AppRadius.lg)
+                .overlay(
+                    RoundedRectangle(cornerRadius: AppRadius.lg)
+                        .stroke(AppTheme.primary.opacity(0.3), lineWidth: 1)
+                )
+            }
+
+            Button(action: { coordinator.navigate(to: .emotionDecoder) }) {
+                HStack(spacing: AppSpacing.sm) {
+                    Image(systemName: "chart.bar.fill")
+                    Text("查看情绪解码")
+                }
+                .font(AppFont.buttonLabel)
+                .foregroundColor(AppTheme.textSecondary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(AppTheme.surface)
+                .cornerRadius(AppRadius.lg)
+            }
         }
     }
 
