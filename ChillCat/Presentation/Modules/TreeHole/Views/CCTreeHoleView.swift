@@ -107,26 +107,12 @@ struct CCTreeHoleView: View {
 
     private var headerSection: some View {
         HStack {
-            Text("共鸣墙")
+            Text("树洞")
                 .font(AppFont.title1)
                 .foregroundColor(AppTheme.textPrimary)
             Spacer()
 
-            // Mutual aid group entry
-            NavigationLink(value: CCAppRoute.mutualAidGroups) {
-                HStack(spacing: 4) {
-                    Image(systemName: "person.3.fill")
-                        .font(.system(size: 12))
-                    Text("互助小组")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.accentMint)
-                }
-                .padding(.horizontal, AppSpacing.sm)
-                .padding(.vertical, 4)
-                .background(AppTheme.accentMint.opacity(0.12))
-                .cornerRadius(AppRadius.sm)
-            }
-
+            // 在线人数
             HStack(spacing: 4) {
                 Text("🕊️").font(.system(size: 14))
                 Text("\(viewModel.onlineCount) 人此刻")
@@ -137,56 +123,49 @@ struct CCTreeHoleView: View {
             .padding(.vertical, 4)
             .background(AppTheme.primary.opacity(0.1))
             .cornerRadius(AppRadius.sm)
-
-            NavigationLink(value: CCAppRoute.encourageChain) {
-                HStack(spacing: 4) {
-                    Text("🔥").font(.system(size: 13))
-                    Text("鼓励链")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.warmGold)
-                }
-                .padding(.horizontal, AppSpacing.sm)
-                .padding(.vertical, 4)
-                .background(AppTheme.warmGold.opacity(0.12))
-                .cornerRadius(AppRadius.sm)
-            }
         }
         .padding(.horizontal)
         .padding(.top, AppSpacing.sm)
         .padding(.bottom, AppSpacing.xs)
     }
 
-    // MARK: - Publish Box
-
+    // MARK: - Publish Box (对照截图: 输入框 + "发送倾诉"大按钮)
     private var publishBox: some View {
         VStack(spacing: AppSpacing.md) {
             // 输入框
-            TextField("随便说什么都好，这里不评判…", text: $viewModel.newPostText, axis: .vertical)
-                .focused($isFocused)
-                .font(AppFont.body)
-                .lineLimit(3...6)
-                .padding(AppSpacing.lg)
-                .background(AppTheme.cardBackground)
-                .cornerRadius(AppRadius.lg)
-                .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
+            ZStack(alignment: .topLeading) {
+                if viewModel.newPostText.isEmpty && !isFocused {
+                    Text("随便说什么都好，这里不评判…")
+                        .font(AppFont.body)
+                        .foregroundColor(AppTheme.textMuted)
+                        .padding(.horizontal, AppSpacing.lg)
+                        .padding(.vertical, AppSpacing.lg)
+                        .allowsHitTesting(false)
+                }
 
+                TextEditor(text: $viewModel.newPostText)
+                    .focused($isFocused)
+                    .font(AppFont.body)
+                    .scrollContentBackground(.hidden)
+                    .background(Color.clear)
+                    .frame(minHeight: 100, maxHeight: 160)
+                    .padding(AppSpacing.md)
+            }
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.lg)
+            .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
+
+            // 操作栏 + 发送按钮
             if !viewModel.newPostText.isEmpty {
                 HStack {
-                    Picker("可见范围", selection: $viewModel.selectedScope) {
-                        ForEach(CCPostScope.allCases, id: \.self) { s in
-                            Text(s.rawValue).tag(s)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-
-                    Spacer()
-
                     Button(action: { showEmoji.toggle() }) {
                         Image(systemName: "face.smiling")
                             .font(.system(size: 20))
-                            .foregroundColor(AppTheme.primary)
+                            .foregroundColor(AppTheme.textSecondary)
+                            .frame(width: 40, height: 40)
                     }
-                    .padding(.trailing, AppSpacing.sm)
+
+                    Spacer()
 
                     Button(action: {
                         CCHaptic.medium()
@@ -199,19 +178,24 @@ struct CCTreeHoleView: View {
                             showContentWarning = true
                         }
                     }) {
-                        Image(systemName: "paperplane.fill")
-                            .font(.system(size: 18))
-                            .foregroundColor(.white)
-                            .padding(14)
-                            .background(
-                                LinearGradient(
-                                    colors: [AppTheme.primary, AppTheme.primaryDark],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
+                        HStack(spacing: AppSpacing.sm) {
+                            Image(systemName: "paperplane.fill")
+                                .font(.system(size: 14))
+                            Text("发送倾诉")
+                                .font(AppFont.buttonLabel)
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, AppSpacing.xl)
+                        .padding(.vertical, 12)
+                        .background(
+                            LinearGradient(
+                                colors: [AppTheme.primary, AppTheme.primaryDark],
+                                startPoint: .leading,
+                                endPoint: .trailing
                             )
-                            .clipShape(Circle())
-                            .shadow(color: AppTheme.primary.opacity(0.3), radius: 6, x: 0, y: 3)
+                        )
+                        .cornerRadius(AppRadius.full)
+                        .shadow(color: AppTheme.primary.opacity(0.3), radius: 8, x: 0, y: 3)
                     }
                 }
             }

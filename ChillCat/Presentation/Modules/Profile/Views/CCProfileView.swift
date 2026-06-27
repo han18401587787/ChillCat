@@ -47,6 +47,9 @@ struct CCProfileView: View {
                 // 统计概览
                 statsOverview
 
+                // 心光会员大卡片
+                vipBannerCard
+
                 // 功能入口
                 featureSection
 
@@ -136,7 +139,56 @@ struct CCProfileView: View {
         .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
     }
 
-    // MARK: - 功能入口
+    // MARK: - 心光会员大卡片
+    private var vipBannerCard: some View {
+        Button(action: { coordinator.navigate(to: .vipCenter) }) {
+            HStack(spacing: AppSpacing.lg) {
+                // 左侧图标
+                ZStack {
+                    Circle()
+                        .fill(Color.white.opacity(0.3))
+                        .frame(width: 48, height: 48)
+                    Image(systemName: "crown.fill")
+                        .font(.system(size: 22))
+                        .foregroundColor(.white)
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("心光会员")
+                        .font(AppFont.title3)
+                        .foregroundColor(.white)
+                    Text("解锁更多治愈功能")
+                        .font(AppFont.footnote)
+                        .foregroundColor(.white.opacity(0.8))
+                }
+
+                Spacer()
+
+                Text("立即开通")
+                    .font(AppFont.footnote.weight(.medium))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, AppSpacing.lg)
+                    .padding(.vertical, AppSpacing.sm)
+                    .background(Color.white.opacity(0.25))
+                    .cornerRadius(AppRadius.full)
+            }
+            .padding(AppSpacing.lg)
+            .background(
+                LinearGradient(
+                    colors: [
+                        Color(hex: "D4A882"),
+                        Color(hex: "E8C4A3"),
+                        Color(hex: "F2DBC9")
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+            .cornerRadius(AppRadius.lg)
+            .shadow(color: Color(hex: "D4A882").opacity(0.25), radius: 12, x: 0, y: 4)
+        }
+        .buttonStyle(.plain)
+    }
     private var featureSection: some View {
         VStack(spacing: AppSpacing.sm) {
             featureRow(
