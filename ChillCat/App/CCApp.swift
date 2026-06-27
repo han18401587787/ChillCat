@@ -38,34 +38,34 @@ struct CCApp: View {
     // MARK: - Splash
     private var splashView: some View {
         ZStack {
-            AppTheme.background.ignoresSafeArea()
-            VStack(spacing: AppSpacing.lg) {
+            Color.xuanApricotBg.ignoresSafeArea()
+            VStack(spacing: XuanSpacing.lg) {
                 Image(systemName: "leaf.circle.fill")
                     .font(.system(size: 64))
-                    .foregroundColor(AppTheme.accentMint)
+                    .foregroundColor(Color.xuanMint)
 
                 if let error = initError {
-                    VStack(spacing: AppSpacing.sm) {
+                    VStack(spacing: XuanSpacing.sm) {
                         Text("连接失败")
-                            .font(AppFont.title3)
-                            .foregroundColor(AppTheme.textPrimary)
+                            .font(XuanFont.h3)
+                            .foregroundColor(Color.xuanTextPrimary)
                         Text(error)
-                            .font(AppFont.footnote)
-                            .foregroundColor(AppTheme.textSecondary)
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextSecondary)
                         Button("重试") {
                             initError = nil
                             Task { await initializeApp() }
                         }
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.primary)
-                        .padding(.top, AppSpacing.sm)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(Color.xuanApricot)
+                        .padding(.top, XuanSpacing.sm)
                     }
                 } else {
                     ProgressView()
                         .scaleEffect(1.2)
                     Text("正在连接...")
-                        .font(AppFont.footnote)
-                        .foregroundColor(AppTheme.textSecondary)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
             }
         }
