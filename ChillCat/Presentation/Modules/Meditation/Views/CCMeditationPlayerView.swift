@@ -1,35 +1,34 @@
 //
 //  CCMeditationPlayerView.swift
-//  ChillCat
+//  绪安 - 冥想播放器 (对照截图 #2 像素级还原)
 //
-//  冥想音频播放页面 — 时间轴滑块、播放/暂停、进度标签
-//
+//  布局: 方形封面图 → 标题+副标题 → 进度条+时间 → 播放/暂停大按钮 → 定时关闭选项
 
 import SwiftUI
 
 struct CCMeditationPlayerView: View {
     let session: CCMeditationSession
-
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel = CCAudioPlayerViewModel()
     @State private var isDragging = false
     @State private var dragTime: TimeInterval = 0
+    @State private var timerOption: Int = 0  // 0=不限, 1=15min, 2=30min, 3=60min
+    private let timerOptions = [0, 15, 30, 60]
 
     var body: some View {
-        VStack(spacing: AppSpacing.lg) {
-            // 顶部占位
-            Spacer().frame(height: 40)
+        VStack(spacing: AppSpacing.xl) {
+            Spacer().frame(height: 20)
 
-            // 音频可视化占位（呼吸光晕）
-            audioVisualizer
+            // 方形封面
+            coverImage
 
             // 标题
             VStack(spacing: AppSpacing.xs) {
                 Text(session.title)
-                    .font(.system(size: 28, weight: .bold))
+                    .font(.system(size: 24, weight: .bold))
                     .foregroundColor(AppTheme.textPrimary)
-                Text(session.category.displayName)
-                    .font(.system(size: 15))
+                Text(session.category.subtitle)
+                    .font(AppFont.footnote)
                     .foregroundColor(AppTheme.textSecondary)
             }
 
@@ -40,14 +39,11 @@ struct CCMeditationPlayerView: View {
                     in: 0...max(viewModel.duration, 1),
                     onEditingChanged: { editing in
                         isDragging = editing
-                        if editing {
-                            dragTime = viewModel.currentTime
-                        } else {
-                            viewModel.seek(to: dragTime)
-                        }
+                        if editing { dragTime = viewModel.currentTime }
+                        else { viewModel.seek(to: dragTime) }
                     }
                 )
-                .accentColor(Color(hex: session.category.themeColor))
+                .accentColor(AppTheme.accentMint)
                 .disabled(viewModel.isLoading || viewModel.duration <= 0)
 
                 HStack {
@@ -60,98 +56,135 @@ struct CCMeditationPlayerView: View {
                         .foregroundColor(AppTheme.textMuted)
                 }
             }
-            .padding(.horizontal, AppSpacing.lg)
+            .padding(.horizontal, AppSpacing.xxl)
 
-            // 播放/暂停按钮
+            // 播放/暂停 大按钮
             Button(action: { viewModel.togglePlayPause() }) {
                 ZStack {
                     Circle()
-                        .fill(Color(hex: session.category.themeColor).opacity(0.15))
-                        .frame(width: 80, height: 80)
+                        .fill(AppTheme.accentMint.opacity(0.12))
+                        .frame(width: 88, height: 88)
 
                     if viewModel.isLoading {
                         ProgressView()
+                            .scaleEffect(1.5)
                     } else {
                         Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                            .font(.system(size: 32))
-                            .foregroundColor(Color(hex: "5A7A8A"))
+                            .font(.system(size: 36))
+                            .foregroundColor(AppTheme.accentMint)
                     }
                 }
             }
             .disabled(viewModel.isLoading)
 
-            // 信息提示
+            // 定时关闭
+            VStack(spacing: AppSpacing.sm) {
+                Text("定时关闭")
+                    .font(AppFont.footnote)
+                    .foregroundColor(AppTheme.textMuted)
+
+                HStack(spacing: AppSpacing.sm) {
+                    timerChip(label: "不限", minutes: 0)
+                    timerChip(label: "15分钟", minutes: 15)
+                    timerChip(label: "30分钟", minutes: 30)
+                    timerChip(label: "60分钟", minutes: 60)
+                }
+            }
+
+            // 提示文字
             if let error = viewModel.errorMessage {
                 Text(error)
-                    .font(.system(size: 13))
+                    .font(AppFont.footnote)
                     .foregroundColor(AppTheme.error)
-                    .padding(.horizontal)
             } else if viewModel.isLoading {
                 Text("正在准备音频...")
-                    .font(.system(size: 13))
+                    .font(AppFont.footnote)
                     .foregroundColor(AppTheme.textSecondary)
             } else {
                 hintText
-                    .font(.system(size: 14))
+                    .font(AppFont.footnote)
                     .foregroundColor(AppTheme.textMuted)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, AppSpacing.lg)
+                    .padding(.horizontal, AppSpacing.xxl)
             }
 
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppTheme.background)
-        .navigationTitle("冥想播放")
+        .navigationTitle(session.title)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(false)
         .onDisappear { viewModel.stop() }
-        .task {
-            await viewModel.load(session: session)
-        }
+        .task { await viewModel.load(session: session) }
     }
 
-    // MARK: - Audio Visualizer (animated breathing ring)
-
-    private var audioVisualizer: some View {
+    // MARK: - 方形封面
+    private var coverImage: some View {
         ZStack {
-            Circle()
-                .stroke(Color(hex: session.category.themeColor).opacity(0.15), lineWidth: 2)
-                .frame(width: 180, height: 180)
-
-            Circle()
-                .trim(from: 0, to: viewModel.duration > 0
-                    ? CGFloat(viewModel.currentTime / viewModel.duration)
-                    : 0)
-                .stroke(
-                    Color(hex: session.category.themeColor),
-                    style: StrokeStyle(lineWidth: 3, lineCap: .round)
+            RoundedRectangle(cornerRadius: AppRadius.lg)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(hex: session.category.themeColor).opacity(0.3),
+                            Color(hex: session.category.themeColor).opacity(0.1),
+                            AppTheme.background
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
                 )
-                .frame(width: 180, height: 180)
-                .rotationEffect(.degrees(-90))
-                .animation(.linear(duration: 0.25), value: viewModel.currentTime)
+                .frame(width: 200, height: 200)
 
-            VStack(spacing: 4) {
+            VStack(spacing: AppSpacing.md) {
                 Image(systemName: session.category.iconName)
-                    .font(.system(size: 36))
+                    .font(.system(size: 48))
                     .foregroundColor(Color(hex: session.category.themeColor))
+
                 if viewModel.isPlaying {
-                    Text("播放中")
-                        .font(.system(size: 13))
-                        .foregroundColor(AppTheme.textSecondary)
+                    HStack(spacing: 3) {
+                        ForEach(0..<3) { i in
+                            RoundedRectangle(cornerRadius: 2)
+                                .fill(Color(hex: session.category.themeColor).opacity(0.6))
+                                .frame(width: 3, height: [12, 20, 8][i])
+                                .scaleEffect(y: viewModel.isPlaying ? [1.0, 0.6, 0.8][i] : 1.0, anchor: .center)
+                                .animation(
+                                    .easeInOut(duration: 0.4).repeatForever(autoreverses: true)
+                                    .delay(Double(i) * 0.15),
+                                    value: viewModel.isPlaying
+                                )
+                        }
+                    }
                 }
             }
         }
     }
 
-    private var hintText: some View {
+    // MARK: - 定时Chip
+    private func timerChip(label: String, minutes: Int) -> some View {
+        Button(action: { timerOption = minutes }) {
+            Text(label)
+                .font(AppFont.caption2)
+                .foregroundColor(timerOption == minutes ? .white : AppTheme.textSecondary)
+                .padding(.horizontal, AppSpacing.md)
+                .padding(.vertical, AppSpacing.xs)
+                .background(
+                    timerOption == minutes
+                        ? AppTheme.accentMint
+                        : AppTheme.surface
+                )
+                .cornerRadius(AppRadius.full)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var hintText: Text {
         switch session.category {
         case .sleep:
-            return Text("闭上眼睛，跟随音波的节奏缓缓入眠。\n适合睡前聆听，帮助放松身心。")
+            return Text("闭上眼睛，跟随音波的节奏缓缓入眠。")
         case .relax:
-            return Text("给自己一段独处的时间。\n让思绪随着音频自然流淌。")
+            return Text("给自己一段独处的时间，让思绪自然流淌。")
         case .anxiety:
-            return Text("接纳此刻的感受，不评判不抗拒。\n让声音带走紧绷与不安。")
+            return Text("接纳此刻的感受，让声音带走紧绷与不安。")
         }
     }
 

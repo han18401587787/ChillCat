@@ -204,10 +204,10 @@ struct AIChatView: View {
 
     // MARK: - Quick Topics
     private var quickTopicsSection: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: AppSpacing.md) {
             Text("或许你想聊聊这些？")
                 .font(AppFont.footnote)
-                .foregroundColor(AppTheme.textTertiary)
+                .foregroundColor(AppTheme.textMuted)
 
             LazyVGrid(
                 columns: [GridItem(.flexible()), GridItem(.flexible())],
@@ -219,17 +219,18 @@ struct AIChatView: View {
                     } label: {
                         HStack(spacing: 6) {
                             Image(systemName: topicIcon(for: topic))
-                                .font(.system(size: 12))
+                                .font(.system(size: 13))
                             Text(topic)
                                 .font(AppFont.footnote)
                                 .lineLimit(1)
                         }
-                        .foregroundColor(AppTheme.textSecondary)
+                        .foregroundColor(AppTheme.textPrimary)
                         .frame(maxWidth: .infinity)
                         .padding(.horizontal, AppSpacing.md)
                         .padding(.vertical, AppSpacing.md)
-                        .background(AppTheme.backgroundSecondary)
-                        .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                        .background(AppTheme.cardBackground)
+                        .cornerRadius(AppRadius.md)
+                        .shadow(color: Color(hex: "2C2416").opacity(0.03), radius: 4, y: 1)
                     }
                     .accessibilityHint("双击发送这个话题")
                 }
@@ -427,7 +428,7 @@ struct AIChatView: View {
     // MARK: - Input Area
     private var inputArea: some View {
         VStack(spacing: 0) {
-            Divider()
+            Divider().foregroundColor(AppTheme.border)
 
             HStack(alignment: .bottom, spacing: AppSpacing.sm) {
                 // 语音输入按钮
@@ -437,21 +438,19 @@ struct AIChatView: View {
                     Image(systemName: "mic.fill")
                         .font(.system(size: 22))
                         .foregroundColor(AppTheme.textSecondary)
-                        .frame(width: 40, height: 40)
+                        .frame(width: 44, height: 44)
                 }
                 .accessibilityLabel("语音输入")
-                .accessibilityHint("双击开始语音输入")
 
                 // 文字输入框
                 TextField("说说你的想法...", text: $viewModel.inputText, axis: .vertical)
                     .font(AppFont.body)
                     .padding(.horizontal, AppSpacing.lg)
                     .padding(.vertical, AppSpacing.sm)
-                    .background(AppTheme.backgroundSecondary)
-                    .clipShape(RoundedRectangle(cornerRadius: AppRadius.xl))
+                    .background(AppTheme.cardBackground)
+                    .cornerRadius(AppRadius.lg)
                     .focused($isInputFocused)
                     .lineLimit(1...5)
-                    .accessibilityLabel("消息输入框")
 
                 // 发送按钮
                 Button {
@@ -459,16 +458,14 @@ struct AIChatView: View {
                     isInputFocused = false
                 } label: {
                     Image(systemName: "arrow.up.circle.fill")
-                        .font(.system(size: 32))
+                        .font(.system(size: 34))
                         .foregroundColor(
                             viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                ? AppTheme.textTertiary
+                                ? AppTheme.textMuted
                                 : AppTheme.primary
                         )
                 }
                 .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                .accessibilityLabel("发送")
-                .accessibilityHint("发送消息给AI倾听官")
             }
             .padding(.horizontal, AppSpacing.md)
             .padding(.vertical, AppSpacing.sm)

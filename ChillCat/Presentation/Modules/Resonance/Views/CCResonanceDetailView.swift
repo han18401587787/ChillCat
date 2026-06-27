@@ -35,25 +35,110 @@ struct CCResonanceDetailView: View {
     }
 
     private var detailContent: some View {
-        ScrollView {
-            VStack(spacing: AppSpacing.lg) {
-                // 原始帖子卡片
-                originalPostCard
-
-                // 回应列表
-                if !replies.isEmpty {
-                    repliesSection
+        ZStack(alignment: .bottom) {
+            ScrollView {
+                VStack(spacing: AppSpacing.lg) {
+                    originalPostCard
+                    if !replies.isEmpty { repliesSection }
+                    Spacer().frame(height: 80) // 底部操作栏空间
                 }
-
-                // 输入区域
-                replyInputSection
+                .padding(AppSpacing.lg)
             }
-            .padding(AppSpacing.lg)
+
+            // 底部固定操作栏
+            bottomActionBar
         }
+        .background(AppTheme.background)
         .cc_emojiPickerOverlay(isShowing: $showEmoji) { emoji in
             newReply += emoji.displayName
         }
         .animation(.easeInOut, value: showEmoji)
+    }
+
+    // MARK: - 底部固定操作栏
+    private var bottomActionBar: some View {
+        VStack(spacing: 0) {
+            Divider().foregroundColor(AppTheme.border)
+
+            HStack(spacing: AppSpacing.md) {
+                // 共鸣按钮
+                Button(action: { /* 共鸣 */ }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "heart.fill")
+                            .font(.system(size: 18))
+                            .foregroundColor(AppTheme.warmPink)
+                        Text("共鸣")
+                            .font(AppFont.bodyBold)
+                            .foregroundColor(AppTheme.textPrimary)
+                        Text("\(item.resonanceCount)")
+                            .font(AppFont.footnote)
+                            .foregroundColor(AppTheme.textMuted)
+                    }
+                    .padding(.horizontal, AppSpacing.lg)
+                    .padding(.vertical, AppSpacing.sm)
+                    .background(AppTheme.warmPink.opacity(0.08))
+                    .cornerRadius(AppRadius.full)
+                }
+
+                // 鼓励按钮
+                Button(action: {
+                    isFocused = true
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "hand.wave.fill")
+                            .font(.system(size: 18))
+                            .foregroundColor(AppTheme.warmGold)
+                        Text("鼓励")
+                            .font(AppFont.bodyBold)
+                            .foregroundColor(AppTheme.textPrimary)
+                        Text("\(replies.count)")
+                            .font(AppFont.footnote)
+                            .foregroundColor(AppTheme.textMuted)
+                    }
+                    .padding(.horizontal, AppSpacing.lg)
+                    .padding(.vertical, AppSpacing.sm)
+                    .background(AppTheme.warmGold.opacity(0.08))
+                    .cornerRadius(AppRadius.full)
+                }
+
+                Spacer()
+
+                // 回复输入框
+                HStack(spacing: AppSpacing.sm) {
+                    TextField("附上一句鼓励...", text: $newReply, axis: .vertical)
+                        .focused($isFocused)
+                        .font(AppFont.footnote)
+                        .lineLimit(1)
+
+                    Button(action: { showEmoji.toggle() }) {
+                        Image(systemName: "face.smiling")
+                            .font(.system(size: 18))
+                            .foregroundColor(AppTheme.textSecondary)
+                    }
+
+                    Button(action: { sendReply() }) {
+                        Image(systemName: "paperplane.fill")
+                            .font(.system(size: 16))
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(
+                                newReply.trimmingCharacters(in: .whitespaces).isEmpty
+                                    ? AppTheme.textMuted
+                                    : AppTheme.primary
+                            )
+                            .clipShape(Circle())
+                    }
+                    .disabled(newReply.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
+                .padding(.horizontal, AppSpacing.md)
+                .padding(.vertical, AppSpacing.xs)
+                .background(AppTheme.surface)
+                .cornerRadius(AppRadius.full)
+            }
+            .padding(.horizontal, AppSpacing.lg)
+            .padding(.vertical, AppSpacing.sm)
+            .background(.regularMaterial)
+        }
     }
 
     // MARK: - 原始帖子卡片
