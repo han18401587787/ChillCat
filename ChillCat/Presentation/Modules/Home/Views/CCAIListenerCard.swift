@@ -52,8 +52,8 @@ struct CCAIListenerCard: View {
             RoundedRectangle(cornerRadius: AppRadius.lg)
                 .stroke(
                     viewModel.crisisDetected && viewModel.riskLevel >= .medium
-                        ? Color.red.opacity(0.3)
-                        : AppTheme.primaryMuted.opacity(0.3),
+                        ? AppTheme.error.opacity(0.3)
+                        : AppTheme.primary.opacity(0.15),
                     lineWidth: 1
                 )
         )
@@ -84,10 +84,10 @@ struct CCAIListenerCard: View {
                     Text("安全空间")
                         .font(.system(size: 12, weight: .medium))
                 }
-                .foregroundColor(Color.red)
+                .foregroundColor(AppTheme.error)
                 .padding(.horizontal, AppSpacing.sm)
                 .padding(.vertical, AppSpacing.xs)
-                .background(Color.red.opacity(0.18))
+                .background(AppTheme.error.opacity(0.12))
                 .cornerRadius(AppRadius.sm)
                 .transition(.opacity.combined(with: .scale))
             }
@@ -124,7 +124,7 @@ struct CCAIListenerCard: View {
             .background {
                 if viewModel.currentMode == mode {
                     Capsule()
-                        .fill(Color(hex: "5A7A8A"))
+                        .fill(AppTheme.primaryDark)
                         .matchedGeometryEffect(id: "mode_background", in: modeAnimation)
                 } else {
                     Capsule()
@@ -183,9 +183,9 @@ struct CCAIListenerCard: View {
                     NavigationLink(value: CCAppRoute.safetyPlan) {
                         Image(systemName: "heart.circle.fill")
                             .font(.system(size: 20))
-                            .foregroundColor(Color.red)
+                            .foregroundColor(AppTheme.crisisRed)
                             .frame(width: 44, height: 44)
-                            .background(Color.red.opacity(0.12))
+                            .background(AppTheme.crisisRed.opacity(0.12))
                             .cornerRadius(AppRadius.sm)
                     }
                 }
@@ -295,13 +295,13 @@ struct CCAIListenerCard: View {
                     Text("感谢反馈")
                         .font(.system(size: 12))
                 }
-                .foregroundColor(Color(hex: "82C785"))
+                .foregroundColor(AppTheme.success)
                 .padding(.top, 4)
             }
         }
         .padding(AppSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(hex: "A8D9BA").opacity(0.12))
+        .background(AppTheme.accentMint.opacity(0.12))
         .cornerRadius(AppRadius.md)
     }
 
@@ -339,20 +339,20 @@ struct CCAIListenerCard: View {
             HStack(spacing: AppSpacing.sm) {
                 Image(systemName: "phone.fill")
                     .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(Color.red)
+                    .foregroundColor(AppTheme.crisisRed)
 
                 Text("拨打心理援助热线")
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(Color.red)
+                    .foregroundColor(AppTheme.crisisRed)
 
                 Spacer()
 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(Color.red.opacity(0.6))
+                    .foregroundColor(AppTheme.crisisRed.opacity(0.6))
             }
             .padding(AppSpacing.md)
-            .background(Color.red.opacity(0.09))
+            .background(AppTheme.crisisRed.opacity(0.09))
             .cornerRadius(AppRadius.md)
         }
         .buttonStyle(.plain)
@@ -416,7 +416,7 @@ struct CCAIListenerCard: View {
         HStack(spacing: AppSpacing.md) {
             Image(systemName: "phone.circle.fill")
                 .font(.system(size: 28))
-                .foregroundColor(Color.red)
+                .foregroundColor(AppTheme.crisisRed)
 
             VStack(alignment: .leading, spacing: AppSpacing.xs) {
                 Text(title)
@@ -425,7 +425,7 @@ struct CCAIListenerCard: View {
 
                 Text(number)
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(Color.red)
+                    .foregroundColor(AppTheme.crisisRed)
 
                 Text(subtitle)
                     .font(.system(size: 12))
@@ -441,15 +441,15 @@ struct CCAIListenerCard: View {
             } label: {
                 Image(systemName: "phone.arrow.up.right")
                     .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(Color.red)
+                    .foregroundColor(AppTheme.crisisRed)
                     .frame(width: 44, height: 44)
-                    .background(Color.red.opacity(0.12))
+                    .background(AppTheme.crisisRed.opacity(0.12))
                     .cornerRadius(AppRadius.sm)
             }
             .buttonStyle(.plain)
         }
         .padding(AppSpacing.md)
-        .background(Color.red.opacity(0.045))
+        .background(AppTheme.crisisRed.opacity(0.045))
         .cornerRadius(AppRadius.md)
     }
 }

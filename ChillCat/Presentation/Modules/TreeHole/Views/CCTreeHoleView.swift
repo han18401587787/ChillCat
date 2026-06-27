@@ -108,7 +108,7 @@ struct CCTreeHoleView: View {
     private var headerSection: some View {
         HStack {
             Text("共鸣墙")
-                .font(.system(size: 24, weight: .bold))
+                .font(AppFont.title1)
                 .foregroundColor(AppTheme.textPrimary)
             Spacer()
 
@@ -118,44 +118,42 @@ struct CCTreeHoleView: View {
                     Image(systemName: "person.3.fill")
                         .font(.system(size: 12))
                     Text("互助小组")
-                        .font(.system(size: 13))
-                        .foregroundColor(Color(hex: "66BB6A"))
+                        .font(AppFont.footnote)
+                        .foregroundColor(AppTheme.accentMint)
                 }
-                .padding(.horizontal, 10)
+                .padding(.horizontal, AppSpacing.sm)
                 .padding(.vertical, 4)
-                .background(Color(hex: "66BB6A").opacity(0.1))
+                .background(AppTheme.accentMint.opacity(0.12))
                 .cornerRadius(AppRadius.sm)
             }
 
             HStack(spacing: 4) {
-                Text("🕊️")
-                    .font(.system(size: 14))
+                Text("🕊️").font(.system(size: 14))
                 Text("\(viewModel.onlineCount) 人此刻")
-                    .font(.system(size: 13))
+                    .font(AppFont.footnote)
                     .foregroundColor(AppTheme.textSecondary)
             }
-            .padding(.horizontal, 10)
+            .padding(.horizontal, AppSpacing.sm)
             .padding(.vertical, 4)
-            .background(AppTheme.primaryMuted.opacity(0.2))
+            .background(AppTheme.primary.opacity(0.1))
             .cornerRadius(AppRadius.sm)
 
             NavigationLink(value: CCAppRoute.encourageChain) {
                 HStack(spacing: 4) {
-                    Text("🔥")
-                        .font(.system(size: 13))
+                    Text("🔥").font(.system(size: 13))
                     Text("鼓励链")
-                        .font(.system(size: 13))
-                        .foregroundColor(Color(hex: "8B6F47"))
+                        .font(AppFont.footnote)
+                        .foregroundColor(AppTheme.warmGold)
                 }
-                .padding(.horizontal, 10)
+                .padding(.horizontal, AppSpacing.sm)
                 .padding(.vertical, 4)
-                .background(Color(hex: "8B6F47").opacity(0.1))
+                .background(AppTheme.warmGold.opacity(0.12))
                 .cornerRadius(AppRadius.sm)
             }
         }
         .padding(.horizontal)
-        .padding(.top, 8)
-        .padding(.bottom, 4)
+        .padding(.top, AppSpacing.sm)
+        .padding(.bottom, AppSpacing.xs)
     }
 
     // MARK: - Publish Box
@@ -403,11 +401,11 @@ struct CCTreeHoleView: View {
     // MARK: - Guideline Banner
 
     private var guidelineBanner: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: AppSpacing.sm) {
             Text("💚")
                 .font(.system(size: 14))
             Text("社区准则：温暖友善，互相支持")
-                .font(.system(size: 13))
+                .font(AppFont.footnote)
                 .foregroundColor(AppTheme.textSecondary)
             Spacer()
             Button(action: {
@@ -420,25 +418,25 @@ struct CCTreeHoleView: View {
                     .foregroundColor(AppTheme.textSecondary)
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-        .background(Color(hex: "66BB6A").opacity(0.3))
+        .padding(.horizontal, AppSpacing.lg)
+        .padding(.vertical, AppSpacing.sm)
+        .background(AppTheme.accentMint.opacity(0.15))
     }
 
     // MARK: - Helpers
 
     private func emotionColorFor(_ colorName: String) -> Color {
         switch colorName {
-        case "softGreen": return Color(hex: "66BB6A")
-        case "warmLight": return Color(hex: "C9A063")
+        case "softGreen": return AppTheme.accentMint
+        case "warmLight": return AppTheme.warmGold
         case "primaryMuted": return AppTheme.primaryMuted
-        case "softPurple": return Color(hex: "D4C8E8")
-        case "softPink": return Color(hex: "E8B8C8")
+        case "softPurple": return AppTheme.warmPurple
+        case "softPink": return AppTheme.warmPink
         case "primaryLight": return AppTheme.primaryLight
-        case "error": return Color.red
-        case "softPurpleLight": return Color(hex: "D4C8E8").opacity(0.3)
-        case "warm": return Color(hex: "8B6F47")
-        default: return AppTheme.primaryMuted
+        case "error": return AppTheme.error
+        case "softPurpleLight": return AppTheme.warmPurple.opacity(0.3)
+        case "warm": return AppTheme.warmGold
+        default: return AppTheme.primary
         }
     }
 }

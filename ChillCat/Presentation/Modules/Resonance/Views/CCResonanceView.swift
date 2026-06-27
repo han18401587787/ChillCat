@@ -1,7 +1,9 @@
 //
 //  CCResonanceView.swift
-//  绪安 - 共鸣墙
+//  绪安 - 共鸣墙 (Ardot v3)
 //
+//  对照设计图像素级还原
+//  包含：共鸣故事卡片列表、情绪色条、互动按钮、悬浮发布按钮
 
 import SwiftUI
 
@@ -9,18 +11,15 @@ struct CCResonanceView: View {
     @State private var viewModel = CCResonanceViewModel()
     @Environment(CCAppCoordinator.self) private var coordinator
 
-    // Compose
     @State private var showComposer = false
     @State private var composerText = ""
     @State private var showComposerEmoji = false
     @FocusState private var composerFocused: Bool
 
-    // Resonate sheet
     @State private var resonateTarget: CCResonanceDisplayItem?
     @State private var resonateMessage = ""
     @State private var showResonateEmoji = false
 
-    // Share sheet
     @State private var shareItem: CCResonanceDisplayItem?
 
     var body: some View {
@@ -43,29 +42,24 @@ struct CCResonanceView: View {
                 resonanceList
             }
 
-            // Floating compose button
             if !viewModel.resonanceItems.isEmpty {
                 composeFAB
             }
         }
         .navigationTitle("共鸣墙")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.large)
         .toolbar { toolbarContent }
         .task { await viewModel.loadResonance() }
-        // Compose sheet
         .sheet(isPresented: $showComposer) { composeSheet }
-        // Resonate sheet
         .sheet(item: $resonateTarget) { item in
             resonateSheet(for: item)
-                .presentationDetents([.height(320)])
+                .presentationDetents([.height(360)])
                 .presentationDragIndicator(.visible)
         }
-        // Share sheet
         .sheet(item: $shareItem) { item in
             ShareSheet(activityItems: [item.content])
                 .presentationDetents([.medium])
         }
-        // Emoji overlays (V3)
         .cc_emojiPickerOverlay(isShowing: $showComposerEmoji) { emoji in
             composerText += emoji.displayName
         }
@@ -77,36 +71,39 @@ struct CCResonanceView: View {
     }
 
     // MARK: - Toolbar
-
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
-            HStack(spacing: 4) {
-                Image(systemName: "person.2.fill")
-                    .font(.system(size: 11))
-                    .foregroundColor(AppTheme.primaryMuted)
-                Text("\(viewModel.onlineCount) 人此刻")
-                    .font(.system(size: 12))
-                    .foregroundColor(AppTheme.textSecondary)
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 4)
-            .background(AppTheme.primaryMuted.opacity(0.2))
-            .cornerRadius(AppRadius.sm)
-        }
-        ToolbarItem(placement: .topBarTrailing) {
-            Button(action: { coordinator.navigate(to: .encourageChain) }) {
-                HStack(spacing: 2) {
-                    Text("🔥").font(.system(size: 13))
-                    Text("鼓励链").font(.system(size: 13))
+            HStack(spacing: AppSpacing.sm) {
+                // 在线人数
+                HStack(spacing: 4) {
+                    Image(systemName: "person.2.fill")
+                        .font(.system(size: 11))
+                        .foregroundColor(AppTheme.accentMint)
+                    Text("\(viewModel.onlineCount) 人此刻")
+                        .font(AppFont.footnote)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
-                .foregroundColor(AppTheme.warm)
+                .padding(.horizontal, AppSpacing.md)
+                .padding(.vertical, 4)
+                .background(AppTheme.accentMint.opacity(0.1))
+                .cornerRadius(AppRadius.full)
+
+                // 鼓励链入口
+                Button(action: {
+                    coordinator.navigate(to: .encourageChain)
+                }) {
+                    HStack(spacing: 2) {
+                        Text("🔥").font(.system(size: 12))
+                        Text("鼓励链").font(AppFont.footnote)
+                    }
+                    .foregroundColor(AppTheme.warmGold)
+                }
             }
         }
     }
 
     // MARK: - List
-
     private var resonanceList: some View {
         ScrollView {
             LazyVStack(spacing: AppSpacing.md) {
@@ -129,45 +126,44 @@ struct CCResonanceView: View {
 
                 if !viewModel.hasMore && !viewModel.resonanceItems.isEmpty {
                     Text("— 已经到底了 —")
-                        .font(.system(size: 12))
+                        .font(AppFont.footnote)
                         .foregroundColor(AppTheme.textMuted)
-                        .padding(.vertical, AppSpacing.md)
+                        .padding(.vertical, AppSpacing.lg)
                 }
             }
-            .padding()
+            .padding(AppSpacing.lg)
             .padding(.bottom, 80)
         }
         .refreshable { await viewModel.refresh() }
     }
 
     // MARK: - Card
-
     private func resonanceCard(_ item: CCResonanceDisplayItem) -> some View {
         HStack(spacing: 0) {
-            // Left emotion color strip (4px per spec)
+            // 情绪色条
             RoundedRectangle(cornerRadius: 2)
                 .fill(item.emotionColorValue)
                 .frame(width: 4)
                 .padding(.vertical, AppSpacing.md)
 
             VStack(alignment: .leading, spacing: AppSpacing.sm) {
-                // Header: emotion label + time
+                // 顶栏：情绪标签 + 时间
                 HStack(spacing: AppSpacing.sm) {
                     HStack(spacing: 4) {
                         Circle()
                             .fill(item.emotionColorValue)
                             .frame(width: 8, height: 8)
                         Text(item.emotion)
-                            .font(.system(size: 13))
+                            .font(AppFont.footnote)
                             .foregroundColor(item.emotionColorValue)
                     }
                     Spacer()
                     Text(item.timeAgo)
-                        .font(.system(size: 12))
+                        .font(AppFont.caption2)
                         .foregroundColor(AppTheme.textMuted)
                 }
 
-                // Content (max 280 chars per spec, fold after 5 lines)
+                // 内容
                 Text(item.content)
                     .font(.system(size: 15))
                     .foregroundColor(AppTheme.textPrimary)
@@ -176,9 +172,8 @@ struct CCResonanceView: View {
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
 
-                // Bottom: resonance count + actions
+                // 底栏：共鸣数 + 操作
                 HStack(spacing: AppSpacing.lg) {
-                    // Resonance count — tapping opens resonate sheet per spec
                     Button(action: {
                         CCHaptic.light()
                         resonateTarget = item
@@ -187,9 +182,9 @@ struct CCResonanceView: View {
                         HStack(spacing: 4) {
                             Image(systemName: "heart.fill")
                                 .font(.system(size: 14))
-                                .foregroundColor(AppTheme.softPink)
+                                .foregroundColor(AppTheme.warmPink)
                             Text("\(item.resonanceCount) 人共鸣")
-                                .font(.system(size: 13))
+                                .font(AppFont.footnote)
                                 .foregroundColor(AppTheme.textSecondary)
                         }
                     }
@@ -197,22 +192,28 @@ struct CCResonanceView: View {
 
                     Spacer()
 
-                    // "我也想说"
                     Button(action: { showComposer = true }) {
-                        Label("我也想说", systemImage: "bubble.left")
-                            .font(.system(size: 12))
-                            .foregroundColor(AppTheme.primaryLight)
+                        HStack(spacing: 4) {
+                            Image(systemName: "bubble.left")
+                                .font(.system(size: 12))
+                            Text("我也想说")
+                                .font(AppFont.caption2)
+                        }
+                        .foregroundColor(AppTheme.info)
                     }
                     .buttonStyle(.plain)
 
-                    // "分享共鸣"
                     Button(action: {
                         CCHaptic.light()
                         shareItem = item
                     }) {
-                        Label("分享共鸣", systemImage: "square.and.arrow.up")
-                            .font(.system(size: 12))
-                            .foregroundColor(AppTheme.primaryLight)
+                        HStack(spacing: 4) {
+                            Image(systemName: "square.and.arrow.up")
+                                .font(.system(size: 12))
+                            Text("分享")
+                                .font(AppFont.caption2)
+                        }
+                        .foregroundColor(AppTheme.info)
                     }
                     .buttonStyle(.plain)
                 }
@@ -223,37 +224,41 @@ struct CCResonanceView: View {
         }
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
+        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
     }
 
     // MARK: - Floating Compose Button
-
     private var composeFAB: some View {
         Button(action: { showComposer = true }) {
             HStack(spacing: 6) {
                 Image(systemName: "pencil.line")
                     .font(.system(size: 16))
                 Text("写下心情")
-                    .font(.system(size: 14, weight: .medium))
+                    .font(AppFont.bodyBold)
             }
             .foregroundColor(.white)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, AppSpacing.xl)
             .padding(.vertical, 12)
-            .background(AppTheme.primary)
-            .cornerRadius(24)
-            .shadow(color: AppTheme.primary.opacity(0.3), radius: 6, y: 2)
+            .background(
+                LinearGradient(
+                    colors: [AppTheme.primary, AppTheme.primaryDark],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .cornerRadius(AppRadius.full)
+            .shadow(color: AppTheme.primary.opacity(0.3), radius: 8, x: 0, y: 3)
         }
         .padding(.trailing, AppSpacing.lg)
-        .padding(.bottom, AppSpacing.md)
+        .padding(.bottom, AppSpacing.lg)
     }
 
     // MARK: - Compose Sheet
-
     private var composeSheet: some View {
         NavigationStack {
             VStack(spacing: AppSpacing.md) {
                 HStack {
                     Spacer()
-
                     Button(action: { showComposerEmoji.toggle() }) {
                         Image(systemName: "face.smiling")
                             .font(.system(size: 20))
@@ -284,7 +289,7 @@ struct CCResonanceView: View {
 
                 TextField("分享你的心情，与千万人共鸣…", text: $composerText, axis: .vertical)
                     .focused($composerFocused)
-                    .font(.system(size: 15))
+                    .font(AppFont.body)
                     .lineLimit(4...10)
                     .padding(AppSpacing.md)
                     .background(AppTheme.surface)
@@ -308,19 +313,17 @@ struct CCResonanceView: View {
     }
 
     // MARK: - Resonate Sheet
-
     private func resonateSheet(for item: CCResonanceDisplayItem) -> some View {
         VStack(alignment: .leading, spacing: AppSpacing.lg) {
-            // Quote the post
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
                 HStack(spacing: 6) {
                     Circle().fill(item.emotionColorValue).frame(width: 8, height: 8)
                     Text(item.emotion)
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(AppFont.footnote)
                         .foregroundColor(item.emotionColorValue)
                     Text("·").foregroundColor(AppTheme.textMuted)
                     Text(item.timeAgo)
-                        .font(.system(size: 13))
+                        .font(AppFont.footnote)
                         .foregroundColor(AppTheme.textMuted)
                 }
                 Text(item.content)
@@ -334,16 +337,16 @@ struct CCResonanceView: View {
             .cornerRadius(AppRadius.md)
 
             Text("我也有过这种感觉")
-                .font(.system(size: 18, weight: .semibold))
+                .font(AppFont.title3)
                 .foregroundColor(AppTheme.textPrimary)
 
             Text("你愿意附上一句鼓励吗？（选填）")
-                .font(.system(size: 14))
+                .font(AppFont.footnote)
                 .foregroundColor(AppTheme.textSecondary)
 
-            HStack(alignment: .bottom, spacing: 8) {
+            HStack(alignment: .bottom, spacing: AppSpacing.sm) {
                 TextField("一句温暖的话…", text: $resonateMessage, axis: .vertical)
-                    .font(.system(size: 15))
+                    .font(AppFont.body)
                     .lineLimit(2...4)
                     .padding(AppSpacing.md)
                     .background(AppTheme.surface)
@@ -367,12 +370,12 @@ struct CCResonanceView: View {
                 HStack {
                     Spacer()
                     Text("💚 表达共鸣")
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(AppFont.buttonLabel)
                         .foregroundColor(.white)
                     Spacer()
                 }
                 .padding(.vertical, 14)
-                .background(AppTheme.softGreen)
+                .background(AppTheme.accentMint)
                 .cornerRadius(AppRadius.md)
             }
 
@@ -384,7 +387,6 @@ struct CCResonanceView: View {
 }
 
 // MARK: - Share Sheet
-
 private struct ShareSheet: UIViewControllerRepresentable {
     let activityItems: [Any]
 

@@ -30,6 +30,18 @@ final class CCProfileViewModel {
         user?.email ?? ""
     }
 
+    var totalCheckins: Int {
+        user?.totalCheckins ?? 0
+    }
+
+    var streakDays: Int {
+        user?.streakDays ?? 0
+    }
+
+    var resonanceCount: Int {
+        user?.resonanceCount ?? 0
+    }
+
     func loadProfile() async {
         isLoading = true
         errorMessage = nil

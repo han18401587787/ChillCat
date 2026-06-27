@@ -1,7 +1,9 @@
 //
 //  CCResonanceDetailView.swift
-//  绪安 - 共鸣详情
+//  绪安 - 共鸣详情 (Ardot v3)
 //
+//  对照设计图像素级还原
+//  包含：帖子详情（全内容展开）、回应列表、回复输入框
 
 import SwiftUI
 
@@ -35,66 +37,18 @@ struct CCResonanceDetailView: View {
     private var detailContent: some View {
         ScrollView {
             VStack(spacing: AppSpacing.lg) {
-                // 原始卡片（全内容展开）
-                VStack(spacing: 0) {
-                    HStack(spacing: 0) {
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(item.emotionColorValue)
-                            .frame(width: 4)
-                            .padding(.vertical, AppSpacing.md)
+                // 原始帖子卡片
+                originalPostCard
 
-                        VStack(alignment: .leading, spacing: AppSpacing.sm) {
-                            HStack(spacing: AppSpacing.sm) {
-                                HStack(spacing: 4) {
-                                    Circle().fill(item.emotionColorValue).frame(width: 8, height: 8)
-                                    Text(item.emotion).font(.system(size: 13)).foregroundColor(item.emotionColorValue)
-                                }
-                                Spacer()
-                                Text(item.timeAgo).font(.system(size: 12)).foregroundColor(AppTheme.textMuted)
-                            }
-
-                            Text(item.content)
-                                .font(.system(size: 15))
-                                .foregroundColor(AppTheme.textPrimary)
-                                .lineSpacing(6)
-                                .fixedSize(horizontal: false, vertical: true)
-
-                            HStack(spacing: AppSpacing.lg) {
-                                Button(action: { /* 共鸣互动 */ }) {
-                                    HStack(spacing: 4) {
-                                        Image(systemName: "heart.fill").font(.system(size: 14)).foregroundColor(AppTheme.softPink)
-                                        Text("\(item.resonanceCount) 人共鸣").font(.system(size: 13)).foregroundColor(AppTheme.textSecondary)
-                                    }
-                                }
-                                .buttonStyle(.plain)
-                                Spacer()
-                            }
-                        }
-                        .padding(.leading, AppSpacing.sm)
-                        .padding(.vertical, AppSpacing.md)
-                        .padding(.trailing, AppSpacing.md)
-                    }
-                }
-                .background(AppTheme.cardBackground)
-                .cornerRadius(AppRadius.lg)
-
-                // 共鸣回应列表
+                // 回应列表
                 if !replies.isEmpty {
-                    VStack(alignment: .leading, spacing: AppSpacing.sm) {
-                        Text("回应 (\(replies.count))")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(AppTheme.textPrimary)
-
-                        ForEach(replies) { reply in
-                            replyRow(reply)
-                        }
-                    }
+                    repliesSection
                 }
 
                 // 输入区域
                 replyInputSection
             }
-            .padding()
+            .padding(AppSpacing.lg)
         }
         .cc_emojiPickerOverlay(isShowing: $showEmoji) { emoji in
             newReply += emoji.displayName
@@ -102,41 +56,124 @@ struct CCResonanceDetailView: View {
         .animation(.easeInOut, value: showEmoji)
     }
 
+    // MARK: - 原始帖子卡片
+    private var originalPostCard: some View {
+        HStack(spacing: 0) {
+            // 情绪色条
+            RoundedRectangle(cornerRadius: 2)
+                .fill(item.emotionColorValue)
+                .frame(width: 4)
+                .padding(.vertical, AppSpacing.md)
+
+            VStack(alignment: .leading, spacing: AppSpacing.sm) {
+                // 头：情绪标签 + 时间
+                HStack(spacing: AppSpacing.sm) {
+                    HStack(spacing: 4) {
+                        Circle().fill(item.emotionColorValue).frame(width: 8, height: 8)
+                        Text(item.emotion)
+                            .font(AppFont.footnote)
+                            .foregroundColor(item.emotionColorValue)
+                    }
+                    Spacer()
+                    Text(item.timeAgo)
+                        .font(AppFont.caption2)
+                        .foregroundColor(AppTheme.textMuted)
+                }
+
+                // 内容（全展开）
+                Text(item.content)
+                    .font(.system(size: 15))
+                    .foregroundColor(AppTheme.textPrimary)
+                    .lineSpacing(6)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                // 共鸣数
+                HStack(spacing: AppSpacing.lg) {
+                    Button(action: { /* 共鸣互动 */ }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "heart.fill")
+                                .font(.system(size: 14))
+                                .foregroundColor(AppTheme.warmPink)
+                            Text("\(item.resonanceCount) 人共鸣")
+                                .font(AppFont.footnote)
+                                .foregroundColor(AppTheme.textSecondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    Spacer()
+                }
+            }
+            .padding(.leading, AppSpacing.sm)
+            .padding(.vertical, AppSpacing.md)
+            .padding(.trailing, AppSpacing.md)
+        }
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.lg)
+        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
+    }
+
+    // MARK: - 回应区
+    private var repliesSection: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
+            Text("回应 (\(replies.count))")
+                .font(AppFont.title3)
+                .foregroundColor(AppTheme.textPrimary)
+                .padding(.top, AppSpacing.sm)
+
+            ForEach(replies) { reply in
+                replyRow(reply)
+            }
+        }
+    }
+
     private func replyRow(_ reply: CCResonanceReplyDisplay) -> some View {
-        HStack(alignment: .top, spacing: AppSpacing.sm) {
-            Image(systemName: "person.circle.fill")
-                .font(.system(size: 20))
-                .foregroundColor(AppTheme.primaryMuted)
+        HStack(alignment: .top, spacing: AppSpacing.md) {
+            // 匿名头像
+            ZStack {
+                Circle()
+                    .fill(AppTheme.primary.opacity(0.15))
+                    .frame(width: 36, height: 36)
+
+                Image(systemName: "person.circle.fill")
+                    .font(.system(size: 20))
+                    .foregroundColor(AppTheme.primaryMuted)
+            }
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("匿名用户")
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(AppTheme.textSecondary)
+                HStack {
+                    Text("匿名用户")
+                        .font(AppFont.footnote)
+                        .foregroundColor(AppTheme.textSecondary)
+                    Spacer()
+                    Text(reply.timeAgo)
+                        .font(AppFont.caption2)
+                        .foregroundColor(AppTheme.textMuted)
+                }
                 Text(reply.content)
                     .font(.system(size: 14))
                     .foregroundColor(AppTheme.textPrimary)
                     .lineSpacing(4)
-                Text(reply.timeAgo)
-                    .font(.system(size: 11))
-                    .foregroundColor(AppTheme.textMuted)
             }
         }
-        .padding(AppSpacing.sm)
+        .padding(AppSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppTheme.surface)
-        .cornerRadius(AppRadius.sm)
+        .background(AppTheme.cardBackground)
+        .cornerRadius(AppRadius.md)
     }
 
+    // MARK: - 回复输入区
     private var replyInputSection: some View {
         VStack(spacing: AppSpacing.sm) {
             Divider()
+                .foregroundColor(AppTheme.border)
+
             HStack(spacing: AppSpacing.sm) {
                 TextField("附上一句鼓励...", text: $newReply, axis: .vertical)
                     .focused($isFocused)
-                    .font(.system(size: 15))
-                    .padding(10)
+                    .font(AppFont.body)
+                    .padding(AppSpacing.md)
                     .background(AppTheme.surface)
-                    .cornerRadius(AppRadius.md)
+                    .cornerRadius(AppRadius.lg)
                     .lineLimit(1...3)
 
                 Button(action: { showEmoji.toggle() }) {
@@ -149,15 +186,21 @@ struct CCResonanceDetailView: View {
                     Image(systemName: "paperplane.fill")
                         .font(.system(size: 16))
                         .foregroundColor(.white)
-                        .padding(10)
-                        .background(newReply.trimmingCharacters(in: .whitespaces).isEmpty ? AppTheme.textMuted : AppTheme.primary)
+                        .padding(12)
+                        .background(
+                            newReply.trimmingCharacters(in: .whitespaces).isEmpty
+                                ? AppTheme.textMuted
+                                : AppTheme.primary
+                        )
                         .clipShape(Circle())
                 }
                 .disabled(newReply.trimmingCharacters(in: .whitespaces).isEmpty)
             }
         }
+        .padding(.top, AppSpacing.sm)
     }
 
+    // MARK: - 数据加载
     private func loadDetail() async {
         isLoading = true
         guard let id = Int64(item.id) else { isLoading = false; return }
@@ -185,10 +228,8 @@ struct CCResonanceDetailView: View {
         Task {
             do {
                 try await CCXuanAPI.hugResonance(id: id, message: replyText)
-                // Reload replies to show the new one
                 await loadDetail()
             } catch {
-                // Silently revert — the reply can be retried
                 newReply = replyText
             }
         }
