@@ -14,13 +14,25 @@ enum CCMainTab: Int, CaseIterable {
         }
     }
 
-    var iconName: String {
+    /// Ardot 自定义 SVG 图标 (Asset Catalog 名称)
+    var activeIconName: String {
         switch self {
-        case .home:          return "house.fill"
-        case .treeHole:      return "bubble.left.and.bubble.right.fill"
-        case .resonanceWall: return "heart.fill"
-        case .healing:       return "leaf.fill"
-        case .profile:       return "person.fill"
+        case .home:          return "tab-home-active-homepage"
+        case .treeHole:      return "tab-tree-active-treehollow"
+        case .resonanceWall: return "tab-resonance-active-resonance"
+        case .healing:       return "tab-healing-active-healing"
+        case .profile:       return "tab-profile-active-profile"
+        }
+    }
+
+    /// 非选中态图标（使用任意页面上下文的 inactive 版本）
+    var inactiveIconName: String {
+        switch self {
+        case .home:          return "tab-home-inactive-treehollow"
+        case .treeHole:      return "tab-tree-inactive-homepage"
+        case .resonanceWall: return "tab-resonance-inactive-homepage"
+        case .healing:       return "tab-healing-inactive-homepage"
+        case .profile:       return "tab-profile-inactive-homepage"
         }
     }
 }
@@ -38,7 +50,9 @@ struct CCMainTabView: View {
                         coordinator.buildView(for: route)
                     }
             }
-            .tabItem { Label(CCMainTab.home.title, systemImage: CCMainTab.home.iconName) }
+            .tabItem {
+                tabIcon(for: .home)
+            }
             .tag(CCMainTab.home)
             .accessibilityIdentifier("tab_home")
 
@@ -49,7 +63,9 @@ struct CCMainTabView: View {
                         coordinator.buildView(for: route)
                     }
             }
-            .tabItem { Label(CCMainTab.treeHole.title, systemImage: CCMainTab.treeHole.iconName) }
+            .tabItem {
+                tabIcon(for: .treeHole)
+            }
             .tag(CCMainTab.treeHole)
             .accessibilityIdentifier("tab_treehole")
 
@@ -60,7 +76,9 @@ struct CCMainTabView: View {
                         coordinator.buildView(for: route)
                     }
             }
-            .tabItem { Label(CCMainTab.resonanceWall.title, systemImage: CCMainTab.resonanceWall.iconName) }
+            .tabItem {
+                tabIcon(for: .resonanceWall)
+            }
             .tag(CCMainTab.resonanceWall)
             .accessibilityIdentifier("tab_resonance")
 
@@ -71,7 +89,9 @@ struct CCMainTabView: View {
                         coordinator.buildView(for: route)
                     }
             }
-            .tabItem { Label(CCMainTab.healing.title, systemImage: CCMainTab.healing.iconName) }
+            .tabItem {
+                tabIcon(for: .healing)
+            }
             .tag(CCMainTab.healing)
             .accessibilityIdentifier("tab_healing")
 
@@ -82,10 +102,23 @@ struct CCMainTabView: View {
                         coordinator.buildView(for: route)
                     }
             }
-            .tabItem { Label(CCMainTab.profile.title, systemImage: CCMainTab.profile.iconName) }
+            .tabItem {
+                tabIcon(for: .profile)
+            }
             .tag(CCMainTab.profile)
             .accessibilityIdentifier("tab_profile")
         }
         .tint(AppTheme.primary)
+    }
+
+    @ViewBuilder
+    private func tabIcon(for tab: CCMainTab) -> some View {
+        let isSelected = selectedTab == tab
+        Label {
+            Text(tab.title)
+        } icon: {
+            Image(isSelected ? tab.activeIconName : tab.inactiveIconName)
+                .renderingMode(.template)
+        }
     }
 }
