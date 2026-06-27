@@ -614,12 +614,22 @@ enum CCXuanAPI {
         do {
             let data = try await session.request(fullURL(path)).validate().serializingData().value
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+
+            // 检测 HTML 响应（DNS 劫持/备案拦截）
+            if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
+                print("⚠️ [API] ← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)")
+                throw CCAPIError.serverError(0)
+            }
+
             let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
-            guard resp.isSuccess, let d = resp.data else { throw CCAPIError.badRequest }
-            let preview = String(data: data, encoding: .utf8)?.prefix(200) ?? ""
+            guard resp.isSuccess, let d = resp.data else {
+                print("❌ [API] ← code=\(resp.code) \(resp.message) (\(elapsed)ms)")
+                throw CCAPIError.badRequest
+            }
             print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
-            if !preview.isEmpty { print("   📦 \(preview)") }
             return d
+        } catch let error as CCAPIError {
+            throw error
         } catch {
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
             print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
@@ -641,12 +651,22 @@ enum CCXuanAPI {
         do {
             let data = try await session.request(fullURL(path), method: .post, parameters: body, encoder: JSONParameterEncoder.default).validate().serializingData().value
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+
+            // 检测 HTML 响应
+            if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
+                print("⚠️ [API] ← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)")
+                throw CCAPIError.serverError(0)
+            }
+
             let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
-            guard resp.isSuccess, let d = resp.data else { throw CCAPIError.badRequest }
-            let preview = String(data: data, encoding: .utf8)?.prefix(200) ?? ""
+            guard resp.isSuccess, let d = resp.data else {
+                print("❌ [API] ← code=\(resp.code) \(resp.message) (\(elapsed)ms)")
+                throw CCAPIError.badRequest
+            }
             print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
-            if !preview.isEmpty { print("   📦 \(preview)") }
             return d
+        } catch let error as CCAPIError {
+            throw error
         } catch {
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
             print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")

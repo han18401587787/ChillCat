@@ -14,25 +14,13 @@ enum CCMainTab: Int, CaseIterable {
         }
     }
 
-    /// Ardot 自定义 SVG 图标 (Asset Catalog 名称)
-    var activeIconName: String {
+    var sfSymbol: String {
         switch self {
-        case .home:          return "tab-home-active-homepage"
-        case .treeHole:      return "tab-tree-active-treehollow"
-        case .resonanceWall: return "tab-resonance-active-resonance"
-        case .healing:       return "tab-healing-active-healing"
-        case .profile:       return "tab-profile-active-profile"
-        }
-    }
-
-    /// 非选中态图标（使用任意页面上下文的 inactive 版本）
-    var inactiveIconName: String {
-        switch self {
-        case .home:          return "tab-home-inactive-treehollow"
-        case .treeHole:      return "tab-tree-inactive-homepage"
-        case .resonanceWall: return "tab-resonance-inactive-homepage"
-        case .healing:       return "tab-healing-inactive-homepage"
-        case .profile:       return "tab-profile-inactive-homepage"
+        case .home:          return "house.fill"
+        case .treeHole:      return "bubble.left.and.bubble.right.fill"
+        case .resonanceWall: return "heart.fill"
+        case .healing:       return "leaf.fill"
+        case .profile:       return "person.fill"
         }
     }
 }
@@ -43,82 +31,30 @@ struct CCMainTabView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            // Tab 1: 首页
-            NavigationStack {
-                coordinator.buildView(for: .home)
-                    .navigationDestination(for: CCAppRoute.self) { route in
-                        coordinator.buildView(for: route)
-                    }
+            ForEach(CCMainTab.allCases, id: \.self) { tab in
+                NavigationStack {
+                    coordinator.buildView(for: routeFor(tab))
+                        .navigationDestination(for: CCAppRoute.self) { route in
+                            coordinator.buildView(for: route)
+                        }
+                }
+                .tabItem {
+                    Label(tab.title, systemImage: tab.sfSymbol)
+                }
+                .tag(tab)
+                .accessibilityIdentifier("tab_\(tab.title)")
             }
-            .tabItem {
-                tabIcon(for: .home)
-            }
-            .tag(CCMainTab.home)
-            .accessibilityIdentifier("tab_home")
-
-            // Tab 2: 树洞
-            NavigationStack {
-                coordinator.buildView(for: .treeHole)
-                    .navigationDestination(for: CCAppRoute.self) { route in
-                        coordinator.buildView(for: route)
-                    }
-            }
-            .tabItem {
-                tabIcon(for: .treeHole)
-            }
-            .tag(CCMainTab.treeHole)
-            .accessibilityIdentifier("tab_treehole")
-
-            // Tab 3: 共鸣墙
-            NavigationStack {
-                coordinator.buildView(for: .resonanceWall)
-                    .navigationDestination(for: CCAppRoute.self) { route in
-                        coordinator.buildView(for: route)
-                    }
-            }
-            .tabItem {
-                tabIcon(for: .resonanceWall)
-            }
-            .tag(CCMainTab.resonanceWall)
-            .accessibilityIdentifier("tab_resonance")
-
-            // Tab 4: 治愈空间
-            NavigationStack {
-                coordinator.buildView(for: .healing)
-                    .navigationDestination(for: CCAppRoute.self) { route in
-                        coordinator.buildView(for: route)
-                    }
-            }
-            .tabItem {
-                tabIcon(for: .healing)
-            }
-            .tag(CCMainTab.healing)
-            .accessibilityIdentifier("tab_healing")
-
-            // Tab 5: 个人中心
-            NavigationStack {
-                coordinator.buildView(for: .profile)
-                    .navigationDestination(for: CCAppRoute.self) { route in
-                        coordinator.buildView(for: route)
-                    }
-            }
-            .tabItem {
-                tabIcon(for: .profile)
-            }
-            .tag(CCMainTab.profile)
-            .accessibilityIdentifier("tab_profile")
         }
         .tint(Color.xuanApricot)
     }
 
-    @ViewBuilder
-    private func tabIcon(for tab: CCMainTab) -> some View {
-        let isSelected = selectedTab == tab
-        Label {
-            Text(tab.title)
-        } icon: {
-            Image(isSelected ? tab.activeIconName : tab.inactiveIconName)
-                .renderingMode(.template)
+    private func routeFor(_ tab: CCMainTab) -> CCAppRoute {
+        switch tab {
+        case .home:          return .home
+        case .treeHole:      return .treeHole
+        case .resonanceWall: return .resonanceWall
+        case .healing:       return .healing
+        case .profile:       return .profile
         }
     }
 }

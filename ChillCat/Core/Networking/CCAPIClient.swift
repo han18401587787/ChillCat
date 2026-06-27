@@ -45,6 +45,11 @@ final class CCAPIClient: CCAPIClientProtocol {
 
     func request<T: Decodable>(_ endpoint: CCAPIEndpoint) async throws -> T {
         let data = try await request(endpoint)
+        // 检测 HTML 响应
+        if let str = String(data: data, encoding: .utf8),
+           str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
+            throw CCAPIError.serverError(0)
+        }
         do {
             return try decoder.decode(T.self, from: data)
         } catch {
