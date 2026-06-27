@@ -90,9 +90,9 @@ enum ComponentStyles {
         func body(content: Content) -> some View {
             content
                 .padding(AppSpacing.lg)
-                .background(AppTheme.surface)
+                .background(AppTheme.cardBackground)
                 .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
-                .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 2)
+                .shadow(color: Color(hex: "2C2416").opacity(0.06), radius: 12, x: 0, y: 2)
         }
     }
     

@@ -262,7 +262,7 @@ struct CCTreeHoleView: View {
                         HStack(spacing: 4) {
                             Image(systemName: post.hasResonated ? "heart.fill" : "heart")
                                 .font(.system(size: 13))
-                                .foregroundColor(post.hasResonated ? Color.red : Color(hex: "E8B8C8"))
+                                .foregroundColor(post.hasResonated ? AppTheme.crisisRed : AppTheme.warmPink)
                             Text("\(post.formattedResonance) 人共鸣")
                                 .font(.system(size: 13))
                                 .foregroundColor(AppTheme.textSecondary)

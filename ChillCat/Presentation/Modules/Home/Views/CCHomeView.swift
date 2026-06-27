@@ -234,14 +234,14 @@ struct CCHomeView: View {
                           GridItem(.flexible())],
                 spacing: AppSpacing.sm
             ) {
-                exploreCard(icon: "heart.fill", title: "共鸣墙", color: Color(hex: "F5A6BA"), route: .resonanceWall)
-                exploreCard(icon: "leaf.fill", title: "治愈空间", color: Color(hex: "A8D9BA"), route: .healing)
-                exploreCard(icon: "brain.head.profile", title: "情绪解码", color: Color(hex: "A085C6"), route: .emotionDecoder)
-                exploreCard(icon: "chart.line.uptrend.xyaxis", title: "成长档案", color: Color(hex: "63B5F5"), route: .growthArchive)
-                exploreCard(icon: "chart.bar.fill", title: "情绪趋势", color: Color(hex: "A085C6"), route: .trends)
-                exploreCard(icon: "book.fill", title: "情绪日记", color: Color(hex: "D4A882"), route: .journal)
-                exploreCard(icon: "waveform", title: "冥想放松", color: Color(hex: "A8D9BA"), route: .meditation)
-                exploreCard(icon: "lightbulb.fill", title: "小课堂", color: Color(hex: "FFB84D"), route: .courses)
+                exploreCard(icon: "heart.fill", title: "共鸣墙", color: AppTheme.warmPink, route: .resonanceWall)
+                exploreCard(icon: "leaf.fill", title: "治愈空间", color: AppTheme.accentMint, route: .healing)
+                exploreCard(icon: "brain.head.profile", title: "情绪解码", color: AppTheme.warmPurple, route: .emotionDecoder)
+                exploreCard(icon: "chart.line.uptrend.xyaxis", title: "成长档案", color: AppTheme.info, route: .growthArchive)
+                exploreCard(icon: "chart.bar.fill", title: "情绪趋势", color: AppTheme.warmPurple, route: .trends)
+                exploreCard(icon: "book.fill", title: "情绪日记", color: AppTheme.warmGold, route: .journal)
+                exploreCard(icon: "waveform", title: "冥想放松", color: AppTheme.accentMint, route: .meditation)
+                exploreCard(icon: "lightbulb.fill", title: "小课堂", color: AppTheme.warning, route: .courses)
 
             }
         }

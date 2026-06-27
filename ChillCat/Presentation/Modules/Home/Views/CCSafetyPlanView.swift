@@ -112,7 +112,7 @@ struct CCSafetyPlanView: View {
                 icon: "exclamationmark.triangle.fill",
                 title: "预警信号",
                 subtitle: "当我出现以下情况时，我知道自己需要寻求帮助",
-                color: Color(hex: "8B6F47")
+                color: AppTheme.warmGold
             )
 
             VStack(spacing: AppSpacing.sm) {
@@ -132,7 +132,7 @@ struct CCSafetyPlanView: View {
             }) {
                 Image(systemName: item.wrappedValue.isChecked ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundColor(item.wrappedValue.isChecked ? Color(hex: "8B6F47") : AppTheme.textSecondary)
+                    .foregroundColor(item.wrappedValue.isChecked ? AppTheme.warmGold : AppTheme.textSecondary)
             }
 
             Text(item.wrappedValue.text)
@@ -157,7 +157,7 @@ struct CCSafetyPlanView: View {
                 icon: "leaf.fill",
                 title: "安抚策略",
                 subtitle: "当我感到情绪失控时，可以尝试以下方法",
-                color: Color(hex: "66BB6A")
+                color: AppTheme.accentMint
             )
 
             VStack(spacing: AppSpacing.sm) {
@@ -220,7 +220,7 @@ struct CCSafetyPlanView: View {
                 icon: "person.2.fill",
                 title: "支持联系人",
                 subtitle: "当我需要倾诉时，可以联系这些人",
-                color: Color(hex: "D4C8E8")
+                color: AppTheme.warmPurple
             )
 
             VStack(spacing: AppSpacing.sm) {
@@ -240,10 +240,10 @@ struct CCSafetyPlanView: View {
                     Text("添加联系人")
                         .font(AppFont.body)
                 }
-                .foregroundColor(Color(hex: "D4C8E8"))
+                .foregroundColor(AppTheme.warmPurple)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, AppSpacing.sm)
-                .background(Color(hex: "D4C8E8").opacity(0.08))
+                .background(AppTheme.warmPurple.opacity(0.08))
                 .cornerRadius(AppRadius.sm)
             }
         }
@@ -253,7 +253,7 @@ struct CCSafetyPlanView: View {
         HStack(spacing: AppSpacing.md) {
             Image(systemName: "person.crop.circle.fill")
                 .font(.system(size: 28))
-                .foregroundColor(Color(hex: "D4C8E8"))
+                .foregroundColor(AppTheme.warmPurple)
 
             VStack(alignment: .leading, spacing: 2) {
                 TextField("联系人姓名", text: contact.name)
@@ -291,7 +291,7 @@ struct CCSafetyPlanView: View {
                 icon: "cross.case.fill",
                 title: "专业资源",
                 subtitle: "快速拨打专业援助热线",
-                color: Color.red
+                color: AppTheme.crisisRed
             )
 
             VStack(spacing: AppSpacing.sm) {
@@ -316,7 +316,7 @@ struct CCSafetyPlanView: View {
             HStack {
                 Image(systemName: "phone.fill")
                     .font(.system(size: 14))
-                    .foregroundColor(Color.red)
+                    .foregroundColor(AppTheme.crisisRed)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(name)
@@ -324,7 +324,7 @@ struct CCSafetyPlanView: View {
                         .foregroundColor(AppTheme.textPrimary)
                     Text(number)
                         .font(AppFont.caption)
-                        .foregroundColor(Color.red)
+                        .foregroundColor(AppTheme.crisisRed)
                         .fontWeight(.medium)
                 }
 
