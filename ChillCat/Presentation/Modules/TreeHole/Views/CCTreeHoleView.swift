@@ -159,14 +159,16 @@ struct CCTreeHoleView: View {
     // MARK: - Publish Box
 
     private var publishBox: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: AppSpacing.md) {
+            // 输入框
             TextField("随便说什么都好，这里不评判…", text: $viewModel.newPostText, axis: .vertical)
                 .focused($isFocused)
-                .font(.system(size: 15))
+                .font(AppFont.body)
                 .lineLimit(3...6)
-                .padding()
-                .background(AppTheme.surface)
-                .cornerRadius(AppRadius.md)
+                .padding(AppSpacing.lg)
+                .background(AppTheme.cardBackground)
+                .cornerRadius(AppRadius.lg)
+                .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
 
             if !viewModel.newPostText.isEmpty {
                 HStack {
@@ -184,7 +186,7 @@ struct CCTreeHoleView: View {
                             .font(.system(size: 20))
                             .foregroundColor(AppTheme.primary)
                     }
-                    .padding(.trailing, 8)
+                    .padding(.trailing, AppSpacing.sm)
 
                     Button(action: {
                         CCHaptic.medium()
@@ -200,15 +202,22 @@ struct CCTreeHoleView: View {
                         Image(systemName: "paperplane.fill")
                             .font(.system(size: 18))
                             .foregroundColor(.white)
-                            .padding(10)
-                            .background(AppTheme.primary)
+                            .padding(14)
+                            .background(
+                                LinearGradient(
+                                    colors: [AppTheme.primary, AppTheme.primaryDark],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
                             .clipShape(Circle())
+                            .shadow(color: AppTheme.primary.opacity(0.3), radius: 6, x: 0, y: 3)
                     }
                 }
             }
         }
         .padding(.horizontal)
-        .padding(.bottom, 8)
+        .padding(.bottom, AppSpacing.sm)
     }
 
     // MARK: - Resonance Card

@@ -80,7 +80,7 @@ struct CCHealingPlanView: View {
                     Capsule()
                         .fill(
                             index <= viewModel.currentStep
-                                ? AppTheme.calmBlue
+                                ? AppTheme.accentMint
                                 : AppTheme.border
                         )
                         .frame(height: 4)
@@ -121,7 +121,7 @@ struct StepIntroView: View {
                 Circle()
                     .fill(
                         RadialGradient(
-                            colors: [AppTheme.calmBlue.opacity(0.2), AppTheme.calmBlue.opacity(0.05)],
+                            colors: [AppTheme.accentMint.opacity(0.2), AppTheme.accentMint.opacity(0.05)],
                             center: .center,
                             startRadius: 0,
                             endRadius: 100
@@ -133,7 +133,7 @@ struct StepIntroView: View {
                     .font(.system(size: 64))
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [AppTheme.calmBlue, AppTheme.primary],
+                            colors: [AppTheme.accentMint, AppTheme.primary],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -157,7 +157,7 @@ struct StepIntroView: View {
                     icon: "1.circle.fill",
                     title: "呼吸练习",
                     description: "跟随引导进行4-7-8呼吸法",
-                    color: AppTheme.calmBlue
+                    color: AppTheme.accentMint
                 )
                 
                 StepInfoRow(
@@ -249,7 +249,7 @@ struct StepBreathingView: View {
                     Circle()
                         .stroke(
                             LinearGradient(
-                                colors: [AppTheme.calmBlue.opacity(0.3), AppTheme.softPurple.opacity(0.1)],
+                                colors: [AppTheme.accentMint.opacity(0.3), AppTheme.softPurple.opacity(0.1)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -637,7 +637,7 @@ enum WhiteNoiseOption: String, CaseIterable {
     
     var color: Color {
         switch self {
-        case .rain: return AppTheme.calmBlue
+        case .rain: return AppTheme.accentMint
         case .ocean: return AppTheme.primary
         case .forest: return AppTheme.safeGreen
         }
@@ -684,7 +684,7 @@ final class HealingPlanViewModel: ObservableObject {
     
     var currentPhaseColor: Color {
         switch currentBreathingPhase {
-        case .inhale: return AppTheme.calmBlue
+        case .inhale: return AppTheme.accentMint
         case .hold: return AppTheme.softPurple
         case .exhale: return AppTheme.safeGreen
         }
