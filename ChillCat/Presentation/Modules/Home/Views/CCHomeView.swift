@@ -1,8 +1,10 @@
 //
 //  CCHomeView.swift
-//  绪安 - 首页 (Ardot v3 对照截图 #9 完整重构)
+//  绪安 - 首页 (完全对照截图 #9 像素级还原)
 //
-//  布局：问候区 → 4需求卡片 → 打卡按钮 → 今日暖心 → 稳情计划预览 → 情绪探索
+//  布局：
+//   问候区 → 4需求卡片(纵向列表) → 打卡按钮 → 今日暖心 → 稳情计划 → 情绪探索
+//  每个需求卡片: 左侧圆形图标 + 标题副标题 + 右侧选中指示
 
 import SwiftUI
 
@@ -10,8 +12,22 @@ struct CCHomeView: View {
     @State private var viewModel = CCEmotionViewModel()
     @Environment(CCAppCoordinator.self) private var coordinator
 
-    // 4 个需求入口 (2×2)
-    let needGridColumns = Array(repeating: GridItem(.flexible(), spacing: AppSpacing.sm), count: 2)
+    // 4 个需求入口 (纵向单列列表, 非网格)
+    struct NeedItem: Identifiable {
+        let id = UUID()
+        let emoji: String
+        let title: String
+        let subtitle: String
+        let emotion: CCEmotion
+        let color: Color
+    }
+
+    private let needItems: [NeedItem] = [
+        NeedItem(emoji: "👂", title: "想被倾听", subtitle: "有好多话憋在心里", emotion: .wronged, color: AppTheme.info),
+        NeedItem(emoji: "💚", title: "需要被理解", subtitle: "感觉没有人懂我", emotion: .anxious, color: AppTheme.accentMint),
+        NeedItem(emoji: "🔥", title: "想要一些鼓励", subtitle: "最近有点撑不住了", emotion: .calm, color: AppTheme.warmGold),
+        NeedItem(emoji: "💬", title: "就想随便说说", subtitle: "没什么大事，就是想聊聊", emotion: .happy, color: AppTheme.warmPink),
+    ]
 
     var body: some View {
         ScrollView {
@@ -22,15 +38,16 @@ struct CCHomeView: View {
                     // 1. 问候区
                     greetingSection
 
-                    // 2. 需求选择卡片 (4个, 2×2)
-                    needSelectionSection
+                    // 2. 4个需求卡片 (纵向列表)
+                    needCardList
 
-                    // 3. 打卡按钮
+                    // 3. 打卡按钮 (选情绪后出现)
                     if viewModel.selectedEmotion != nil && !viewModel.hasCheckedIn {
                         checkInButtonSection
+                            .transition(.opacity.combined(with: .move(edge: .bottom)))
                     }
 
-                    // 4. 今日已打卡
+                    // 4. 已打卡庆祝
                     if viewModel.hasCheckedIn {
                         checkedInCelebration
                     }
@@ -48,8 +65,7 @@ struct CCHomeView: View {
             .padding(AppSpacing.lg)
         }
         .background(AppTheme.background)
-        .navigationTitle("绪安")
-        .navigationBarTitleDisplayMode(.inline)
+        .animation(.easeInOut(duration: 0.3), value: viewModel.selectedEmotion)
         .task { await viewModel.loadData() }
     }
 
@@ -57,19 +73,15 @@ struct CCHomeView: View {
     private var loadingContent: some View {
         VStack(spacing: AppSpacing.lg) {
             greetingSection
-            skeletonCard(height: 200)
+            skeletonCard(height: 260)
             skeletonCard(height: 48)
-            skeletonCard(height: 120)
+            skeletonCard(height: 100)
             skeletonCard(height: 80)
-            skeletonCard(height: 200)
+            skeletonCard(height: 180)
         }
     }
-
     private func skeletonCard(height: CGFloat) -> some View {
-        RoundedRectangle(cornerRadius: AppRadius.md)
-            .fill(AppTheme.surface)
-            .frame(height: height)
-            .opacity(0.5)
+        RoundedRectangle(cornerRadius: AppRadius.md).fill(AppTheme.surface).frame(height: height).opacity(0.5)
     }
 
     // MARK: - 1. 问候区
@@ -77,7 +89,7 @@ struct CCHomeView: View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: AppSpacing.xs) {
                 Text("现在是什么感受？")
-                    .font(AppFont.title1)
+                    .font(.system(size: 28, weight: .bold))
                     .foregroundColor(AppTheme.textPrimary)
                 Text("已陪伴你 \(viewModel.totalDays) 天")
                     .font(AppFont.footnote)
@@ -86,16 +98,15 @@ struct CCHomeView: View {
             Spacer()
 
             // 连续打卡徽章
-            VStack(spacing: 2) {
+            VStack(spacing: 0) {
                 Text("\(viewModel.streakDays)")
-                    .font(.system(size: 22, weight: .bold))
+                    .font(.system(size: 24, weight: .bold))
                     .foregroundColor(AppTheme.primary)
-                Text("连续天")
+                Text("天")
                     .font(AppFont.caption2)
                     .foregroundColor(AppTheme.textSecondary)
             }
-            .padding(.horizontal, AppSpacing.md)
-            .padding(.vertical, AppSpacing.sm)
+            .frame(width: 56, height: 56)
             .background(
                 RoundedRectangle(cornerRadius: AppRadius.md)
                     .fill(AppTheme.primary.opacity(0.08))
@@ -103,95 +114,92 @@ struct CCHomeView: View {
         }
     }
 
-    // MARK: - 2. 需求选择卡片 (4个, 2×2)
-    private var needSelectionSection: some View {
+    // MARK: - 2. 需求卡片列表 (纵向, 单列)
+    private var needCardList: some View {
         VStack(spacing: AppSpacing.sm) {
-            Text("选择你的情绪")
-                .font(AppFont.title3)
-                .foregroundColor(AppTheme.textPrimary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            LazyVGrid(columns: needGridColumns, spacing: AppSpacing.sm) {
-                ForEach(viewModel.topEmotions, id: \.self) { emotion in
-                    needCard(emotion)
-                }
+            ForEach(needItems) { item in
+                needCard(item)
             }
         }
     }
 
-    private func needCard(_ emotion: CCEmotion) -> some View {
-        Button(action: {
+    private func needCard(_ item: NeedItem) -> some View {
+        let isSelected = viewModel.selectedEmotion == item.emotion
+
+        return Button(action: {
             CCHaptic.selection()
-            viewModel.selectEmotion(emotion)
+            viewModel.selectEmotion(item.emotion)
         }) {
             HStack(spacing: AppSpacing.md) {
-                // 左侧表情
+                // 左侧圆形图标
                 ZStack {
                     Circle()
                         .fill(
-                            viewModel.selectedEmotion == emotion
-                                ? AppTheme.primary.opacity(0.15)
+                            isSelected
+                                ? item.color.opacity(0.15)
                                 : AppTheme.surface
                         )
-                        .frame(width: 44, height: 44)
+                        .frame(width: 48, height: 48)
 
-                    Image(systemName: emotion.iconName)
-                        .font(.system(size: 20))
-                        .foregroundColor(
-                            viewModel.selectedEmotion == emotion
-                                ? AppTheme.primary
-                                : AppTheme.textSecondary
-                        )
+                    Text(item.emoji)
+                        .font(.system(size: 22))
                 }
 
+                // 标题 + 副标题
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(emotion.rawValue)
+                    Text(item.title)
                         .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.textPrimary)
-                    Text(emotionSubtitle(emotion))
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textMuted)
+                        .foregroundColor(
+                            isSelected ? AppTheme.textPrimary : AppTheme.textPrimary
+                        )
+                    Text(item.subtitle)
+                        .font(AppFont.footnote)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
 
                 Spacer()
+
+                // 选中指示
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 22))
+                        .foregroundColor(item.color)
+                }
             }
-            .padding(AppSpacing.md)
-            .frame(maxWidth: .infinity)
-            .background(AppTheme.cardBackground)
-            .cornerRadius(AppRadius.lg)
+            .padding(AppSpacing.lg)
+            .background(
+                RoundedRectangle(cornerRadius: AppRadius.lg)
+                    .fill(AppTheme.cardBackground)
+            )
             .overlay(
                 RoundedRectangle(cornerRadius: AppRadius.lg)
                     .stroke(
-                        viewModel.selectedEmotion == emotion
-                            ? AppTheme.primary.opacity(0.4)
-                            : Color.clear,
+                        isSelected ? item.color.opacity(0.4) : Color.clear,
                         lineWidth: 1.5
                     )
             )
+            .shadow(
+                color: Color(hex: "2C2416").opacity(isSelected ? 0.06 : 0.03),
+                radius: isSelected ? 10 : 6,
+                x: 0,
+                y: isSelected ? 3 : 1
+            )
         }
         .buttonStyle(.plain)
-    }
-
-    private func emotionSubtitle(_ emotion: CCEmotion) -> String {
-        switch emotion {
-        case .happy:    return "想分享快乐"
-        case .calm:     return "感到平静"
-        case .anxious:  return "有点焦虑"
-        case .wronged:  return "心里委屈"
-        default:        return "需要陪伴"
-        }
+        .animation(.easeInOut(duration: 0.2), value: isSelected)
     }
 
     // MARK: - 3. 打卡按钮
     private var checkInButtonSection: some View {
         VStack(spacing: AppSpacing.md) {
-            // 心情备注
+            // 心情备注输入框
             TextField("写下此刻的感受（可选）...", text: $viewModel.todayNote, axis: .vertical)
                 .font(AppFont.body)
-                .padding(AppSpacing.md)
+                .padding(AppSpacing.lg)
                 .background(AppTheme.cardBackground)
                 .cornerRadius(AppRadius.md)
                 .lineLimit(2...4)
+                .shadow(color: Color(hex: "2C2416").opacity(0.03), radius: 4, y: 1)
 
             // 打卡按钮
             Button(action: {
@@ -215,18 +223,22 @@ struct CCHomeView: View {
                     )
                 )
                 .cornerRadius(AppRadius.lg)
-                .shadow(color: AppTheme.primary.opacity(0.25), radius: 8, x: 0, y: 3)
+                .shadow(color: AppTheme.primary.opacity(0.25), radius: 10, x: 0, y: 3)
             }
         }
-        .transition(.opacity.combined(with: .move(edge: .bottom)))
     }
 
-    // MARK: - 4. 今日已打卡
+    // MARK: - 4. 已打卡庆祝
     private var checkedInCelebration: some View {
         HStack(spacing: AppSpacing.md) {
-            Image(systemName: "checkmark.seal.fill")
-                .font(.system(size: 36))
-                .foregroundColor(AppTheme.accentMint)
+            ZStack {
+                Circle()
+                    .fill(AppTheme.accentMint.opacity(0.15))
+                    .frame(width: 48, height: 48)
+                Image(systemName: "checkmark.seal.fill")
+                    .font(.system(size: 26))
+                    .foregroundColor(AppTheme.accentMint)
+            }
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("今日已打卡")
@@ -236,16 +248,15 @@ struct CCHomeView: View {
                     .font(AppFont.footnote)
                     .foregroundColor(AppTheme.textSecondary)
             }
-
             Spacer()
         }
         .padding(AppSpacing.lg)
-        .frame(maxWidth: .infinity)
-        .background(AppTheme.accentMint.opacity(0.1))
+        .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
+        .shadow(color: Color(hex: "2C2416").opacity(0.03), radius: 6, y: 1)
     }
 
-    // MARK: - 5. 今日暖心推荐
+    // MARK: - 5. 今日暖心
     private var todayWarmthCard: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
             HStack {
@@ -258,117 +269,92 @@ struct CCHomeView: View {
                 Spacer()
             }
 
-            HStack(spacing: AppSpacing.lg) {
-                Image(systemName: viewModel.dailyTaskCompleted ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 24))
-                    .foregroundColor(viewModel.dailyTaskCompleted ? AppTheme.accentMint : AppTheme.textMuted)
-
-                Text(viewModel.dailyTask)
-                    .font(AppFont.body)
-                    .foregroundColor(viewModel.dailyTaskCompleted ? AppTheme.textSecondary : AppTheme.textPrimary)
-                    .strikethrough(viewModel.dailyTaskCompleted)
-
-                Spacer()
-            }
-            .padding(AppSpacing.md)
-            .background(AppTheme.surface)
-            .cornerRadius(AppRadius.md)
-            .onTapGesture {
+            Button(action: {
                 if !viewModel.dailyTaskCompleted {
+                    CCHaptic.light()
                     viewModel.completeDailyTask()
                 }
+            }) {
+                HStack(spacing: AppSpacing.md) {
+                    Image(systemName: viewModel.dailyTaskCompleted ? "checkmark.circle.fill" : "circle")
+                        .font(.system(size: 24))
+                        .foregroundColor(viewModel.dailyTaskCompleted ? AppTheme.accentMint : AppTheme.textMuted)
+
+                    Text(viewModel.dailyTask)
+                        .font(AppFont.body)
+                        .foregroundColor(viewModel.dailyTaskCompleted ? AppTheme.textSecondary : AppTheme.textPrimary)
+                        .strikethrough(viewModel.dailyTaskCompleted)
+
+                    Spacer()
+                }
+                .padding(AppSpacing.md)
+                .background(AppTheme.surface)
+                .cornerRadius(AppRadius.md)
             }
+            .buttonStyle(.plain)
         }
         .padding(AppSpacing.lg)
         .background(AppTheme.cardBackground)
         .cornerRadius(AppRadius.lg)
-        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
+        .shadow(color: Color(hex: "2C2416").opacity(0.03), radius: 6, y: 1)
     }
 
     // MARK: - 6. 稳情计划预览
     private var healingPlanPreview: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
-            HStack {
-                Image(systemName: "leaf.fill")
-                    .font(.system(size: 16))
-                    .foregroundColor(AppTheme.accentMint)
-                Text("稳情计划")
-                    .font(AppFont.title3)
-                    .foregroundColor(AppTheme.textPrimary)
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundColor(AppTheme.textMuted)
-            }
-
-            // 本周进度
-            HStack(spacing: AppSpacing.xs) {
-                ForEach(0..<7) { day in
-                    Circle()
-                        .fill(
-                            day < viewModel.weeklyProgress
-                                ? AppTheme.accentMint
-                                : AppTheme.surface
-                        )
-                        .frame(width: 8, height: 8)
+        Button(action: { coordinator.navigate(to: .safetyPlan) }) {
+            VStack(alignment: .leading, spacing: AppSpacing.md) {
+                HStack {
+                    Image(systemName: "leaf.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(AppTheme.accentMint)
+                    Text("稳情计划")
+                        .font(AppFont.title3)
+                        .foregroundColor(AppTheme.textPrimary)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(AppTheme.textMuted)
                 }
-            }
 
-            Text("本周已完成 \(viewModel.weeklyProgress)/7 天")
-                .font(AppFont.footnote)
-                .foregroundColor(AppTheme.textSecondary)
+                HStack(spacing: 6) {
+                    ForEach(0..<7) { day in
+                        Circle()
+                            .fill(day < viewModel.weeklyProgress ? AppTheme.accentMint : AppTheme.surface)
+                            .frame(width: 10, height: 10)
+                    }
+                }
+
+                Text("本周已完成 \(viewModel.weeklyProgress)/7 天")
+                    .font(AppFont.footnote)
+                    .foregroundColor(AppTheme.textSecondary)
+            }
+            .padding(AppSpacing.lg)
+            .background(AppTheme.cardBackground)
+            .cornerRadius(AppRadius.lg)
+            .shadow(color: Color(hex: "2C2416").opacity(0.03), radius: 6, y: 1)
         }
-        .padding(AppSpacing.lg)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(AppRadius.lg)
-        .shadow(color: Color(hex: "2C2416").opacity(0.04), radius: 8, x: 0, y: 2)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            coordinator.navigate(to: .safetyPlan)
-        }
+        .buttonStyle(.plain)
     }
 
     // MARK: - 7. 情绪探索
     private var emotionExploreSection: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(spacing: AppSpacing.md) {
             Text("探索更多可能")
                 .font(AppFont.title3)
                 .foregroundColor(AppTheme.textPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             LazyVGrid(
-                columns: [GridItem(.flexible(), spacing: AppSpacing.sm),
-                          GridItem(.flexible(), spacing: AppSpacing.sm)],
+                columns: [
+                    GridItem(.flexible(), spacing: AppSpacing.sm),
+                    GridItem(.flexible(), spacing: AppSpacing.sm)
+                ],
                 spacing: AppSpacing.sm
             ) {
-                exploreCard(
-                    icon: "heart.fill",
-                    title: "共鸣墙",
-                    subtitle: "匿名分享心声",
-                    color: AppTheme.warmPink,
-                    route: .resonanceWall
-                )
-                exploreCard(
-                    icon: "leaf.fill",
-                    title: "治愈空间",
-                    subtitle: "冥想与放松",
-                    color: AppTheme.accentMint,
-                    route: .healing
-                )
-                exploreCard(
-                    icon: "brain.head.profile",
-                    title: "情绪解码",
-                    subtitle: "了解你的情绪",
-                    color: AppTheme.warmPurple,
-                    route: .emotionDecoder
-                )
-                exploreCard(
-                    icon: "chart.bar.fill",
-                    title: "情绪趋势",
-                    subtitle: "查看变化轨迹",
-                    color: AppTheme.info,
-                    route: .trends
-                )
+                exploreCard(icon: "heart.fill", title: "共鸣墙", subtitle: "匿名分享心声", color: AppTheme.warmPink, route: .resonanceWall)
+                exploreCard(icon: "leaf.fill", title: "治愈空间", subtitle: "冥想与放松", color: AppTheme.accentMint, route: .healing)
+                exploreCard(icon: "brain.head.profile", title: "情绪解码", subtitle: "了解你的情绪", color: AppTheme.warmPurple, route: .emotionDecoder)
+                exploreCard(icon: "chart.bar.fill", title: "情绪趋势", subtitle: "查看变化轨迹", color: AppTheme.info, route: .trends)
             }
         }
     }
@@ -380,19 +366,13 @@ struct CCHomeView: View {
                     RoundedRectangle(cornerRadius: AppRadius.sm)
                         .fill(color.opacity(0.12))
                         .frame(width: 40, height: 40)
-
                     Image(systemName: icon)
                         .font(.system(size: 18))
                         .foregroundColor(color)
                 }
-
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(AppFont.bodyBold)
-                        .foregroundColor(AppTheme.textPrimary)
-                    Text(subtitle)
-                        .font(AppFont.caption2)
-                        .foregroundColor(AppTheme.textMuted)
+                    Text(title).font(AppFont.bodyBold).foregroundColor(AppTheme.textPrimary)
+                    Text(subtitle).font(AppFont.caption2).foregroundColor(AppTheme.textMuted)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
