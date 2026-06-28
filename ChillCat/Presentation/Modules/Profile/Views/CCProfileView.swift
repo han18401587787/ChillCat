@@ -19,15 +19,8 @@ struct CCProfileView: View {
                     error: NSError(domain: "profile", code: -1, userInfo: [NSLocalizedDescriptionKey: errorMessage]),
                     retryAction: { await viewModel.loadProfile() }
                 )
-            } else if viewModel.user == nil {
-                CCEmptyStateView(
-                    title: "暂无数据",
-                    message: "未能加载用户信息",
-                    imageName: "person.fill.questionmark",
-                    actionTitle: "重试",
-                    action: { await viewModel.loadProfile() }
-                )
             } else {
+                // 未登录也正常展示页面，用默认值
                 content
             }
         }

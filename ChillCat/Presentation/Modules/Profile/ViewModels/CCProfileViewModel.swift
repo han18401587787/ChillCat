@@ -49,10 +49,11 @@ final class CCProfileViewModel {
         do {
             user = try await profileUseCase.fetchProfile()
         } catch {
-            if let apiError = error as? CCAPIError {
+            // 未登录不显示错误 — 页面正常展示默认信息
+            if let apiError = error as? CCAPIError, apiError == .unauthorized {
+                user = nil
+            } else if let apiError = error as? CCAPIError {
                 switch apiError {
-                case .unauthorized:
-                    errorMessage = "登录已过期，请重新登录"
                 case .networkFailure:
                     errorMessage = "网络连接失败，请检查网络设置"
                 case .serverError:

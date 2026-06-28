@@ -33,7 +33,14 @@ final class CCUserRemoteDataSource {
 
     func fetchProfile() async throws -> CCUserDTO {
         let response: CCAPIResponse<CCUserDTO> = try await apiClient.request(CCUserAPI.profile)
-        guard response.isSuccess, let data = response.data else {
+        // code=10002 表示未登录，不应抛异常，返回空让上层用默认值
+        guard response.isSuccess else {
+            if response.code == 10002 {
+                throw CCAPIError.unauthorized
+            }
+            throw mapAPIError(code: response.code)
+        }
+        guard let data = response.data else {
             throw mapAPIError(code: response.code)
         }
         return data
