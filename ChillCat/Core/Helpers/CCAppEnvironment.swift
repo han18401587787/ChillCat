@@ -24,7 +24,8 @@ enum CCAppEnvironment {
     var baseURL: URL {
         switch self {
         case .development:
-            return URL(string: "https://api.chillcatgo.com")!
+            // 临时：HTTP 直连绕过域名备案拦截（仅开发用）
+            return URL(string: "http://81.70.178.249:8080")!
         case .staging:
             return URL(string: "https://staging-api.chillcatgo.com")!
         case .production:
