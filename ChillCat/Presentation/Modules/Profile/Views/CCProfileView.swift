@@ -55,44 +55,63 @@ struct CCProfileView: View {
 
     // MARK: - 用户信息卡片
     private var userInfoCard: some View {
-        HStack(spacing: XuanSpacing.lg) {
-            // 头像
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [Color.xuanMint, Color.xuanMintDark],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+        Button(action: {
+            // 未登录时点击跳转登录页
+            if viewModel.user == nil {
+                coordinator.isLoggedIn = false
+            }
+        }) {
+            HStack(spacing: XuanSpacing.lg) {
+                // 头像
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Color.xuanMint, Color.xuanMintDark],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
                         )
-                    )
-                    .frame(width: 64, height: 64)
+                        .frame(width: 64, height: 64)
 
-                Image(systemName: "leaf.circle.fill")
-                    .font(.system(size: 32))
-                    .foregroundColor(.white)
-            }
+                    Image(systemName: viewModel.user == nil ? "person.circle.fill" : "leaf.circle.fill")
+                        .font(.system(size: 32))
+                        .foregroundColor(.white)
+                }
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(viewModel.displayName)
-                    .font(XuanFont.h2)
-                    .foregroundColor(Color.xuanTextPrimary)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 4) {
+                        Text(viewModel.displayName)
+                            .font(XuanFont.h2)
+                            .foregroundColor(Color.xuanTextPrimary)
+                        if viewModel.user == nil {
+                            Text("点击登录")
+                                .font(XuanFont.bodyS)
+                                .foregroundColor(Color.xuanApricot)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 2)
+                                .background(Color.xuanApricot.opacity(0.12))
+                                .cornerRadius(XuanRadius.sm)
+                        }
+                    }
 
-                Text(daysSinceJoinedText)
-                    .font(XuanFont.bodyS)
-                    .foregroundColor(Color.xuanTextSecondary)
-            }
+                    Text(daysSinceJoinedText)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextSecondary)
+                }
 
-            Spacer()
+                Spacer()
 
             // 编辑按钮
             Image(systemName: "chevron.right")
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(Color.xuanTextTertiary)
+            }
         }
         .padding(XuanSpacing.lg)
         .background(Color.xuanWhite)
         .cornerRadius(XuanRadius.lg)
+        .buttonStyle(.plain)
         .xuanCardShadow()
     }
 
