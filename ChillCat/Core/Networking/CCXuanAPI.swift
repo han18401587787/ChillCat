@@ -357,7 +357,7 @@ enum CCXuanAPI {
     }
 
     static func fetchWarmTemplates() async throws -> [CCWarmResponseTemplate] {
-        let raw: [WarmTemplateResponse] = try await get("/api/v1/community/warm-templates")
+        let raw: [WarmTemplateResponse] = (try? await get("/api/v1/community/warm-templates")) ?? []
         return raw.map { CCWarmResponseTemplate(id: $0.id, content: $0.content, emoji: $0.emoji, category: $0.category) }
     }
 
