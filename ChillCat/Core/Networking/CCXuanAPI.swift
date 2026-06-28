@@ -248,35 +248,6 @@ enum CCXuanAPI {
         return resp.task
     }
 
-    // MARK: - Letters (感谢信)
-
-    struct LetterResponse: Decodable, Identifiable {
-        let id: Int64; let content: String; let senderName: String; let receiverName: String?
-        let isPublic: Bool; let createdAt: String
-    }
-    struct LetterPage: Decodable { let list: [LetterResponse]; let total: Int64 }
-
-    /// 发送感谢信
-    static func sendLetter(content: String, receiverName: String? = nil, isPublic: Bool = false) async throws -> LetterResponse {
-        try await post("/api/v1/letters", body: LetterSendRequest(content: content, receiverName: receiverName, isPublic: isPublic))
-    }
-    /// 我发出的信
-    static func getSentLetters(page: Int = 1) async throws -> LetterPage {
-        try await get("/api/v1/letters/sent?page=\(page)")
-    }
-    /// 我收到的信
-    static func getReceivedLetters(page: Int = 1) async throws -> LetterPage {
-        try await get("/api/v1/letters/received?page=\(page)")
-    }
-    /// 信件详情
-    static func getLetter(id: Int64) async throws -> LetterResponse {
-        try await get("/api/v1/letters/\(id)")
-    }
-
-    struct LetterSendRequest: Encodable {
-        let content: String; let receiverName: String?; let isPublic: Bool
-    }
-
     // MARK: - Crisis & Safety
 
     // Crisis resource models
@@ -293,22 +264,6 @@ enum CCXuanAPI {
         let resources: [CrisisResourceItem]
     }
 
-    // Safety plan models
-    struct SafetyPlanData: Codable {
-        var warningSigns: [String]
-        var strategies: [String]
-        var contacts: [String]
-        var resources: [String]
-    }
-
-    struct SafetyPlanResponse: Decodable {
-        let id: Int64
-        let warningSigns: [String]
-        let strategies: [String]
-        let contacts: [String]
-        let resources: [String]
-    }
-
     // Tool usage models
     struct ToolUsageRecord: Encodable {
         let toolType: String
@@ -316,38 +271,10 @@ enum CCXuanAPI {
         let completed: Bool
     }
 
-    struct ToolUsageStats: Decodable {
-        let totalCount: Int64
-        let totalDuration: Int64
-        let lastUsedAt: String?
-    }
-
-    /// 获取危机资源列表
-    static func getCrisisResources(type: String = "") async throws -> [CrisisResourceItem] {
-        let path = "/api/v1/crisis/resources" + (type.isEmpty ? "" : "?type=\(type)")
-        let response: CrisisResourceListResponse = try await get(path)
-        return response.resources
-    }
-
-    /// 获取用户安全计划
-    static func getSafetyPlan() async throws -> SafetyPlanResponse {
-        try await get("/api/v1/crisis/safety-plan")
-    }
-
-    /// 创建/更新安全计划
-    static func updateSafetyPlan(_ plan: SafetyPlanData) async throws -> SafetyPlanResponse {
-        try await post("/api/v1/crisis/safety-plan", body: plan)
-    }
-
     /// 记录工具使用
     static func recordToolUsage(toolType: String, duration: Int, completed: Bool) async throws {
         let record = ToolUsageRecord(toolType: toolType, duration: duration, completed: completed)
         let _: CCEmptyResponse = try await post("/api/v1/tools/usage", body: record)
-    }
-
-    /// 获取工具使用统计
-    static func getToolUsageStats(toolType: String) async throws -> ToolUsageStats {
-        try await get("/api/v1/tools/usage/stats?toolType=\(toolType)")
     }
 
     // MARK: - Warm Templates
@@ -431,24 +358,9 @@ enum CCXuanAPI {
         let totalDays: Int64
     }
 
-    // Growth report models
-    struct GrowthReportVO: Decodable {
-        let stats: GrowthStatsVO
-        let topEmotions: [String]?
-        let toolDistribution: [String: Int64]?
-        let milestones: [MilestoneVO]?
-        let insights: [String]?
-    }
-
     /// 获取所有成就及用户进度
     static func getAchievements() async throws -> [AchievementVO] {
         let response: AchievementListResponse = try await get("/api/v1/achievements")
-        return response.achievements
-    }
-
-    /// 获取已解锁成就
-    static func getUnlockedAchievements() async throws -> [AchievementVO] {
-        let response: AchievementListResponse = try await get("/api/v1/achievements/unlocked")
         return response.achievements
     }
 
@@ -461,143 +373,6 @@ enum CCXuanAPI {
     /// 获取成长统计
     static func getGrowthStats() async throws -> GrowthStatsVO {
         return try await get("/api/v1/growth/stats")
-    }
-
-    /// 获取成长报告
-    static func getGrowthReport(period: String = "month") async throws -> GrowthReportVO {
-        return try await get("/api/v1/growth/report?period=\(period)")
-    }
-
-    // MARK: - Community
-
-    struct MutualAidGroupVO: Decodable, Identifiable {
-        let id: Int64
-        let name: String
-        let description: String
-        let category: String
-        let memberCount: Int64
-        let iconName: String
-        let isJoined: Bool
-    }
-
-    struct MutualAidGroupListResponse: Decodable {
-        let groups: [MutualAidGroupVO]
-    }
-
-    struct MutualAidGroupDetailResponse: Decodable {
-        let group: MutualAidGroupVO
-    }
-
-    struct WarmTemplateVO: Decodable, Identifiable {
-        let id: Int64
-        let content: String
-        let emoji: String
-        let category: String
-    }
-
-    struct WarmTemplateListResponse: Decodable {
-        let templates: [WarmTemplateVO]
-    }
-
-    /// 获取互助小组列表
-    static func listMutualAidGroups(category: String = "") async throws -> [MutualAidGroupVO] {
-        let path = category.isEmpty ? "/community/groups" : "/community/groups?category=\(category)"
-        let response: MutualAidGroupListResponse = try await get(path)
-        return response.groups
-    }
-
-    /// 获取小组详情
-    static func getGroupDetail(id: Int64) async throws -> MutualAidGroupVO {
-        let response: MutualAidGroupDetailResponse = try await get("/community/groups/\(id)")
-        return response.group
-    }
-
-    /// 加入小组
-    static func joinGroup(id: Int64) async throws {
-        let _: CCEmptyResponse = try await post("/community/groups/\(id)/join", body: Optional<String>.none)
-    }
-
-    /// 退出小组
-    static func leaveGroup(id: Int64) async throws {
-        let _: CCEmptyResponse = try await post("/community/groups/\(id)/leave", body: Optional<String>.none)
-    }
-
-    /// 获取我的小组
-    static func getMyGroups() async throws -> [MutualAidGroupVO] {
-        let response: MutualAidGroupListResponse = try await get("/community/my-groups")
-        return response.groups
-    }
-
-    /// 获取温暖回应模板
-    static func getWarmTemplates() async throws -> [WarmTemplateVO] {
-        let response: WarmTemplateListResponse = try await get("/community/warm-templates")
-        return response.templates
-    }
-
-    // MARK: - Member
-
-    struct MemberInfoVO: Decodable {
-        let memberType: String; let status: String; let startDate: String
-        let endDate: String?; let autoRenew: Bool; let purchaseDate: String
-    }
-
-    /// 获取会员信息
-    static func getMemberInfo() async throws -> MemberInfoVO {
-        try await get("/api/v1/member/info")
-    }
-
-    // MARK: - Analytics
-
-    struct CCInsightsResponse: Decodable {
-        let insights: [String]
-    }
-
-    struct EmotionTrendVO: Decodable {
-        let labels: [String]
-        let values: [Double]
-        let dominantEmotion: String?
-    }
-
-    struct ToolUsageItemVO: Decodable, Identifiable {
-        var id: String { toolType }
-        let toolType: String
-        let count: Int64
-        let totalDuration: Int64
-    }
-
-    struct ToolUsageDistributionResponse: Decodable {
-        let items: [ToolUsageItemVO]
-    }
-
-    struct DashboardVO: Decodable {
-        let totalCheckins: Int64
-        let streakDays: Int64
-        let topEmotion: String?
-        let toolUsageCount: Int64
-        let groupCount: Int64
-        let totalDays: Int64
-    }
-
-    /// 获取情绪趋势
-    static func getEmotionTrend(period: String = "week") async throws -> EmotionTrendVO {
-        return try await get("/analytics/emotion-trend?period=\(period)")
-    }
-
-    /// 获取工具使用分布
-    static func getToolUsageDistribution() async throws -> [ToolUsageItemVO] {
-        let response: ToolUsageDistributionResponse = try await get("/analytics/tool-usage")
-        return response.items
-    }
-
-    /// 获取仪表盘数据
-    static func getDashboard() async throws -> DashboardVO {
-        return try await get("/analytics/dashboard")
-    }
-
-    /// 获取AI洞察
-    static func getInsights() async throws -> [String] {
-        let response: CCInsightsResponse = try await get("/analytics/insights")
-        return response.insights
     }
 
     // MARK: - Internal helpers
