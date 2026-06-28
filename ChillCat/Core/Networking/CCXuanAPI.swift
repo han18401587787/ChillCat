@@ -159,7 +159,7 @@ enum CCXuanAPI {
         let id: Int64; let content: String; let emotion: String; let emotionColor: String
         let resonanceCount: Int64; let createdAt: String; let isAnonymous: Bool; let displayName: String
     }
-    struct ResonancePage: Decodable { let list: [ResonanceItem]; let total: Int64; let onlineCount: Int64 }
+    struct ResonancePage: Decodable { let list: [ResonanceItem]; let total: Int64; let onlineCount: Int64? }
     struct ResonanceDetailResponse: Decodable { let item: ResonanceItem; let replies: [ResonanceReply] }
     struct ResonanceReply: Decodable, Identifiable { let id: Int64; let content: String; let createdAt: String }
     struct ResonancePostRequest: Encodable { let emotion: String; let content: String; let isAnonymous: Bool }

@@ -28,7 +28,7 @@ final class CCResonanceViewModel {
         do {
             let page = try await CCXuanAPI.listResonance(page: 1)
             resonanceItems = mapItems(page.list)
-            onlineCount = 0
+            onlineCount = page.onlineCount ?? 0
             hasMore = page.total > resonanceItems.count
             if resonanceItems.isEmpty { resonanceItems = [] }
             print("✅ [Resonance] loadResonance done: \(resonanceItems.count) items, \(onlineCount) online")
@@ -46,7 +46,7 @@ final class CCResonanceViewModel {
         do {
             let page = try await CCXuanAPI.listResonance(page: 1)
             resonanceItems = mapItems(page.list)
-            onlineCount = 0
+            onlineCount = page.onlineCount ?? 0
             hasMore = page.total > resonanceItems.count
             print("✅ [Resonance] refresh done: \(resonanceItems.count) items")
         } catch {
