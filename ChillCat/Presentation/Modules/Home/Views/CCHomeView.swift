@@ -14,17 +14,18 @@ struct CCHomeView: View {
 
     // 4个需求选项 (严格对照设计稿)
     private let needItems: [NeedItem] = [
-        NeedItem(title: "被倾听", subtitle: "有人愿意听你说，什么都不用解释", color: Color.xuanApricot),
-        NeedItem(title: "被理解", subtitle: "希望有人真的懂你在想什么", color: Color.xuanMint),
-        NeedItem(title: "被鼓励", subtitle: "需要一些力量和温暖的肯定", color: Color.xuanPink),
-        NeedItem(title: "只是想说说", subtitle: "说出来就好，不需要解决方案", color: Color.xuanTextTertiary)
+        NeedItem(title: "被倾听", subtitle: "有人愿意听你说，什么都不用解释", bgColor: Color.xuanApricotLight, selectedColor: Color.xuanApricotDark),
+        NeedItem(title: "被理解", subtitle: "希望有人真的懂你在想什么", bgColor: Color.xuanMintLight, selectedColor: Color.xuanMintDark),
+        NeedItem(title: "被鼓励", subtitle: "需要一些力量和温暖的肯定", bgColor: Color.xuanPinkLight, selectedColor: Color.xuanPinkDark),
+        NeedItem(title: "只是想说说", subtitle: "说出来就好，不需要解决方案", bgColor: Color.xuanSurface, selectedColor: Color.xuanTextSecondary)
     ]
 
     struct NeedItem: Identifiable {
         let id = UUID()
         let title: String
         let subtitle: String
-        let color: Color
+        let bgColor: Color
+        let selectedColor: Color
     }
 
     var body: some View {
@@ -108,7 +109,7 @@ struct CCHomeView: View {
                 .font(XuanFont.h3)
                 .foregroundColor(Color.xuanTextPrimary)
 
-            VStack(spacing: XuanSpacing.sm) {
+            VStack(spacing: XuanSpacing.md) {
                 ForEach(needItems) { item in
                     needTagButton(item)
                 }
@@ -127,27 +128,14 @@ struct CCHomeView: View {
             CCHaptic.selection()
             viewModel.selectNeed(item.title)
         }) {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(item.title)
-                        .font(XuanFont.bodyLBold)
-                        .foregroundColor(isSelected ? .white : Color.xuanTextPrimary)
-                    Text(item.subtitle)
-                        .font(XuanFont.bodyS)
-                        .foregroundColor(isSelected ? .white.opacity(0.9) : Color.xuanTextSecondary)
-                }
-                Spacer()
-                if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 22))
-                        .foregroundColor(.white)
-                }
-            }
-            .padding(XuanSpacing.md)
-            .background(
-                RoundedRectangle(cornerRadius: XuanRadius.md)
-                    .fill(isSelected ? item.color : Color.xuanSurface)
-            )
+            Text(item.title)
+                .font(XuanFont.bodyLBold)
+                .foregroundColor(isSelected ? .white : Color.xuanTextPrimary)
+                .frame(width: 148, height: 48)
+                .background(
+                    RoundedRectangle(cornerRadius: XuanRadius.md)
+                        .fill(isSelected ? item.selectedColor : item.bgColor)
+                )
         }
         .buttonStyle(.plain)
         .animation(.easeInOut(duration: 0.2), value: isSelected)
