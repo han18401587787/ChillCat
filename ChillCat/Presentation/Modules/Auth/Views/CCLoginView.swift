@@ -122,7 +122,7 @@ struct CCLoginView: View {
                                     ? Color.xuanApricot
                                     : Color.xuanApricot.opacity(0.4)
                             )
-                            .cornerRadius(XuanRadius.lg)
+                            .cornerRadius(XuanRadius.md)
                     }
                     .disabled(phoneNumber.count < 11 || verificationCode.count < 4)
 
