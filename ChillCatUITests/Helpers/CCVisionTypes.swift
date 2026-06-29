@@ -28,4 +28,13 @@ struct CCVisionAnalyzeResult: Decodable {
     let elementsFound: [String]
     let elementsMissing: [String]
     let suggestion: String
+
+    enum CodingKeys: String, CodingKey {
+        case score
+        case passed
+        case issues
+        case elementsFound = "elements_found"
+        case elementsMissing = "elements_missing"
+        case suggestion
+    }
 }

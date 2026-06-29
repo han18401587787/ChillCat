@@ -48,12 +48,16 @@ extension XCUIApplication {
     var tabHome: XCUIElement { tabBars.buttons["首页"].firstMatch }
     /// TabBar - 树洞
     var tabTreeHole: XCUIElement { tabBars.buttons["树洞"].firstMatch }
-    /// TabBar - 工具箱 (v3.0新增)
+    /// TabBar - 共鸣墙 (v3.0)
+    var tabResonance: XCUIElement { tabBars.buttons["共鸣墙"].firstMatch }
+    /// TabBar - 治愈空间 (v3.0)
+    var tabHealing: XCUIElement { tabBars.buttons["治愈空间"].firstMatch }
+    /// TabBar - 个人中心
+    var tabProfile: XCUIElement { tabBars.buttons["个人中心"].firstMatch }
+
+    // 兼容旧版
     var tabToolbox: XCUIElement { tabBars.buttons["工具箱"].firstMatch }
-    /// TabBar - 会员
     var tabVIP: XCUIElement { tabBars.buttons["会员"].firstMatch }
-    /// TabBar - 我的
-    var tabProfile: XCUIElement { tabBars.buttons["我的"].firstMatch }
 
     // MARK: - v3.0 新功能页面元素
 
