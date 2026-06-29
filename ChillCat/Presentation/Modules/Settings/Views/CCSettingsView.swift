@@ -26,11 +26,11 @@ struct CCSettingsView: View {
                     settingsRow(icon: "bell.fill", title: "消息推送", color: Color.xuanPink) {
                         // toggle handled inline
                     } trailing: {
-                        Toggle("", isOn: Binding(
+                        AnyView(Toggle("", isOn: Binding(
                             get: { viewModel.notificationsEnabled },
                             set: { viewModel.notificationsEnabled = $0 }
                         ))
-                        .labelsHidden()
+                        .labelsHidden())
                     }
                     settingsRow(icon: "moon.fill", title: "勿扰模式", color: Color(hex: "A085C6")) {}
                 }
@@ -75,9 +75,9 @@ struct CCSettingsView: View {
                 // 关于
                 sectionView("关于") {
                     settingsRow(icon: "info.circle.fill", title: "版本信息", color: Color.xuanTextTertiary) {} trailing: {
-                        Text("v3.0.0")
+                        AnyView(Text("v3.0.0")
                             .font(XuanFont.bodyS)
-                            .foregroundColor(Color.xuanTextTertiary)
+                            .foregroundColor(Color.xuanTextTertiary))
                     }
                     settingsRow(icon: "doc.text.fill", title: "用户协议", color: Color.xuanTextSecondary) {
                         coordinator.navigate(to: .userAgreement)
@@ -145,7 +145,8 @@ struct CCSettingsView: View {
     }
 
     // MARK: - Row
-    private func settingsRow(icon: String, title: String, color: Color, action: @escaping () -> Void, trailing: (() -> some View)? = nil) -> some View {
+    @ViewBuilder
+    private func settingsRow(icon: String, title: String, color: Color, action: @escaping () -> Void, trailing: (() -> AnyView)? = nil) -> some View {
         Button(action: action) {
             HStack(spacing: XuanSpacing.md) {
                 ZStack {
@@ -164,7 +165,7 @@ struct CCSettingsView: View {
                 Spacer()
 
                 if let trailing = trailing {
-                    AnyView(trailing())
+                    trailing()
                 } else {
                     Image(systemName: "chevron.right")
                         .font(.system(size: 13, weight: .semibold))

@@ -151,6 +151,10 @@ enum CCAppRoute: Hashable, Identifiable {
         case .growthReport: return "growthReport"
         case .mutualAidGroups: return "mutualAidGroups"
         case .mutualAidGroupDetail(let id): return "mutualAidGroupDetail_\(id)"
+        case .stablePlan: return "stablePlan"
+        case .rainSound: return "rainSound"
+        case .emotionRecord: return "emotionRecord"
+        case .checkinSuccess: return "checkinSuccess"
         }
     }
 }
