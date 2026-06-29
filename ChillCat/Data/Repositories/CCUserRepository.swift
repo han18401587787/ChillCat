@@ -7,10 +7,12 @@
 //
 
 import Foundation
+import KeychainAccess
 
 final class CCUserRepository: CCUserRepositoryProtocol {
     private let remoteDataSource: CCUserRemoteDataSource
     private let localDataSource: CCUserLocalDataSource
+    private let keychain = Keychain(service: "app.xuanpeace.token")
 
     init(
         remoteDataSource: CCUserRemoteDataSource,
@@ -24,6 +26,11 @@ final class CCUserRepository: CCUserRepositoryProtocol {
         let dto = try await remoteDataSource.login(username: username, password: password)
         let user = CCUserDTOMapper.toEntity(dto)
         try? await localDataSource.saveUser(user)
+        // 将 token 写入 Keychain，CCXuanAPI 的 XuanAuthInterceptor 需要
+        if let token = dto.token {
+            keychain["access_token"] = token
+            print("✅ [Login] Token已缓存")
+        }
         return user
     }
 
