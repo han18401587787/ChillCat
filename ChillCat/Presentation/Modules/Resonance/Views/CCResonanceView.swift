@@ -117,11 +117,11 @@ struct CCResonanceView: View {
         HStack(spacing: XuanSpacing.md) {
             ZStack {
                 Circle()
-                    .fill(Color.xuanMint.opacity(0.15))
+                    .fill(Color.white.opacity(0.5))
                     .frame(width: 44, height: 44)
                 Image(systemName: "hand.raised.fill")
                     .font(.system(size: 20))
-                    .foregroundColor(Color.xuanMint)
+                    .foregroundColor(Color.xuanPinkDark)
             }
 
             VStack(alignment: .leading, spacing: 2) {
@@ -135,15 +135,8 @@ struct CCResonanceView: View {
             Spacer()
         }
         .padding(XuanSpacing.lg)
-        .background(
-            RoundedRectangle(cornerRadius: XuanRadius.lg)
-                .fill(Color.xuanWhite)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: XuanRadius.lg)
-                .stroke(Color.xuanMint.opacity(0.3), lineWidth: 1)
-        )
-        .xuanCardShadow()
+        .background(Color.xuanPinkLight)
+        .cornerRadius(XuanRadius.md)
     }
 
     // MARK: - Card (设计稿风格)
