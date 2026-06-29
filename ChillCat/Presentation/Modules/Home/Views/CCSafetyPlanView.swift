@@ -86,14 +86,14 @@ struct CCSafetyPlanView: View {
         VStack(spacing: XuanSpacing.sm) {
             Image(systemName: "shield.checkered")
                 .font(.system(size: 36))
-                .foregroundColor(Color.xuanApricot)
+                .foregroundColor(Color.xuanApricotDark)
 
-            Text("提前准备，从容应对")
+            Text("安全守护")
                 .font(XuanFont.h1)
                 .foregroundColor(Color.xuanTextPrimary)
 
-            Text("安全计划是你在情绪危机时可以依靠的个性化方案。花一点时间填写它，未来你会感谢现在的自己。")
-                .font(XuanFont.bodyL)
+            Text("提前准备，从容应对。安全计划是你在情绪危机时可以依靠的个性化方案。")
+                .font(XuanFont.bodyM)
                 .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
