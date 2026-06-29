@@ -77,13 +77,26 @@ final class CCResonanceViewModel {
             CCResonanceDisplayItem(
                 id: String(p.id),
                 content: p.content,
-                emotion: p.emotion,
-                emotionColor: p.emotionColor,
+                emotion: p.emotionType ?? "平静",
+                emotionColor: emotionColorFor(p.emotionType ?? "平静"),
                 isAnonymous: p.isAnonymous,
-                displayName: p.displayName,
+                displayName: p.displayName ?? "匿名用户",
                 resonanceCount: Int(p.resonanceCount),
                 createdAt: ISO8601DateFormatter().date(from: p.createdAt) ?? Date()
             )
+        }
+    }
+
+    private func emotionColorFor(_ type: String) -> String {
+        switch type {
+        case "calm":    return "A8D9BA"
+        case "happy":   return "D4A882"
+        case "anxious": return "A085C6"
+        case "wronged": return "F5A6BA"
+        case "angry":   return "E67373"
+        case "lonely":  return "63B5F5"
+        case "tired":   return "B8D4E3"
+        default:        return "A8D9BA"
         }
     }
 

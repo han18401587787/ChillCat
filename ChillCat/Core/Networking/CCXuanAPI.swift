@@ -156,8 +156,10 @@ enum CCXuanAPI {
     // MARK: - Resonance Wall (共鸣墙)
 
     struct ResonanceItem: Decodable, Identifiable, Hashable {
-        let id: Int64; let content: String; let emotion: String; let emotionColor: String
-        let resonanceCount: Int64; let createdAt: String; let isAnonymous: Bool; let displayName: String
+        let id: Int64; let content: String
+        let emotionType: String?  // 服务端返回 emotion_type
+        let isAnonymous: Bool; let resonanceCount: Int64
+        let createdAt: String; let displayName: String?
     }
     struct ResonancePage: Decodable { let list: [ResonanceItem]; let total: Int64; let onlineCount: Int64? }
     struct ResonanceDetailResponse: Decodable { let item: ResonanceItem; let replies: [ResonanceReply] }
