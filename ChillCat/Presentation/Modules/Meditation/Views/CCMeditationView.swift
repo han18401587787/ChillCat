@@ -1,9 +1,10 @@
+//
+//  CCMeditationView.swift
+//  绪安 - 治愈空间 (严格对照设计稿 page_21 像素级还原)
+//
+
 import SwiftUI
 import Combine
-
-// MARK: - 治愈空间 v3.0 (Ardot Design)
-/// 对照截图 03_healing_space.png 像素级还原
-/// 包含：冥想练习卡片、治愈音频（白噪音/森林/钢琴）、呼吸训练入口
 
 struct CCMeditationView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
@@ -13,19 +14,18 @@ struct CCMeditationView: View {
     @State private var secondsElapsed = 0
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
-    // 当前选中的音频类型
-    @State private var selectedAudio: HealingAudioType = .rain
+    @State private var selectedAudio: HealingAudioType? = nil
 
     var body: some View {
         ScrollView {
             VStack(spacing: XuanSpacing.xl2) {
-                // 1. 冥想练习卡片列表
+                // 1. 冥想练习卡片
                 meditationSection
 
-                // 2. 治愈音频区
+                // 2. 治愈音频
                 healingAudioSection
 
-                // 3. 呼吸训练入口
+                // 3. 呼吸训练
                 breathingSection
             }
             .padding(XuanSpacing.lg)
@@ -38,13 +38,15 @@ struct CCMeditationView: View {
             guard timerRunning else { return }
             secondsElapsed += 1
             let cycle = secondsElapsed % 19
-            if cycle < 4 { breathPhase = "吸气" }
-            else if cycle < 11 { breathPhase = "屏息" }
-            else { breathPhase = "呼气" }
+            switch cycle {
+            case 0..<4:  breathPhase = "吸气"
+            case 4..<11: breathPhase = "屏息"
+            default:     breathPhase = "呼气"
+            }
         }
     }
 
-    // MARK: - 冥想练习区
+    // MARK: - 冥想练习
     private var meditationSection: some View {
         VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("冥想练习")
@@ -53,27 +55,26 @@ struct CCMeditationView: View {
 
             VStack(spacing: XuanSpacing.sm) {
                 ForEach(CCMeditationSession.presets) { session in
-                    meditationCard(session: session)
+                    meditationCard(session)
                 }
             }
         }
     }
 
-    private func meditationCard(session: CCMeditationSession) -> some View {
+    private func meditationCard(_ session: CCMeditationSession) -> some View {
         NavigationLink(value: CCAppRoute.meditationPlayer(session: session)) {
-            HStack(spacing: XuanSpacing.lg) {
-                // 左侧图标
+            HStack(spacing: XuanSpacing.md) {
+                // 图标
                 ZStack {
                     RoundedRectangle(cornerRadius: XuanRadius.md)
                         .fill(Color(hex: session.category.themeColor).opacity(0.12))
                         .frame(width: 56, height: 56)
-
                     Image(systemName: session.category.iconName)
                         .font(.system(size: 24))
                         .foregroundColor(Color(hex: session.category.themeColor))
                 }
 
-                // 中间文字
+                // 文字
                 VStack(alignment: .leading, spacing: 4) {
                     Text(session.title)
                         .font(XuanFont.bodyLBold)
@@ -85,14 +86,22 @@ struct CCMeditationView: View {
 
                 Spacer()
 
+                // 时长标签
+                Text(session.category.subtitle)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.sm)
+
                 // 播放按钮
                 ZStack {
                     Circle()
                         .fill(Color(hex: session.category.themeColor).opacity(0.1))
-                        .frame(width: 40, height: 40)
-
+                        .frame(width: 36, height: 36)
                     Image(systemName: "play.fill")
-                        .font(.system(size: 16))
+                        .font(.system(size: 14))
                         .foregroundColor(Color(hex: session.category.themeColor))
                 }
             }
@@ -103,7 +112,7 @@ struct CCMeditationView: View {
         }
     }
 
-    // MARK: - 治愈音频区
+    // MARK: - 治愈音频
     private var healingAudioSection: some View {
         VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("治愈音频")
@@ -114,21 +123,21 @@ struct CCMeditationView: View {
                 audioCard(
                     type: .rain,
                     title: "白噪音·雨声",
-                    subtitle: "模拟淅沥雨声，帮助平静思绪",
+                    subtitle: "淅沥雨声，平静思绪",
                     icon: "cloud.rain.fill",
-                    color: Color(hex: "63B5F5")
+                    color: Color.xuanInfo
                 )
                 audioCard(
                     type: .forest,
                     title: "森林声音",
-                    subtitle: "鸟鸣与风吹树叶的自然之声",
+                    subtitle: "鸟鸣与风吹树叶",
                     icon: "leaf.fill",
-                    color: Color(hex: "82C785")
+                    color: Color.xuanSuccess
                 )
                 audioCard(
                     type: .piano,
                     title: "钢琴曲",
-                    subtitle: "舒缓的古典钢琴，放松身心",
+                    subtitle: "舒缓古典钢琴，放松身心",
                     icon: "music.quarternote.3",
                     color: Color(hex: "A085C6")
                 )
@@ -138,16 +147,13 @@ struct CCMeditationView: View {
 
     private func audioCard(type: HealingAudioType, title: String, subtitle: String, icon: String, color: Color) -> some View {
         Button(action: {
-            selectedAudio = type
-            // TODO: 播放对应音频
+            selectedAudio = (selectedAudio == type) ? nil : type
         }) {
-            HStack(spacing: XuanSpacing.lg) {
-                // 图标
+            HStack(spacing: XuanSpacing.md) {
                 ZStack {
                     RoundedRectangle(cornerRadius: XuanRadius.md)
                         .fill(color.opacity(0.12))
                         .frame(width: 56, height: 56)
-
                     Image(systemName: icon)
                         .font(.system(size: 24))
                         .foregroundColor(color)
@@ -164,12 +170,10 @@ struct CCMeditationView: View {
 
                 Spacer()
 
-                // 播放/选中状态
                 ZStack {
                     Circle()
                         .fill(selectedAudio == type ? color : color.opacity(0.1))
                         .frame(width: 40, height: 40)
-
                     Image(systemName: selectedAudio == type ? "pause.fill" : "play.fill")
                         .font(.system(size: 16))
                         .foregroundColor(selectedAudio == type ? .white : color)
@@ -184,7 +188,7 @@ struct CCMeditationView: View {
         .buttonStyle(.plain)
     }
 
-    // MARK: - 呼吸训练区
+    // MARK: - 呼吸训练
     private var breathingSection: some View {
         VStack(alignment: .leading, spacing: XuanSpacing.md) {
             Text("呼吸训练")
@@ -192,7 +196,6 @@ struct CCMeditationView: View {
                 .foregroundColor(Color.xuanTextPrimary)
 
             VStack(spacing: XuanSpacing.lg) {
-                // 标题行
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("4-7-8 呼吸法")
@@ -205,14 +208,12 @@ struct CCMeditationView: View {
                     Spacer()
                 }
 
-                // 呼吸动画圆
+                // 呼吸动画
                 ZStack {
-                    // 外圈
                     Circle()
-                        .stroke(Color.xuanMint.opacity(0.2), lineWidth: 3)
-                        .frame(width: 200, height: 200)
+                        .stroke(Color.xuanMint.opacity(0.15), lineWidth: 3)
+                        .frame(width: 180, height: 180)
 
-                    // 进度圈
                     Circle()
                         .trim(from: 0, to: breathing ? 1 : 0.4)
                         .stroke(
@@ -223,26 +224,27 @@ struct CCMeditationView: View {
                             ),
                             style: StrokeStyle(lineWidth: 3, lineCap: .round)
                         )
-                        .frame(width: 200, height: 200)
+                        .frame(width: 180, height: 180)
                         .rotationEffect(.degrees(-90))
                         .animation(breathing ? .easeInOut(duration: 4).repeatForever() : .default, value: breathing)
 
-                    // 中心文字
                     VStack(spacing: XuanSpacing.sm) {
                         Text(breathPhase)
                             .font(.system(size: 28, weight: .light))
                             .foregroundColor(Color.xuanMintDark)
 
                         if timerRunning {
-                            Text("\(secondsElapsed / 60):\(String(format: "%02d", secondsElapsed % 60))")
+                            Text(String(format: "%d:%02d", secondsElapsed / 60, secondsElapsed % 60))
                                 .font(XuanFont.bodyS)
                                 .foregroundColor(Color.xuanTextSecondary)
+                                .monospacedDigit()
                         }
                     }
                 }
+                .frame(maxWidth: .infinity)
 
-                // 操作按钮
                 Button(action: {
+                    CCHaptic.light()
                     breathing.toggle()
                     timerRunning.toggle()
                     if !breathing { secondsElapsed = 0 }
@@ -276,7 +278,5 @@ struct CCMeditationView: View {
 
 // MARK: - 治愈音频类型
 enum HealingAudioType {
-    case rain
-    case forest
-    case piano
+    case rain, forest, piano
 }
