@@ -144,7 +144,7 @@ struct CCTreeHoleView: View {
                         ? Color.xuanApricot.opacity(0.4)
                         : Color.xuanApricot
                 )
-                .cornerRadius(XuanRadius.lg)
+                .cornerRadius(XuanRadius.md)
             }
             .disabled(viewModel.newPostText.trimmingCharacters(in: .whitespaces).isEmpty)
 
