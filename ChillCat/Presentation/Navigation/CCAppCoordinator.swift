@@ -69,6 +69,10 @@ final class CCAppCoordinator {
         case .growthReport: CCGrowthReportView()
         case .mutualAidGroups: CCMutualAidGroupView()
         case .mutualAidGroupDetail(let id): CCMutualAidGroupView()
+        case .stablePlan: CCStablePlanView()
+        case .rainSound: CCRainSoundView()
+        case .emotionRecord: CCEmotionRecordView()
+        case .checkinSuccess: CCCheckinResultView()
         }
     }
 

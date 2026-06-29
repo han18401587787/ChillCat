@@ -95,6 +95,10 @@ enum CCAppRoute: Hashable, Identifiable {
     case growthReport
     case mutualAidGroups
     case mutualAidGroupDetail(Int64)
+    case stablePlan
+    case rainSound
+    case emotionRecord
+    case checkinSuccess
 
     var id: String {
         switch self {
