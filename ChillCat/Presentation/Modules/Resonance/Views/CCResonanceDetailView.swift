@@ -200,7 +200,7 @@ struct CCResonanceDetailView: View {
     // MARK: - 回应区
     private var repliesSection: some View {
         VStack(alignment: .leading, spacing: XuanSpacing.md) {
-            Text("回应 (\(replies.count))")
+            Text("温暖的回应 (\(replies.count))")
                 .font(XuanFont.h3)
                 .foregroundColor(Color.xuanTextPrimary)
                 .padding(.top, XuanSpacing.sm)
