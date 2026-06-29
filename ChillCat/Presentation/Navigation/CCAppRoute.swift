@@ -156,6 +156,7 @@ enum CCAppRoute: Hashable, Identifiable {
         case .rainSound: return "rainSound"
         case .emotionRecord: return "emotionRecord"
         case .checkinSuccess: return "checkinSuccess"
+        case .emotionDecodeResult: return "emotionDecodeResult"
         }
     }
 }

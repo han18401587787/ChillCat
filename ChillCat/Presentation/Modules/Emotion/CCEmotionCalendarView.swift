@@ -57,8 +57,8 @@ struct CCEmotionCalendarView: View {
                 calendarGrid
 
                 // 选中日期详情
-                if let dateStr = dateString(from: selectedDate),
-                   let data = emotionData[dateStr] {
+                let dateStr = dateString(from: selectedDate)
+                if let data = emotionData[dateStr] {
                     dayDetailCard(date: selectedDate, emoji: data.emoji, emotion: data.emotion)
                 }
 
