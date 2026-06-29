@@ -258,13 +258,7 @@ struct CCMeditationView: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(
-                        LinearGradient(
-                            colors: [Color.xuanMint, Color.xuanMintDark],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
+                    .background(Color.xuanMint)
                     .cornerRadius(XuanRadius.lg)
                 }
             }
