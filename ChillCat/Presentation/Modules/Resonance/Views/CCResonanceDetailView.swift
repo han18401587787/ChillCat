@@ -193,7 +193,7 @@ struct CCResonanceDetailView: View {
             .padding(.trailing, XuanSpacing.md)
         }
         .background(Color.xuanWhite)
-        .cornerRadius(XuanRadius.lg)
+        .cornerRadius(XuanRadius.md)
         .xuanCardShadow()
     }
 
