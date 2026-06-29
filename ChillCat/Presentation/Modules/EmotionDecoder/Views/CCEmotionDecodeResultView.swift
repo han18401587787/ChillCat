@@ -147,7 +147,7 @@ struct CCEmotionDecodeResultView: View {
         }
         .padding(XuanSpacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.xuanWhite)
+        .background(Color.xuanApricotBg)
         .cornerRadius(XuanRadius.lg)
         .xuanCardShadow()
     }
