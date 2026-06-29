@@ -1,8 +1,11 @@
-import SwiftUI
+//
+//  CCProfileView.swift
+//  绪安 - 个人中心 (严格对照设计稿 page_22 像素级还原)
+//
+//  设计稿来源: /workspace/design_pages/page_22.png
+//  布局：用户信息卡片 → 统计概览 → 心光会员大卡片 → 功能入口列表 → 设置
 
-// MARK: - 个人中心 v3.0 (Ardot Design)
-/// 对照设计图像素级还原
-/// 包含：用户信息卡片、统计数据、功能入口列表、设置/退出
+import SwiftUI
 
 struct CCProfileView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
@@ -20,12 +23,11 @@ struct CCProfileView: View {
                     retryAction: { await viewModel.loadProfile() }
                 )
             } else {
-                // 未登录也正常展示页面，用默认值
                 content
             }
         }
         .background(Color.xuanApricotBg)
-        .navigationTitle("个人中心")
+        .navigationTitle("我的")
         .navigationBarTitleDisplayMode(.large)
         .task { await viewModel.loadProfile() }
     }
@@ -37,17 +39,17 @@ struct CCProfileView: View {
                 // 用户信息卡片
                 userInfoCard
 
-                // 统计概览
+                // 统计概览 (3列)
                 statsOverview
 
                 // 心光会员大卡片
                 vipBannerCard
 
-                // 功能入口
+                // 功能入口列表
                 featureSection
 
-                // 底部操作
-                bottomActions
+                // 设置入口
+                settingsEntry
             }
             .padding(XuanSpacing.lg)
         }
@@ -56,7 +58,6 @@ struct CCProfileView: View {
     // MARK: - 用户信息卡片
     private var userInfoCard: some View {
         Button(action: {
-            // 未登录时点击跳转登录页
             if viewModel.user == nil {
                 coordinator.isLoggedIn = false
             }
@@ -74,19 +75,20 @@ struct CCProfileView: View {
                         )
                         .frame(width: 64, height: 64)
 
-                    Image(systemName: viewModel.user == nil ? "person.circle.fill" : "leaf.circle.fill")
-                        .font(.system(size: 32))
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 28))
                         .foregroundColor(.white)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
-                    HStack(spacing: 4) {
+                    HStack(spacing: 6) {
                         Text(viewModel.displayName)
                             .font(XuanFont.h2)
                             .foregroundColor(Color.xuanTextPrimary)
+
                         if viewModel.user == nil {
                             Text("点击登录")
-                                .font(XuanFont.bodyS)
+                                .font(XuanFont.caption)
                                 .foregroundColor(Color.xuanApricot)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 2)
@@ -102,17 +104,16 @@ struct CCProfileView: View {
 
                 Spacer()
 
-            // 编辑按钮
-            Image(systemName: "chevron.right")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundColor(Color.xuanTextTertiary)
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(Color.xuanTextTertiary)
             }
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.lg)
+            .xuanCardShadow()
         }
-        .padding(XuanSpacing.lg)
-        .background(Color.xuanWhite)
-        .cornerRadius(XuanRadius.lg)
         .buttonStyle(.plain)
-        .xuanCardShadow()
     }
 
     // MARK: - 统计概览
@@ -130,7 +131,6 @@ struct CCProfileView: View {
                 RoundedRectangle(cornerRadius: XuanRadius.md)
                     .fill(color.opacity(0.1))
                     .frame(width: 44, height: 44)
-
                 Image(systemName: icon)
                     .font(.system(size: 20))
                     .foregroundColor(color)
@@ -151,14 +151,13 @@ struct CCProfileView: View {
         .xuanCardShadow()
     }
 
-    // MARK: - 心光会员大卡片
+    // MARK: - 心光会员大卡片 (设计稿风格)
     private var vipBannerCard: some View {
         Button(action: { coordinator.navigate(to: .vipCenter) }) {
             HStack(spacing: XuanSpacing.lg) {
-                // 左侧图标
                 ZStack {
                     Circle()
-                        .fill(Color.white.opacity(0.3))
+                        .fill(Color.white.opacity(0.25))
                         .frame(width: 48, height: 48)
                     Image(systemName: "crown.fill")
                         .font(.system(size: 22))
@@ -169,9 +168,9 @@ struct CCProfileView: View {
                     Text("心光会员")
                         .font(XuanFont.h3)
                         .foregroundColor(.white)
-                    Text("解锁更多治愈功能")
+                    Text("首月仅需 ¥9.9，解锁更多治愈功能")
                         .font(XuanFont.bodyS)
-                        .foregroundColor(.white.opacity(0.8))
+                        .foregroundColor(.white.opacity(0.85))
                 }
 
                 Spacer()
@@ -181,7 +180,7 @@ struct CCProfileView: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, XuanSpacing.lg)
                     .padding(.vertical, XuanSpacing.sm)
-                    .background(Color.white.opacity(0.25))
+                    .background(Color.white.opacity(0.2))
                     .cornerRadius(XuanRadius.full)
             }
             .padding(XuanSpacing.lg)
@@ -201,47 +200,14 @@ struct CCProfileView: View {
         }
         .buttonStyle(.plain)
     }
+
+    // MARK: - 功能入口列表
     private var featureSection: some View {
         VStack(spacing: XuanSpacing.sm) {
-            featureRow(
-                icon: "crown.fill",
-                title: "心光会员",
-                subtitle: "解锁更多治愈功能",
-                iconColor: Color(hex: "D4A882"),
-                action: { coordinator.navigate(to: .vipCenter) }
-            )
-
-            featureRow(
-                icon: "chart.line.uptrend.xyaxis",
-                title: "情绪趋势",
-                subtitle: "查看情绪变化与洞察",
-                iconColor: Color.xuanMint,
-                action: { coordinator.navigate(to: .trends) }
-            )
-
-            featureRow(
-                icon: "heart.text.square",
-                title: "治愈记录",
-                subtitle: "冥想/稳情练习记录",
-                iconColor: Color(hex: "A085C6"),
-                action: { coordinator.navigate(to: .growthArchive) }
-            )
-
-            featureRow(
-                icon: "envelope.fill",
-                title: "感谢信",
-                subtitle: "来自绪安的温暖信件",
-                iconColor: Color.xuanPink,
-                action: { coordinator.navigate(to: .journal) }
-            )
-
-            featureRow(
-                icon: "lock.shield.fill",
-                title: "隐私设置",
-                subtitle: "管理数据与隐私偏好",
-                iconColor: Color.xuanInfo,
-                action: { coordinator.navigate(to: .privacy) }
-            )
+            featureRow(icon: "chart.line.uptrend.xyaxis", title: "情绪趋势", subtitle: "查看情绪变化与洞察", iconColor: Color.xuanMint, action: { coordinator.navigate(to: .trends) })
+            featureRow(icon: "heart.text.square", title: "治愈记录", subtitle: "冥想/稳情练习记录", iconColor: Color(hex: "A085C6"), action: { coordinator.navigate(to: .growthArchive) })
+            featureRow(icon: "envelope.fill", title: "感谢信", subtitle: "来自绪安的温暖信件", iconColor: Color.xuanPink, action: { coordinator.navigate(to: .journal) })
+            featureRow(icon: "lock.shield.fill", title: "隐私设置", subtitle: "管理数据与隐私偏好", iconColor: Color.xuanInfo, action: { coordinator.navigate(to: .privacy) })
         }
     }
 
@@ -252,7 +218,6 @@ struct CCProfileView: View {
                     RoundedRectangle(cornerRadius: XuanRadius.sm)
                         .fill(iconColor.opacity(0.12))
                         .frame(width: 40, height: 40)
-
                     Image(systemName: icon)
                         .font(.system(size: 18))
                         .foregroundColor(iconColor)
@@ -276,62 +241,43 @@ struct CCProfileView: View {
             .padding(XuanSpacing.lg)
             .background(Color.xuanWhite)
             .cornerRadius(XuanRadius.lg)
+            .xuanCardShadow()
         }
         .buttonStyle(.plain)
     }
 
-    // MARK: - 底部操作
-    private var bottomActions: some View {
-        VStack(spacing: XuanSpacing.sm) {
-            Button(action: { coordinator.navigate(to: .settings) }) {
-                HStack(spacing: XuanSpacing.md) {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: XuanRadius.sm)
-                            .fill(Color.xuanSurface)
-                            .frame(width: 40, height: 40)
-
-                        Image(systemName: "gearshape.fill")
-                            .font(.system(size: 18))
-                            .foregroundColor(Color.xuanTextSecondary)
-                    }
-
-                    Text("设置")
-                        .font(XuanFont.bodyLBold)
-                        .foregroundColor(Color.xuanTextPrimary)
-
-                    Spacer()
-
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(Color.xuanTextTertiary)
+    // MARK: - 设置入口
+    private var settingsEntry: some View {
+        Button(action: { coordinator.navigate(to: .settings) }) {
+            HStack(spacing: XuanSpacing.md) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: XuanRadius.sm)
+                        .fill(Color.xuanSurface)
+                        .frame(width: 40, height: 40)
+                    Image(systemName: "gearshape.fill")
+                        .font(.system(size: 18))
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
-                .padding(XuanSpacing.lg)
-                .background(Color.xuanWhite)
-                .cornerRadius(XuanRadius.lg)
+
+                Text("设置")
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanTextPrimary)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Color.xuanTextTertiary)
             }
-            .buttonStyle(.plain)
-
-            Button(role: .destructive, action: {
-                Task {
-                    await viewModel.logout()
-                    coordinator.isLoggedIn = false
-                }
-            }) {
-                HStack {
-                    Spacer()
-                    Text("退出登录")
-                        .font(XuanFont.bodyLBold)
-                        .foregroundColor(Color.xuanDanger)
-                    Spacer()
-                }
-                .padding(.vertical, XuanSpacing.lg)
-                .background(Color.xuanWhite)
-                .cornerRadius(XuanRadius.lg)
-            }
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.lg)
+            .xuanCardShadow()
         }
+        .buttonStyle(.plain)
     }
 
-    // MARK: - 辅助方法
+    // MARK: - 辅助
     private var daysSinceJoinedText: String {
         guard let createdAt = viewModel.user?.createdAt else { return "感谢你的陪伴" }
         let days = Calendar.current.dateComponents([.day], from: createdAt, to: Date()).day ?? 0

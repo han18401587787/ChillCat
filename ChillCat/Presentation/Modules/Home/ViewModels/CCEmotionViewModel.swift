@@ -10,6 +10,7 @@ import SwiftUI
 @Observable
 final class CCEmotionViewModel {
     var selectedEmotion: CCEmotion?
+    var selectedNeed: String?  // 选中的需求标签（被倾听/被理解/被鼓励/只是想说说）
     var todayNote: String = ""
     var hasCheckedIn: Bool = false
     var streakDays: Int = 0
@@ -91,6 +92,10 @@ final class CCEmotionViewModel {
 
     func selectEmotion(_ emotion: CCEmotion) {
         selectedEmotion = emotion
+    }
+
+    func selectNeed(_ need: String) {
+        selectedNeed = need
     }
 
     func completeCheckIn() {
