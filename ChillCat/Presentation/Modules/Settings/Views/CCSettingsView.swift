@@ -1,3 +1,9 @@
+//
+//  CCSettingsView.swift
+//  绪安 - 设置页面 (严格对照设计稿 page_47 像素级还原)
+//
+//  设计稿来源: /workspace/design_pages/page_47.png
+
 import SwiftUI
 
 struct CCSettingsView: View {
@@ -6,31 +12,169 @@ struct CCSettingsView: View {
     @State private var viewModel = CCSettingsViewModel()
 
     var body: some View {
-        List {
-            Section("外观") {
-                Button(action: { themeManager.toggleTheme() }) {
-                    Label("暗色模式", systemImage: themeManager.isDarkMode ? "moon.fill" : "sun.max.fill")
-                }.foregroundColor(.primary)
+        ScrollView {
+            VStack(spacing: XuanSpacing.xl2) {
+                // 账号与安全
+                sectionView("账号与安全") {
+                    settingsRow(icon: "person.fill", title: "账号信息", color: Color.xuanApricot) {}
+                    settingsRow(icon: "lock.fill", title: "安全设置", color: Color.xuanMint) {}
+                    settingsRow(icon: "key.fill", title: "密码管理", color: Color.xuanInfo) {}
+                }
+
+                // 消息通知
+                sectionView("消息通知") {
+                    settingsRow(icon: "bell.fill", title: "消息推送", color: Color.xuanPink) {
+                        // toggle handled inline
+                    } trailing: {
+                        Toggle("", isOn: Binding(
+                            get: { viewModel.notificationsEnabled },
+                            set: { viewModel.notificationsEnabled = $0 }
+                        ))
+                        .labelsHidden()
+                    }
+                    settingsRow(icon: "moon.fill", title: "勿扰模式", color: Color(hex: "A085C6")) {}
+                }
+
+                // 隐私设置
+                sectionView("隐私设置") {
+                    settingsRow(icon: "hand.raised.fill", title: "隐私保护", color: Color.xuanInfo) {
+                        coordinator.navigate(to: .privacy)
+                    }
+                    settingsRow(icon: "eye.slash.fill", title: "匿名保护", color: Color.xuanTextTertiary) {}
+                }
+
+                // 外观
+                sectionView("外观") {
+                    Button(action: { themeManager.toggleTheme() }) {
+                        HStack(spacing: XuanSpacing.md) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: XuanRadius.sm)
+                                    .fill(Color.xuanApricot.opacity(0.12))
+                                    .frame(width: 36, height: 36)
+                                Image(systemName: themeManager.isDarkMode ? "moon.fill" : "sun.max.fill")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color.xuanApricot)
+                            }
+                            Text("深色模式")
+                                .font(XuanFont.bodyL)
+                                .foregroundColor(Color.xuanTextPrimary)
+                            Spacer()
+                            Toggle("", isOn: Binding(
+                                get: { themeManager.isDarkMode },
+                                set: { _ in themeManager.toggleTheme() }
+                            ))
+                            .labelsHidden()
+                        }
+                        .padding(XuanSpacing.md)
+                        .background(Color.xuanWhite)
+                        .cornerRadius(XuanRadius.md)
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                // 关于
+                sectionView("关于") {
+                    settingsRow(icon: "info.circle.fill", title: "版本信息", color: Color.xuanTextTertiary) {} trailing: {
+                        Text("v3.0.0")
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextTertiary)
+                    }
+                    settingsRow(icon: "doc.text.fill", title: "用户协议", color: Color.xuanTextSecondary) {
+                        coordinator.navigate(to: .userAgreement)
+                    }
+                    settingsRow(icon: "shield.fill", title: "隐私政策", color: Color.xuanTextSecondary) {
+                        coordinator.navigate(to: .privacyPolicy)
+                    }
+                    settingsRow(icon: "questionmark.circle.fill", title: "常见问题", color: Color.xuanTextSecondary) {
+                        coordinator.navigate(to: .faq)
+                    }
+                    settingsRow(icon: "envelope.fill", title: "意见反馈", color: Color.xuanTextSecondary) {
+                        coordinator.navigate(to: .feedback)
+                    }
+                }
+
+                // 数据管理
+                sectionView("数据管理") {
+                    settingsRow(icon: "externaldrive.fill", title: "数据管理", color: Color.xuanInfo) {
+                        coordinator.navigate(to: .dataManagement)
+                    }
+                    Button(action: { coordinator.navigate(to: .deleteAccount) }) {
+                        HStack(spacing: XuanSpacing.md) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: XuanRadius.sm)
+                                    .fill(Color.xuanDanger.opacity(0.1))
+                                    .frame(width: 36, height: 36)
+                                Image(systemName: "trash.fill")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color.xuanDanger)
+                            }
+                            Text("注销账号")
+                                .font(XuanFont.bodyL)
+                                .foregroundColor(Color.xuanDanger)
+                            Spacer()
+                        }
+                        .padding(XuanSpacing.md)
+                        .background(Color.xuanWhite)
+                        .cornerRadius(XuanRadius.md)
+                    }
+                    .buttonStyle(.plain)
+                }
             }
-            Section("通知") {
-                Toggle(isOn: Binding(
-                    get: { viewModel.notificationsEnabled },
-                    set: { viewModel.notificationsEnabled = $0 }
-                )) { Label("消息推送", systemImage: "bell.fill") }
-            }
-            Section("关于") {
-                Label("版本 3.0", systemImage: "info.circle")
-                Button(action: { coordinator.navigate(to: .privacy) }) { Label("隐私设置", systemImage: "lock.fill").foregroundColor(.primary) }
-                Button(action: { coordinator.navigate(to: .privacyPolicy) }) { Label("隐私政策", systemImage: "hand.raised.fill").foregroundColor(.primary) }
-                Button(action: { coordinator.navigate(to: .userAgreement) }) { Label("用户协议", systemImage: "doc.text.fill").foregroundColor(.primary) }
-                Button(action: { coordinator.navigate(to: .faq) }) { Label("常见问题", systemImage: "questionmark.circle.fill").foregroundColor(.primary) }
-                Button(action: { coordinator.navigate(to: .feedback) }) { Label("意见反馈", systemImage: "envelope.fill").foregroundColor(.primary) }
-            }
-            Section("数据") {
-                Button("数据管理") { coordinator.navigate(to: .dataManagement) }
-                Button("注销账号", role: .destructive) { coordinator.navigate(to: .deleteAccount) }
-            }
+            .padding(XuanSpacing.lg)
         }
+        .background(Color.xuanApricotBg)
         .navigationTitle("设置")
+        .navigationBarTitleDisplayMode(.large)
+    }
+
+    // MARK: - Section
+    private func sectionView<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
+            Text(title)
+                .font(XuanFont.bodyS)
+                .foregroundColor(Color.xuanTextSecondary)
+                .padding(.leading, 4)
+
+            VStack(spacing: 1) {
+                content()
+            }
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.md)
+            .xuanCardShadow()
+        }
+    }
+
+    // MARK: - Row
+    private func settingsRow(icon: String, title: String, color: Color, action: @escaping () -> Void, trailing: (() -> some View)? = nil) -> some View {
+        Button(action: action) {
+            HStack(spacing: XuanSpacing.md) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: XuanRadius.sm)
+                        .fill(color.opacity(0.12))
+                        .frame(width: 36, height: 36)
+                    Image(systemName: icon)
+                        .font(.system(size: 16))
+                        .foregroundColor(color)
+                }
+
+                Text(title)
+                    .font(XuanFont.bodyL)
+                    .foregroundColor(Color.xuanTextPrimary)
+
+                Spacer()
+
+                if let trailing = trailing {
+                    AnyView(trailing())
+                } else {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(Color.xuanTextTertiary)
+                }
+            }
+            .padding(XuanSpacing.md)
+        }
+        .buttonStyle(.plain)
+        Divider()
+            .padding(.leading, 52)
     }
 }
