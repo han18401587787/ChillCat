@@ -99,6 +99,7 @@ enum CCAppRoute: Hashable, Identifiable {
     case rainSound
     case emotionRecord
     case checkinSuccess
+    case emotionDecodeResult
 
     var id: String {
         switch self {

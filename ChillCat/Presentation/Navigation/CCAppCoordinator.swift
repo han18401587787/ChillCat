@@ -73,6 +73,7 @@ final class CCAppCoordinator {
         case .rainSound: CCRainSoundView()
         case .emotionRecord: CCEmotionRecordView()
         case .checkinSuccess: CCCheckinResultView()
+        case .emotionDecodeResult: CCEmotionDecodeResultView()
         }
     }
 
