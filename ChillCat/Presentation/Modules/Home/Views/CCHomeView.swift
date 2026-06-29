@@ -139,6 +139,7 @@ struct CCHomeView: View {
         }
         .buttonStyle(.plain)
         .animation(.easeInOut(duration: 0.2), value: isSelected)
+        .accessibilityIdentifier("home_need_\(item.title)")
     }
 
     // MARK: - 4. 今日心情打卡按钮
@@ -156,6 +157,7 @@ struct CCHomeView: View {
                 .cornerRadius(XuanRadius.lg)
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("home_checkin_button")
     }
 
     // MARK: - 5. 今日暖心
@@ -259,6 +261,7 @@ struct CCHomeView: View {
                 }
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("home_emotion_explore")
         }
         .padding(XuanSpacing.lg)
         .background(Color.xuanWhite)
@@ -362,6 +365,7 @@ struct CCHomeView: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("home_ai_listener_entry")
         .padding(XuanSpacing.lg)
         .background(Color.xuanWhite)
         .cornerRadius(XuanRadius.lg)

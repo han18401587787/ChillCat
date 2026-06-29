@@ -59,6 +59,34 @@ extension XCUIApplication {
     var tabToolbox: XCUIElement { tabBars.buttons["工具箱"].firstMatch }
     var tabVIP: XCUIElement { tabBars.buttons["会员"].firstMatch }
 
+    // MARK: - v3.0 交互元素验证辅助
+
+    /// 验证元素是Button类型且可点击
+    func assertButton(_ identifier: String, file: StaticString = #file, line: UInt = #line) -> XCUIElement {
+        let btn = buttons[identifier].firstMatch
+        XCTAssertTrue(btn.waitForExistence(timeout: 5), "按钮「\(identifier)」应该存在", file: file, line: line)
+        XCTAssertEqual(btn.elementType, .button, "「\(identifier)」应该是Button类型", file: file, line: line)
+        XCTAssertTrue(btn.isHittable, "「\(identifier)」应该是可点击的", file: file, line: line)
+        return btn
+    }
+
+    /// 验证输入框可编辑
+    func assertTextField(_ placeholder: String, file: StaticString = #file, line: UInt = #line) -> XCUIElement {
+        let field = textFields[placeholder].firstMatch.exists
+            ? textFields[placeholder].firstMatch
+            : textViews.firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "输入框「\(placeholder)」应该存在", file: file, line: line)
+        return field
+    }
+
+    /// 验证点击区域足够大 (>=44pt 符合HIG)
+    func assertHitArea(_ element: XCUIElement, minWidth: CGFloat = 44, minHeight: CGFloat = 44, file: StaticString = #file, line: UInt = #line) {
+        XCTAssertGreaterThanOrEqual(element.frame.width, minWidth,
+            "「\(element.identifier)」点击宽度 \(element.frame.width) < \(minWidth)", file: file, line: line)
+        XCTAssertGreaterThanOrEqual(element.frame.height, minHeight,
+            "「\(element.identifier)」点击高度 \(element.frame.height) < \(minHeight)", file: file, line: line)
+    }
+
     // MARK: - v3.0 新功能页面元素
 
     /// AI倾听官 - 输入框
