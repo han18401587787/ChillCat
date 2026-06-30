@@ -124,16 +124,16 @@ final class CCInteractionTests: XCTestCase {
         // 多策略查找 "你并不孤单"
         var found = false
         let strategies: [(String, () -> Bool)] = [
-            ("staticText 精确", { app.staticTexts["你并不孤单"].firstMatch.exists }),
-            ("button 精确", { app.buttons["你并不孤单"].firstMatch.exists }),
+            ("staticText 精确", { self.app.staticTexts["你并不孤单"].firstMatch.exists }),
+            ("button 精确", { self.app.buttons["你并不孤单"].firstMatch.exists }),
             ("staticText 包含", {
-                app.staticTexts.allElementsBoundByIndex.contains { $0.label.contains("不孤单") }
+                self.app.staticTexts.allElementsBoundByIndex.contains { $0.label.contains("不孤单") }
             }),
             ("button 包含", {
-                app.buttons.allElementsBoundByIndex.contains { $0.label.contains("不孤单") }
+                self.app.buttons.allElementsBoundByIndex.contains { $0.label.contains("不孤单") }
             }),
         ]
-        for (name, check) in strategies {
+        for (_, check) in strategies {
             if check() {
                 found = true
                 break
