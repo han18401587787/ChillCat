@@ -166,6 +166,7 @@ struct CCEmotionDecodeResultView: View {
                     .background(Color.xuanApricot)
                     .cornerRadius(XuanRadius.lg)
             }
+            .accessibilityIdentifier("decode_continue_chat")
 
             Button(action: {
                 coordinator.navigate(to: .resonanceWall)
@@ -178,6 +179,7 @@ struct CCEmotionDecodeResultView: View {
                     .background(Color.xuanPinkLight)
                     .cornerRadius(XuanRadius.lg)
             }
+            .accessibilityIdentifier("decode_share_anonymous")
         }
     }
 

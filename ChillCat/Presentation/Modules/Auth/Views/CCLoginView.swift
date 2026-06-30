@@ -125,6 +125,7 @@ struct CCLoginView: View {
                             .cornerRadius(XuanRadius.md)
                     }
                     .disabled(phoneNumber.count < 11 || verificationCode.count < 4)
+                    .accessibilityIdentifier("login_submit_button")
 
                     // 其他登录方式
                     VStack(spacing: XuanSpacing.lg) {

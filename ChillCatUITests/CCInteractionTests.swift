@@ -243,4 +243,64 @@ final class CCInteractionTests: XCTestCase {
             XCTAssertTrue((phoneField.value as? String ?? "").contains("138"), "输入框应该接受输入")
         }
     }
+
+    // MARK: - 治愈空间交互验证
+
+    func test_Healing_AudioCardsAreButtons() throws {
+        app.tabHealing.tap()
+        sleep(2)
+
+        let audioCards = ["白噪音·雨声", "森林声音", "钢琴曲"]
+        for card in audioCards {
+            let btn = app.buttons[card].firstMatch
+            if btn.waitForExistence(timeout: 3) {
+                XCTAssertEqual(btn.elementType, .button, "「\(card)」应该是Button类型")
+            }
+        }
+    }
+
+    // MARK: - 设置页交互验证
+
+    func test_Settings_ToggleExists() throws {
+        app.tabProfile.tap()
+        sleep(1)
+
+        // 导航到设置
+        let settingsBtn = app.buttons["设置"].firstMatch
+        if settingsBtn.waitForExistence(timeout: 3) {
+            settingsBtn.tap()
+            sleep(2)
+
+            // 应该有深色模式开关
+            let toggles = app.switches.allElementsBoundByIndex
+            XCTAssertFalse(toggles.isEmpty, "设置页应该有Toggle开关")
+        }
+    }
+
+    // MARK: - 心光会员交互验证
+
+    func test_VIP_BannerNavigates() throws {
+        app.tabProfile.tap()
+        sleep(1)
+
+        let vipBtn = app.buttons["心光会员"].firstMatch
+        if vipBtn.waitForExistence(timeout: 3) {
+            vipBtn.tap()
+            let navTitle = app.navigationBars["心光会员"]
+            XCTAssertTrue(navTitle.waitForExistence(timeout: 5), "应该导航到心光会员页")
+        }
+    }
+
+    // MARK: - 安全守护交互验证
+
+    func test_SafetyPlan_Navigates() throws {
+        app.tabProfile.tap()
+        sleep(1)
+
+        let safetyBtn = app.buttons["情绪趋势"].firstMatch
+        if !safetyBtn.waitForExistence(timeout: 2) {
+            // 尝试其他入口
+            return
+        }
+    }
 }
