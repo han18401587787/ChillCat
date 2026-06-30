@@ -18,7 +18,7 @@ final class ChillCatVisualRegressionTests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = true  // 视觉测试允许多个页面失败
-        app.launchArguments = ["-UITEST_SKIP_WELCOME"]
+        app.launchArguments = ["-UITEST_SKIP_WELCOME", "-UITEST_AUTO_LOGIN"]
         app.launch()
         _ = app.tabHome.waitForExistence(timeout: 15)
     }

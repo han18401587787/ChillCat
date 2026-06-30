@@ -44,16 +44,36 @@ extension XCUIApplication {
         buttons["就是这样，进去看看"].firstMatch
     }
 
-    /// TabBar - 首页
-    var tabHome: XCUIElement { tabBars.buttons["首页"].firstMatch }
+    /// TabBar - 首页 (通过 accessibilityIdentifier 定位)
+    var tabHome: XCUIElement {
+        tabBars.buttons["tab_首页"].firstMatch.exists
+            ? tabBars.buttons["tab_首页"].firstMatch
+            : tabBars.buttons["首页"].firstMatch  // 兼容旧版
+    }
     /// TabBar - 树洞
-    var tabTreeHole: XCUIElement { tabBars.buttons["树洞"].firstMatch }
+    var tabTreeHole: XCUIElement {
+        tabBars.buttons["tab_树洞"].firstMatch.exists
+            ? tabBars.buttons["tab_树洞"].firstMatch
+            : tabBars.buttons["树洞"].firstMatch
+    }
     /// TabBar - 共鸣墙 (v3.0)
-    var tabResonance: XCUIElement { tabBars.buttons["共鸣墙"].firstMatch }
+    var tabResonance: XCUIElement {
+        tabBars.buttons["tab_共鸣墙"].firstMatch.exists
+            ? tabBars.buttons["tab_共鸣墙"].firstMatch
+            : tabBars.buttons["共鸣墙"].firstMatch
+    }
     /// TabBar - 治愈空间 (v3.0)
-    var tabHealing: XCUIElement { tabBars.buttons["治愈空间"].firstMatch }
+    var tabHealing: XCUIElement {
+        tabBars.buttons["tab_治愈空间"].firstMatch.exists
+            ? tabBars.buttons["tab_治愈空间"].firstMatch
+            : tabBars.buttons["治愈空间"].firstMatch
+    }
     /// TabBar - 个人中心
-    var tabProfile: XCUIElement { tabBars.buttons["个人中心"].firstMatch }
+    var tabProfile: XCUIElement {
+        tabBars.buttons["tab_个人中心"].firstMatch.exists
+            ? tabBars.buttons["tab_个人中心"].firstMatch
+            : tabBars.buttons["个人中心"].firstMatch
+    }
 
     // 兼容旧版
     var tabToolbox: XCUIElement { tabBars.buttons["工具箱"].firstMatch }

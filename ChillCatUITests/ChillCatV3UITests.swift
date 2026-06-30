@@ -13,7 +13,7 @@ final class ChillCatV3UITests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
-        app.launchArguments = ["-UITEST_SKIP_WELCOME"]
+        app.launchArguments = ["-UITEST_SKIP_WELCOME", "-UITEST_AUTO_LOGIN"]
         app.launch()
         _ = app.tabHome.waitForExistence(timeout: 15)
     }

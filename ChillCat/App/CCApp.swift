@@ -8,21 +8,24 @@ struct CCApp: View {
     @State private var initError: String?
 
     /// XCUITest 可通过 launchArguments 跳过 Welcome: `-UITEST_SKIP_WELCOME`
+    /// XCUITest 可通过 launchArguments 自动登录: `-UITEST_AUTO_LOGIN`
     private var isUITesting: Bool {
         ProcessInfo.processInfo.arguments.contains("-UITEST_SKIP_WELCOME")
+    }
+    private var isUITestAutoLogin: Bool {
+        ProcessInfo.processInfo.arguments.contains("-UITEST_AUTO_LOGIN")
     }
 
     var body: some View {
         Group {
             if isInitializing && !isUITesting {
                 splashView
-            } else if isUITesting || coordinator.hasSeenWelcome {
-                if coordinator.isLoggedIn {
-                    CCMainTabView()
-                } else {
-                    CCLoginView()
-                }
-            } else {
+            } else if isUITestAutoLogin || coordinator.isLoggedIn {
+                CCMainTabView()
+            } else if isUITesting {
+                // UITest 未设置自动登录 → 直接显示主界面（允许未登录状态测试）
+                CCMainTabView()
+            } else if coordinator.hasSeenWelcome {
                 CCWelcomeView()
             }
         }

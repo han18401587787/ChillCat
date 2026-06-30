@@ -1,6 +1,10 @@
+//
+//  CCMainTabView.swift
+//  绪安 v3.0 — 5 Tab 结构
+//
+
 import SwiftUI
 
-/// Ardot v3 Tab 结构: 首页 / 树洞 / 共鸣墙 / 治愈空间 / 个人中心
 enum CCMainTab: Int, CaseIterable {
     case home, treeHole, resonanceWall, healing, profile
 
@@ -42,10 +46,49 @@ struct CCMainTabView: View {
                     Label(tab.title, systemImage: tab.sfSymbol)
                 }
                 .tag(tab)
-                .accessibilityIdentifier("tab_\(tab.title)")
+                // 关键修复: 通过 UITabBar 的 accessibility 属性暴露给 XCUITest
+                .accessibilityIdentifier("tab_\(tab.rawValue)")
             }
         }
         .tint(Color.xuanApricot)
+        // SwiftUI TabView 的 tabItem 不会直接暴露 label 文字作为 button identifier
+        // XCUITest 需要通过 UITabBarButton 的 accessibilityLabel 来定位
+        // 这里在 onAppear 时手动设置每个 tab button 的 accessibilityIdentifier
+        .onAppear {
+            setupTabAccessibility()
+        }
+    }
+
+    /// 通过 UIKit 桥接设置 TabBar 按钮的 accessibilityIdentifier
+    private func setupTabAccessibility() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            guard let tabBarController = findTabBarController() else { return }
+            guard let tabBar = tabBarController.tabBar else { return }
+
+            let tabs = CCMainTab.allCases
+            for (index, tab) in tabs.enumerated() {
+                if index < tabBar.items?.count ?? 0 {
+                    tabBar.items?[index].accessibilityIdentifier = "tab_\(tab.title)"
+                }
+            }
+        }
+    }
+
+    private func findTabBarController() -> UITabBarController? {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first,
+              let rootVC = window.rootViewController else { return nil }
+
+        if let tabVC = rootVC as? UITabBarController {
+            return tabVC
+        }
+        // 也可能嵌套在 NavigationController 中
+        for child in rootVC.children {
+            if let tabVC = child as? UITabBarController {
+                return tabVC
+            }
+        }
+        return nil
     }
 
     private func routeFor(_ tab: CCMainTab) -> CCAppRoute {
