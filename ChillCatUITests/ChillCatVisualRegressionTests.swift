@@ -19,6 +19,9 @@ final class ChillCatVisualRegressionTests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = true  // 视觉测试允许多个页面失败
         app.launchArguments = ["-UITEST_SKIP_WELCOME", "-UITEST_AUTO_LOGIN"]
+        // CI 环境注入 API 地址，本地回退 localhost
+        let apiURL = ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://localhost:8080"
+        app.launchEnvironment = ["CHILLCAT_API_URL": apiURL]
         app.launch()
         _ = app.tabHome.waitForExistence(timeout: 15)
     }
