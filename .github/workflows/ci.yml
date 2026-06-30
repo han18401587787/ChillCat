@@ -67,15 +67,46 @@ jobs:
             -resultBundlePath ui-test-results.xcresult \
             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
         continue-on-error: true
+
+      # ── 解析 xcresult 生成 JSON 报告 ──
+      - name: Parse Test Results
+        if: always()
+        run: |
+          xcrun xcresulttool get --path ui-test-results.xcresult --format json > test-results.json 2>/dev/null || true
+          # 提取测试摘要
+          python3 -c "
+          import json, sys
+          try:
+              with open('test-results.json') as f:
+                  data = json.load(f)
+              # 提取关键信息生成简要报告
+              print(json.dumps(data.get('issues', {}), indent=2)[:5000])
+          except:
+              print('{\"error\": \"Failed to parse xcresult\"}')
+          " > test-summary.json 2>/dev/null || true
+
+      # ── 收集失败截图 ──
+      - name: Collect Failure Screenshots
+        if: always()
+        run: |
+          mkdir -p failure-screenshots
+          # 从临时目录复制 VisualTesting 失败截图
+          cp -r /tmp/VisualDiffFailures/* failure-screenshots/ 2>/dev/null || true
+          ls -la failure-screenshots/ 2>/dev/null || echo "No failure screenshots"
+
+      # ── 上传测试报告 ──
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ios-test-results
-          path: ui-test-results.xcresult
+          path: |
+            ui-test-results.xcresult
+            test-summary.json
+            failure-screenshots/
 
   # =============================================
-  # 测试报告汇总
+  # 测试报告汇总 + 问题清单
   # =============================================
   report:
     name: Test Report Summary
@@ -83,9 +114,50 @@ jobs:
     needs: [ios-test]
     if: always()
     steps:
-      - name: Summary
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-test-results
+          path: test-artifacts
+
+      - name: Generate Issue Report
         run: |
-          echo "## 绪安 v3.0 CI 测试报告" >> $GITHUB_STEP_SUMMARY
+          echo "## 🧪 绪安 v3.0 CI 测试报告" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| iOS Build | ${{ needs.ios-build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| iOS Tests | ${{ needs.ios-test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📋 测试套件" >> $GITHUB_STEP_SUMMARY
+          echo "- **ChillCatV3UITests** — Tab导航/页面入口/功能验证" >> $GITHUB_STEP_SUMMARY
+          echo "- **CCInteractionTests** — 控件类型/点击区域/输入框/按钮状态" >> $GITHUB_STEP_SUMMARY
+          echo "- **ChillCatVisualRegressionTests** — AI视觉校验/像素对比" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # 检查是否有失败截图
+          if ls test-artifacts/failure-screenshots/*.png 2>/dev/null; then
+            echo "### ⚠️ 视觉差异截图" >> $GITHUB_STEP_SUMMARY
+            for f in test-artifacts/failure-screenshots/*.png; do
+              echo "- $(basename $f)" >> $GITHUB_STEP_SUMMARY
+            done
+          fi
+
+          # 检查测试摘要
+          if [ -f test-artifacts/test-summary.json ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            cat test-artifacts/test-summary.json >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # 生成可操作的修复建议
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔧 修复流程" >> $GITHUB_STEP_SUMMARY
+          echo "1. 下载 \`ios-test-results\` artifact 查看详细日志" >> $GITHUB_STEP_SUMMARY
+          echo "2. 在 Xcode 中打开 \`.xcresult\` 文件查看具体失败用例" >> $GITHUB_STEP_SUMMARY
+          echo "3. 对照 \`failure-screenshots/\` 中的截图定位视觉差异" >> $GITHUB_STEP_SUMMARY
+          echo "4. 修复代码后推送，CI 自动重新验证" >> $GITHUB_STEP_SUMMARY
           echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| iOS Build | ${{ needs.ios-build.result }} |" >> $GITHUB_STEP_SUMMARY
