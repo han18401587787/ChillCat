@@ -85,11 +85,14 @@ struct CCDiagnosticHelper {
         ╚══════════════════════════════════════════╝
         """)
 
-        // 1. 截图
-        let screenshot = app.screenshot()
-        let screenshotPath = "/tmp/diag_\(page)_\(Date().timeIntervalSince1970).png"
-        try? screenshot.pngRepresentation.write(to: URL(fileURLWithPath: screenshotPath))
-        print("   📸 截图: \(screenshotPath)")
+        // 1. 截图 (可能在某些 CI 环境失败)
+        if let screenshot = try? app.screenshot() {
+            let screenshotPath = "/tmp/diag_\(page)_\(Date().timeIntervalSince1970).png"
+            try? screenshot.pngRepresentation.write(to: URL(fileURLWithPath: screenshotPath))
+            print("   📸 截图: \(screenshotPath)")
+        } else {
+            print("   ⚠️  截图失败 (CI 环境限制)")
+        }
 
         // 2. 统计所有可见元素
         let allStaticTexts = app.staticTexts.allElementsBoundByIndex

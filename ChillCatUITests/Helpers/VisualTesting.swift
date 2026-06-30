@@ -150,10 +150,13 @@ struct VisualTesting {
         struct APIResponse: Decodable {
             let code: Int
             let message: String
-            let data: CCVisionAnalyzeResult
+            let data: CCVisionAnalyzeResult?
         }
         let apiResp = try JSONDecoder().decode(APIResponse.self, from: data)
-        return apiResp.data
+        guard let result = apiResp.data else {
+            throw NSError(domain: "VisionAPI", code: -2, userInfo: [NSLocalizedDescriptionKey: "API 返回 data 为 null: \(apiResp.message)"])
+        }
+        return result
     }
 
     // MARK: - 像素比对引擎
