@@ -132,7 +132,7 @@ struct VisualTesting {
 
     /// 直接 HTTP 调用视觉分析接口
     private static func visionAPIRequest(image: String, page: String, checks: [String]) async throws -> CCVisionAnalyzeResult {
-        let baseURL = ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://localhost:8080"
+        let baseURL = ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://81.70.178.249:8080"
         let url = URL(string: "\(baseURL)/api/v1/vision/analyze")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

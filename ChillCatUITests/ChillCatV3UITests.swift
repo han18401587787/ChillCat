@@ -14,9 +14,15 @@ final class ChillCatV3UITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app.launchArguments = ["-UITEST_SKIP_WELCOME", "-UITEST_AUTO_LOGIN"]
-        app.launchEnvironment = ["CHILLCAT_API_URL": ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://localhost:8080"]
+        app.launchEnvironment = ["CHILLCAT_API_URL": ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://81.70.178.249:8080"]
         app.launch()
         _ = app.tabHome.waitForExistence(timeout: 15)
+    }
+
+    // MARK: - 🔍 环境自检
+
+    func test_EnvironmentCheck() throws {
+        CCDiagnosticHelper.checkEnvironment()
     }
 
     // MARK: - Tab 导航测试

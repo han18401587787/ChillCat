@@ -19,9 +19,15 @@ final class CCInteractionTests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = true
         app.launchArguments = ["-UITEST_SKIP_WELCOME", "-UITEST_AUTO_LOGIN"]
-        app.launchEnvironment = ["CHILLCAT_API_URL": ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://localhost:8080"]
+        app.launchEnvironment = ["CHILLCAT_API_URL": ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://81.70.178.249:8080"]
         app.launch()
         _ = app.tabHome.waitForExistence(timeout: 15)
+    }
+
+    // MARK: - 🔍 环境自检 (最先运行)
+
+    func test_EnvironmentCheck() throws {
+        CCDiagnosticHelper.checkEnvironment()
     }
 
     // MARK: - 首页交互验证
@@ -115,11 +121,29 @@ final class CCInteractionTests: XCTestCase {
         app.tabResonance.tap()
         sleep(2)
 
-        // "你并不孤单"横幅存在 — 可能是 StaticText 或 Button 内的文字
-        let banner = app.staticTexts["你并不孤单"].firstMatch
-        let bannerBtn = app.buttons["你并不孤单"].firstMatch
-        XCTAssertTrue(banner.waitForExistence(timeout: 5) || bannerBtn.waitForExistence(timeout: 5),
-                      "应该有「你并不孤单」提示")
+        // 多策略查找 "你并不孤单"
+        var found = false
+        let strategies: [(String, () -> Bool)] = [
+            ("staticText 精确", { app.staticTexts["你并不孤单"].firstMatch.exists }),
+            ("button 精确", { app.buttons["你并不孤单"].firstMatch.exists }),
+            ("staticText 包含", {
+                app.staticTexts.allElementsBoundByIndex.contains { $0.label.contains("不孤单") }
+            }),
+            ("button 包含", {
+                app.buttons.allElementsBoundByIndex.contains { $0.label.contains("不孤单") }
+            }),
+        ]
+        for (name, check) in strategies {
+            if check() {
+                found = true
+                break
+            }
+        }
+
+        if !found {
+            CCDiagnosticHelper.diagnose(page: "共鸣墙", expectedElement: "你并不孤单", app: app)
+            XCTFail("找不到「你并不孤单」横幅 — 详见诊断报告")
+        }
     }
 
     func test_Resonance_FABButton() throws {

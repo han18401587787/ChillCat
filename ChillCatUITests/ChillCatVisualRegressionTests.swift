@@ -3,8 +3,8 @@
 //  绪安 v3.0 — 全页面视觉回归测试
 //
 //  运行方式:
-//  1. 确保服务端已启动 (默认 http://localhost:8080)
-//  2. 自定义 API URL: xcodebuild ... CHILLCAT_API_URL=https://api.chillcatgo.com
+//  1. 确保服务端已启动
+//  2. 自定义 API URL: xcodebuild ... CHILLCAT_API_URL=http://81.70.178.249:8080
 //  3. 运行: xcodebuild test -scheme ChillCat -destination 'platform=iOS Simulator,name=iPhone 16'
 //
 //  AI 视觉校验依赖: 服务端 DASHSCOPE_API_KEY 环境变量
@@ -17,13 +17,18 @@ final class ChillCatVisualRegressionTests: XCTestCase {
     let app = XCUIApplication()
 
     override func setUpWithError() throws {
-        continueAfterFailure = true  // 视觉测试允许多个页面失败
+        continueAfterFailure = true
         app.launchArguments = ["-UITEST_SKIP_WELCOME", "-UITEST_AUTO_LOGIN"]
-        // CI 环境注入 API 地址，本地回退 localhost
-        let apiURL = ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://localhost:8080"
+        let apiURL = ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://81.70.178.249:8080"
         app.launchEnvironment = ["CHILLCAT_API_URL": apiURL]
         app.launch()
         _ = app.tabHome.waitForExistence(timeout: 15)
+    }
+
+    // MARK: - 🔍 环境自检
+
+    func test_EnvironmentCheck() throws {
+        CCDiagnosticHelper.checkEnvironment()
     }
 
     // MARK: - Tab 页面视觉校验
