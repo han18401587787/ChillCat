@@ -186,6 +186,7 @@ struct CCMeditationView: View {
             .xuanCardShadow()
         }
         .accessibilityIdentifier("healing_audio_\(title)")
+    }
 
     // MARK: - 呼吸训练
     private var breathingSection: some View {
