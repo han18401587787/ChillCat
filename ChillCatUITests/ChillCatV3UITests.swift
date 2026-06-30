@@ -16,7 +16,7 @@ final class ChillCatV3UITests: XCTestCase {
         app.launchArguments = ["-UITEST_SKIP_WELCOME", "-UITEST_AUTO_LOGIN"]
         app.launchEnvironment = ["CHILLCAT_API_URL": ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://81.70.178.249:8080"]
         app.launch()
-        _ = app.tabHome.waitForExistence(timeout: 15)
+        _ = app.tabHome.waitForExistence(timeout: 30)
     }
 
     // MARK: - 🔍 环境自检

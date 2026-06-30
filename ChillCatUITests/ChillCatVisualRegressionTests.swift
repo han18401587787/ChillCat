@@ -22,7 +22,8 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         let apiURL = ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://81.70.178.249:8080"
         app.launchEnvironment = ["CHILLCAT_API_URL": apiURL]
         app.launch()
-        _ = app.tabHome.waitForExistence(timeout: 15)
+        // CI 冷启动 Simulator 可能较慢，给 30s 等待 TabBar 出现
+        _ = app.tabHome.waitForExistence(timeout: 30)
     }
 
     // MARK: - 🔍 环境自检
