@@ -63,7 +63,7 @@ struct CCMainTabView: View {
     private func setupTabAccessibility() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             guard let tabBarController = findTabBarController() else { return }
-            guard let tabBar = tabBarController.tabBar else { return }
+            let tabBar = tabBarController.tabBar
 
             let tabs = CCMainTab.allCases
             for (index, tab) in tabs.enumerated() {
