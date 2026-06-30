@@ -36,7 +36,7 @@ jobs:
     runs-on: macos-15
     needs: ios-build
     env:
-      CHILLCAT_API_URL: "http://你的服务器IP:8080"
+      CHILLCAT_API_URL: "http://81.70.178.249:8080"
     steps:
       - uses: actions/checkout@v4
       - name: Select Xcode
