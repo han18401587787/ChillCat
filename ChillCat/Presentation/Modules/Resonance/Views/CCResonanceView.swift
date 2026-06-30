@@ -183,6 +183,7 @@ struct CCResonanceView: View {
                     }
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("resonance_card_hug")
 
                 Spacer()
 
@@ -238,6 +239,7 @@ struct CCResonanceView: View {
             .cornerRadius(XuanRadius.full)
             .shadow(color: Color(hex: "2C2416").opacity(0.15), radius: 16, x: 0, y: 4)
         }
+        .accessibilityIdentifier("resonance_compose_fab")
         .padding(.trailing, XuanSpacing.lg)
         .padding(.bottom, XuanSpacing.lg)
     }

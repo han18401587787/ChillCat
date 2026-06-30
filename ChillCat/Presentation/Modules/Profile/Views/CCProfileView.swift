@@ -114,6 +114,7 @@ struct CCProfileView: View {
             .xuanCardShadow()
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("profile_user_card")
     }
 
     // MARK: - 统计概览
@@ -199,6 +200,7 @@ struct CCProfileView: View {
             .shadow(color: Color(hex: "D4A882").opacity(0.25), radius: 12, x: 0, y: 4)
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("profile_vip_banner")
     }
 
     // MARK: - 功能入口列表

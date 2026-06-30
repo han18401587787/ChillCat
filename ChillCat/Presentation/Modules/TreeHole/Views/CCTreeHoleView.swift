@@ -147,6 +147,7 @@ struct CCTreeHoleView: View {
                 .cornerRadius(XuanRadius.md)
             }
             .disabled(viewModel.newPostText.trimmingCharacters(in: .whitespaces).isEmpty)
+            .accessibilityIdentifier("treehole_publish_button")
 
             // 快捷模板
             warmTemplateChips
@@ -242,6 +243,7 @@ struct CCTreeHoleView: View {
                     }
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("treehole_resonate_\(post.id)")
 
                 Spacer()
 
@@ -293,6 +295,7 @@ struct CCTreeHoleView: View {
                 )
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("treehole_quick_template")
     }
 
     // MARK: - 社区准则横幅

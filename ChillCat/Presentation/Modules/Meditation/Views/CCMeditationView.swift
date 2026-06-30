@@ -185,8 +185,7 @@ struct CCMeditationView: View {
             .cornerRadius(XuanRadius.lg)
             .xuanCardShadow()
         }
-        .buttonStyle(.plain)
-    }
+        .accessibilityIdentifier("healing_audio_\(title)")
 
     // MARK: - 呼吸训练
     private var breathingSection: some View {
@@ -261,6 +260,7 @@ struct CCMeditationView: View {
                     .background(Color.xuanMint)
                     .cornerRadius(XuanRadius.lg)
                 }
+                .accessibilityIdentifier("healing_breathing_button")
             }
             .padding(XuanSpacing.xl)
             .background(Color.xuanWhite)
