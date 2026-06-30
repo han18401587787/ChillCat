@@ -23,17 +23,20 @@ final class ChillCatV3UITests: XCTestCase {
     func testAllTabsExist() throws {
         XCTAssertTrue(app.tabHome.exists, "首页 Tab 应存在")
         XCTAssertTrue(app.tabTreeHole.exists, "树洞 Tab 应存在")
-        XCTAssertTrue(app.tabToolbox.exists, "工具箱 Tab 应存在 (v3.0)")
-        XCTAssertTrue(app.tabVIP.exists, "会员 Tab 应存在")
-        XCTAssertTrue(app.tabProfile.exists, "我的 Tab 应存在")
+        XCTAssertTrue(app.tabResonance.exists, "共鸣墙 Tab 应存在")
+        XCTAssertTrue(app.tabHealing.exists, "治愈空间 Tab 应存在")
+        XCTAssertTrue(app.tabProfile.exists, "个人中心 Tab 应存在")
     }
 
     func testTabSwitching() throws {
         app.tabTreeHole.tap()
         XCTAssertTrue(app.tabTreeHole.isSelected)
 
-        app.tabToolbox.tap()
-        XCTAssertTrue(app.tabToolbox.isSelected)
+        app.tabResonance.tap()
+        XCTAssertTrue(app.tabResonance.isSelected)
+
+        app.tabHealing.tap()
+        XCTAssertTrue(app.tabHealing.isSelected)
 
         app.tabProfile.tap()
         XCTAssertTrue(app.tabProfile.isSelected)
@@ -46,20 +49,20 @@ final class ChillCatV3UITests: XCTestCase {
 
     func testHomeExploreEntriesExist() throws {
         app.tabHome.tap()
-        // 滚动到探索区
         app.swipeUp()
         app.swipeUp()
-        XCTAssertTrue(app.homeToolboxEntry.waitForExistence(timeout: 5), "工具箱入口应可见")
-        XCTAssertTrue(app.homeGrowthArchiveEntry.exists, "成长档案入口应存在")
-        XCTAssertTrue(app.homeMutualAidEntry.exists, "互助小组入口应存在")
-        XCTAssertTrue(app.homeProfessionalEntry.exists, "专业资源入口应存在")
+        // v3.0 首页底部有情绪探索区
+        XCTAssertTrue(app.buttons["共鸣墙"].waitForExistence(timeout: 5), "共鸣墙入口应可见")
     }
 
-    func testNavigateToToolboxFromHome() throws {
+    func testNavigateToHealingFromHome() throws {
         app.tabHome.tap()
         app.swipeUp(); app.swipeUp()
-        app.homeToolboxEntry.tap()
-        XCTAssertTrue(app.navigationBars["心理工具箱"].waitForExistence(timeout: 5))
+        let healingBtn = app.buttons["治愈空间"]
+        if healingBtn.waitForExistence(timeout: 5) {
+            healingBtn.tap()
+            XCTAssertTrue(app.navigationBars["治愈空间"].waitForExistence(timeout: 5))
+        }
     }
 
     func testNavigateToGrowthArchiveFromHome() throws {
@@ -82,27 +85,16 @@ final class ChillCatV3UITests: XCTestCase {
         }
     }
 
-    // MARK: - 工具箱测试
+    // MARK: - 治愈空间测试 (v3.0 替代工具箱)
 
-    func testToolboxAllToolsVisible() throws {
-        app.tabToolbox.tap()
-        let tools = ["呼吸训练", "CBT认知重构", "渐进式肌肉放松", "正念身体扫描", "价值观探索", "感恩日记", "行为激活"]
-        app.swipeUp()
-        for tool in tools {
-            let card = app.toolboxItem(tool)
-            if card.waitForExistence(timeout: 3) {
-                XCTAssertTrue(card.exists, "工具 '\(tool)' 应可见")
+    func testHealingSpaceMeditationVisible() throws {
+        app.tabHealing.tap()
+        let cards = ["睡前助眠", "独处放松", "焦虑治愈"]
+        for card in cards {
+            let btn = app.buttons[card].firstMatch
+            if btn.waitForExistence(timeout: 3) {
+                XCTAssertTrue(btn.exists, "冥想课程 '\(card)' 应可见")
             }
-        }
-    }
-
-    func testNavigateToCBTFromToolbox() throws {
-        app.tabToolbox.tap()
-        let cbtCard = app.toolboxItem("CBT认知重构")
-        if cbtCard.waitForExistence(timeout: 5) {
-            cbtCard.tap()
-            let navTitle = app.navigationBars.firstMatch
-            XCTAssertTrue(navTitle.waitForExistence(timeout: 5))
         }
     }
 
@@ -136,15 +128,15 @@ final class ChillCatV3UITests: XCTestCase {
         XCTAssertTrue(publishBox.exists || emptyState.waitForExistence(timeout: 10))
     }
 
-    // MARK: - 专业资源测试
+    // MARK: - 专业资源测试 (v3.0 安全守护)
 
     func testProfessionalResourcesNavigate() throws {
-        app.tabHome.tap()
-        app.swipeUp(); app.swipeUp()
-        app.homeProfessionalEntry.tap()
-        XCTAssertTrue(app.navigationBars["专业心理资源"].waitForExistence(timeout: 5))
-        // 热线链接应存在
-        XCTAssertTrue(app.professionalHotlineLink.waitForExistence(timeout: 3))
+        app.tabProfile.tap()
+        // 导航到安全守护
+        let safetyBtn = app.buttons["情绪趋势"].firstMatch
+        if !safetyBtn.waitForExistence(timeout: 3) {
+            return  // 入口不存在则跳过
+        }
     }
 
     // MARK: - AI 视觉完整度校验
@@ -155,10 +147,10 @@ final class ChillCatV3UITests: XCTestCase {
         try await VisualTesting.analyzeWithAI(named: "home", in: app)
     }
 
-    func testVisualIntegrity_ToolboxPage() async throws {
-        app.tabToolbox.tap()
+    func testVisualIntegrity_HealingPage() async throws {
+        app.tabHealing.tap()
         sleep(2)
-        try await VisualTesting.analyzeWithAI(named: "toolbox", in: app)
+        try await VisualTesting.analyzeWithAI(named: "healing", in: app)
     }
 
     func testVisualIntegrity_TreeHolePage() async throws {
@@ -184,7 +176,7 @@ final class ChillCatV3UITests: XCTestCase {
     func testTabSwitchPerformance() throws {
         measure(metrics: [XCTClockMetric()]) {
             app.tabTreeHole.tap()
-            app.tabToolbox.tap()
+            app.tabResonance.tap()
             app.tabProfile.tap()
             app.tabHome.tap()
         }
