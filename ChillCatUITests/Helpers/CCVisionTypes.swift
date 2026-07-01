@@ -19,6 +19,17 @@ struct CCVisionIssue: Decodable {
     let type: String
     let description: String
     let severity: String
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = (try? container.decode(String.self, forKey: .type)) ?? "unknown"
+        description = (try? container.decode(String.self, forKey: .description)) ?? ""
+        severity = (try? container.decode(String.self, forKey: .severity)) ?? "info"
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case type, description, severity
+    }
 }
 
 struct CCVisionAnalyzeResult: Decodable {
@@ -28,6 +39,16 @@ struct CCVisionAnalyzeResult: Decodable {
     let elementsFound: [String]
     let elementsMissing: [String]
     let suggestion: String
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        score = (try? container.decode(Double.self, forKey: .score)) ?? 0
+        passed = (try? container.decode(Bool.self, forKey: .passed)) ?? false
+        issues = (try? container.decode([CCVisionIssue].self, forKey: .issues)) ?? []
+        elementsFound = (try? container.decode([String].self, forKey: .elementsFound)) ?? []
+        elementsMissing = (try? container.decode([String].self, forKey: .elementsMissing)) ?? []
+        suggestion = (try? container.decode(String.self, forKey: .suggestion)) ?? ""
+    }
 
     enum CodingKeys: String, CodingKey {
         case score
