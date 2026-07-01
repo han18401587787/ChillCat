@@ -119,6 +119,12 @@ struct VisualTesting {
         )
 
         if !report.passed {
+            // 规则模式（无 AI Key）：评分固定 50，不做精确分析
+            if report.suggestion.contains("规则模式") || report.suggestion.contains("DASHSCOPE_API_KEY") {
+                print("   ⚠️ 服务器运行在规则模式 (无 AI Key)，跳过视觉校验")
+                return report  // 不报失败
+            }
+
             // 评分过低时自动诊断
             if report.score < 30 {
                 print("   ⚠️ 评分过低 (\(String(format: "%.0f", report.score)))，可能原因:")
