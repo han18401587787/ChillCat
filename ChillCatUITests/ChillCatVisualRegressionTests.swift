@@ -37,7 +37,9 @@ final class ChillCatVisualRegressionTests: XCTestCase {
     /// 首页 — page_18
     func testVisual_HomePage() async throws {
         app.tabHome.tap()
-        sleep(2)
+        // 等待首页内容加载完成（今日心情打卡按钮出现 = 数据就绪）
+        _ = app.buttons["今日心情打卡"].waitForExistence(timeout: 10)
+        sleep(1)
         try await VisualTesting.analyzeWithAI(
             named: "home",
             in: app,
@@ -108,11 +110,11 @@ final class ChillCatVisualRegressionTests: XCTestCase {
     /// 情绪记录 — page_36
     func testVisual_EmotionRecord() async throws {
         app.tabHome.tap()
-        // 点击打卡按钮进入情绪记录
-        let checkinBtn = app.buttons["今日心情打卡"]
-        if checkinBtn.waitForExistence(timeout: 5) {
-            checkinBtn.tap()
-            sleep(2)
+        // 点击需求标签进入情绪选择状态（不点打卡按钮，避免跳转到打卡成功页）
+        let needBtn = app.buttons["被倾听"].firstMatch
+        if needBtn.waitForExistence(timeout: 5) {
+            needBtn.tap()
+            sleep(1)
             try await VisualTesting.analyzeWithAI(named: "emotion_record", in: app)
         }
     }
