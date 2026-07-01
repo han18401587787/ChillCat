@@ -102,7 +102,11 @@ struct VisualTesting {
         let screenshot = app.screenshot()
         let base64 = screenshot.pngRepresentation.base64EncodedString()
 
-        // 直接 HTTP 调用，避免依赖 @testable import ChillCat
+        // 截图基础校验：空白/过小截图提前告警
+        let imageSizeKB = Double(screenshot.pngRepresentation.count) / 1024.0
+        print("   📸 截图大小: \(String(format: "%.1f", imageSizeKB))KB (页面: \(pageName))")
+
+        // 直接 HTTP 调用
         let result = try await visionAPIRequest(image: base64, page: pageName, checks: checks)
 
         let report = AIVisionReport(
@@ -115,8 +119,33 @@ struct VisualTesting {
         )
 
         if !report.passed {
+            // 评分过低时自动诊断
+            if report.score < 30 {
+                print("   ⚠️ 评分过低 (\(String(format: "%.0f", report.score)))，可能原因:")
+                if imageSizeKB < 10 {
+                    print("   🚨 截图过小 (\(String(format: "%.0f", imageSizeKB))KB) → 页面可能是空白或未加载")
+                }
+                if result.elementsFound.isEmpty && result.elementsMissing.isEmpty {
+                    print("   🚨 AI 未识别到任何元素 → 截图内容可能完全不匹配页面 \(pageName)")
+                }
+                if result.elementsMissing.count > 3 {
+                    print("   🚨 缺失 \(result.elementsMissing.count) 个预期元素 → 可能导航到了错误页面")
+                }
+                // 打印当前页面可见文本帮助定位
+                let visibleTexts = app.staticTexts.allElementsBoundByIndex.filter { $0.isHittable }.prefix(8)
+                if !visibleTexts.isEmpty {
+                    print("   📋 当前页面可见文本: \(visibleTexts.map { "\"\($0.label)\"" }.joined(separator: ", "))")
+                }
+                // 保存截图到 /tmp/ 供后续分析
+                let diagPath = "/tmp/vision_fail_\(pageName)_\(Int(Date().timeIntervalSince1970)).png"
+                try? screenshot.pngRepresentation.write(to: URL(fileURLWithPath: diagPath))
+                print("   💾 失败截图已保存: \(diagPath)")
+            }
+
             let issueList = report.issues.map { "• [\($0.severity)] \($0.description)" }.joined(separator: "\n")
-            XCTFail("❌ AI 视觉校验未通过 (\(pageName)) 评分: \(String(format: "%.1f", report.score))\n\(issueList)\n💡 \(report.suggestion)", file: file, line: line)
+            let missingList = report.elementsMissing.isEmpty ? "" : "\n缺失元素: \(report.elementsMissing.joined(separator: ", "))"
+            let foundList = report.elementsFound.isEmpty ? "" : "\n识别到: \(report.elementsFound.joined(separator: ", "))"
+            XCTFail("❌ AI 视觉校验未通过 (\(pageName)) 评分: \(String(format: "%.1f", report.score))\(foundList)\(missingList)\n\(issueList)\n💡 \(report.suggestion)", file: file, line: line)
         } else {
             print("✅ AI 视觉校验通过 (\(pageName)) 评分: \(String(format: "%.1f", report.score))")
             if !report.elementsFound.isEmpty {
