@@ -147,6 +147,7 @@ struct CCHomeView: View {
         Button(action: {
             CCHaptic.success()
             viewModel.completeCheckIn()
+            coordinator.navigate(to: .checkinSuccess)
         }) {
             Text("今日心情打卡")
                 .font(XuanFont.bodyLMedium)
