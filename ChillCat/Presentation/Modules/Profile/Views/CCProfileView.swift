@@ -17,12 +17,8 @@ struct CCProfileView: View {
         Group {
             if viewModel.isLoading {
                 CCLoadingView(message: "加载中...")
-            } else if let errorMessage = viewModel.errorMessage {
-                CCErrorView(
-                    error: NSError(domain: "profile", code: -1, userInfo: [NSLocalizedDescriptionKey: errorMessage]),
-                    retryAction: { await viewModel.loadProfile() }
-                )
             } else {
+                // 无论是否登录，都正常展示页面结构
                 content
             }
         }

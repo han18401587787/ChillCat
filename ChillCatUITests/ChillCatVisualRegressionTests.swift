@@ -18,12 +18,22 @@ final class ChillCatVisualRegressionTests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = true
+        // 确保前一个测试的 app 完全终止
+        app.terminate()
+        // 等待进程完全释放
+        sleep(2)
         app.launchArguments = ["-UITEST_SKIP_WELCOME", "-UITEST_AUTO_LOGIN"]
         let apiURL = ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://81.70.178.249:8080"
         app.launchEnvironment = ["CHILLCAT_API_URL": apiURL]
         app.launch()
         // CI 冷启动 Simulator 可能较慢，给 30s 等待 TabBar 出现
         _ = app.tabHome.waitForExistence(timeout: 30)
+    }
+
+    override func tearDownWithError() throws {
+        // 确保测试结束后 app 完全终止
+        app.terminate()
+        sleep(1)
     }
 
     // MARK: - 🔍 环境自检

@@ -100,69 +100,81 @@ struct VisualTesting {
         line: UInt = #line
     ) async throws -> AIVisionReport {
         let screenshot = app.screenshot()
-        let base64 = screenshot.pngRepresentation.base64EncodedString()
+        // 压缩截图：超过 100KB 时用 JPEG 压缩
+        var imageData = screenshot.pngRepresentation
+        var imageSizeKB = Double(imageData.count) / 1024.0
+        if imageSizeKB > 100, let jpegData = jpegCompressed(screenshot.pngRepresentation, quality: 0.5) {
+            imageData = jpegData
+            imageSizeKB = Double(jpegData.count) / 1024.0
+        }
+        let base64 = imageData.base64EncodedString()
 
-        // 截图基础校验：空白/过小截图提前告警
-        let imageSizeKB = Double(screenshot.pngRepresentation.count) / 1024.0
         print("   📸 截图大小: \(String(format: "%.1f", imageSizeKB))KB (页面: \(pageName))")
 
-        // 直接 HTTP 调用
-        let result = try await visionAPIRequest(image: base64, page: pageName, checks: checks)
+        // 重试机制：最多3次
+        var lastError: Error?
+        for attempt in 1...3 {
+            do {
+                let result = try await visionAPIRequest(image: base64, page: pageName, checks: checks)
 
-        let report = AIVisionReport(
-            score: result.score,
-            passed: result.passed,
-            issues: result.issues.map { AIVisionReport.VisionIssue(type: $0.type, description: $0.description, severity: $0.severity) },
-            elementsFound: result.elementsFound,
-            elementsMissing: result.elementsMissing,
-            suggestion: result.suggestion
-        )
+                let report = AIVisionReport(
+                    score: result.score,
+                    passed: result.passed,
+                    issues: result.issues.map { AIVisionReport.VisionIssue(type: $0.type, description: $0.description, severity: $0.severity) },
+                    elementsFound: result.elementsFound,
+                    elementsMissing: result.elementsMissing,
+                    suggestion: result.suggestion
+                )
 
-        if !report.passed {
-            // 规则模式（无 AI Key）：评分固定 50，不做精确分析
-            if report.suggestion.contains("规则模式") || report.suggestion.contains("DASHSCOPE_API_KEY") {
-                print("   ⚠️ 服务器运行在规则模式 (无 AI Key)，跳过视觉校验")
-                return report  // 不报失败
-            }
+                if !report.passed {
+                    if report.suggestion.contains("规则模式") || report.suggestion.contains("DASHSCOPE_API_KEY") {
+                        print("   ⚠️ 服务器运行在规则模式 (无 AI Key)，跳过视觉校验")
+                        return report
+                    }
+                    if report.score < 30 {
+                        print("   ⚠️ 评分过低 (\(String(format: "%.0f", report.score)))，可能原因:")
+                        if imageSizeKB < 10 {
+                            print("   🚨 截图过小 (\(String(format: "%.0f", imageSizeKB))KB) → 页面可能是空白或未加载")
+                        }
+                        if result.elementsFound.isEmpty && result.elementsMissing.isEmpty {
+                            print("   🚨 AI 未识别到任何元素 → 截图内容可能完全不匹配页面 \(pageName)")
+                        }
+                        if result.elementsMissing.count > 3 {
+                            print("   🚨 缺失 \(result.elementsMissing.count) 个预期元素 → 可能导航到了错误页面")
+                        }
+                        let visibleTexts = app.staticTexts.allElementsBoundByIndex.filter { $0.isHittable }.prefix(8)
+                        if !visibleTexts.isEmpty {
+                            print("   📋 当前页面可见文本: \(visibleTexts.map { "\"\($0.label)\"" }.joined(separator: ", "))")
+                        }
+                        let diagPath = "/tmp/vision_fail_\(pageName)_\(Int(Date().timeIntervalSince1970)).png"
+                        try? screenshot.pngRepresentation.write(to: URL(fileURLWithPath: diagPath))
+                        print("   💾 失败截图已保存: \(diagPath)")
+                    }
+                    let issueList = report.issues.map { "• [\($0.severity)] \($0.description)" }.joined(separator: "\n")
+                    let missingList = report.elementsMissing.isEmpty ? "" : "\n缺失元素: \(report.elementsMissing.joined(separator: ", "))"
+                    let foundList = report.elementsFound.isEmpty ? "" : "\n识别到: \(report.elementsFound.joined(separator: ", "))"
+                    XCTFail("❌ AI 视觉校验未通过 (\(pageName)) 评分: \(String(format: "%.1f", report.score))\(foundList)\(missingList)\n\(issueList)\n💡 \(report.suggestion)", file: file, line: line)
+                } else {
+                    print("✅ AI 视觉校验通过 (\(pageName)) 评分: \(String(format: "%.1f", report.score))")
+                    if !report.elementsFound.isEmpty {
+                        print("   已检测元素: \(report.elementsFound.joined(separator: ", "))")
+                    }
+                    if !report.suggestion.isEmpty {
+                        print("   💡 \(report.suggestion)")
+                    }
+                }
+                return report
 
-            // 评分过低时自动诊断
-            if report.score < 30 {
-                print("   ⚠️ 评分过低 (\(String(format: "%.0f", report.score)))，可能原因:")
-                if imageSizeKB < 10 {
-                    print("   🚨 截图过小 (\(String(format: "%.0f", imageSizeKB))KB) → 页面可能是空白或未加载")
+            } catch {
+                lastError = error
+                if attempt < 3 {
+                    print("   🔄 第\(attempt)次请求失败，1秒后重试... (\(error.localizedDescription))")
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
                 }
-                if result.elementsFound.isEmpty && result.elementsMissing.isEmpty {
-                    print("   🚨 AI 未识别到任何元素 → 截图内容可能完全不匹配页面 \(pageName)")
-                }
-                if result.elementsMissing.count > 3 {
-                    print("   🚨 缺失 \(result.elementsMissing.count) 个预期元素 → 可能导航到了错误页面")
-                }
-                // 打印当前页面可见文本帮助定位
-                let visibleTexts = app.staticTexts.allElementsBoundByIndex.filter { $0.isHittable }.prefix(8)
-                if !visibleTexts.isEmpty {
-                    print("   📋 当前页面可见文本: \(visibleTexts.map { "\"\($0.label)\"" }.joined(separator: ", "))")
-                }
-                // 保存截图到 /tmp/ 供后续分析
-                let diagPath = "/tmp/vision_fail_\(pageName)_\(Int(Date().timeIntervalSince1970)).png"
-                try? screenshot.pngRepresentation.write(to: URL(fileURLWithPath: diagPath))
-                print("   💾 失败截图已保存: \(diagPath)")
-            }
-
-            let issueList = report.issues.map { "• [\($0.severity)] \($0.description)" }.joined(separator: "\n")
-            let missingList = report.elementsMissing.isEmpty ? "" : "\n缺失元素: \(report.elementsMissing.joined(separator: ", "))"
-            let foundList = report.elementsFound.isEmpty ? "" : "\n识别到: \(report.elementsFound.joined(separator: ", "))"
-            XCTFail("❌ AI 视觉校验未通过 (\(pageName)) 评分: \(String(format: "%.1f", report.score))\(foundList)\(missingList)\n\(issueList)\n💡 \(report.suggestion)", file: file, line: line)
-        } else {
-            print("✅ AI 视觉校验通过 (\(pageName)) 评分: \(String(format: "%.1f", report.score))")
-            if !report.elementsFound.isEmpty {
-                print("   已检测元素: \(report.elementsFound.joined(separator: ", "))")
-            }
-            if !report.suggestion.isEmpty {
-                print("   💡 \(report.suggestion)")
             }
         }
 
-        return report
+        throw lastError ?? NSError(domain: "VisionAPI", code: -1, userInfo: [NSLocalizedDescriptionKey: "重试3次后仍失败"])
     }
 
     /// 直接 HTTP 调用视觉分析接口
@@ -172,7 +184,7 @@ struct VisualTesting {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.timeoutInterval = 60
+        request.timeoutInterval = 60  // AI 分析可能较慢
 
         let body = CCVisionAnalyzeRequest(image: image, page: page, checks: checks)
         request.httpBody = try JSONEncoder().encode(body)
@@ -192,6 +204,18 @@ struct VisualTesting {
             throw NSError(domain: "VisionAPI", code: -2, userInfo: [NSLocalizedDescriptionKey: "API 返回 data 为 null: \(apiResp.message)"])
         }
         return result
+    }
+
+    // MARK: - 图片压缩
+
+    /// JPEG 压缩 PNG 数据
+    private static func jpegCompressed(_ pngData: Data, quality: CGFloat) -> Data? {
+        #if os(iOS)
+        guard let image = UIImage(data: pngData) else { return nil }
+        return image.jpegData(compressionQuality: quality)
+        #else
+        return nil
+        #endif
     }
 
     // MARK: - 像素比对引擎
