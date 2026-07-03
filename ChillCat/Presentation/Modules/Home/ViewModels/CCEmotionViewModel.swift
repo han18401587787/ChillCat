@@ -102,16 +102,21 @@ final class CCEmotionViewModel {
     }
 
     func completeCheckIn() {
-        guard let emotion = selectedEmotion else { return }
+        // 没选情绪时默认"平静"
+        let emotionToCheckin = selectedEmotion ?? .calm
+        selectedEmotion = emotionToCheckin
         hasCheckedIn = true
         Task {
             do {
-                let result = try await CCXuanAPI.checkin(emotion: emotion.rawValue, note: todayNote)
+                let result = try await CCXuanAPI.checkin(emotion: emotionToCheckin.rawValue, note: todayNote)
                 streakDays = Int(result.streakDays ?? 0)
+                totalDays = Int(result.streakDays ?? 0)
                 // 同步数据到 Widget
-                CCWidgetDataSync.update(emotion: emotion.rawValue, streak: Int(result.streakDays ?? 0), quote: quote)
+                CCWidgetDataSync.update(emotion: emotionToCheckin.rawValue, streak: Int(result.streakDays ?? 0), quote: quote)
+                print("✅ [Emotion] checkin success: streak=\(streakDays)")
             } catch {
-                // Already checked in today — still show success
+                // 已打卡或其他错误 — 仍保持已打卡状态
+                print("⚠️ [Emotion] checkin API error (已打卡?): \(error)")
             }
         }
     }

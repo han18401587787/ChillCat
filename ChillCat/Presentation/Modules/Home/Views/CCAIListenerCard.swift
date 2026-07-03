@@ -20,43 +20,40 @@ struct CCAIListenerCard: View {
     @Namespace private var modeAnimation
 
     var body: some View {
-        VStack(alignment: .leading, spacing: XuanSpacing.md) {
-            // MARK: - Header
-            headerSection
+        ScrollView {
+            VStack(alignment: .leading, spacing: XuanSpacing.md) {
+                // MARK: - Header
+                headerSection
 
-            // MARK: - Mode Switcher
-            modeSwitcherBar
+                // MARK: - Mode Switcher
+                modeSwitcherBar
 
-            // MARK: - Input Area
-            inputSection
+                // MARK: - Input Area
+                inputSection
 
-            // MARK: - Loading State
-            if viewModel.isLoading {
-                loadingIndicator
+                // MARK: - Loading State
+                if viewModel.isLoading {
+                    loadingIndicator
+                }
+
+                // MARK: - AI Response Bubbles
+                if !viewModel.aiResponses.isEmpty {
+                    responsesSection
+                }
+
+                // MARK: - Crisis Hotline Button
+                if viewModel.crisisDetected && viewModel.riskLevel >= .medium {
+                    crisisHotlineButton
+                }
+
+                // 底部留白
+                Spacer().frame(height: XuanSpacing.xl)
             }
-
-            // MARK: - AI Response Bubbles
-            if !viewModel.aiResponses.isEmpty {
-                responsesSection
-            }
-
-            // MARK: - Crisis Hotline Button
-            if viewModel.crisisDetected && viewModel.riskLevel >= .medium {
-                crisisHotlineButton
-            }
+            .padding(XuanSpacing.md)
         }
-        .padding(XuanSpacing.md)
-        .background(Color.xuanWhite)
-        .cornerRadius(XuanRadius.lg)
-        .overlay(
-            RoundedRectangle(cornerRadius: XuanRadius.lg)
-                .stroke(
-                    viewModel.crisisDetected && viewModel.riskLevel >= .medium
-                        ? Color.xuanDanger.opacity(0.3)
-                        : Color.xuanApricot.opacity(0.15),
-                    lineWidth: 1
-                )
-        )
+        .background(Color.xuanApricotBg.ignoresSafeArea())
+        .navigationTitle("AI 倾听官")
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $viewModel.showHotlineSheet) {
             crisisHotlineSheet
         }

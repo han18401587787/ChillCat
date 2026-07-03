@@ -158,17 +158,22 @@ struct CCHomeView: View {
             viewModel.completeCheckIn()
             coordinator.navigate(to: .checkinSuccess)
         }) {
-            Text("今日心情打卡")
-                .font(XuanFont.bodyLMedium)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(Color.xuanApricot)
-                .cornerRadius(XuanRadius.lg)
+            HStack(spacing: XuanSpacing.sm) {
+                Image(systemName: viewModel.hasCheckedIn ? "checkmark.circle.fill" : "heart.fill")
+                    .font(.system(size: 16))
+                Text(viewModel.hasCheckedIn ? "今日已打卡 ✓" : "今日心情打卡")
+                    .font(XuanFont.bodyLMedium)
+            }
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .background(viewModel.hasCheckedIn ? Color.xuanMint : Color.xuanApricot)
+            .cornerRadius(XuanRadius.lg)
         }
         .buttonStyle(.plain)
         .contentShape(Rectangle())
         .accessibilityIdentifier("home_checkin_button")
+        .animation(.easeInOut(duration: 0.3), value: viewModel.hasCheckedIn)
     }
 
     // MARK: - 5. 今日暖心

@@ -336,8 +336,36 @@ enum CCXuanAPI {
     static func listResonance(page: Int = 1) async throws -> ResonancePage {
         try await get("/api/v1/resonance/stories?page=\(page)")
     }
-    static func getResonanceDetail(id: Int64) async throws -> ResonanceDetailResponse {
-        try await get("/api/v1/resonance/stories/\(id)")
+    static func getResonanceDetail(id: Int64) async throws -> ResonanceItem {
+        // 后端返回扁平的 ResonanceItem 结构，直接解码
+        let start = CFAbsoluteTimeGetCurrent()
+        print("🌐 [API] → GET /api/v1/resonance/stories/\(id)")
+        do {
+            let data = try await session.request(fullURL("/api/v1/resonance/stories/\(id)")).validate().serializingData().value
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+
+            if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
+                throw CCAPIError.serverError(0)
+            }
+
+            let resp = try decoder.decode(CCAPIResponse<ResonanceItem>.self, from: data)
+            guard resp.isSuccess, let d = resp.data else {
+                print("❌ [API] ← code=\(resp.code) \(resp.message) (\(elapsed)ms)")
+                if resp.code == 10002 {
+                    try await refreshTokenAndRetry()
+                    return try await getResonanceDetail(id: id)
+                }
+                throw apiError(for: resp.code, message: resp.message)
+            }
+            print("✅ [API] ← 200 /api/v1/resonance/stories/\(id) (\(elapsed)ms)")
+            return d
+        } catch let error as CCAPIError {
+            throw error
+        } catch {
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+            print("❌ [API] ← error /api/v1/resonance/stories/\(id): \(error.localizedDescription) (\(elapsed)ms)")
+            throw error
+        }
     }
     static func hugResonance(id: Int64, message: String? = nil) async throws {
         let path = "/api/v1/resonance/stories/\(id)/resonate"

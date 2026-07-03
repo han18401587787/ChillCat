@@ -290,14 +290,11 @@ struct CCResonanceDetailView: View {
         isLoading = true
         guard let id = Int64(item.id) else { isLoading = false; return }
         do {
-            let resp = try await CCXuanAPI.getResonanceDetail(id: id)
-            replies = resp.resolvedReplies.map { r in
-                CCResonanceReplyDisplay(
-                    id: String(r.id),
-                    content: r.content ?? "",
-                    createdAt: ISO8601DateFormatter().date(from: r.createdAt ?? "") ?? Date()
-                )
-            }
+            // 后端返回扁平的 ResonanceItem，目前没有 replies 接口
+            let detailItem = try await CCXuanAPI.getResonanceDetail(id: id)
+            // 暂时无 replies 数据，设为空数组
+            replies = []
+            // 可以用 detailItem 更新 item 内容（如果需要）
         } catch { self.error = error }
         isLoading = false
     }

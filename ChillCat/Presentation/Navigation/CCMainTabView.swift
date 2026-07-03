@@ -36,23 +36,67 @@ struct CCMainTabView: View {
     var body: some View {
         @Bindable var coordinator = coordinator
         TabView(selection: $selectedTab) {
-            ForEach(CCMainTab.allCases, id: \.self) { tab in
-                NavigationStack(path: $coordinator.path) {
-                    coordinator.buildView(for: routeFor(tab))
-                        .navigationDestination(for: CCAppRoute.self) { route in
-                            coordinator.buildView(for: route)
-                        }
-                }
-                .interactiveDismissDisabled()
-                .tabItem {
-                    Label(tab.title, systemImage: tab.sfSymbol)
-                }
-                .tag(tab)
-                .accessibilityIdentifier("tab_\(tab.rawValue)")
+            NavigationStack(path: $coordinator.homePath) {
+                coordinator.buildView(for: .home)
+                    .navigationDestination(for: CCAppRoute.self) { route in
+                        coordinator.buildView(for: route)
+                            .toolbar(.hidden, for: .tabBar)
+                    }
             }
+            .tabItem { Label(CCMainTab.home.title, systemImage: CCMainTab.home.sfSymbol) }
+            .tag(CCMainTab.home)
+            .accessibilityIdentifier("tab_\(CCMainTab.home.rawValue)")
+
+            NavigationStack(path: $coordinator.treeHolePath) {
+                coordinator.buildView(for: .treeHole)
+                    .navigationDestination(for: CCAppRoute.self) { route in
+                        coordinator.buildView(for: route)
+                            .toolbar(.hidden, for: .tabBar)
+                    }
+            }
+            .tabItem { Label(CCMainTab.treeHole.title, systemImage: CCMainTab.treeHole.sfSymbol) }
+            .tag(CCMainTab.treeHole)
+            .accessibilityIdentifier("tab_\(CCMainTab.treeHole.rawValue)")
+
+            NavigationStack(path: $coordinator.resonancePath) {
+                coordinator.buildView(for: .resonanceWall)
+                    .navigationDestination(for: CCAppRoute.self) { route in
+                        coordinator.buildView(for: route)
+                            .toolbar(.hidden, for: .tabBar)
+                    }
+            }
+            .tabItem { Label(CCMainTab.resonanceWall.title, systemImage: CCMainTab.resonanceWall.sfSymbol) }
+            .tag(CCMainTab.resonanceWall)
+            .accessibilityIdentifier("tab_\(CCMainTab.resonanceWall.rawValue)")
+
+            NavigationStack(path: $coordinator.healingPath) {
+                coordinator.buildView(for: .healing)
+                    .navigationDestination(for: CCAppRoute.self) { route in
+                        coordinator.buildView(for: route)
+                            .toolbar(.hidden, for: .tabBar)
+                    }
+            }
+            .tabItem { Label(CCMainTab.healing.title, systemImage: CCMainTab.healing.sfSymbol) }
+            .tag(CCMainTab.healing)
+            .accessibilityIdentifier("tab_\(CCMainTab.healing.rawValue)")
+
+            NavigationStack(path: $coordinator.profilePath) {
+                coordinator.buildView(for: .profile)
+                    .navigationDestination(for: CCAppRoute.self) { route in
+                        coordinator.buildView(for: route)
+                            .toolbar(.hidden, for: .tabBar)
+                    }
+            }
+            .tabItem { Label(CCMainTab.profile.title, systemImage: CCMainTab.profile.sfSymbol) }
+            .tag(CCMainTab.profile)
+            .accessibilityIdentifier("tab_\(CCMainTab.profile.rawValue)")
         }
         .tint(Color.xuanApricot)
+        .onChange(of: selectedTab) { _, newTab in
+            coordinator.activeTab = newTab.rawValue
+        }
         .onAppear {
+            coordinator.activeTab = selectedTab.rawValue
             setupTabAccessibility()
         }
     }
@@ -86,15 +130,5 @@ struct CCMainTabView: View {
             }
         }
         return nil
-    }
-
-    private func routeFor(_ tab: CCMainTab) -> CCAppRoute {
-        switch tab {
-        case .home:          return .home
-        case .treeHole:      return .treeHole
-        case .resonanceWall: return .resonanceWall
-        case .healing:       return .healing
-        case .profile:       return .profile
-        }
     }
 }

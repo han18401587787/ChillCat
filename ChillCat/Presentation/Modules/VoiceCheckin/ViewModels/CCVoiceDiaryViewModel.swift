@@ -138,31 +138,63 @@ final class CCVoiceDiaryViewModel {
     // MARK: - AI Analysis
 
     private func performAnalysis() async {
+        // Phase 1: 没有真实语音识别，使用录音时长生成模拟转录
+        // 后续 Phase 2 接入真正的语音识别 API
+        let simulatedTranscription = generateSimulatedTranscription()
+
         do {
-            // 调用语音分析 API — Phase 1 模拟，不传音频数据
-            let analysis = try await CCXuanAPI.analyze(text: "语音日记模拟分析")
+            // 调用 AI 文本分析接口分析情绪
+            let analysis = try await CCXuanAPI.analyze(text: simulatedTranscription)
 
             let result = CCVoiceDiaryResult(
                 emotion: analysis.emotion,
                 confidence: analysis.confidence,
-                transcription: "今天开会又被老板批评了，感觉很委屈，明明不是我的问题...",
+                transcription: simulatedTranscription,
                 tags: analysis.tags
             )
             editableTranscription = result.transcription
             editableTags = result.tags
             state = .result(result)
         } catch {
-            // 降级为模拟数据
+            // API 失败时降级为本地情绪推断
             let result = CCVoiceDiaryResult(
-                emotion: "焦虑",
-                confidence: 0.85,
-                transcription: "今天开会又被老板批评了，感觉很委屈，明明不是我的问题...",
-                tags: ["职场", "压力", "委屈"]
+                emotion: inferEmotion(from: simulatedTranscription),
+                confidence: 0.6,
+                transcription: simulatedTranscription,
+                tags: inferTags(from: simulatedTranscription)
             )
             editableTranscription = result.transcription
             editableTags = result.tags
             state = .result(result)
         }
+    }
+
+    /// 根据录音时长生成模拟转录文案
+    private func generateSimulatedTranscription() -> String {
+        // Phase 1: 录音时长 > 0 时提示用户编辑
+        if recordingDuration > 0 {
+            return "录音 \(formattedDuration)，请点击编辑写下你的感受..."
+        }
+        return "点击编辑写下你的感受..."
+    }
+
+    /// 本地情绪推断（API 不可用时降级）
+    private func inferEmotion(from text: String) -> String {
+        if text.contains("焦虑") || text.contains("紧张") || text.contains("压力") { return "焦虑" }
+        if text.contains("开心") || text.contains("高兴") || text.contains("好") { return "开心" }
+        if text.contains("孤独") || text.contains("一个人") { return "孤独" }
+        if text.contains("委屈") || text.contains("不公平") { return "委屈" }
+        return "平静"
+    }
+
+    /// 本地标签推断
+    private func inferTags(from text: String) -> [String] {
+        var tags: [String] = []
+        if text.contains("工作") || text.contains("老板") || text.contains("开会") { tags.append("#职场") }
+        if text.contains("家") || text.contains("妈") || text.contains("爸") { tags.append("#家庭") }
+        if text.contains("朋友") { tags.append("#社交") }
+        if tags.isEmpty { tags = ["#日常"] }
+        return tags
     }
 
     // MARK: - Save

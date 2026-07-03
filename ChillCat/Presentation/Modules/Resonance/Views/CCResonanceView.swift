@@ -13,6 +13,7 @@ struct CCResonanceView: View {
 
     @State private var showComposer = false
     @State private var composerText = ""
+    @State private var heartScale: [String: CGFloat] = [:]
     @FocusState private var composerFocused: Bool
 
     var body: some View {
@@ -176,17 +177,28 @@ struct CCResonanceView: View {
                 Button(action: {
                     CCHaptic.light()
                     viewModel.hugResonance(item, message: nil)
+                    // 点赞动画
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.4)) {
+                        heartScale[item.id] = 1.4
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                            heartScale[item.id] = 1.0
+                        }
+                    }
                 }) {
                     HStack(spacing: 4) {
                         Image(systemName: "heart.fill")
                             .font(.system(size: 14))
                             .foregroundColor(Color.xuanPink)
+                            .scaleEffect(heartScale[item.id] ?? 1.0)
                         Text("\(item.resonanceCount) 人共鸣")
                             .font(XuanFont.bodyS)
                             .foregroundColor(Color.xuanTextSecondary)
                     }
                 }
                 .buttonStyle(.plain)
+                .contentShape(Rectangle())
                 .accessibilityIdentifier("resonance_card_hug")
 
                 Spacer()
@@ -217,8 +229,12 @@ struct CCResonanceView: View {
                             .font(XuanFont.caption)
                     }
                     .foregroundColor(Color.xuanTextSecondary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
                 }
                 .buttonStyle(.plain)
+                .contentShape(Rectangle())
+                .accessibilityIdentifier("resonance_card_pass_\(item.id)")
             }
         }
         .padding(XuanSpacing.lg)
