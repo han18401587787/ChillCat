@@ -607,7 +607,7 @@ enum CCXuanAPI {
         // 优先尝试 refresh_token
         if let refreshToken = keychain["refresh_token"], !refreshToken.isEmpty {
             do {
-                let resp = try await refreshToken(refreshToken: refreshToken)
+                let resp = try await CCXuanAPI.refreshToken(refreshToken: refreshToken)
                 keychain["access_token"] = resp.accessToken
                 if !resp.refreshToken.isEmpty {
                     keychain["refresh_token"] = resp.refreshToken
