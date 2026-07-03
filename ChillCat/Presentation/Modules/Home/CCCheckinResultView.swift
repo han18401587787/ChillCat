@@ -81,15 +81,13 @@ struct CCCheckinResultView: View {
                     .fill(Color.xuanApricot.opacity(0.15))
                     .frame(width: 88, height: 88)
 
-                // 头像圆
-                Circle()
-                    .fill(Color.xuanApricot.opacity(0.25))
-                    .frame(width: 72, height: 72)
-                    .overlay(
-                        Image(systemName: "headphones")
-                            .font(.system(size: 28, weight: .medium))
-                            .foregroundColor(Color.xuanApricotDark)
-                    )
+                // Lottie 情绪动画
+                CCEmotionAnimationView(
+                    emotion: emotionLabel,
+                    level: 2,
+                    loopMode: .loop,
+                    size: 72
+                )
 
                 // 在线状态点
                 Circle()

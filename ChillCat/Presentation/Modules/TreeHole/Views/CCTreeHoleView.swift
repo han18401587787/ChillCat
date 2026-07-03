@@ -13,6 +13,8 @@ struct CCTreeHoleView: View {
     @State private var showContentWarning = false
     @State private var pendingPublishText: String = ""
     @State private var showGuidelineBanner = true
+    @State private var treeHoleHeartScale: [String: CGFloat] = [:]
+    @State private var treeHoleHeartTrigger: [String: Bool] = [:]
     @Environment(CCAppCoordinator.self) private var coordinator
     @FocusState private var isFocused: Bool
 
@@ -232,17 +234,45 @@ struct CCTreeHoleView: View {
                 Button(action: {
                     CCHaptic.light()
                     viewModel.resonatePost(post)
+                    // Lottie 动画触发
+                    treeHoleHeartTrigger[post.id] = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        treeHoleHeartTrigger[post.id] = true
+                    }
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.4)) {
+                        treeHoleHeartScale[post.id] = 1.4
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                            treeHoleHeartScale[post.id] = 1.0
+                        }
+                    }
                 }) {
                     HStack(spacing: 4) {
-                        Image(systemName: post.hasResonated ? "heart.fill" : "heart")
-                            .font(.system(size: 13))
-                            .foregroundColor(post.hasResonated ? Color.xuanDanger : Color.xuanPink)
+                        ZStack {
+                            if treeHoleHeartTrigger[post.id] == true {
+                                CCHeartBeatAnimation(
+                                    trigger: Binding(
+                                        get: { treeHoleHeartTrigger[post.id] ?? false },
+                                        set: { treeHoleHeartTrigger[post.id] = $0 }
+                                    ),
+                                    size: 26
+                                )
+                                .allowsHitTesting(false)
+                            }
+                            Image(systemName: post.hasResonated ? "heart.fill" : "heart")
+                                .font(.system(size: 13))
+                                .foregroundColor(post.hasResonated ? Color.xuanDanger : Color.xuanPink)
+                                .scaleEffect(treeHoleHeartScale[post.id] ?? 1.0)
+                                .opacity(treeHoleHeartTrigger[post.id] == true ? 0 : 1)
+                        }
                         Text("\(post.resonanceCount) 人共鸣")
                             .font(XuanFont.bodyS)
                             .foregroundColor(Color.xuanTextSecondary)
                     }
                 }
                 .buttonStyle(.plain)
+                .contentShape(Rectangle())
                 .accessibilityIdentifier("treehole_resonate_\(post.id)")
 
                 Spacer()

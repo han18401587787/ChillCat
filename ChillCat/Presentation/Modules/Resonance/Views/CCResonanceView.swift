@@ -14,6 +14,7 @@ struct CCResonanceView: View {
     @State private var showComposer = false
     @State private var composerText = ""
     @State private var heartScale: [String: CGFloat] = [:]
+    @State private var heartTrigger: [String: Bool] = [:]
     @FocusState private var composerFocused: Bool
 
     var body: some View {
@@ -177,7 +178,12 @@ struct CCResonanceView: View {
                 Button(action: {
                     CCHaptic.light()
                     viewModel.hugResonance(item, message: nil)
-                    // 点赞动画
+                    // Lottie 心跳动画触发
+                    heartTrigger[item.id] = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        heartTrigger[item.id] = true
+                    }
+                    // 同时触发 scale 动画
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.4)) {
                         heartScale[item.id] = 1.4
                     }
@@ -188,10 +194,25 @@ struct CCResonanceView: View {
                     }
                 }) {
                     HStack(spacing: 4) {
-                        Image(systemName: "heart.fill")
-                            .font(.system(size: 14))
-                            .foregroundColor(Color.xuanPink)
-                            .scaleEffect(heartScale[item.id] ?? 1.0)
+                        ZStack {
+                            // Lottie 心跳动画层
+                            if heartTrigger[item.id] == true {
+                                CCHeartBeatAnimation(
+                                    trigger: Binding(
+                                        get: { heartTrigger[item.id] ?? false },
+                                        set: { heartTrigger[item.id] = $0 }
+                                    ),
+                                    size: 28
+                                )
+                                .allowsHitTesting(false)
+                            }
+                            // 始终显示的心形图标
+                            Image(systemName: "heart.fill")
+                                .font(.system(size: 14))
+                                .foregroundColor(Color.xuanPink)
+                                .scaleEffect(heartScale[item.id] ?? 1.0)
+                                .opacity(heartTrigger[item.id] == true ? 0 : 1)
+                        }
                         Text("\(item.resonanceCount) 人共鸣")
                             .font(XuanFont.bodyS)
                             .foregroundColor(Color.xuanTextSecondary)

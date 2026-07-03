@@ -11,6 +11,30 @@
 		7A2D32072FD7ADEF004F8DCC /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 7A2D32062FD7ADEF004F8DCC /* KeychainAccess */; };
 		7A2D320F2FD7AE11004F8DCC /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 7A2D320E2FD7AE11004F8DCC /* Kingfisher */; };
 		7AE9E8632FF7ACBF0065A696 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 7AE9E8622FF7ACBF0065A696 /* Lottie */; };
+		786DD47F14CC /* emotion_anger_1.json in Resources */ = {isa = PBXBuildFile; fileRef = A889758E20A6 /* emotion_anger_1.json */; };
+		BFFF13387EA6 /* emotion_anger_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 3844C3762C68 /* emotion_anger_2.json */; };
+		12E9AA83F44B /* emotion_anger_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 5ADBE3CFA06C /* emotion_anger_3.json */; };
+		5CB006655126 /* emotion_anger_4.json in Resources */ = {isa = PBXBuildFile; fileRef = 40895AC66E50 /* emotion_anger_4.json */; };
+		5223AE9457A9 /* emotion_disgust_1.json in Resources */ = {isa = PBXBuildFile; fileRef = CDA9FF3DCFF7 /* emotion_disgust_1.json */; };
+		A086533735BA /* emotion_disgust_2.json in Resources */ = {isa = PBXBuildFile; fileRef = F1CC69270AC5 /* emotion_disgust_2.json */; };
+		4DAC779E55E5 /* emotion_disgust_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 125F83B5A8D4 /* emotion_disgust_3.json */; };
+		6EA7EDD4A2EC /* emotion_disgust_4.json in Resources */ = {isa = PBXBuildFile; fileRef = 261CA94CA042 /* emotion_disgust_4.json */; };
+		552739C71021 /* emotion_fear_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 79B9E688A629 /* emotion_fear_1.json */; };
+		BD80E4EA6DA3 /* emotion_fear_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 010A9A3F2F9C /* emotion_fear_2.json */; };
+		1D8852DBE73A /* emotion_fear_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A6F6FFCD0F6 /* emotion_fear_3.json */; };
+		39E66DCDC636 /* emotion_fear_4.json in Resources */ = {isa = PBXBuildFile; fileRef = 2E25C7CDA7A2 /* emotion_fear_4.json */; };
+		F78A7F4CF5A5 /* emotion_joy_1.json in Resources */ = {isa = PBXBuildFile; fileRef = E08DF5975D6E /* emotion_joy_1.json */; };
+		DF20ECA5AD57 /* emotion_joy_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 082228A4B06B /* emotion_joy_2.json */; };
+		E010033DFF27 /* emotion_joy_3.json in Resources */ = {isa = PBXBuildFile; fileRef = DDF6C1051D9D /* emotion_joy_3.json */; };
+		F212847B6F74 /* emotion_joy_4.json in Resources */ = {isa = PBXBuildFile; fileRef = A685813A5A40 /* emotion_joy_4.json */; };
+		748A7C2A2306 /* emotion_sadness_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A827FF86908 /* emotion_sadness_1.json */; };
+		AAA7CEB39F97 /* emotion_sadness_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 37D217DE00CA /* emotion_sadness_2.json */; };
+		DDD5934F9D58 /* emotion_sadness_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EF0E4A4DC59 /* emotion_sadness_3.json */; };
+		3CD047FCF167 /* emotion_sadness_4.json in Resources */ = {isa = PBXBuildFile; fileRef = 6B5730D60B47 /* emotion_sadness_4.json */; };
+		DE7C356DEF4F /* emotion_surprise_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 3ED89935DC36 /* emotion_surprise_1.json */; };
+		0444CDA4A2E0 /* emotion_surprise_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BAA6E630B49 /* emotion_surprise_2.json */; };
+		738805E695D8 /* emotion_surprise_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 8FEA65AEABB1 /* emotion_surprise_3.json */; };
+		7AADC8D02AF9 /* emotion_surprise_4.json in Resources */ = {isa = PBXBuildFile; fileRef = 54FFE8172C20 /* emotion_surprise_4.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +58,30 @@
 		7A8F02762FAF1FB3001D0053 /* ChillCat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChillCat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A9D2A632FEE66B900288912 /* ChillCatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChillCatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AB3D3512FD7CCD300CCD8A8 /* ChillCatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChillCatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A889758E20A6 /* emotion_anger_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_anger_1.json"; sourceTree = "<group>"; };
+		3844C3762C68 /* emotion_anger_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_anger_2.json"; sourceTree = "<group>"; };
+		5ADBE3CFA06C /* emotion_anger_3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_anger_3.json"; sourceTree = "<group>"; };
+		40895AC66E50 /* emotion_anger_4.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_anger_4.json"; sourceTree = "<group>"; };
+		CDA9FF3DCFF7 /* emotion_disgust_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_disgust_1.json"; sourceTree = "<group>"; };
+		F1CC69270AC5 /* emotion_disgust_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_disgust_2.json"; sourceTree = "<group>"; };
+		125F83B5A8D4 /* emotion_disgust_3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_disgust_3.json"; sourceTree = "<group>"; };
+		261CA94CA042 /* emotion_disgust_4.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_disgust_4.json"; sourceTree = "<group>"; };
+		79B9E688A629 /* emotion_fear_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_fear_1.json"; sourceTree = "<group>"; };
+		010A9A3F2F9C /* emotion_fear_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_fear_2.json"; sourceTree = "<group>"; };
+		8A6F6FFCD0F6 /* emotion_fear_3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_fear_3.json"; sourceTree = "<group>"; };
+		2E25C7CDA7A2 /* emotion_fear_4.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_fear_4.json"; sourceTree = "<group>"; };
+		E08DF5975D6E /* emotion_joy_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_joy_1.json"; sourceTree = "<group>"; };
+		082228A4B06B /* emotion_joy_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_joy_2.json"; sourceTree = "<group>"; };
+		DDF6C1051D9D /* emotion_joy_3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_joy_3.json"; sourceTree = "<group>"; };
+		A685813A5A40 /* emotion_joy_4.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_joy_4.json"; sourceTree = "<group>"; };
+		2A827FF86908 /* emotion_sadness_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_sadness_1.json"; sourceTree = "<group>"; };
+		37D217DE00CA /* emotion_sadness_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_sadness_2.json"; sourceTree = "<group>"; };
+		9EF0E4A4DC59 /* emotion_sadness_3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_sadness_3.json"; sourceTree = "<group>"; };
+		6B5730D60B47 /* emotion_sadness_4.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_sadness_4.json"; sourceTree = "<group>"; };
+		3ED89935DC36 /* emotion_surprise_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_surprise_1.json"; sourceTree = "<group>"; };
+		4BAA6E630B49 /* emotion_surprise_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_surprise_2.json"; sourceTree = "<group>"; };
+		8FEA65AEABB1 /* emotion_surprise_3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_surprise_3.json"; sourceTree = "<group>"; };
+		54FFE8172C20 /* emotion_surprise_4.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EmotionAnimations/emotion_surprise_4.json"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -247,7 +295,30 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
+							786DD47F14CC /* emotion_anger_1.json in Resources */,
+				BFFF13387EA6 /* emotion_anger_2.json in Resources */,
+				12E9AA83F44B /* emotion_anger_3.json in Resources */,
+				5CB006655126 /* emotion_anger_4.json in Resources */,
+				5223AE9457A9 /* emotion_disgust_1.json in Resources */,
+				A086533735BA /* emotion_disgust_2.json in Resources */,
+				4DAC779E55E5 /* emotion_disgust_3.json in Resources */,
+				6EA7EDD4A2EC /* emotion_disgust_4.json in Resources */,
+				552739C71021 /* emotion_fear_1.json in Resources */,
+				BD80E4EA6DA3 /* emotion_fear_2.json in Resources */,
+				1D8852DBE73A /* emotion_fear_3.json in Resources */,
+				39E66DCDC636 /* emotion_fear_4.json in Resources */,
+				F78A7F4CF5A5 /* emotion_joy_1.json in Resources */,
+				DF20ECA5AD57 /* emotion_joy_2.json in Resources */,
+				E010033DFF27 /* emotion_joy_3.json in Resources */,
+				F212847B6F74 /* emotion_joy_4.json in Resources */,
+				748A7C2A2306 /* emotion_sadness_1.json in Resources */,
+				AAA7CEB39F97 /* emotion_sadness_2.json in Resources */,
+				DDD5934F9D58 /* emotion_sadness_3.json in Resources */,
+				3CD047FCF167 /* emotion_sadness_4.json in Resources */,
+				DE7C356DEF4F /* emotion_surprise_1.json in Resources */,
+				0444CDA4A2E0 /* emotion_surprise_2.json in Resources */,
+				738805E695D8 /* emotion_surprise_3.json in Resources */,
+				7AADC8D02AF9 /* emotion_surprise_4.json in Resources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		7A9D2A612FEE66B900288912 /* Resources */ = {
