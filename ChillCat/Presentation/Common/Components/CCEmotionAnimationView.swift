@@ -92,7 +92,7 @@ struct CCEmotionAnimationView: View {
                 .frame(width: size, height: size)
         } else {
             // Fallback: 显示 emoji
-            Text(emotion.emoji)
+            Text(emoji)
                 .font(.system(size: size * 0.6))
                 .frame(width: size, height: size)
         }

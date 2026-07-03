@@ -6,6 +6,7 @@
 //  布局: AI倾听官头像+在线状态 → 打卡成功提示+情绪标签+陪伴天数 → AI回应卡片 → 操作按钮组
 
 import SwiftUI
+import Lottie
 
 // MARK: - CCCheckinResultView
 

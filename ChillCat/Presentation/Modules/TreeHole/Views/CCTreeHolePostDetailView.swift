@@ -181,8 +181,9 @@ struct CCTreeHolePostDetailView: View {
     private func loadReplies() async {
         isLoadingReplies = true
         do {
-            let detail = try await CCXuanAPI.getResonanceDetail(id: Int64(post.id) ?? 0)
-            replies = detail.replies ?? []
+            let _ = try await CCXuanAPI.getResonanceDetail(id: Int64(post.id) ?? 0)
+            // getResonanceDetail 返回 ResonanceItem（扁平结构），replies 暂为空
+            replies = []
         } catch { /* keep empty */ }
         isLoadingReplies = false
     }
