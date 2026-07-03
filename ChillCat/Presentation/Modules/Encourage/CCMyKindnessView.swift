@@ -10,6 +10,7 @@ struct MyKindnessView: View {
     @State private var selectedSegment: KindnessSegment = .participated
     @State private var showPassAnimation = false
     @State private var animatingChainId: String?
+    @Environment(CCAppCoordinator.self) private var coordinator
     
     var body: some View {
         VStack(spacing: 0) {
@@ -119,7 +120,7 @@ struct MyKindnessView: View {
                     message: "还没有参与任何鼓励链\n去发现页找到温暖的链吧",
                     imageName: "heart.text.clipboard",
                     actionTitle: "去发现",
-                    action: {}
+                    action: { coordinator.navigate(to: .encourageChain) }
                 )
                 .padding(.top, 40)
             } else {
@@ -145,7 +146,7 @@ struct MyKindnessView: View {
                     message: "还没有发起过鼓励链\n发起第一条温暖的链吧",
                     imageName: "heart.text.clipboard",
                     actionTitle: "发起新链",
-                    action: {}
+                    action: { coordinator.navigate(to: .encourageChain) }
                 )
                 .padding(.top, 40)
             } else {

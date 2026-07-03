@@ -283,7 +283,9 @@ struct CCHomeView: View {
                     .font(XuanFont.h3)
                     .foregroundColor(Color.xuanTextPrimary)
                 Spacer()
-                Button(action: {}) {
+                Button(action: {
+                    coordinator.navigate(to: .encourageChain)
+                }) {
                     HStack(spacing: 2) {
                         Text("查看全部")
                             .font(XuanFont.bodyS)
@@ -294,6 +296,7 @@ struct CCHomeView: View {
                 }
                 .buttonStyle(.plain)
                 .contentShape(Rectangle())
+                .accessibilityIdentifier("home_warmth_view_all")
             }
 
             VStack(spacing: XuanSpacing.md) {

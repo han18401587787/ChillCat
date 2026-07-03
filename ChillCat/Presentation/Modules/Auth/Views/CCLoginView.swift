@@ -17,6 +17,7 @@ struct CCLoginView: View {
     @State private var verificationCode: String = ""
     @State private var isSendingCode: Bool = false
     @State private var countdown: Int = 0
+    @State private var showSocialLoginToast: Bool = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -145,7 +146,9 @@ struct CCLoginView: View {
 
                         HStack(spacing: XuanSpacing.xl3) {
                             // 微信登录
-                            Button(action: {}) {
+                            Button(action: {
+                                showSocialLoginToast = true
+                            }) {
                                 VStack(spacing: XuanSpacing.sm) {
                                     ZStack {
                                         Circle()
@@ -160,9 +163,13 @@ struct CCLoginView: View {
                                         .foregroundColor(Color.xuanTextSecondary)
                                 }
                             }
+                            .buttonStyle(.plain)
+                            .contentShape(Circle())
 
                             // Apple 登录
-                            Button(action: {}) {
+                            Button(action: {
+                                showSocialLoginToast = true
+                            }) {
                                 VStack(spacing: XuanSpacing.sm) {
                                     ZStack {
                                         Circle()
@@ -177,6 +184,8 @@ struct CCLoginView: View {
                                         .foregroundColor(Color.xuanTextSecondary)
                                 }
                             }
+                            .buttonStyle(.plain)
+                            .contentShape(Circle())
                         }
                     }
                     .padding(.top, XuanSpacing.lg)
@@ -214,6 +223,23 @@ struct CCLoginView: View {
             }
         }
         .background(Color.xuanApricotBg)
+        .overlay(alignment: .top) {
+            if showSocialLoginToast {
+                Text("第三方登录即将上线，请使用手机号登录")
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, XuanSpacing.lg)
+                    .padding(.vertical, XuanSpacing.sm)
+                    .background(Color.xuanTextPrimary.opacity(0.85))
+                    .cornerRadius(XuanRadius.md)
+                    .padding(.top, 60)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .task {
+                        try? await Task.sleep(nanoseconds: 2_000_000_000)
+                        withAnimation { showSocialLoginToast = false }
+                    }
+            }
+        }
         .onChange(of: viewModel.isLoggedIn) { _, newValue in
             if newValue { coordinator.isLoggedIn = true }
         }
