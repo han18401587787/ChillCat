@@ -178,24 +178,27 @@ struct CCResonanceView: View {
                 Button(action: {
                     CCHaptic.light()
                     viewModel.hugResonance(item, message: nil)
-                    // Lottie 心跳动画触发
-                    heartTrigger[item.id] = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                        heartTrigger[item.id] = true
-                    }
-                    // 同时触发 scale 动画
+                    // 放大动画
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.4)) {
                         heartScale[item.id] = 1.4
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    // 0.3s 后复原
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                             heartScale[item.id] = 1.0
+                        }
+                    }
+                    // Lottie 动画：触发显示 → 0.8s 后隐藏
+                    heartTrigger[item.id] = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                        withAnimation(.easeOut(duration: 0.2)) {
+                            heartTrigger[item.id] = false
                         }
                     }
                 }) {
                     HStack(spacing: 4) {
                         ZStack {
-                            // Lottie 心跳动画层
+                            // Lottie 动画层（播完自动隐藏）
                             if heartTrigger[item.id] == true {
                                 CCHeartBeatAnimation(
                                     trigger: Binding(
@@ -205,8 +208,9 @@ struct CCResonanceView: View {
                                     size: 28
                                 )
                                 .allowsHitTesting(false)
+                                .transition(.opacity)
                             }
-                            // 始终显示的心形图标
+                            // 心形图标（Lottie 播放时隐藏，播完恢复）
                             Image(systemName: "heart.fill")
                                 .font(.system(size: 14))
                                 .foregroundColor(Color.xuanPink)

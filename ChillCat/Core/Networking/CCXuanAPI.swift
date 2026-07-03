@@ -390,9 +390,9 @@ enum CCXuanAPI {
     // MARK: - Encourage Chain (鼓励链)
 
     struct ChainLink: Decodable, Identifiable, Hashable {
-        let id: Int64; let chainId: Int64; let content: String; let position: Int; let createdAt: String
+        let id: Int64; let chainId: Int64?; let content: String?; let position: Int?; let createdAt: String?
     }
-    struct ChainResponse: Decodable { let chainId: Int64; let links: [ChainLink]; let participantCount: Int64 }
+    struct ChainResponse: Decodable { let chainId: Int64?; let links: [ChainLink]?; let participantCount: Int64? }
     struct ChainCreateRequest: Encodable { let status: String; let category: String }
     struct ChainParticipateRequest: Encodable { let content: String }
 

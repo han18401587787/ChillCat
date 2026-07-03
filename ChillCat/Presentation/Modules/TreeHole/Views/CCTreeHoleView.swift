@@ -234,17 +234,21 @@ struct CCTreeHoleView: View {
                 Button(action: {
                     CCHaptic.light()
                     viewModel.resonatePost(post)
-                    // Lottie 动画触发
-                    treeHoleHeartTrigger[post.id] = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                        treeHoleHeartTrigger[post.id] = true
-                    }
+                    // 放大动画
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.4)) {
                         treeHoleHeartScale[post.id] = 1.4
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    // 0.3s 后复原
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                             treeHoleHeartScale[post.id] = 1.0
+                        }
+                    }
+                    // Lottie 动画：触发显示 → 0.8s 后隐藏
+                    treeHoleHeartTrigger[post.id] = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                        withAnimation(.easeOut(duration: 0.2)) {
+                            treeHoleHeartTrigger[post.id] = false
                         }
                     }
                 }) {
@@ -259,6 +263,7 @@ struct CCTreeHoleView: View {
                                     size: 26
                                 )
                                 .allowsHitTesting(false)
+                                .transition(.opacity)
                             }
                             Image(systemName: post.hasResonated ? "heart.fill" : "heart")
                                 .font(.system(size: 13))
