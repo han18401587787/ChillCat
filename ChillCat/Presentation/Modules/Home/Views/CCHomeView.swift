@@ -74,15 +74,22 @@ struct CCHomeView: View {
                     .foregroundColor(Color.xuanTextSecondary)
             }
             Spacer()
-            // 用户头像
-            Circle()
-                .fill(Color.xuanApricot.opacity(0.3))
-                .frame(width: 40, height: 40)
-                .overlay(
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 20))
-                        .foregroundColor(Color.xuanApricotDark)
-                )
+            // 用户头像 — 点击跳转个人中心
+            Button(action: {
+                coordinator.navigate(to: .profile)
+            }) {
+                Circle()
+                    .fill(Color.xuanApricot.opacity(0.3))
+                    .frame(width: 40, height: 40)
+                    .overlay(
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(Color.xuanApricotDark)
+                    )
+            }
+            .buttonStyle(.plain)
+            .contentShape(Circle())
+            .accessibilityIdentifier("home_avatar")
         }
     }
 

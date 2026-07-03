@@ -271,7 +271,59 @@ enum CCXuanAPI {
         let createdAt: String?; let displayName: String?
     }
     struct ResonancePage: Decodable { let list: [ResonanceItem]?; let total: Int64?; let onlineCount: Int64? }
-    struct ResonanceDetailResponse: Decodable { let item: ResonanceItem; let replies: [ResonanceReply]? }
+    struct ResonanceDetailResponse: Decodable {
+        let item: ResonanceItem?
+        let replies: [ResonanceReply]?
+        // 后端可能直接返回 ResonanceItem 而非 {item, replies} 结构
+        // 通过自定义解码兼容两种格式
+        let id: Int64?
+        let content: String?
+        let emotionType: String?
+        let isAnonymous: Bool?
+        let resonanceCount: Int64?
+        let displayName: String?
+        let createdAt: String?
+
+        var resolvedItem: ResonanceItem? {
+            if let item = item { return item }
+            if let id = id {
+                return ResonanceItem(
+                    id: id,
+                    content: content,
+                    emotionType: emotionType,
+                    isAnonymous: isAnonymous,
+                    resonanceCount: resonanceCount,
+                    createdAt: createdAt,
+                    displayName: displayName
+                )
+            }
+            return nil
+        }
+
+        var resolvedReplies: [ResonanceReply] {
+            replies ?? []
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case item, replies
+            case id, content, emotionType, isAnonymous, resonanceCount, displayName, createdAt
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            // 尝试解析 {item, replies} 结构
+            item = try? container.decodeIfPresent(ResonanceItem.self, forKey: .item)
+            replies = try? container.decodeIfPresent([ResonanceReply].self, forKey: .replies)
+            // 尝试解析扁平的 ResonanceItem 结构
+            id = try? container.decodeIfPresent(Int64.self, forKey: .id)
+            content = try? container.decodeIfPresent(String.self, forKey: .content)
+            emotionType = try? container.decodeIfPresent(String.self, forKey: .emotionType)
+            isAnonymous = try? container.decodeIfPresent(Bool.self, forKey: .isAnonymous)
+            resonanceCount = try? container.decodeIfPresent(Int64.self, forKey: .resonanceCount)
+            displayName = try? container.decodeIfPresent(String.self, forKey: .displayName)
+            createdAt = try? container.decodeIfPresent(String.self, forKey: .createdAt)
+        }
+    }
     struct ResonanceReply: Decodable, Identifiable { let id: Int64; let content: String?; let createdAt: String? }
     struct ResonancePostRequest: Encodable {
         let emotion: String; let content: String; let isAnonymous: Bool

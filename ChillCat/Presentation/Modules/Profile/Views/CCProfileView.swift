@@ -55,7 +55,8 @@ struct CCProfileView: View {
     private var userInfoCard: some View {
         Button(action: {
             if viewModel.user == nil {
-                coordinator.isLoggedIn = false
+                // 未登录 → 跳转登录页
+                coordinator.navigate(to: .login)
             }
         }) {
             HStack(spacing: XuanSpacing.lg) {

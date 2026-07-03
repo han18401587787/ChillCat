@@ -291,7 +291,7 @@ struct CCResonanceDetailView: View {
         guard let id = Int64(item.id) else { isLoading = false; return }
         do {
             let resp = try await CCXuanAPI.getResonanceDetail(id: id)
-            replies = (resp.replies ?? []).map { r in
+            replies = resp.resolvedReplies.map { r in
                 CCResonanceReplyDisplay(
                     id: String(r.id),
                     content: r.content ?? "",
