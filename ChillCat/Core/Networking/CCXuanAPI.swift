@@ -558,7 +558,85 @@ enum CCXuanAPI {
         }
     }
 
+    // MARK: - 业务码 → CCAPIError 映射
+    private static func apiError(for code: Int, message: String) -> CCAPIError {
+        switch code {
+        case 10001: return .badRequest
+        case 10002: return .unauthorized
+        case 10003: return .forbidden
+        case 10004: return .notFound
+        case 10005: return .tooManyRequests
+        case 10006: return .serverError(500)
+        case 10007: return .unprocessableEntity
+        default:     return .unexpectedStatusCode(code)
+        }
+    }
+
+    // MARK: - Token 自动刷新（遇到 10002 时调用）
+    private static var isRefreshingToken = false
+    private static let refreshLock = NSLock()
+
+    private static func refreshTokenAndRetry() async throws {
+        refreshLock.lock()
+        if isRefreshingToken {
+            refreshLock.unlock()
+            // 等待正在进行的刷新完成
+            for _ in 0..<20 {
+                try? await Task.sleep(nanoseconds: 500_000_000)
+                refreshLock.lock()
+                if !isRefreshingToken {
+                    refreshLock.unlock()
+                    return
+                }
+                refreshLock.unlock()
+            }
+            throw CCAPIError.unauthorized
+        }
+        isRefreshingToken = true
+        refreshLock.unlock()
+
+        defer {
+            refreshLock.lock()
+            isRefreshingToken = false
+            refreshLock.unlock()
+        }
+
+        print("🔄 [API] 业务码 10002，自动刷新 token...")
+        let keychain = Keychain(service: "app.xuanpeace.token")
+
+        // 优先尝试 refresh_token
+        if let refreshToken = keychain["refresh_token"], !refreshToken.isEmpty {
+            do {
+                let resp = try await refreshToken(refreshToken: refreshToken)
+                keychain["access_token"] = resp.accessToken
+                if !resp.refreshToken.isEmpty {
+                    keychain["refresh_token"] = resp.refreshToken
+                }
+                print("✅ [API] refresh_token 刷新成功")
+                return
+            } catch {
+                print("⚠️ [API] refresh_token 刷新失败: \(error)，尝试匿名登录")
+            }
+        }
+
+        // 降级：匿名登录
+        do {
+            let resp = try await anonymousLogin()
+            keychain["access_token"] = resp.token
+            print("✅ [API] 匿名登录获取新 token 成功")
+        } catch {
+            print("❌ [API] 匿名登录也失败: \(error)")
+            try? keychain.remove("access_token")
+            try? keychain.remove("refresh_token")
+            throw CCAPIError.unauthorized
+        }
+    }
+
     private static func get<T: Decodable>(_ path: String) async throws -> T {
+        try await getWithRetry(path, retryCount: 0)
+    }
+
+    private static func getWithRetry<T: Decodable>(_ path: String, retryCount: Int) async throws -> T {
         let start = CFAbsoluteTimeGetCurrent()
         print("🌐 [API] → GET \(path)")
         do {
@@ -574,7 +652,15 @@ enum CCXuanAPI {
             let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
             guard resp.isSuccess, let d = resp.data else {
                 print("❌ [API] ← code=\(resp.code) \(resp.message) (\(elapsed)ms)")
-                throw CCAPIError.badRequest
+
+                // 业务码 10002 = token 过期，自动刷新重试一次
+                if resp.code == 10002 && retryCount < 1 {
+                    try await refreshTokenAndRetry()
+                    print("🔄 [API] token 已刷新，重试 GET \(path)")
+                    return try await getWithRetry(path, retryCount: retryCount + 1)
+                }
+
+                throw apiError(for: resp.code, message: resp.message)
             }
             print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
             return d
@@ -588,6 +674,10 @@ enum CCXuanAPI {
     }
 
     private static func post<T: Decodable, B: Encodable>(_ path: String, body: B?) async throws -> T {
+        try await postWithRetry(path, body: body, retryCount: 0)
+    }
+
+    private static func postWithRetry<T: Decodable, B: Encodable>(_ path: String, body: B?, retryCount: Int) async throws -> T {
         let start = CFAbsoluteTimeGetCurrent()
         let bodyPreview: String = {
             guard let body else { return "nil" }
@@ -611,7 +701,15 @@ enum CCXuanAPI {
             let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
             guard resp.isSuccess, let d = resp.data else {
                 print("❌ [API] ← code=\(resp.code) \(resp.message) (\(elapsed)ms)")
-                throw CCAPIError.badRequest
+
+                // 业务码 10002 = token 过期，自动刷新重试一次
+                if resp.code == 10002 && retryCount < 1 {
+                    try await refreshTokenAndRetry()
+                    print("🔄 [API] token 已刷新，重试 POST \(path)")
+                    return try await postWithRetry(path, body: body, retryCount: retryCount + 1)
+                }
+
+                throw apiError(for: resp.code, message: resp.message)
             }
             print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
             return d
