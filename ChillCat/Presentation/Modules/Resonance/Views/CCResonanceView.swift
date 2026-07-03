@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CCResonanceView: View {
-    @State var viewModel: CCResonanceViewModel
+    var viewModel: CCResonanceViewModel
     @Environment(CCAppCoordinator.self) private var coordinator
 
     @State private var showComposer = false
@@ -83,11 +83,6 @@ struct CCResonanceView: View {
                 LazyVStack(spacing: XuanSpacing.md) {
                     ForEach(viewModel.resonanceItems) { item in
                         resonanceCard(item)
-                            .contentShape(Rectangle())
-                            // 使用 simultaneousGesture 避免与内部 Button 冲突
-                            .simultaneousGesture(TapGesture().onEnded {
-                                coordinator.navigate(to: .resonanceDetail(item))
-                            })
                             .onAppear {
                                 if item.id == viewModel.resonanceItems.last?.id {
                                     Task { await viewModel.loadMore() }
@@ -143,32 +138,40 @@ struct CCResonanceView: View {
     // MARK: - Card (设计稿风格)
     private func resonanceCard(_ item: CCResonanceDisplayItem) -> some View {
         VStack(alignment: .leading, spacing: XuanSpacing.md) {
-            // 顶栏：情绪标签 + 时间
-            HStack(spacing: XuanSpacing.sm) {
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(item.emotionColorValue)
-                        .frame(width: 8, height: 8)
-                    Text(item.emotion)
-                        .font(XuanFont.bodyS)
-                        .foregroundColor(item.emotionColorValue)
+            // 可点击区域：顶栏 + 内容 → 导航到详情
+            Button(action: {
+                coordinator.navigate(to: .resonanceDetail(item))
+            }) {
+                VStack(alignment: .leading, spacing: XuanSpacing.md) {
+                    // 顶栏：情绪标签 + 时间
+                    HStack(spacing: XuanSpacing.sm) {
+                        HStack(spacing: 4) {
+                            Circle()
+                                .fill(item.emotionColorValue)
+                                .frame(width: 8, height: 8)
+                            Text(item.emotion)
+                                .font(XuanFont.bodyS)
+                                .foregroundColor(item.emotionColorValue)
+                        }
+                        Spacer()
+                        Text(item.timeAgo)
+                            .font(XuanFont.caption)
+                            .foregroundColor(Color.xuanTextTertiary)
+                    }
+
+                    // 内容
+                    Text(item.content)
+                        .font(.system(size: 15))
+                        .foregroundColor(Color.xuanTextPrimary)
+                        .lineSpacing(6)
+                        .lineLimit(5)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                Spacer()
-                Text(item.timeAgo)
-                    .font(XuanFont.caption)
-                    .foregroundColor(Color.xuanTextTertiary)
             }
+            .buttonStyle(.plain)
 
-            // 内容
-            Text(item.content)
-                .font(.system(size: 15))
-                .foregroundColor(Color.xuanTextPrimary)
-                .lineSpacing(6)
-                .lineLimit(5)
-                .multilineTextAlignment(.leading)
-                .fixedSize(horizontal: false, vertical: true)
-
-            // 底栏操作
+            // 底栏操作（独立按钮，不触发卡片导航）
             HStack(spacing: XuanSpacing.lg) {
                 Button(action: {
                     CCHaptic.light()

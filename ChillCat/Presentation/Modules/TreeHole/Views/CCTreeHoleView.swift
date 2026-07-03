@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CCTreeHoleView: View {
-    @State var viewModel: CCTreeHoleViewModel
+    var viewModel: CCTreeHoleViewModel
     @State private var showEmoji = false
     @State private var showContentWarning = false
     @State private var pendingPublishText: String = ""
@@ -247,13 +247,19 @@ struct CCTreeHoleView: View {
 
                 Spacer()
 
-                Text("我也想说")
-                    .font(XuanFont.caption)
-                    .foregroundColor(Color.xuanApricot)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(Color.xuanApricotLight)
-                    .cornerRadius(XuanRadius.sm)
+                Button(action: {
+                    viewModel.newPostText = ""
+                    isFocused = true
+                }) {
+                    Text("我也想说")
+                        .font(XuanFont.caption)
+                        .foregroundColor(Color.xuanApricot)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Color.xuanApricotLight)
+                        .cornerRadius(XuanRadius.sm)
+                }
+                .buttonStyle(.plain)
             }
         }
         .padding(XuanSpacing.md)

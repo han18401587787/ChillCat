@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CCHomeView: View {
-    @State var viewModel: CCEmotionViewModel
+    var viewModel: CCEmotionViewModel
     @Environment(CCAppCoordinator.self) private var coordinator
 
     // 4个需求选项 (严格对照设计稿)

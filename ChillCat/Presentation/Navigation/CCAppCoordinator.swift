@@ -17,11 +17,32 @@ final class CCAppCoordinator {
 
     init() { isLoggedIn = false }
 
-    func navigate(to route: CCAppRoute) { path.append(route) }
-    func presentSheet(_ route: CCAppRoute) { presentedSheet = route }
-    func dismiss() { presentedSheet = nil }
-    func popToRoot() { path.removeLast(path.count) }
-    func pop() { guard !path.isEmpty else { return }; path.removeLast() }
+    func navigate(to route: CCAppRoute) {
+        DispatchQueue.main.async { [self] in
+            path.append(route)
+        }
+    }
+    func presentSheet(_ route: CCAppRoute) {
+        DispatchQueue.main.async { [self] in
+            presentedSheet = route
+        }
+    }
+    func dismiss() {
+        DispatchQueue.main.async { [self] in
+            presentedSheet = nil
+        }
+    }
+    func popToRoot() {
+        DispatchQueue.main.async { [self] in
+            path.removeLast(path.count)
+        }
+    }
+    func pop() {
+        DispatchQueue.main.async { [self] in
+            guard !path.isEmpty else { return }
+            path.removeLast()
+        }
+    }
 
     /// Tab 切换时刷新当前 Tab 数据
     func refreshCurrentTab() {
