@@ -9,63 +9,30 @@
 import Foundation
 
 final class CCUserRemoteDataSource {
-    private let apiClient: CCAPIClientProtocol
-
-    init(apiClient: CCAPIClientProtocol) {
-        self.apiClient = apiClient
-    }
 
     func login(username: String, password: String) async throws -> CCUserDTO {
-        let response: CCAPIResponse<CCUserDTO> = try await apiClient.request(CCUserAPI.login(username: username, password: password))
-        guard response.isSuccess, let data = response.data else {
-            throw mapAPIError(code: response.code)
-        }
-        return data
+        try await CCXuanAPI.login(username: username, password: password)
     }
 
     func register(username: String, password: String, email: String) async throws -> CCUserDTO {
-        let response: CCAPIResponse<CCUserDTO> = try await apiClient.request(CCUserAPI.register(username: username, password: password, email: email))
-        guard response.isSuccess, let data = response.data else {
-            throw mapAPIError(code: response.code)
-        }
-        return data
+        try await CCXuanAPI.register(username: username, password: password, email: email)
     }
 
     func fetchProfile() async throws -> CCUserDTO {
-        let response: CCAPIResponse<CCUserDTO> = try await apiClient.request(CCUserAPI.profile)
-        // code=10002 表示未登录，不应抛异常，返回空让上层用默认值
-        guard response.isSuccess else {
-            if response.code == 10002 {
-                throw CCAPIError.unauthorized
-            }
-            throw mapAPIError(code: response.code)
-        }
-        guard let data = response.data else {
-            throw mapAPIError(code: response.code)
-        }
-        return data
-    }
-
-    private func mapAPIError(code: Int?) -> CCAPIError {
-        guard let code else { return .serverError(0) }
-        switch code {
-        case 400: return .badRequest
-        case 401: return .unauthorized
-        case 403: return .forbidden
-        case 404: return .notFound
-        case 409: return .conflict
-        case 422: return .unprocessableEntity
-        case 429: return .tooManyRequests
-        case 500...599: return .serverError(code)
-        default: return .unexpectedStatusCode(code)
+        do {
+            return try await CCXuanAPI.getProfile()
+        } catch let error as CCAPIError {
+            // 401 / unauthorized → 让上层用默认值
+            if error == .unauthorized { throw CCAPIError.unauthorized }
+            throw error
         }
     }
 
     func logout() async throws {
-        let _: CCAPIResponse<CCEmptyResponse> = try await apiClient.request(CCUserAPI.logout)
+        try await CCXuanAPI.logout()
     }
 
     func deleteAccount() async throws {
-        let _: CCAPIResponse<CCEmptyResponse> = try await apiClient.request(CCUserAPI.deleteAccount)
+        try await CCXuanAPI.deleteAccount()
     }
 }

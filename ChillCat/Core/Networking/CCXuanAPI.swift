@@ -37,6 +37,9 @@ enum CCXuanAPI {
 
     struct TokenRefreshRequest: Encodable {
         let refreshToken: String
+        enum CodingKeys: String, CodingKey {
+            case refreshToken = "refresh_token"
+        }
     }
 
     struct TokenRefreshResponse: Decodable {
@@ -53,6 +56,60 @@ enum CCXuanAPI {
     /// 刷新 Token（使用 refresh token 获取新的 access token）
     static func refreshToken(refreshToken: String) async throws -> TokenRefreshResponse {
         try await post("/api/v1/auth/refresh", body: TokenRefreshRequest(refreshToken: refreshToken))
+    }
+
+    // MARK: - Auth (Login / Register)
+
+    struct LoginRequest: Encodable { let username: String; let password: String }
+    struct RegisterRequest: Encodable { let username: String; let password: String; let email: String }
+
+    static func login(username: String, password: String) async throws -> CCUserDTO {
+        try await post("/api/v1/auth/login", body: LoginRequest(username: username, password: password))
+    }
+
+    static func register(username: String, password: String, email: String) async throws -> CCUserDTO {
+        try await post("/api/v1/auth/register", body: RegisterRequest(username: username, password: password, email: email))
+    }
+
+    // MARK: - User Profile
+
+    static func getProfile() async throws -> CCUserDTO {
+        try await get("/api/v1/user/profile")
+    }
+
+    static func logout() async throws {
+        let _: CCEmptyResponse = try await get("/api/v1/auth/logout")
+    }
+
+    static func deleteAccount() async throws {
+        let _: CCEmptyResponse = try await delete("/api/v1/user/account")
+    }
+
+    // MARK: - Member
+
+    static func getMemberInfo() async throws -> CCMemberInfoDTO {
+        try await get("/api/v1/member/info")
+    }
+
+    static func getMemberProducts() async throws -> [CCMemberProductDTO] {
+        let response: CCAPIResponse<[CCMemberProductDTO]> = try await getRaw("/api/v1/member/products")
+        return response.data ?? []
+    }
+
+    static func getMemberPrivileges() async throws -> [CCMemberPrivilegeDTO] {
+        let response: CCAPIResponse<[CCMemberPrivilegeDTO]> = try await getRaw("/api/v1/member/privileges")
+        return response.data ?? []
+    }
+
+    struct PurchaseRequest: Encodable {
+        let productId: String
+        enum CodingKeys: String, CodingKey {
+            case productId = "product_id"
+        }
+    }
+
+    static func purchaseMember(productId: String) async throws -> CCMemberInfoDTO {
+        try await post("/api/v1/member/purchase", body: PurchaseRequest(productId: productId))
     }
 
     // MARK: - Emotion
@@ -78,7 +135,13 @@ enum CCXuanAPI {
 
     // MARK: - TreeHole
 
-    struct PostRequest: Encodable { let content: String; let scope: String; let isAnonymous: Bool }
+    struct PostRequest: Encodable {
+        let content: String; let scope: String; let isAnonymous: Bool
+        enum CodingKeys: String, CodingKey {
+            case content, scope
+            case isAnonymous = "is_anonymous"
+        }
+    }
     struct PostResponse: Decodable, Identifiable { let id: Int64; let content: String; let scope: String; let isAnonymous: Bool; let hugs: Int64; let createdAt: String; let displayName: String }
     struct PostPage: Decodable { let list: [PostResponse]; let total: Int64 }
 
@@ -114,7 +177,13 @@ enum CCXuanAPI {
 
     struct EmpathyRequest: Encodable { let text: String }
     struct EmpathyResponse: Decodable { let responses: [String] }
-    struct EmpathyFeedbackRequest: Encodable { let responseIndex: Int; let helpful: Bool }
+    struct EmpathyFeedbackRequest: Encodable {
+        let responseIndex: Int; let helpful: Bool
+        enum CodingKeys: String, CodingKey {
+            case responseIndex = "response_index"
+            case helpful
+        }
+    }
 
     static func getEmpathyResponses(text: String) async throws -> EmpathyResponse {
         try await post("/api/v1/ai/empathy", body: EmpathyRequest(text: text))
@@ -136,7 +205,13 @@ enum CCXuanAPI {
 
     // MARK: - Voice Diary (语音日记)
 
-    struct VoiceAnalysisRequest: Encodable { let audioData: String; let duration: Int }
+    struct VoiceAnalysisRequest: Encodable {
+        let audioData: String; let duration: Int
+        enum CodingKeys: String, CodingKey {
+            case audioData = "audio_data"
+            case duration
+        }
+    }
     struct VoiceUploadResult: Decodable {
         let uploadId: String; let status: String
     }
@@ -180,7 +255,13 @@ enum CCXuanAPI {
     struct ResonancePage: Decodable { let list: [ResonanceItem]; let total: Int64; let onlineCount: Int64? }
     struct ResonanceDetailResponse: Decodable { let item: ResonanceItem; let replies: [ResonanceReply] }
     struct ResonanceReply: Decodable, Identifiable { let id: Int64; let content: String; let createdAt: String }
-    struct ResonancePostRequest: Encodable { let emotion: String; let content: String; let isAnonymous: Bool }
+    struct ResonancePostRequest: Encodable {
+        let emotion: String; let content: String; let isAnonymous: Bool
+        enum CodingKeys: String, CodingKey {
+            case emotion, content
+            case isAnonymous = "is_anonymous"
+        }
+    }
 
     static func listResonance(page: Int = 1) async throws -> ResonancePage {
         try await get("/api/v1/resonance/stories?page=\(page)")
@@ -287,6 +368,10 @@ enum CCXuanAPI {
         let toolType: String
         let duration: Int
         let completed: Bool
+        enum CodingKeys: String, CodingKey {
+            case toolType = "tool_type"
+            case duration, completed
+        }
     }
 
     /// 记录工具使用
@@ -399,6 +484,60 @@ enum CCXuanAPI {
 
     private static func fullURL(_ path: String) -> URL {
         URL(string: CCAppEnvironment.current.baseURL.absoluteString + path)!
+    }
+
+    /// 返回完整 CCAPIResponse，供需要检查 code 的场景使用
+    private static func getRaw<T: Decodable>(_ path: String) async throws -> CCAPIResponse<T> {
+        let start = CFAbsoluteTimeGetCurrent()
+        print("🌐 [API] → GET \(path)")
+        do {
+            let data = try await session.request(fullURL(path)).validate().serializingData().value
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+
+            if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
+                print("⚠️ [API] ← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)")
+                throw CCAPIError.serverError(0)
+            }
+
+            let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
+            print("✅ [API] ← 200 \(path) code=\(resp.code) (\(elapsed)ms)")
+            return resp
+        } catch let error as CCAPIError {
+            throw error
+        } catch {
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            throw error
+        }
+    }
+
+    /// DELETE 请求辅助方法
+    private static func delete<T: Decodable>(_ path: String) async throws -> T {
+        let start = CFAbsoluteTimeGetCurrent()
+        print("🌐 [API] → DELETE \(path)")
+        do {
+            let data = try await session.request(fullURL(path), method: .delete).validate().serializingData().value
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+
+            if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
+                print("⚠️ [API] ← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)")
+                throw CCAPIError.serverError(0)
+            }
+
+            let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
+            guard resp.isSuccess, let d = resp.data else {
+                print("❌ [API] ← code=\(resp.code) \(resp.message) (\(elapsed)ms)")
+                throw CCAPIError.badRequest
+            }
+            print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
+            return d
+        } catch let error as CCAPIError {
+            throw error
+        } catch {
+            let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            throw error
+        }
     }
 
     private static func get<T: Decodable>(_ path: String) async throws -> T {

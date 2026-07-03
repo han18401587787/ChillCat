@@ -140,10 +140,6 @@ struct CCHomeView: View {
         }
         .buttonStyle(.plain)
         .contentShape(Rectangle())
-        .highPriorityGesture(TapGesture().onEnded {
-            CCHaptic.selection()
-            viewModel.selectNeed(item.title)
-        })
         .animation(.easeInOut(duration: 0.2), value: isSelected)
         .accessibilityIdentifier("home_need_\(item.title)")
     }
@@ -165,11 +161,6 @@ struct CCHomeView: View {
         }
         .buttonStyle(.plain)
         .contentShape(Rectangle())
-        .highPriorityGesture(TapGesture().onEnded {
-            CCHaptic.success()
-            viewModel.completeCheckIn()
-            coordinator.navigate(to: .checkinSuccess)
-        })
         .accessibilityIdentifier("home_checkin_button")
     }
 
