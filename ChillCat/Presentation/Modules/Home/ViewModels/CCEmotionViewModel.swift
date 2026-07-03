@@ -61,15 +61,16 @@ final class CCEmotionViewModel {
         print("🔄 [Emotion] loadToday start")
         do {
             let today = try await CCXuanAPI.getToday()
-            if today.id > 0 {
+            if let id = today.id, id > 0 {
                 hasCheckedIn = true
-                if let e = CCEmotion.allCases.first(where: { $0.rawValue == today.emotion }) {
+                if let emotion = today.emotion,
+                   let e = CCEmotion.allCases.first(where: { $0.rawValue == emotion }) {
                     selectedEmotion = e
                 }
-                todayNote = today.note
+                todayNote = today.note ?? ""
             }
-            streakDays = Int(today.streakDays)
-            totalDays = Int(today.streakDays)
+            streakDays = Int(today.streakDays ?? 0)
+            totalDays = Int(today.streakDays ?? 0)
             print("✅ [Emotion] loadToday done: checkedIn=\(hasCheckedIn), streak=\(streakDays)")
         } catch {
             weeklyNote = "加载中，请稍后重试"
@@ -82,8 +83,10 @@ final class CCEmotionViewModel {
         print("🔄 [Emotion] loadWeeklyStats start")
         do {
             let stats = try await CCXuanAPI.getWeeklyStats()
-            weeklyNote = "本周记录 \(stats.totalCount) 次，你的情绪以「\(stats.topEmotion)」为主"
-            print("✅ [Emotion] loadWeeklyStats done: \(stats.totalCount) entries, top=\(stats.topEmotion)")
+            let count = stats.totalCount ?? 0
+            let top = stats.topEmotion ?? "平静"
+            weeklyNote = "本周记录 \(count) 次，你的情绪以「\(top)」为主"
+            print("✅ [Emotion] loadWeeklyStats done: \(count) entries, top=\(top)")
         } catch {
             weeklyNote = "本周数据加载失败"
             print("⚠️ [Emotion] loadWeeklyStats API failed: \(error)")

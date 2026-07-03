@@ -115,10 +115,22 @@ enum CCXuanAPI {
     // MARK: - Emotion
 
     struct CheckinRequest: Encodable { let emotion: String; let note: String }
-    struct TodayResponse: Decodable { let id: Int64; let emotion: String; let note: String; let checkinDate: String; let streakDays: Int64 }
-    struct JournalEntry: Decodable, Identifiable, Hashable { let id: Int64; let emotion: String; let note: String; let hasDoodle: Bool; let checkinDate: String; let createdAt: String }
-    struct JournalPage: Decodable { let list: [JournalEntry]; let total: Int64 }
-    struct WeeklyStats: Decodable { let entries: [JournalEntry]; let totalCount: Int64; let streakDays: Int64; let topEmotion: String; let insight: String }
+    struct TodayResponse: Decodable {
+        let id: Int64?
+        let emotion: String?
+        let note: String?
+        let checkinDate: String?
+        let streakDays: Int64?
+    }
+    struct JournalEntry: Decodable, Identifiable, Hashable {
+        let id: Int64; let emotion: String?; let note: String?
+        let hasDoodle: Bool?; let checkinDate: String?; let createdAt: String?
+    }
+    struct JournalPage: Decodable { let list: [JournalEntry]?; let total: Int64? }
+    struct WeeklyStats: Decodable {
+        let entries: [JournalEntry]?; let totalCount: Int64?
+        let streakDays: Int64?; let topEmotion: String?; let insight: String?
+    }
 
     static func checkin(emotion: String, note: String) async throws -> TodayResponse {
         try await post("/api/v1/emotion/checkin", body: CheckinRequest(emotion: emotion, note: note))
@@ -142,8 +154,11 @@ enum CCXuanAPI {
             case isAnonymous = "is_anonymous"
         }
     }
-    struct PostResponse: Decodable, Identifiable { let id: Int64; let content: String; let scope: String; let isAnonymous: Bool; let hugs: Int64; let createdAt: String; let displayName: String }
-    struct PostPage: Decodable { let list: [PostResponse]; let total: Int64 }
+    struct PostResponse: Decodable, Identifiable {
+        let id: Int64; let content: String?; let scope: String?
+        let isAnonymous: Bool?; let hugs: Int64?; let createdAt: String?; let displayName: String?
+    }
+    struct PostPage: Decodable { let list: [PostResponse]?; let total: Int64? }
 
     static func createPost(content: String, scope: String, isAnonymous: Bool) async throws -> PostResponse {
         try await post("/api/v1/treehole/posts", body: PostRequest(content: content, scope: scope, isAnonymous: isAnonymous))
@@ -167,7 +182,10 @@ enum CCXuanAPI {
 
     // MARK: - Courses
 
-    struct CourseItem: Decodable, Identifiable, Hashable { let id: Int64; let title: String; let description: String; let duration: Int; let category: String; let tag: String }
+    struct CourseItem: Decodable, Identifiable, Hashable {
+        let id: Int64; let title: String?; let description: String?
+        let duration: Int?; let category: String?; let tag: String?
+    }
 
     static func getCourses(category: String = "") async throws -> [CourseItem] {
         try await get("/api/v1/courses" + (category.isEmpty ? "" : "?category=\(category)"))
@@ -247,14 +265,14 @@ enum CCXuanAPI {
     // MARK: - Resonance Wall (共鸣墙)
 
     struct ResonanceItem: Decodable, Identifiable, Hashable {
-        let id: Int64; let content: String
-        let emotionType: String?  // 服务端返回 emotion_type
-        let isAnonymous: Bool; let resonanceCount: Int64
-        let createdAt: String; let displayName: String?
+        let id: Int64; let content: String?
+        let emotionType: String?
+        let isAnonymous: Bool?; let resonanceCount: Int64?
+        let createdAt: String?; let displayName: String?
     }
-    struct ResonancePage: Decodable { let list: [ResonanceItem]; let total: Int64; let onlineCount: Int64? }
-    struct ResonanceDetailResponse: Decodable { let item: ResonanceItem; let replies: [ResonanceReply] }
-    struct ResonanceReply: Decodable, Identifiable { let id: Int64; let content: String; let createdAt: String }
+    struct ResonancePage: Decodable { let list: [ResonanceItem]?; let total: Int64?; let onlineCount: Int64? }
+    struct ResonanceDetailResponse: Decodable { let item: ResonanceItem; let replies: [ResonanceReply]? }
+    struct ResonanceReply: Decodable, Identifiable { let id: Int64; let content: String?; let createdAt: String? }
     struct ResonancePostRequest: Encodable {
         let emotion: String; let content: String; let isAnonymous: Bool
         enum CodingKeys: String, CodingKey {

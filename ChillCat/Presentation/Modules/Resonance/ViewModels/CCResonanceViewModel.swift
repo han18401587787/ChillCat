@@ -27,9 +27,9 @@ final class CCResonanceViewModel {
         isLoading = true; error = nil; currentPage = 1
         do {
             let page = try await CCXuanAPI.listResonance(page: 1)
-            resonanceItems = mapItems(page.list)
+            resonanceItems = mapItems(page.list ?? [])
             onlineCount = page.onlineCount ?? 0
-            hasMore = page.total > resonanceItems.count
+            hasMore = (page.total ?? 0) > resonanceItems.count
             if resonanceItems.isEmpty { resonanceItems = [] }
             print("✅ [Resonance] loadResonance done: \(resonanceItems.count) items, \(onlineCount) online")
         } catch {
@@ -45,9 +45,9 @@ final class CCResonanceViewModel {
         isRefreshing = true; error = nil; currentPage = 1
         do {
             let page = try await CCXuanAPI.listResonance(page: 1)
-            resonanceItems = mapItems(page.list)
+            resonanceItems = mapItems(page.list ?? [])
             onlineCount = page.onlineCount ?? 0
-            hasMore = page.total > resonanceItems.count
+            hasMore = (page.total ?? 0) > resonanceItems.count
             print("✅ [Resonance] refresh done: \(resonanceItems.count) items")
         } catch {
             self.error = error
@@ -62,9 +62,10 @@ final class CCResonanceViewModel {
         isLoadingMore = true; currentPage += 1
         do {
             let page = try await CCXuanAPI.listResonance(page: currentPage)
-            resonanceItems += mapItems(page.list)
-            hasMore = page.total > resonanceItems.count
-            print("✅ [Resonance] loadMore done: +\(page.list.count) items, total=\(resonanceItems.count)")
+            let newItems = mapItems(page.list ?? [])
+            resonanceItems += newItems
+            hasMore = (page.total ?? 0) > resonanceItems.count
+            print("✅ [Resonance] loadMore done: +\(newItems.count) items, total=\(resonanceItems.count)")
         } catch {
             currentPage -= 1
             print("❌ [Resonance] loadMore failed: \(error)")
@@ -76,13 +77,13 @@ final class CCResonanceViewModel {
         list.map { p in
             CCResonanceDisplayItem(
                 id: String(p.id),
-                content: p.content,
+                content: p.content ?? "",
                 emotion: p.emotionType ?? "平静",
                 emotionColor: emotionColorFor(p.emotionType ?? "平静"),
-                isAnonymous: p.isAnonymous,
+                isAnonymous: p.isAnonymous ?? true,
                 displayName: p.displayName ?? "匿名用户",
-                resonanceCount: Int(p.resonanceCount),
-                createdAt: ISO8601DateFormatter().date(from: p.createdAt) ?? Date()
+                resonanceCount: Int(p.resonanceCount ?? 0),
+                createdAt: ISO8601DateFormatter().date(from: p.createdAt ?? "") ?? Date()
             )
         }
     }
