@@ -23,8 +23,8 @@ final class CCTrendsViewModel {
             stats = s
             let dayNames = ["日", "一", "二", "三", "四", "五", "六"]
             var counts: [String: Int] = [:]
-            for e in s.entries {
-                let d = e.checkinDate
+            for e in s.entries ?? [] {
+                guard let d = e.checkinDate else { continue }
                 let idx = dayOfWeek(from: d)
                 counts[dayNames[idx], default: 0] += 1
             }

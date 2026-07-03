@@ -47,12 +47,12 @@ struct CCCoursesView: View {
                 NavigationLink(value: CCAppRoute.courseDetail(course)) {
                     HStack(spacing: 12) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(course.title).font(.system(size: 15, weight: .medium))
+                            Text(course.title ?? "").font(.system(size: 15, weight: .medium))
                             HStack(spacing: 8) {
-                                Text(course.tag).font(.system(size: 11)).foregroundColor(Color.xuanApricotDark)
+                                Text(course.tag ?? "").font(.system(size: 11)).foregroundColor(Color.xuanApricotDark)
                                     .padding(.horizontal, 8).padding(.vertical, 2)
                                     .background(Color.xuanInfo.opacity(0.3)).cornerRadius(4)
-                                Text("\(course.duration / 60) 分钟").font(.system(size: 11)).foregroundColor(Color.xuanTextTertiary)
+                                Text("\((course.duration ?? 0) / 60) 分钟").font(.system(size: 11)).foregroundColor(Color.xuanTextTertiary)
                             }
                         }
                         Spacer()

@@ -40,7 +40,7 @@ final class CCCoursesViewModel {
                 categories = []
                 print("✅ [Courses] loadCourses done: empty")
             } else {
-                let grouped = Dictionary(grouping: all, by: { $0.category })
+                let grouped = Dictionary(grouping: all, by: { $0.category ?? "其他" })
                 categories = grouped.map { (name, items) in
                     let (icon, color) = icons[name] ?? ("book.fill", Color(hex: "A085C6"))
                     return (name, icon, color, items)

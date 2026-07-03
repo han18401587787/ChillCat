@@ -22,8 +22,8 @@ final class CCJournalViewModel {
         let m = String(format: "%04d-%02d", selectedYear, selectedMonth)
         do {
             let page = try await CCXuanAPI.getJournal(month: m)
-            entries = page.list
-            print("✅ [Journal] loadJournal done: \(page.list.count) entries, total=\(page.total)")
+            entries = page.list ?? []
+            print("✅ [Journal] loadJournal done: \(page.list?.count ?? 0) entries, total=\(page.total ?? 0)")
         } catch {
             entries = []
             self.error = error

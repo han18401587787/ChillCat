@@ -689,15 +689,15 @@ final class EmotionDecodeViewModel: ObservableObject {
             let stats = try await CCXuanAPI.getWeeklyStats()
             let dayNames = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"]
             let calendar = Calendar.current
-            weeklyTrend = stats.entries.compactMap { entry in
+            weeklyTrend = (stats.entries ?? []).compactMap { entry in
                 let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"
-                guard let date = f.date(from: entry.checkinDate) else { return nil }
+                guard let dateStr = entry.checkinDate, let date = f.date(from: dateStr) else { return nil }
                 let weekday = calendar.component(.weekday, from: date) - 1
                 return WeeklyTrendData(
                     dayShort: dayNames[weekday],
                     intensity: 5,
                     emotionEmoji: "😌",
-                    emotionColor: EmotionColors.color(for: entry.emotion)
+                    emotionColor: EmotionColors.color(for: entry.emotion ?? "")
                 )
             }
             // Check for low score warning

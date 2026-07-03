@@ -47,9 +47,9 @@ struct CCJournalView: View {
                 }.padding().background(Color.xuanWhite).cornerRadius(XuanRadius.lg)
 
                 HStack(spacing: XuanSpacing.md) {
-                    statCard(title: "本月", value: "\(viewModel.entries.count) 次", bg: Color(hex: "A085C6").opacity(0.25).opacity(0.25))
-                    statCard(title: "记录", value: "\(uniqueDays) 天", bg: Color.xuanApricot.opacity(0.6).opacity(0.25))
-                    statCard(title: "坚持", value: "\(uniqueDays) 天", bg: Color.xuanSuccess.opacity(0.25).opacity(0.25))
+                    statCard(title: "本月", value: "\(viewModel.entries.count) 次", bg: Color(hex: "A085C6").opacity(0.25))
+                    statCard(title: "记录", value: "\(uniqueDays) 天", bg: Color.xuanApricot.opacity(0.15))
+                    statCard(title: "坚持", value: "\(uniqueDays) 天", bg: Color.xuanSuccess.opacity(0.25))
                 }
 
                 VStack(alignment: .leading, spacing: XuanSpacing.sm) {
@@ -60,23 +60,24 @@ struct CCJournalView: View {
                         CCEmptyStateView(title: "暂无记录", message: "开始记录你的第一份情绪日记吧", actionTitle: nil, action: nil)
                     } else {
                         ForEach(viewModel.entries) { entry in
+                            let emotionName = entry.emotion ?? ""
                             HStack(spacing: 12) {
-                                Image(systemName: CCEmotion.allCases.first(where: { $0.rawValue == entry.emotion })?.iconName ?? "circle.fill")
+                                Image(systemName: CCEmotion.allCases.first(where: { $0.rawValue == emotionName })?.iconName ?? "circle.fill")
                                     .font(.system(size: 24))
-                                    .foregroundColor(emotionColor(entry.emotion))
+                                    .foregroundColor(emotionColor(emotionName))
                                     .frame(width: 44, height: 44)
-                                    .background(emotionColor(entry.emotion).opacity(0.1)).cornerRadius(XuanRadius.sm)
+                                    .background(emotionColor(emotionName).opacity(0.1)).cornerRadius(XuanRadius.sm)
                                 VStack(alignment: .leading, spacing: 2) {
                                     HStack {
-                                        Text(entry.emotion).font(.system(size: 15, weight: .medium))
-                                        if entry.hasDoodle { Text("有涂鸦").font(.system(size: 11)).foregroundColor(Color.xuanPink) }
+                                        Text(emotionName).font(.system(size: 15, weight: .medium))
+                                        if entry.hasDoodle ?? false { Text("有涂鸦").font(.system(size: 11)).foregroundColor(Color.xuanPink) }
                                     }
-                                    if !entry.note.isEmpty {
-                                        Text(entry.note).font(.system(size: 13)).foregroundColor(Color.xuanTextSecondary).lineLimit(2)
+                                    if let note = entry.note, !note.isEmpty {
+                                        Text(note).font(.system(size: 13)).foregroundColor(Color.xuanTextSecondary).lineLimit(2)
                                     }
                                 }
                                 Spacer()
-                                Text(String(entry.checkinDate.suffix(5))).font(.system(size: 12)).foregroundColor(Color.xuanTextTertiary)
+                                Text(String((entry.checkinDate ?? "").suffix(5))).font(.system(size: 12)).foregroundColor(Color.xuanTextTertiary)
                             }.padding().background(Color.xuanWhite).cornerRadius(XuanRadius.md).onTapGesture { coordinator.navigate(to: .journalDetail(entry)) }
                         }
                     }

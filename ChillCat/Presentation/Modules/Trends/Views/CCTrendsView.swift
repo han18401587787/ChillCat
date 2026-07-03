@@ -56,10 +56,10 @@ struct CCTrendsView: View {
                 }
             }
 
-            if !viewModel.isLoading, let s = viewModel.stats, !s.insight.isEmpty {
+            if !viewModel.isLoading, let s = viewModel.stats, !(s.insight ?? "").isEmpty {
                 VStack(alignment: .leading, spacing: XuanSpacing.sm) {
                     Text("绪安洞察").font(.system(size: 16, weight: .semibold))
-                    insightCard(text: s.insight, color: Color(hex: "A085C6"))
+                    insightCard(text: s.insight ?? "", color: Color(hex: "A085C6"))
                 }
             }
         }

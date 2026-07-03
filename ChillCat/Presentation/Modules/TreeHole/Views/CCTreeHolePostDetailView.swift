@@ -82,12 +82,12 @@ struct CCTreeHolePostDetailView: View {
                                         .font(.system(size: 12))
                                         .foregroundColor(Color.xuanPink)
                                         .padding(.top, 2)
-                                    Text(reply.content)
+                                    Text(reply.content ?? "")
                                         .font(.system(size: 14))
                                         .foregroundColor(Color.xuanTextSecondary)
                                         .lineSpacing(4)
                                     Spacer()
-                                    Text(timeAgo(from: reply.createdAt))
+                                    Text(timeAgo(from: reply.createdAt ?? ""))
                                         .font(.system(size: 11))
                                         .foregroundColor(Color.xuanTextTertiary)
                                 }
@@ -182,7 +182,7 @@ struct CCTreeHolePostDetailView: View {
         isLoadingReplies = true
         do {
             let detail = try await CCXuanAPI.getResonanceDetail(id: Int64(post.id) ?? 0)
-            replies = detail.replies
+            replies = detail.replies ?? []
         } catch { /* keep empty */ }
         isLoadingReplies = false
     }

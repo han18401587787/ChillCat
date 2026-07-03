@@ -107,9 +107,9 @@ final class CCEmotionViewModel {
         Task {
             do {
                 let result = try await CCXuanAPI.checkin(emotion: emotion.rawValue, note: todayNote)
-                streakDays = Int(result.streakDays)
+                streakDays = Int(result.streakDays ?? 0)
                 // 同步数据到 Widget
-                CCWidgetDataSync.update(emotion: emotion.rawValue, streak: Int(result.streakDays), quote: quote)
+                CCWidgetDataSync.update(emotion: emotion.rawValue, streak: Int(result.streakDays ?? 0), quote: quote)
             } catch {
                 // Already checked in today — still show success
             }
