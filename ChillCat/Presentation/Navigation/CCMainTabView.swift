@@ -34,15 +34,15 @@ struct CCMainTabView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
 
     var body: some View {
+        @Bindable var coordinator = coordinator
         TabView(selection: $selectedTab) {
             ForEach(CCMainTab.allCases, id: \.self) { tab in
-                NavigationStack {
+                NavigationStack(path: $coordinator.path) {
                     coordinator.buildView(for: routeFor(tab))
                         .navigationDestination(for: CCAppRoute.self) { route in
                             coordinator.buildView(for: route)
                         }
                 }
-                // 禁用交互式 dismiss 防止与 TabView 手势冲突
                 .interactiveDismissDisabled()
                 .tabItem {
                     Label(tab.title, systemImage: tab.sfSymbol)
