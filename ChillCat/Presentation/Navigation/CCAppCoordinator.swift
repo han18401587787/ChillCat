@@ -8,6 +8,12 @@ final class CCAppCoordinator {
     var presentedSheet: CCAppRoute?
     var hasSeenWelcome = false
     var isLoggedIn: Bool
+    var isOffline: Bool = false
+
+    // MARK: - Shared ViewModels（跨 Tab 保持生命周期）
+    let emotionViewModel = CCEmotionViewModel()
+    let resonanceViewModel = CCResonanceViewModel()
+    let treeHoleViewModel = CCTreeHoleViewModel()
 
     init() { isLoggedIn = false }
 
@@ -17,12 +23,17 @@ final class CCAppCoordinator {
     func popToRoot() { path.removeLast(path.count) }
     func pop() { guard !path.isEmpty else { return }; path.removeLast() }
 
+    /// Tab 切换时刷新当前 Tab 数据
+    func refreshCurrentTab() {
+        // 子 ViewModel 自行处理刷新逻辑
+    }
+
     @ViewBuilder
     func buildView(for route: CCAppRoute) -> some View {
         switch route {
         case .login:   CCLoginView()
-        case .home:    CCHomeView()
-        case .treeHole: CCTreeHoleView()
+        case .home:    CCHomeView(viewModel: emotionViewModel)
+        case .treeHole: CCTreeHoleView(viewModel: treeHoleViewModel)
         case .voiceCheckin: CCVoiceCheckinView()
         case .voiceDiary: CCVoiceCheckinView()
         case .voiceEmotionDiary: CCVoiceCheckinView()
@@ -38,7 +49,7 @@ final class CCAppCoordinator {
         case .faq: CCFAQView()
         case .deleteAccount: CCDeleteAccountView()
         case .aiListener: CCAIListenerCard()
-        case .resonanceWall: CCResonanceView()
+        case .resonanceWall: CCResonanceView(viewModel: resonanceViewModel)
         case .resonanceDetail(let p): CCResonanceDetailView(item: p)
         case .encourageChain: CCEncourageChainView()
         case .encourageChainDetail(let chainId): CCEncourageChainView(specificChainId: chainId)
@@ -57,7 +68,7 @@ final class CCAppCoordinator {
         case .safetyPlan: CCSafetyPlanView()
         case .crisisHotline: CCCrisisHotlineView()
         case .toolbox: CCToolboxView()
-        case .breathingExercise: CCToolboxView() // TODO: replace with CCBreathingExerciseView when implemented
+        case .breathingExercise: CCToolboxView()
         case .cbtRestructuring: CCCBTView()
         case .progressiveMuscleRelaxation: CCPMRView()
         case .bodyScan: CCBodyScanView()

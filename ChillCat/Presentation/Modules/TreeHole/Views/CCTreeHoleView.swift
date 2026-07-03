@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CCTreeHoleView: View {
-    @State private var viewModel = CCTreeHoleViewModel()
+    @State var viewModel: CCTreeHoleViewModel
     @State private var showEmoji = false
     @State private var showContentWarning = false
     @State private var pendingPublishText: String = ""

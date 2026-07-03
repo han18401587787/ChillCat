@@ -12,8 +12,8 @@ enum CCXuanAPI {
     private static let session: Session = {
         let interceptor = XuanAuthInterceptor()
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 15   // 单个请求超时15s
-        config.timeoutIntervalForResource = 30  // 总资源超时30s
+        config.timeoutIntervalForRequest = CCNetworkConfig.requestTimeout   // 统一请求超时
+        config.timeoutIntervalForResource = CCNetworkConfig.resourceTimeout // 统一资源超时
         // 不使用 waitsForConnectivity — 模拟器中不稳定
         return Session(
             configuration: config,
@@ -35,8 +35,24 @@ enum CCXuanAPI {
         let token: String; let userId: Int64; let username: String; let nickname: String?
     }
 
+    struct TokenRefreshRequest: Encodable {
+        let refreshToken: String
+    }
+
+    struct TokenRefreshResponse: Decodable {
+        let accessToken: String
+        let refreshToken: String
+        let userId: Int64?
+        let username: String?
+    }
+
     static func anonymousLogin() async throws -> AnonymousResponse {
         try await post("/api/v1/auth/anonymous", body: Optional<String>.none)
+    }
+
+    /// 刷新 Token（使用 refresh token 获取新的 access token）
+    static func refreshToken(refreshToken: String) async throws -> TokenRefreshResponse {
+        try await post("/api/v1/auth/refresh", body: TokenRefreshRequest(refreshToken: refreshToken))
     }
 
     // MARK: - Emotion
@@ -491,23 +507,39 @@ final class XuanAuthInterceptor: RequestInterceptor {
             return
         }
 
-        // 只对连接错误重试1次，超时/取消不重试
+        // 5xx 服务端错误：重试 1 次
+        if let statusCode = request.response?.statusCode, (500...599).contains(statusCode) {
+            guard request.retryCount < 1 else {
+                completion(.doNotRetry); return
+            }
+            completion(.retryWithDelay(CCNetworkConfig.retryBaseDelay))
+            return
+        }
+
+        // 网络错误分类处理
         let nsError = error as NSError
         if nsError.domain == NSURLErrorDomain {
             switch nsError.code {
-            case NSURLErrorTimedOut,
-                 NSURLErrorCancelled,
+            case NSURLErrorTimedOut:
+                // 超时重试 1 次
+                guard request.retryCount < 1 else {
+                    completion(.doNotRetry); return
+                }
+                completion(.retryWithDelay(1.0))
+                return
+            case NSURLErrorCancelled,
                  NSURLErrorCannotConnectToHost,
                  NSURLErrorCannotFindHost,
                  NSURLErrorDNSLookupFailed,
                  NSURLErrorNotConnectedToInternet:
-                completion(.doNotRetry)  // 超时/DNS/无网络不重试
+                completion(.doNotRetry)  // DNS/无网络不重试
                 return
             default:
                 break
             }
         }
 
+        // 其他连接错误：重试 1 次
         guard request.retryCount < 1 else {
             completion(.doNotRetry); return
         }

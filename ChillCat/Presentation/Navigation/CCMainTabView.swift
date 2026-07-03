@@ -42,18 +42,16 @@ struct CCMainTabView: View {
                             coordinator.buildView(for: route)
                         }
                 }
+                // 禁用交互式 dismiss 防止与 TabView 手势冲突
+                .interactiveDismissDisabled()
                 .tabItem {
                     Label(tab.title, systemImage: tab.sfSymbol)
                 }
                 .tag(tab)
-                // 关键修复: 通过 UITabBar 的 accessibility 属性暴露给 XCUITest
                 .accessibilityIdentifier("tab_\(tab.rawValue)")
             }
         }
         .tint(Color.xuanApricot)
-        // SwiftUI TabView 的 tabItem 不会直接暴露 label 文字作为 button identifier
-        // XCUITest 需要通过 UITabBarButton 的 accessibilityLabel 来定位
-        // 这里在 onAppear 时手动设置每个 tab button 的 accessibilityIdentifier
         .onAppear {
             setupTabAccessibility()
         }
@@ -82,7 +80,6 @@ struct CCMainTabView: View {
         if let tabVC = rootVC as? UITabBarController {
             return tabVC
         }
-        // 也可能嵌套在 NavigationController 中
         for child in rootVC.children {
             if let tabVC = child as? UITabBarController {
                 return tabVC

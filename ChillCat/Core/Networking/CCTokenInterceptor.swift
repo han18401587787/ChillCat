@@ -4,7 +4,6 @@
 //
 //  Created by doudou.han on 2026/6/8.
 //
-//
 
 import Foundation
 
@@ -29,10 +28,25 @@ final class CCTokenInterceptor: CCRequestInterceptor {
     func handle(response: HTTPURLResponse, data: Data) async throws {
         if response.statusCode == 401 {
             guard retryCount < retryLimit else {
+                // 重试次数用尽，清除 token 并抛错
+                await tokenProvider.clearTokens()
                 throw CCAPIError.unauthorized
             }
             retryCount += 1
-            try await tokenProvider.refreshToken()
+            print("🔄 [TokenInterceptor] 401 触发 token 刷新 (attempt \(retryCount)/\(retryLimit))")
+            do {
+                try await tokenProvider.refreshToken()
+                print("✅ [TokenInterceptor] token 刷新成功，请求将重试")
+            } catch {
+                print("❌ [TokenInterceptor] token 刷新失败: \(error)")
+                await tokenProvider.clearTokens()
+                throw CCAPIError.unauthorized
+            }
         }
+    }
+
+    /// 重置重试计数（在成功的请求后调用）
+    func resetRetryCount() {
+        retryCount = 0
     }
 }

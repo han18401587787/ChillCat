@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CCHomeView: View {
-    @State private var viewModel = CCEmotionViewModel()
+    @State var viewModel: CCEmotionViewModel
     @Environment(CCAppCoordinator.self) private var coordinator
 
     // 4个需求选项 (严格对照设计稿)
@@ -61,6 +61,7 @@ struct CCHomeView: View {
             .padding(XuanSpacing.lg)
         }
         .background(Color.xuanApricotBg)
+        .scrollDismissesKeyboard(.interactively)
         .task { await viewModel.loadData() }
     }
 
@@ -138,6 +139,11 @@ struct CCHomeView: View {
                 )
         }
         .buttonStyle(.plain)
+        .contentShape(Rectangle())
+        .highPriorityGesture(TapGesture().onEnded {
+            CCHaptic.selection()
+            viewModel.selectNeed(item.title)
+        })
         .animation(.easeInOut(duration: 0.2), value: isSelected)
         .accessibilityIdentifier("home_need_\(item.title)")
     }
@@ -158,6 +164,12 @@ struct CCHomeView: View {
                 .cornerRadius(XuanRadius.lg)
         }
         .buttonStyle(.plain)
+        .contentShape(Rectangle())
+        .highPriorityGesture(TapGesture().onEnded {
+            CCHaptic.success()
+            viewModel.completeCheckIn()
+            coordinator.navigate(to: .checkinSuccess)
+        })
         .accessibilityIdentifier("home_checkin_button")
     }
 
@@ -260,8 +272,10 @@ struct CCHomeView: View {
 
                     Spacer()
                 }
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .contentShape(Rectangle())
             .accessibilityIdentifier("home_emotion_explore")
         }
         .padding(XuanSpacing.lg)
@@ -287,6 +301,8 @@ struct CCHomeView: View {
                     }
                     .foregroundColor(Color.xuanTextTertiary)
                 }
+                .buttonStyle(.plain)
+                .contentShape(Rectangle())
             }
 
             VStack(spacing: XuanSpacing.md) {
@@ -364,8 +380,10 @@ struct CCHomeView: View {
                     .font(.system(size: 14))
                     .foregroundColor(Color.xuanTextTertiary)
             }
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .contentShape(Rectangle())
         .accessibilityIdentifier("home_ai_listener_entry")
         .padding(XuanSpacing.lg)
         .background(Color.xuanWhite)
@@ -376,5 +394,5 @@ struct CCHomeView: View {
 
 // MARK: - Preview
 #Preview {
-    CCHomeView()
+    CCHomeView(viewModel: CCEmotionViewModel())
 }

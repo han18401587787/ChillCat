@@ -124,6 +124,8 @@ struct CCLoginView: View {
                             )
                             .cornerRadius(XuanRadius.md)
                     }
+                    .buttonStyle(.plain)
+                    .contentShape(Rectangle())
                     .disabled(phoneNumber.count < 11 || verificationCode.count < 4)
                     .accessibilityIdentifier("login_submit_button")
 

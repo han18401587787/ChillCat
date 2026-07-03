@@ -20,7 +20,7 @@ protocol CCAPIEndpoint {
 }
 
 extension CCAPIEndpoint {
-    var timeout: TimeInterval { 30 }
+    var timeout: TimeInterval { CCNetworkConfig.requestTimeout }
     var headers: [String: String]? { nil }
     var body: Encodable? { nil }
     var queryParameters: [String: String]? { nil }

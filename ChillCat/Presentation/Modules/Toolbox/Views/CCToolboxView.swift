@@ -132,8 +132,9 @@ struct CCToolboxView: View {
                 NavigationLink(value: item.route) {
                     toolCard(item: item)
                 }
-                .accessibilityLabel("\(item.name)：\(item.description)")
                 .buttonStyle(.plain)
+                .contentShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
+                .accessibilityLabel("\(item.name)：\(item.description)")
                 .opacity(appeared ? 1 : 0)
                 .offset(y: appeared ? 0 : 20)
                 .animation(

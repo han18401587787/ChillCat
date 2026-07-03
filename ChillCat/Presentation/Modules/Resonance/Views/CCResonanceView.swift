@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CCResonanceView: View {
-    @State private var viewModel = CCResonanceViewModel()
+    @State var viewModel: CCResonanceViewModel
     @Environment(CCAppCoordinator.self) private var coordinator
 
     @State private var showComposer = false
@@ -84,9 +84,10 @@ struct CCResonanceView: View {
                     ForEach(viewModel.resonanceItems) { item in
                         resonanceCard(item)
                             .contentShape(Rectangle())
-                            .onTapGesture {
+                            // 使用 simultaneousGesture 避免与内部 Button 冲突
+                            .simultaneousGesture(TapGesture().onEnded {
                                 coordinator.navigate(to: .resonanceDetail(item))
-                            }
+                            })
                             .onAppear {
                                 if item.id == viewModel.resonanceItems.last?.id {
                                     Task { await viewModel.loadMore() }
