@@ -306,15 +306,16 @@ final class EncourageDiscoverViewModel: ObservableObject {
     }
     
     private static func mapToDiscoverChain(_ chain: CCXuanAPI.ChainResponse) -> EncourageChainData {
-        let latestLink = chain.links.last
+        let links = chain.links ?? []
+        let latestLink = links.last
         return EncourageChainData(
-            id: String(chain.chainId),
-            theme: chain.links.first?.content.prefix(15).appending("…") ?? "鼓励链",
+            id: String(chain.chainId ?? 0),
+            theme: (links.first?.content ?? "鼓励链").prefix(15) + "…",
             latestMessage: latestLink?.content ?? "",
             emotionEmoji: "💪",
             emotionTags: [],
-            participantCount: Int(chain.participantCount),
-            messages: chain.links.map { EncourageMessageData(id: String($0.id), content: $0.content, from: "参与者", emoji: "💛", timeAgo: $0.createdAt) },
+            participantCount: Int(chain.participantCount ?? 0),
+            messages: links.map { EncourageMessageData(id: String($0.id), content: $0.content ?? "", from: "参与者", emoji: "💛", timeAgo: $0.createdAt ?? "") },
             createdAt: latestLink?.createdAt ?? ""
         )
     }

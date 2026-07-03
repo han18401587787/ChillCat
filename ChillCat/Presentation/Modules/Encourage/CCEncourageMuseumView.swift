@@ -302,19 +302,19 @@ final class EncourageMuseumViewModel: ObservableObject {
         errorMessage = nil
         do {
             let chains = try await CCXuanAPI.listChains()
-            totalKindnessCount = chains.reduce(0) { $0 + Int($1.participantCount) }
+            totalKindnessCount = chains.reduce(0) { $0 + Int($1.participantCount ?? 0) }
             chainsJoined = chains.count
-            peopleReached = chains.reduce(0) { $0 + Int($1.participantCount) }
+            peopleReached = chains.reduce(0) { $0 + Int($1.participantCount ?? 0) }
             
             completedChains = chains.compactMap { chain in
-                guard let lastLink = chain.links.last else { return nil }
+                guard let lastLink = (chain.links ?? []).last else { return nil }
                 return CompletedChainData(
-                    id: String(chain.chainId),
-                    theme: chain.links.first?.content.prefix(15).appending("…") ?? "鼓励链",
+                    id: String(chain.chainId ?? 0),
+                    theme: (chain.links?.first?.content ?? "鼓励链").prefix(15).appending("…") ?? "鼓励链",
                     emoji: "💛",
-                    participantCount: Int(chain.participantCount),
-                    messageCount: chain.links.count,
-                    completedDate: lastLink.createdAt
+                    participantCount: Int(chain.participantCount ?? 0),
+                    messageCount: chain.links?.count ?? 0,
+                    completedDate: lastLink.createdAt ?? ""
                 )
             }
         } catch {

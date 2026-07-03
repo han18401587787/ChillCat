@@ -37,16 +37,16 @@ final class CCEncourageChainViewModel {
                 isLoading = false
                 return
             }
-            chainId = chain.chainId
-            links = chain.links.map {
+            chainId = chain.chainId ?? 0
+            links = (chain.links ?? []).map {
                 ChainLinkDisplay(
                     id: String($0.id),
-                    content: $0.content,
-                    position: $0.position,
-                    createdAt: ISO8601DateFormatter().date(from: $0.createdAt) ?? Date()
+                    content: $0.content ?? "",
+                    position: $0.position ?? 0,
+                    createdAt: ISO8601DateFormatter().date(from: $0.createdAt ?? "") ?? Date()
                 )
             }
-            participantCount = chain.participantCount
+            participantCount = chain.participantCount ?? 0
         } catch {
             // API 不可用时使用 mock 数据
             links = ChainLinkDisplay.sampleLinks
@@ -62,16 +62,16 @@ final class CCEncourageChainViewModel {
         errorMessage = nil
         do {
             let chain = try await CCXuanAPI.getChain(id: id)
-            chainId = chain.chainId
-            links = chain.links.map {
+            chainId = chain.chainId ?? 0
+            links = (chain.links ?? []).map {
                 ChainLinkDisplay(
                     id: String($0.id),
-                    content: $0.content,
-                    position: $0.position,
-                    createdAt: ISO8601DateFormatter().date(from: $0.createdAt) ?? Date()
+                    content: $0.content ?? "",
+                    position: $0.position ?? 0,
+                    createdAt: ISO8601DateFormatter().date(from: $0.createdAt ?? "") ?? Date()
                 )
             }
-            participantCount = chain.participantCount
+            participantCount = chain.participantCount ?? 0
         } catch {
             // API 不可用时使用 mock 数据
             links = ChainLinkDisplay.sampleLinks
@@ -104,10 +104,10 @@ final class CCEncourageChainViewModel {
             let chains = try await CCXuanAPI.getMyChains()
             myChains = chains.map {
                 ChainSummary(
-                    chainId: String($0.chainId),
-                    firstMessage: $0.links.first?.content ?? "",
-                    participantCount: Int($0.participantCount),
-                    linkCount: $0.links.count
+                    chainId: String($0.chainId ?? 0),
+                    firstMessage: $0.links?.first?.content ?? "",
+                    participantCount: Int($0.participantCount ?? 0),
+                    linkCount: $0.links?.count ?? 0
                 )
             }
         } catch {

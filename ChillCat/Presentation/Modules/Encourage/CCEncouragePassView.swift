@@ -326,13 +326,13 @@ final class EncouragePassViewModel: ObservableObject {
         isLoadingMessages = true
         do {
             let chainData = try await CCXuanAPI.getChain(id: chainId)
-            chainMessages = chainData.links.map { link in
+            chainMessages = (chainData.links ?? []).map { link in
                 EncourageMessageData(
                     id: String(link.id),
-                    content: link.content,
+                    content: link.content ?? "",
                     from: "参与者",
                     emoji: "💛",
-                    timeAgo: link.createdAt
+                    timeAgo: link.createdAt ?? ""
                 )
             }
         } catch {

@@ -131,7 +131,7 @@ struct CCHeartBeatAnimation: View {
         let lottieName = "emotion_joy_2"
         if LottieAnimation.named(lottieName) != nil {
             LottieView(animation: LottieAnimation.named(lottieName))
-                .playbackMode(.playing(.toProgress(0, toProgress: 1, loopMode: .playOnce)))
+                .playbackMode(.playing(.toProgress(1, loopMode: .playOnce)))
                 .animationSpeed(1.5)
                 .frame(width: size, height: size)
                 .scaleEffect(trigger ? 1.0 : 0.3)

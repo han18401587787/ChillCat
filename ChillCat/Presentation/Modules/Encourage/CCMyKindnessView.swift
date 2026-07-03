@@ -305,8 +305,8 @@ final class MyKindnessViewModel: ObservableObject {
             participatedChains = myChains.map { Self.mapToMyChain($0) }
             initiatedChains = [] // initiated chains not separately returned by getMyChains
             totalKindness = myChains.count
-            sentCount = myChains.reduce(0) { $0 + $1.links.count }
-            connectedPeople = myChains.reduce(0) { $0 + Int($1.participantCount) }
+            sentCount = myChains.reduce(0) { $0 + ($1.links?.count ?? 0) }
+            connectedPeople = myChains.reduce(0) { $0 + Int($1.participantCount ?? 0) }
         } catch {
             participatedChains = []
             initiatedChains = []
@@ -317,12 +317,13 @@ final class MyKindnessViewModel: ObservableObject {
     }
     
     private static func mapToMyChain(_ chain: CCXuanAPI.ChainResponse) -> MyChainData {
-        MyChainData(
-            id: String(chain.chainId),
-            theme: chain.links.first?.content.prefix(15).appending("…") ?? "鼓励链",
+        let links = chain.links ?? []
+        return MyChainData(
+            id: String(chain.chainId ?? 0),
+            theme: (links.first?.content ?? "鼓励链").prefix(15) + "…",
             emoji: "💛",
-            participantCount: Int(chain.participantCount),
-            lastUpdated: chain.links.last?.createdAt ?? "",
+            participantCount: Int(chain.participantCount ?? 0),
+            lastUpdated: links.last?.createdAt ?? "",
             status: .active
         )
     }
