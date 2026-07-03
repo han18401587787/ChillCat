@@ -154,6 +154,7 @@ struct CCHomeView: View {
     // MARK: - 4. 今日心情打卡按钮
     private var checkInButtonSection: some View {
         Button(action: {
+            guard !viewModel.hasCheckedIn else { return }
             CCHaptic.success()
             viewModel.completeCheckIn()
             coordinator.navigate(to: .checkinSuccess)
@@ -172,6 +173,7 @@ struct CCHomeView: View {
         }
         .buttonStyle(.plain)
         .contentShape(Rectangle())
+        .disabled(viewModel.hasCheckedIn)
         .accessibilityIdentifier("home_checkin_button")
         .animation(.easeInOut(duration: 0.3), value: viewModel.hasCheckedIn)
     }

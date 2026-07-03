@@ -115,7 +115,8 @@ struct CCEmotionAnimationView: View {
 // MARK: - 点赞心跳动画（Lottie + SwiftUI fallback）
 
 /// 点赞/共鸣心跳动画
-/// 优先使用 Lottie 动画，如果 Lottie 文件不存在则使用 SwiftUI 原生动画
+/// 使用 Lottie joy 动画（项目中有 emotion_joy_1~4），播放一次
+/// 如果 Lottie 文件不存在则使用 SwiftUI 原生动画
 struct CCHeartBeatAnimation: View {
     @Binding var trigger: Bool
     let size: CGFloat
@@ -126,13 +127,14 @@ struct CCHeartBeatAnimation: View {
     }
 
     var body: some View {
-        // 尝试加载 Lottie 心跳动画
-        if LottieAnimation.named("heart_like") != nil {
-            LottieView(animation: LottieAnimation.named("heart_like"))
-                .playbackMode(.playing(.toProgress(1, loopMode: .playOnce)))
+        // 使用 joy 动画作为点赞反馈（项目中有 emotion_joy_1~4.json）
+        let lottieName = "emotion_joy_2"
+        if LottieAnimation.named(lottieName) != nil {
+            LottieView(animation: LottieAnimation.named(lottieName))
+                .playbackMode(.playing(.toProgress(0, toProgress: 1, loopMode: .playOnce)))
                 .animationSpeed(1.5)
                 .frame(width: size, height: size)
-                .scaleEffect(trigger ? 1.0 : 0.5)
+                .scaleEffect(trigger ? 1.0 : 0.3)
                 .opacity(trigger ? 1 : 0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.5), value: trigger)
         } else {

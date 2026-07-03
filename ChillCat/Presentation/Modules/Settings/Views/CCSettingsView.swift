@@ -5,11 +5,16 @@
 //  设计稿来源: /workspace/design_pages/page_47.png
 
 import SwiftUI
+import KeychainAccess
 
 struct CCSettingsView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
     @Environment(CCThemeManager.self) private var themeManager
     @State private var viewModel = CCSettingsViewModel()
+    @State private var showLogoutConfirm = false
+    @State private var profileViewModel = CCProfileViewModel(
+        profileUseCase: CCAppDependencyContainer.shared.container.resolve()
+    )
 
     var body: some View {
         ScrollView {
@@ -119,12 +124,55 @@ struct CCSettingsView: View {
                     }
                     .buttonStyle(.plain)
                 }
+
+                // 退出登录
+                Button(action: {
+                    showLogoutConfirm = true
+                }) {
+                    HStack(spacing: XuanSpacing.md) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: XuanRadius.sm)
+                                .fill(Color.xuanDanger.opacity(0.1))
+                                .frame(width: 36, height: 36)
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                                .font(.system(size: 16))
+                                .foregroundColor(Color.xuanDanger)
+                        }
+                        Text("退出登录")
+                            .font(XuanFont.bodyL)
+                            .foregroundColor(Color.xuanDanger)
+                        Spacer()
+                    }
+                    .padding(XuanSpacing.md)
+                    .background(Color.xuanWhite)
+                    .cornerRadius(XuanRadius.md)
+                }
+                .buttonStyle(.plain)
+                .contentShape(Rectangle())
             }
             .padding(XuanSpacing.lg)
         }
         .background(Color.xuanApricotBg)
         .navigationTitle("设置")
         .navigationBarTitleDisplayMode(.large)
+        .alert("退出登录", isPresented: $showLogoutConfirm) {
+            Button("取消", role: .cancel) {}
+            Button("退出", role: .destructive) {
+                Task {
+                    await profileViewModel.logout()
+                    // 清除 token
+                    let keychain = Keychain(service: "app.xuanpeace.token")
+                    try? keychain.remove("access_token")
+                    try? keychain.remove("refresh_token")
+                    // 重置登录状态
+                    coordinator.isLoggedIn = false
+                    coordinator.hasSeenWelcome = true
+                    coordinator.popToRoot()
+                }
+            }
+        } message: {
+            Text("确定要退出登录吗？退出后需要重新登录")
+        }
     }
 
     // MARK: - Section
