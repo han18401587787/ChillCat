@@ -11,7 +11,10 @@ let package = Package(
         .package(url: "https://github.com/onevcat/Kingfisher.git", from: "8.0.0"),
         // Keychain：Secure Enclave、生物认证、iCloud 同步、访问级别控制
         .package(url: "https://github.com/kishikawakatsumi/KeychainAccess.git", from: "4.2.0"),
-        // 动画引擎：设计师 AE 导出 → 声明式播放，品牌动效/冥想/打卡庆祝
+        // Lottie 动画引擎
+        .package(url: "https://github.com/airbnb/lottie-ios.git", from: "4.6.1"),
+        // Lookin UI 调试工具（仅 Debug 生效）
+        .package(url: "https://github.com/QMUI/LookinServer.git", branch: "develop"),
     ],
     targets: [
         .target(
@@ -20,6 +23,8 @@ let package = Package(
                 .product(name: "Alamofire", package: "Alamofire"),
                 .product(name: "Kingfisher", package: "Kingfisher"),
                 .product(name: "KeychainAccess", package: "KeychainAccess"),
+                .product(name: "Lottie", package: "lottie-ios"),
+                .product(name: "LookinServer", package: "LookinServer"),
             ]
         )
     ]
