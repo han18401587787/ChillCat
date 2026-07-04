@@ -14,7 +14,7 @@ struct CCErrorView: View {
 
     var body: some View {
         VStack(spacing: XuanSpacing.md) {
-            Image(systemName: "exclamationmark.triangle")
+            Image("alert_warn")
                 .font(.system(size: 48))
                 .foregroundColor(Color.xuanDanger)
 

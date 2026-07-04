@@ -78,7 +78,7 @@ struct CCEmotionCalendarView: View {
             Button(action: {
                 withAnimation { currentMonth = calendar.date(byAdding: .month, value: -1, to: currentMonth)! }
             }) {
-                Image(systemName: "chevron.left")
+                Image("common_back")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(Color.xuanTextSecondary)
                     .frame(width: 36, height: 36)
@@ -95,7 +95,7 @@ struct CCEmotionCalendarView: View {
             Button(action: {
                 withAnimation { currentMonth = calendar.date(byAdding: .month, value: 1, to: currentMonth)! }
             }) {
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(Color.xuanTextSecondary)
                     .frame(width: 36, height: 36)

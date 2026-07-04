@@ -261,7 +261,7 @@ struct CCGrowthReportView: View {
                 VStack(spacing: XuanSpacing.sm) {
                     ForEach(periodMilestones) { milestone in
                         HStack(spacing: XuanSpacing.md) {
-                            Image(systemName: milestone.type.iconName)
+                            CCIconMapper.image(for: milestone.type.iconName)
                                 .font(.system(size: 14))
                                 .foregroundColor(milestoneTypeColor(milestone.type))
                                 .frame(width: 28, height: 28)
@@ -388,7 +388,7 @@ struct CCGrowthReportView: View {
 
     private func sectionHeader(title: String, icon: String, color: Color) -> some View {
         HStack(spacing: XuanSpacing.sm) {
-            Image(systemName: icon)
+            CCIconMapper.image(for: icon)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(color)
             Text(title)

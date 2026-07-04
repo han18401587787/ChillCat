@@ -129,7 +129,7 @@ struct CCMutualAidGroupView: View {
                         .fill(iconColor(for: group.iconName).opacity(0.15))
                         .frame(width: 48, height: 48)
 
-                    Image(systemName: group.iconName)
+                    CCIconMapper.image(for: group.iconName)
                         .font(.system(size: 20))
                         .foregroundColor(iconColor(for: group.iconName))
                 }
@@ -147,7 +147,7 @@ struct CCMutualAidGroupView: View {
 
                     // Member count badge
                     HStack(spacing: 4) {
-                        Image(systemName: "person.2")
+                        Image("resonance_people")
                             .font(.system(size: 10))
                         Text(formattedMemberCount(group.memberCount) + " 人")
                             .font(.system(size: 11))

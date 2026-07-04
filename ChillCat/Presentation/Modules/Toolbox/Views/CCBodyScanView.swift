@@ -98,7 +98,7 @@ struct CCBodyScanView: View {
             // Timer display
             VStack(alignment: .trailing, spacing: 2) {
                 HStack(spacing: 4) {
-                    Image(systemName: "timer")
+                    Image("other_assess")
                         .font(.system(size: 14))
                         .foregroundColor(Color.xuanTextSecondary)
                     Text(viewModel.isActive ? viewModel.formattedRemaining : viewModel.formattedTotal)
@@ -260,7 +260,7 @@ struct CCBodyScanView: View {
                 Spacer()
 
                 if viewModel.audioGuidanceEnabled {
-                    Image(systemName: "speaker.wave.2.fill")
+                    Image("healing_sound")
                         .foregroundColor(Color.xuanApricot)
                         .font(.system(size: 18))
                         .opacity(viewModel.isActive ? 1 : 0.3)
@@ -352,7 +352,7 @@ struct CCBodyScanView: View {
             // Audio toggle
             Toggle(isOn: $viewModel.audioGuidanceEnabled) {
                 HStack {
-                    Image(systemName: "speaker.wave.2.fill")
+                    Image("healing_sound")
                         .foregroundColor(Color.xuanApricot)
                     Text("音频引导")
                         .font(XuanFont.bodyL)
@@ -415,7 +415,7 @@ struct CCBodyScanView: View {
             Spacer()
 
             if hasNote {
-                Image(systemName: "note.text")
+                Image("other_diary")
                     .font(.system(size: 10))
                     .foregroundColor(Color.xuanApricotDark)
             }
@@ -433,7 +433,7 @@ struct CCBodyScanView: View {
                     viewModel.start()
                 } label: {
                     HStack {
-                        Image(systemName: "play.fill")
+                        Image("healing_course")
                         Text("开始扫描")
                     }
                     .font(XuanFont.bodyLMedium)
@@ -450,7 +450,7 @@ struct CCBodyScanView: View {
                     viewModel.togglePause()
                 } label: {
                     HStack {
-                        Image(systemName: viewModel.isPaused ? "play.fill" : "pause.fill")
+                        CCIconMapper.image(for: viewModel.isPaused ? "play.fill" : "pause.fill")
                         Text(viewModel.isPaused ? "继续" : "暂停")
                     }
                     .font(XuanFont.bodyLMedium)
@@ -466,7 +466,7 @@ struct CCBodyScanView: View {
                     viewModel.skipToNextRegion()
                 } label: {
                     HStack {
-                        Image(systemName: "forward.fill")
+                        Image("common_refresh")
                         Text("跳过")
                     }
                     .font(XuanFont.bodyLMedium)
@@ -482,7 +482,7 @@ struct CCBodyScanView: View {
                     viewModel.reset()
                 } label: {
                     HStack {
-                        Image(systemName: "arrow.counterclockwise")
+                        Image("common_refresh")
                         Text("重置")
                     }
                     .font(XuanFont.bodyLMedium)

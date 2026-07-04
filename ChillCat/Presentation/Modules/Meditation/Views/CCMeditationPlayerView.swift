@@ -69,7 +69,7 @@ struct CCMeditationPlayerView: View {
                         ProgressView()
                             .scaleEffect(1.5)
                     } else {
-                        Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                        CCIconMapper.image(for: viewModel.isPlaying ? "pause.fill" : "play.fill")
                             .font(.system(size: 36))
                             .foregroundColor(Color.xuanMint)
                     }
@@ -136,7 +136,7 @@ struct CCMeditationPlayerView: View {
                 .frame(width: 200, height: 200)
 
             VStack(spacing: XuanSpacing.md) {
-                Image(systemName: session.category.iconName)
+                CCIconMapper.image(for: session.category.iconName)
                     .font(.system(size: 48))
                     .foregroundColor(Color(hex: session.category.themeColor))
 

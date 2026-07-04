@@ -39,7 +39,7 @@ struct CCToastView: View {
 
     var body: some View {
         HStack(spacing: XuanSpacing.sm) {
-            Image(systemName: type.iconName)
+            CCIconMapper.image(for: type.iconName)
                 .foregroundColor(toastColor)
             Text(message)
                 .font(.system(size: 15))

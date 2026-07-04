@@ -53,7 +53,7 @@ struct CCTreeHolePostDetailView: View {
                     // Resonate button
                     Button(action: { showReplySheet = true }) {
                         HStack(spacing: 6) {
-                            Image(systemName: didResonate ? "heart.fill" : "heart")
+                            CCIconMapper.image(for: didResonate ? "heart.fill" : "heart")
                                 .font(.system(size: 16))
                             Text(didResonate ? "已共鸣" : "我也有过这种感觉")
                                 .font(.system(size: 15, weight: .medium))

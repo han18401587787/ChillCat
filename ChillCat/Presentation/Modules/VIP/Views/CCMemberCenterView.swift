@@ -85,7 +85,7 @@ struct CCMemberCenterView: View {
                 Circle()
                     .fill(Color.white.opacity(0.25))
                     .frame(width: 72, height: 72)
-                Image(systemName: viewModel.isMember ? "crown.fill" : "crown")
+                CCIconMapper.image(for: viewModel.isMember ? "crown.fill" : "crown")
                     .font(.system(size: 36))
                     .foregroundColor(.white)
             }
@@ -148,7 +148,7 @@ struct CCMemberCenterView: View {
                                         : Color.xuanSurface
                                 )
                                 .frame(width: 44, height: 44)
-                            Image(systemName: privilege.iconName)
+                            CCIconMapper.image(for: privilege.iconName)
                                 .font(.system(size: 20))
                                 .foregroundColor(
                                     privilege.isHighlight
@@ -249,7 +249,7 @@ struct CCMemberCenterView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(Color.xuanTextTertiary)
             }

@@ -84,7 +84,7 @@ struct CCSafetyPlanView: View {
 
     private var headerSection: some View {
         VStack(spacing: XuanSpacing.sm) {
-            Image(systemName: "shield.checkered")
+            Image("alert_guardian")
                 .font(.system(size: 36))
                 .foregroundColor(Color.xuanApricotDark)
 
@@ -130,7 +130,7 @@ struct CCSafetyPlanView: View {
                     item.wrappedValue.isChecked.toggle()
                 }
             }) {
-                Image(systemName: item.wrappedValue.isChecked ? "checkmark.circle.fill" : "circle")
+                CCIconMapper.image(for: item.wrappedValue.isChecked ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
                     .foregroundColor(item.wrappedValue.isChecked ? Color.xuanApricotDark : Color.xuanTextSecondary)
             }
@@ -193,7 +193,7 @@ struct CCSafetyPlanView: View {
                     item.wrappedValue.isChecked.toggle()
                 }
             }) {
-                Image(systemName: item.wrappedValue.isChecked ? "checkmark.circle.fill" : "circle")
+                CCIconMapper.image(for: item.wrappedValue.isChecked ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
                     .foregroundColor(item.wrappedValue.isChecked ? Color.xuanMint : Color.xuanTextSecondary)
             }
@@ -251,7 +251,7 @@ struct CCSafetyPlanView: View {
 
     private func contactRow(contact: Binding<EmergencyContact>) -> some View {
         HStack(spacing: XuanSpacing.md) {
-            Image(systemName: "person.crop.circle.fill")
+            Image("profile_user")
                 .font(.system(size: 28))
                 .foregroundColor(Color(hex: "A085C6"))
 
@@ -330,7 +330,7 @@ struct CCSafetyPlanView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(Color.xuanTextSecondary)
             }
@@ -472,7 +472,7 @@ struct CCSafetyPlanView: View {
     private func sectionHeader(icon: String, title: String, subtitle: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: XuanSpacing.xs) {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: icon)
+                CCIconMapper.image(for: icon)
                     .font(.system(size: 16))
                     .foregroundColor(color)
                 Text(title)

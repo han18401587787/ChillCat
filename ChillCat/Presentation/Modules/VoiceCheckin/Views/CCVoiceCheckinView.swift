@@ -193,7 +193,7 @@ struct CCVoiceCheckinView: View {
     private var analysisResultCard: some View {
         VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "heart.text.clinic.fill")
+                Image("alert_guardian")
                     .font(.system(size: 18))
                     .foregroundColor(Color.xuanMint)
                 Text("情绪识别:")
@@ -272,7 +272,7 @@ struct CCVoiceCheckinView: View {
                 Spacer()
                 Button(action: { showEmojiPicker.toggle() }) {
                     HStack(spacing: 4) {
-                        Image(systemName: "face.smiling")
+                        Image("emotion_happy")
                             .font(.system(size: 16))
                         Text("表情")
                             .font(.system(size: 13))
@@ -314,7 +314,7 @@ struct CCVoiceCheckinView: View {
                             .font(.system(size: 13))
                             .foregroundColor(Color.xuanApricotDark)
                         Button(action: { viewModel.removeTag(tag) }) {
-                            Image(systemName: "xmark.circle.fill")
+                            Image("common_close")
                                 .font(.system(size: 12))
                                 .foregroundColor(Color.xuanTextTertiary)
                         }
@@ -360,7 +360,7 @@ struct CCVoiceCheckinView: View {
                 viewModel.reRecord()
             }) {
                 HStack(spacing: 6) {
-                    Image(systemName: "arrow.counterclockwise")
+                    Image("common_refresh")
                         .font(.system(size: 15))
                     Text("重新录制")
                         .font(.system(size: 15, weight: .medium))
@@ -543,7 +543,7 @@ struct CCVoiceCheckinView: View {
         VStack(spacing: XuanSpacing.lg) {
             Spacer().frame(height: 60)
 
-            Image(systemName: "exclamationmark.circle.fill")
+            Image("alert_warn")
                 .font(.system(size: 56))
                 .foregroundColor(Color.xuanDanger)
 
@@ -555,7 +555,7 @@ struct CCVoiceCheckinView: View {
             HStack(spacing: XuanSpacing.md) {
                 Button(action: { viewModel.reRecord() }) {
                     HStack(spacing: 6) {
-                        Image(systemName: "arrow.counterclockwise")
+                        Image("common_refresh")
                             .font(.system(size: 15))
                         Text("重新录制")
                             .font(.system(size: 15, weight: .medium))

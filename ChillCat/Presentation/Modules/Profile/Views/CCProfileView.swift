@@ -101,7 +101,7 @@ struct CCProfileView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(Color.xuanTextTertiary)
             }
@@ -129,7 +129,7 @@ struct CCProfileView: View {
                 RoundedRectangle(cornerRadius: XuanRadius.md)
                     .fill(color.opacity(0.1))
                     .frame(width: 44, height: 44)
-                Image(systemName: icon)
+                CCIconMapper.image(for: icon)
                     .font(.system(size: 20))
                     .foregroundColor(color)
             }
@@ -217,7 +217,7 @@ struct CCProfileView: View {
                     RoundedRectangle(cornerRadius: XuanRadius.sm)
                         .fill(iconColor.opacity(0.12))
                         .frame(width: 40, height: 40)
-                    Image(systemName: icon)
+                    CCIconMapper.image(for: icon)
                         .font(.system(size: 18))
                         .foregroundColor(iconColor)
                 }
@@ -233,7 +233,7 @@ struct CCProfileView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(Color.xuanTextTertiary)
             }
@@ -264,7 +264,7 @@ struct CCProfileView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(Color.xuanTextTertiary)
             }

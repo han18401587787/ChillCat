@@ -7,7 +7,7 @@ struct CCCourseDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: XuanSpacing.lg) {
                 RoundedRectangle(cornerRadius: XuanRadius.md).fill(Color(hex: "A085C6").opacity(0.3)).frame(height: 180).overlay(
-                    Image(systemName: "book.pages.fill").font(.system(size:48)).foregroundColor(Color.xuanApricotDark)
+                    Image("other_diary").font(.system(size:48)).foregroundColor(Color.xuanApricotDark)
                 )
                 VStack(alignment: .leading, spacing: XuanSpacing.sm) {
                     Text(course.title ?? "").font(.system(size:22,weight:.bold))

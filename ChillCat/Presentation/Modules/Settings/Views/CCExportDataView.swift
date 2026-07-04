@@ -64,7 +64,7 @@ struct CCExportDataView: View {
                 ForEach(ExportFormat.allCases, id: \.self) { format in
                     Button(action: { selectedFormat = format }) {
                         VStack(spacing: XuanSpacing.xs) {
-                            Image(systemName: formatIcon(format))
+                            CCIconMapper.image(for: formatIcon(format))
                                 .font(.system(size: 24))
                             Text(format.rawValue)
                                 .font(XuanFont.bodyS)

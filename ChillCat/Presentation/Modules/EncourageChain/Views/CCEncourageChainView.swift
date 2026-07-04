@@ -37,12 +37,12 @@ struct CCEncourageChainView: View {
 
                     NavigationLink(value: CCAppRoute.myEncourageChains) {
                         HStack(spacing: XuanSpacing.sm) {
-                            Image(systemName: "list.bullet.rectangle.portrait")
+                            Image("report_overview")
                                 .font(.system(size: 14))
                             Text("我的鼓励链")
                                 .font(XuanFont.bodyM)
                             Spacer()
-                            Image(systemName: "chevron.right")
+                            Image("common_more")
                                 .font(.system(size: 12))
                         }
                         .foregroundColor(Color.xuanApricotDark)
@@ -171,7 +171,7 @@ struct CCEncourageChainView: View {
             Rectangle()
                 .fill(Color.xuanApricot.opacity(0.3))
                 .frame(width: 2, height: 20)
-            Image(systemName: "arrowtriangle.down.fill")
+            Image("common_more")
                 .font(.system(size: 8))
                 .foregroundColor(Color.xuanApricot.opacity(0.4))
         }
@@ -212,7 +212,7 @@ struct CCEncourageChainView: View {
 
                 HStack {
                     Button(action: { showEmoji.toggle() }) {
-                        Image(systemName: "face.smiling")
+                        Image("emotion_happy")
                             .font(.system(size: 18))
                             .foregroundColor(Color.xuanApricot)
                             .frame(width: 40, height: 40)
@@ -231,7 +231,7 @@ struct CCEncourageChainView: View {
                             if viewModel.isRelaying {
                                 ProgressView().tint(.white).scaleEffect(0.8)
                             } else {
-                                Image(systemName: "paperplane.fill")
+                                Image("common_share")
                             }
                             Text("传递善意")
                         }

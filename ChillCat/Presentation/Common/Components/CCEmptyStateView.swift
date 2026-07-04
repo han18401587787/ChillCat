@@ -31,7 +31,7 @@ struct CCEmptyStateView: View {
 
     var body: some View {
         VStack(spacing: XuanSpacing.md) {
-            Image(systemName: imageName)
+            CCIconMapper.image(for: imageName)
                 .font(.system(size: 48))
                 .foregroundColor(Color.xuanTextTertiary)
 

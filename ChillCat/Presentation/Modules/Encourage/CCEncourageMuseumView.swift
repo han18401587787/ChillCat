@@ -164,7 +164,7 @@ struct MilestoneRow: View {
                     .fill(isCompleted ? color : color.opacity(0.15))
                     .frame(width: 40, height: 40)
                 
-                Image(systemName: isCompleted ? "checkmark" : icon)
+                CCIconMapper.image(for: isCompleted ? "checkmark" : icon)
                     .font(.system(size: 16))
                     .foregroundColor(isCompleted ? .white : color)
             }
@@ -210,7 +210,7 @@ struct BadgeCard: View {
                     )
                     .frame(width: 64, height: 64)
                 
-                Image(systemName: badge.icon)
+                CCIconMapper.image(for: badge.icon)
                     .font(.system(size: 28))
                     .foregroundColor(badge.isUnlocked ? badge.color : Color.xuanTextTertiary)
                     .opacity(badge.isUnlocked ? 1.0 : 0.4)
@@ -264,7 +264,7 @@ struct CompletedChainRow: View {
                         .foregroundColor(Color.xuanTextTertiary)
                     
                     HStack(spacing: 2) {
-                        Image(systemName: "star.fill")
+                        Image("emotion_hopeful")
                             .font(.system(size: 10))
                             .foregroundColor(Color.xuanApricotDark)
                         Text("已完成")

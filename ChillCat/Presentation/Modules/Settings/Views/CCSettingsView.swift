@@ -56,7 +56,7 @@ struct CCSettingsView: View {
                                 RoundedRectangle(cornerRadius: XuanRadius.sm)
                                     .fill(Color.xuanApricot.opacity(0.12))
                                     .frame(width: 36, height: 36)
-                                Image(systemName: themeManager.isDarkMode ? "moon.fill" : "sun.max.fill")
+                                CCIconMapper.image(for: themeManager.isDarkMode ? "moon.fill" : "sun.max.fill")
                                     .font(.system(size: 16))
                                     .foregroundColor(Color.xuanApricot)
                             }
@@ -201,7 +201,7 @@ struct CCSettingsView: View {
                     RoundedRectangle(cornerRadius: XuanRadius.sm)
                         .fill(color.opacity(0.12))
                         .frame(width: 36, height: 36)
-                    Image(systemName: icon)
+                    CCIconMapper.image(for: icon)
                         .font(.system(size: 16))
                         .foregroundColor(color)
                 }
@@ -215,7 +215,7 @@ struct CCSettingsView: View {
                 if let trailing = trailing {
                     trailing()
                 } else {
-                    Image(systemName: "chevron.right")
+                    Image("common_more")
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(Color.xuanTextTertiary)
                 }

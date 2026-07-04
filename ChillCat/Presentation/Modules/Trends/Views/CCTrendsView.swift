@@ -101,7 +101,7 @@ struct CCTrendsView: View {
 
     private var emptyChartPlaceholder: some View {
         VStack(spacing: 8) {
-            Image(systemName: "chart.bar.xaxis.ascending")
+            Image("report_trend")
                 .font(.system(size: 28))
                 .foregroundColor(Color.xuanTextSecondary.opacity(0.4))
             Text("暂无数据")
@@ -132,7 +132,7 @@ struct CCTrendsView: View {
 
     func growthRow(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: icon).font(.system(size: 20)).foregroundColor(Color.xuanApricotDark).frame(width: 40)
+            CCIconMapper.image(for: icon).font(.system(size: 20)).foregroundColor(Color.xuanApricotDark).frame(width: 40)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.system(size: 15, weight: .medium))
                 Text(subtitle).font(.system(size: 12)).foregroundColor(Color.xuanTextSecondary)

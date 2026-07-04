@@ -69,7 +69,7 @@ struct CCMeditationView: View {
                     RoundedRectangle(cornerRadius: XuanRadius.md)
                         .fill(Color(hex: session.category.themeColor).opacity(0.12))
                         .frame(width: 56, height: 56)
-                    Image(systemName: session.category.iconName)
+                    CCIconMapper.image(for: session.category.iconName)
                         .font(.system(size: 24))
                         .foregroundColor(Color(hex: session.category.themeColor))
                 }
@@ -100,7 +100,7 @@ struct CCMeditationView: View {
                     Circle()
                         .fill(Color(hex: session.category.themeColor).opacity(0.1))
                         .frame(width: 36, height: 36)
-                    Image(systemName: "play.fill")
+                    Image("healing_course")
                         .font(.system(size: 14))
                         .foregroundColor(Color(hex: session.category.themeColor))
                 }
@@ -154,7 +154,7 @@ struct CCMeditationView: View {
                     RoundedRectangle(cornerRadius: XuanRadius.md)
                         .fill(color.opacity(0.12))
                         .frame(width: 56, height: 56)
-                    Image(systemName: icon)
+                    CCIconMapper.image(for: icon)
                         .font(.system(size: 24))
                         .foregroundColor(color)
                 }
@@ -174,7 +174,7 @@ struct CCMeditationView: View {
                     Circle()
                         .fill(selectedAudio == type ? color : color.opacity(0.1))
                         .frame(width: 40, height: 40)
-                    Image(systemName: selectedAudio == type ? "pause.fill" : "play.fill")
+                    CCIconMapper.image(for: selectedAudio == type ? "pause.fill" : "play.fill")
                         .font(.system(size: 16))
                         .foregroundColor(selectedAudio == type ? .white : color)
                 }
@@ -250,7 +250,7 @@ struct CCMeditationView: View {
                     if !breathing { secondsElapsed = 0 }
                 }) {
                     HStack(spacing: XuanSpacing.sm) {
-                        Image(systemName: breathing ? "stop.fill" : "play.fill")
+                        CCIconMapper.image(for: breathing ? "stop.fill" : "play.fill")
                             .font(.system(size: 16))
                         Text(breathing ? "结束练习" : "开始练习")
                             .font(XuanFont.bodyLMedium)

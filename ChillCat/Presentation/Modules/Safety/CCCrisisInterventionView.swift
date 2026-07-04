@@ -101,7 +101,7 @@ struct CCCrisisInterventionView: View {
                 )
                 .frame(width: 160, height: 160)
 
-            Image(systemName: isEmergency ? "heart.circle.fill" : "heart.text.square.fill")
+            CCIconMapper.image(for: isEmergency ? "heart.circle.fill" : "heart.text.square.fill")
                 .font(.system(size: 48))
                 .foregroundColor(
                     isEmergency ? Color.xuanDanger : Color.xuanApricotDark
@@ -213,7 +213,7 @@ struct CCCrisisInterventionView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(Color.xuanTextTertiary)
             }
@@ -245,7 +245,7 @@ struct CCCrisisInterventionView: View {
                     .fill(Color.xuanSurface)
                     .frame(width: 44, height: 44)
 
-                Image(systemName: icon)
+                CCIconMapper.image(for: icon)
                     .font(.system(size: 18))
                     .foregroundColor(Color.xuanTextSecondary)
             }
@@ -302,7 +302,7 @@ struct CCCrisisInterventionView: View {
                     .fill(Color.xuanMint.opacity(0.12))
                     .frame(width: 44, height: 44)
 
-                Image(systemName: "shield.checkered")
+                Image("alert_guardian")
                     .font(.system(size: 20))
                     .foregroundColor(Color.xuanMint)
             }
@@ -318,7 +318,7 @@ struct CCCrisisInterventionView: View {
 
             Spacer()
 
-            Image(systemName: "chevron.right")
+            Image("common_more")
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(Color.xuanTextTertiary)
         }
@@ -363,7 +363,7 @@ struct HealingExerciseCard: View {
                         .fill(color.opacity(0.12))
                         .frame(width: 44, height: 44)
 
-                    Image(systemName: icon)
+                    CCIconMapper.image(for: icon)
                         .font(.system(size: 20))
                         .foregroundColor(color)
                 }
@@ -379,7 +379,7 @@ struct HealingExerciseCard: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(Color.xuanTextTertiary)
             }

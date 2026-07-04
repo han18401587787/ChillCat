@@ -97,7 +97,7 @@ struct CCCBTView: View {
                                              ? Color.xuanApricot : Color.xuanBorder))
                     .frame(width: 28, height: 28)
                 if step.rawValue < viewModel.currentStep.rawValue {
-                    Image(systemName: "checkmark")
+                    Image("home_checkin")
                         .font(.system(size: 12, weight: .bold))
                         .foregroundColor(.white)
                 } else {
@@ -214,7 +214,7 @@ struct CCCBTView: View {
                                     Button {
                                         viewModel.toggleDistortion(id)
                                     } label: {
-                                        Image(systemName: "xmark.circle.fill")
+                                        Image("common_close")
                                             .font(.system(size: 12))
                                             .foregroundColor(Color(hex: "A085C6").opacity(0.5).opacity(0.6))
                                     }
@@ -386,7 +386,7 @@ struct CCCBTView: View {
 
                 HStack(spacing: XuanSpacing.xl) {
                     emotionStat(label: "重构前", value: Int(viewModel.emotionBefore), color: Color(hex: "A085C6").opacity(0.5))
-                    Image(systemName: "arrow.right")
+                    Image("common_more")
                         .font(.system(size: 20))
                         .foregroundColor(Color.xuanTextSecondary)
                     emotionStat(label: "重构后", value: Int(viewModel.emotionAfter), color: Color.xuanSuccess)
@@ -476,7 +476,7 @@ struct CCCBTView: View {
                     viewModel.goToPreviousStep()
                 } label: {
                     HStack {
-                        Image(systemName: "chevron.left")
+                        Image("common_back")
                         Text("上一步")
                     }
                     .font(XuanFont.bodyLMedium)
@@ -493,7 +493,7 @@ struct CCCBTView: View {
             } label: {
                 HStack {
                     Text(viewModel.currentStep == .reframeThought ? "完成练习" : "下一步")
-                    Image(systemName: viewModel.currentStep == .reframeThought ? "checkmark" : "chevron.right")
+                    CCIconMapper.image(for: viewModel.currentStep == .reframeThought ? "checkmark" : "chevron.right")
                 }
                 .font(XuanFont.bodyLMedium)
                 .foregroundColor(.white)

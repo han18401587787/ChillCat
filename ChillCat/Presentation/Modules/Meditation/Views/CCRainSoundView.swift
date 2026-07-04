@@ -100,7 +100,7 @@ struct CCRainSoundView: View {
             Button(action: {
                 dismiss()
             }) {
-                Image(systemName: "xmark.circle.fill")
+                Image("common_close")
                     .font(.system(size: 28))
                     .foregroundColor(Color.xuanTextTertiary)
             }
@@ -161,7 +161,7 @@ struct CCRainSoundView: View {
 
             // 中心图标
             VStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "cloud.rain.fill")
+                Image("emotion_sad")
                     .font(.system(size: 48))
                     .foregroundColor(Color.xuanInfo.opacity(0.7))
 
@@ -205,7 +205,7 @@ struct CCRainSoundView: View {
                 currentTime = max(0, currentTime - 15)
             }) {
                 VStack(spacing: XuanSpacing.xs) {
-                    Image(systemName: "gobackward.15")
+                    Image("common_refresh")
                         .font(.system(size: 22))
                     Text("15s")
                         .font(XuanFont.caption)
@@ -224,7 +224,7 @@ struct CCRainSoundView: View {
                         .fill(Color.xuanInfo.opacity(0.12))
                         .frame(width: 80, height: 80)
 
-                    Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                    CCIconMapper.image(for: isPlaying ? "pause.fill" : "play.fill")
                         .font(.system(size: 34))
                         .foregroundColor(Color.xuanInfo)
                         .offset(x: isPlaying ? 0 : 2)
@@ -238,7 +238,7 @@ struct CCRainSoundView: View {
                 currentTime = min(totalDuration, currentTime + 15)
             }) {
                 VStack(spacing: XuanSpacing.xs) {
-                    Image(systemName: "goforward.15")
+                    Image("common_refresh")
                         .font(.system(size: 22))
                     Text("15s")
                         .font(XuanFont.caption)

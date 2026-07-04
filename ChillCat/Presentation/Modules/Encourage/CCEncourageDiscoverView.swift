@@ -260,7 +260,7 @@ struct RecommendedChainRow: View {
                 
                 Spacer()
                 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 14))
                     .foregroundColor(Color.xuanTextTertiary)
             }

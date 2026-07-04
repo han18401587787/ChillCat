@@ -106,7 +106,7 @@ struct VoiceRecorderView: View {
 
         case .cancelled:
             VStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "xmark.circle.fill")
+                Image("common_close")
                     .font(.system(size: 32))
                     .foregroundColor(Color.xuanTextTertiary)
 
@@ -123,7 +123,7 @@ struct VoiceRecorderView: View {
     // MARK: - Unauthorized View
     private var unauthorizedView: some View {
         VStack(spacing: XuanSpacing.lg) {
-            Image(systemName: "mic.slash.fill")
+            Image("ai_listen")
                 .font(.system(size: 40))
                 .foregroundColor(Color.xuanTextTertiary)
 
@@ -183,7 +183,7 @@ struct VoiceRecorderView: View {
                 .fill(recordButtonColor)
                 .frame(width: 80, height: 80)
                 .overlay {
-                    Image(systemName: recordButtonIcon)
+                    CCIconMapper.image(for: recordButtonIcon)
                         .font(.system(size: 28))
                         .foregroundColor(.white)
                 }

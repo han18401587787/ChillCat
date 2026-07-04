@@ -71,7 +71,7 @@ struct EncouragePassView: View {
                 .multilineTextAlignment(.center)
             
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "person.3.fill")
+                Image("resonance_people")
                     .font(.system(size: 14))
                     .foregroundColor(Color.xuanTextTertiary)
                 
@@ -202,7 +202,7 @@ struct EncouragePassView: View {
                         .tint(.white)
                 }
                 
-                Image(systemName: "paperplane.fill")
+                Image("common_share")
                 Text(isSending ? "发送中..." : "传递鼓励")
             }
         }

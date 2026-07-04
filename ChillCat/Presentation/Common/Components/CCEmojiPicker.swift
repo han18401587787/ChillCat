@@ -100,7 +100,7 @@ struct CCEmojiPicker: View {
                         searchText = ""
                     }
                 }) {
-                    Image(systemName: "xmark.circle.fill")
+                    Image("common_close")
                         .font(.system(size: 14))
                         .foregroundColor(Color.xuanTextTertiary)
                 }
@@ -137,7 +137,7 @@ struct CCEmojiPicker: View {
             }
         }) {
             VStack(spacing: 3) {
-                Image(systemName: type.iconName)
+                CCIconMapper.image(for: type.iconName)
                     .font(.system(size: 14))
                     .foregroundColor(isSelected ? type.color : Color.xuanTextTertiary)
                 Text(type.displayName)

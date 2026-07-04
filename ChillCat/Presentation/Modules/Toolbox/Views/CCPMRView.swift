@@ -154,7 +154,7 @@ struct CCPMRView: View {
                 // Center text
                 VStack(spacing: 4) {
                     if viewModel.phase == .idle {
-                        Image(systemName: "figure.mind.and.body")
+                        Image("healing_breath")
                             .font(.system(size: 36))
                             .foregroundColor(Color.xuanApricot.opacity(0.6))
                         Text("准备")
@@ -182,7 +182,7 @@ struct CCPMRView: View {
         VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             if let group = viewModel.currentMuscleGroup, viewModel.phase != .idle {
                 HStack {
-                    Image(systemName: group.icon)
+                    CCIconMapper.image(for: group.icon)
                         .font(.system(size: 24))
                         .foregroundColor(Color.xuanApricot)
                     Text(group.name)
@@ -255,7 +255,7 @@ struct CCPMRView: View {
                     .frame(width: 8, height: 8)
             }
 
-            Image(systemName: group.icon)
+            CCIconMapper.image(for: group.icon)
                 .font(.system(size: 11))
                 .foregroundColor(isActive ? Color.xuanApricot : (isDone ? Color.xuanMint : Color.xuanTextSecondary))
 
@@ -277,7 +277,7 @@ struct CCPMRView: View {
                     viewModel.start()
                 } label: {
                     HStack {
-                        Image(systemName: "play.fill")
+                        Image("healing_course")
                         Text("开始练习")
                     }
                     .font(XuanFont.bodyLMedium)
@@ -294,7 +294,7 @@ struct CCPMRView: View {
                     viewModel.togglePause()
                 } label: {
                     HStack {
-                        Image(systemName: viewModel.isPaused ? "play.fill" : "pause.fill")
+                        CCIconMapper.image(for: viewModel.isPaused ? "play.fill" : "pause.fill")
                         Text(viewModel.isPaused ? "继续" : "暂停")
                     }
                     .font(XuanFont.bodyLMedium)
@@ -310,7 +310,7 @@ struct CCPMRView: View {
                     viewModel.reset()
                 } label: {
                     HStack {
-                        Image(systemName: "arrow.counterclockwise")
+                        Image("common_refresh")
                         Text("重新开始")
                     }
                     .font(XuanFont.bodyLMedium)
@@ -333,7 +333,7 @@ struct CCPMRView: View {
                 Circle()
                     .fill(Color.xuanMint.opacity(0.3))
                     .frame(width: 100, height: 100)
-                Image(systemName: "figure.mind.and.body")
+                Image("healing_breath")
                     .font(.system(size: 44))
                     .foregroundColor(Color.xuanMint)
             }
@@ -398,7 +398,7 @@ struct CCPMRView: View {
                             Image("home_checkin")
                                 .foregroundColor(Color.xuanMint)
                                 .font(.system(size: 12))
-                            Image(systemName: group.icon)
+                            CCIconMapper.image(for: group.icon)
                                 .font(.system(size: 11))
                                 .foregroundColor(Color.xuanMint)
                             Text(group.name)

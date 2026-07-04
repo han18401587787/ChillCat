@@ -166,7 +166,7 @@ struct CCAIListenerCard: View {
                 Button {
                     showEmojiPicker = true
                 } label: {
-                    Image(systemName: "face.smiling")
+                    Image("emotion_happy")
                         .font(.system(size: 18))
                         .foregroundColor(Color.xuanTextSecondary)
                         .frame(width: 44, height: 44)
@@ -178,7 +178,7 @@ struct CCAIListenerCard: View {
                 // 安全计划入口（危机模式可见）
                 if viewModel.crisisDetected && viewModel.riskLevel >= .medium {
                     NavigationLink(value: CCAppRoute.safetyPlan) {
-                        Image(systemName: "heart.circle.fill")
+                        Image("resonance_like")
                             .font(.system(size: 20))
                             .foregroundColor(Color.xuanDanger)
                             .frame(width: 44, height: 44)
@@ -313,7 +313,7 @@ struct CCAIListenerCard: View {
             viewModel.submitFeedback(for: message, isHelpful: isHelpful)
         } label: {
             HStack(spacing: 4) {
-                Image(systemName: icon)
+                CCIconMapper.image(for: icon)
                     .font(.system(size: 12))
                 Text(label)
                     .font(.system(size: 13))
@@ -344,7 +344,7 @@ struct CCAIListenerCard: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 12, weight: .medium))
                     .foregroundColor(Color.xuanDanger.opacity(0.6))
             }
@@ -411,7 +411,7 @@ struct CCAIListenerCard: View {
 
     private func hotlineRow(title: String, number: String, subtitle: String) -> some View {
         HStack(spacing: XuanSpacing.md) {
-            Image(systemName: "phone.circle.fill")
+            Image("alert_call")
                 .font(.system(size: 28))
                 .foregroundColor(Color.xuanDanger)
 
@@ -436,7 +436,7 @@ struct CCAIListenerCard: View {
                     UIApplication.shared.open(url)
                 }
             } label: {
-                Image(systemName: "phone.arrow.up.right")
+                Image("alert_call")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(Color.xuanDanger)
                     .frame(width: 44, height: 44)

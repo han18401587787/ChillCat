@@ -194,7 +194,7 @@ struct CCBehavioralActivationView: View {
         VStack(spacing: XuanSpacing.xl) {
             if viewModel.completedActivities.isEmpty {
                 VStack(spacing: XuanSpacing.lg) {
-                    Image(systemName: "chart.bar.xaxis")
+                    Image("report_trend")
                         .font(.system(size: 48))
                         .foregroundColor(Color.xuanTextSecondary)
                     Text("完成一些活动后，这里会显示心情对比数据")
@@ -255,7 +255,7 @@ struct CCBehavioralActivationView: View {
 
                     ForEach(viewModel.completedActivities) { activity in
                         HStack(spacing: XuanSpacing.md) {
-                            Image(systemName: activity.type.icon)
+                            CCIconMapper.image(for: activity.type.icon)
                                 .foregroundColor(activity.type.color)
                                 .frame(width: 24)
 
@@ -300,13 +300,13 @@ struct CCBehavioralActivationView: View {
                 CCHaptic.medium()
                 viewModel.toggleCompletion(activity)
             } label: {
-                Image(systemName: activity.isCompleted ? "checkmark.circle.fill" : "circle")
+                CCIconMapper.image(for: activity.isCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
                     .foregroundColor(activity.isCompleted ? Color.xuanMint : Color.xuanTextSecondary)
             }
 
             // Type icon
-            Image(systemName: activity.type.icon)
+            CCIconMapper.image(for: activity.type.icon)
                 .foregroundColor(activity.type.color)
                 .font(.system(size: 14))
                 .frame(width: 20)
@@ -349,7 +349,7 @@ struct CCBehavioralActivationView: View {
             Button {
                 viewModel.deleteActivity(activity)
             } label: {
-                Image(systemName: "trash")
+                Image("common_delete")
                     .font(.system(size: 12))
                     .foregroundColor(Color.xuanTextSecondary)
             }
@@ -364,7 +364,7 @@ struct CCBehavioralActivationView: View {
 
     private var emptyState: some View {
         VStack(spacing: XuanSpacing.lg) {
-            Image(systemName: "sun.max.fill")
+            Image("emotion_happy")
                 .font(.system(size: 56))
                 .foregroundColor(Color.xuanApricotDark.opacity(0.6))
                 .padding(.top, XuanSpacing.xl)
@@ -446,7 +446,7 @@ struct CCBehavioralActivationView: View {
                                 viewModel.newActivityType = type
                             } label: {
                                 HStack(spacing: 4) {
-                                    Image(systemName: type.icon)
+                                    CCIconMapper.image(for: type.icon)
                                         .font(.system(size: 11))
                                     Text(type.rawValue)
                                         .font(XuanFont.bodyM)

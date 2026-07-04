@@ -57,7 +57,7 @@ struct CCEmotionCorrectionView: View {
     // MARK: - Header
     private var headerSection: some View {
         VStack(spacing: XuanSpacing.md) {
-            Image(systemName: "pencil.circle.fill")
+            Image("common_edit")
                 .font(.system(size: 40))
                 .foregroundColor(Color.xuanApricot)
             
@@ -120,7 +120,7 @@ struct CCEmotionCorrectionView: View {
                         }
                     } label: {
                         HStack(spacing: XuanSpacing.sm) {
-                            Image(systemName: emotion.sfSymbol)
+                            CCIconMapper.image(for: emotion.sfSymbol)
                                 .font(.system(size: 16))
                                 .foregroundColor(
                                     viewModel.selectedEmotion == emotion.chinese
@@ -220,7 +220,7 @@ struct CCEmotionCorrectionView: View {
     // MARK: - Adjustment Notice
     private var adjustmentNotice: some View {
         HStack(spacing: XuanSpacing.md) {
-            Image(systemName: "gearshape.2.fill")
+            Image("common_settings")
                 .font(.system(size: 20))
                 .foregroundColor(Color.xuanApricot)
             

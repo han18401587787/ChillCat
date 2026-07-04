@@ -74,7 +74,7 @@ struct CCEmotionProfileView: View {
                 Circle()
                     .fill(color.opacity(0.12))
                     .frame(width: 48, height: 48)
-                Image(systemName: icon)
+                CCIconMapper.image(for: icon)
                     .font(.system(size: 20))
                     .foregroundColor(color)
             }
@@ -260,7 +260,7 @@ struct CCEmotionProfileView: View {
                 Circle()
                     .fill(unlocked ? color.opacity(0.12) : Color.xuanSurface)
                     .frame(width: 56, height: 56)
-                Image(systemName: icon)
+                CCIconMapper.image(for: icon)
                     .font(.system(size: 24))
                     .foregroundColor(unlocked ? color : Color.xuanTextTertiary)
             }

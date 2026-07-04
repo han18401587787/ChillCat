@@ -39,7 +39,7 @@ struct CCProfessionalResourceView: View {
 
     private var headerSection: some View {
         VStack(spacing: XuanSpacing.sm) {
-            Image(systemName: "heart.text.square.fill")
+            Image("healing_bookmark")
                 .font(.system(size: 36))
                 .foregroundColor(Color.xuanApricotDark)
 
@@ -148,7 +148,7 @@ struct CCProfessionalResourceView: View {
 
     private func platformRow(name: String, description: String, icon: String) -> some View {
         HStack(spacing: XuanSpacing.md) {
-            Image(systemName: icon)
+            CCIconMapper.image(for: icon)
                 .font(.system(size: 20))
                 .foregroundColor(Color(hex: "A085C6"))
                 .frame(width: 40, height: 40)
@@ -167,7 +167,7 @@ struct CCProfessionalResourceView: View {
 
             Spacer()
 
-            Image(systemName: "arrow.up.forward.app.fill")
+            Image("common_share")
                 .font(.system(size: 14))
                 .foregroundColor(Color.xuanTextSecondary)
         }
@@ -181,7 +181,7 @@ struct CCProfessionalResourceView: View {
     private var safetyPlanCard: some View {
         NavigationLink(value: CCAppRoute.safetyPlan) {
             HStack(spacing: XuanSpacing.md) {
-                Image(systemName: "shield.checkered")
+                Image("alert_guardian")
                     .font(.system(size: 24))
                     .foregroundColor(Color.xuanApricot)
                     .frame(width: 48, height: 48)
@@ -201,7 +201,7 @@ struct CCProfessionalResourceView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(Color.xuanTextSecondary)
             }
@@ -215,7 +215,7 @@ struct CCProfessionalResourceView: View {
 
     private var disclaimerSection: some View {
         VStack(spacing: XuanSpacing.sm) {
-            Image(systemName: "exclamationmark.shield.fill")
+            Image("alert_guardian")
                 .font(.system(size: 20))
                 .foregroundColor(Color.orange)
 
@@ -240,7 +240,7 @@ struct CCProfessionalResourceView: View {
 
     private func sectionHeader(icon: String, title: String, color: Color) -> some View {
         HStack(spacing: XuanSpacing.sm) {
-            Image(systemName: icon)
+            CCIconMapper.image(for: icon)
                 .font(.system(size: 16))
                 .foregroundColor(color)
             Text(title)

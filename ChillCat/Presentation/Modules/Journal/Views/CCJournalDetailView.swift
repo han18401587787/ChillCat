@@ -7,7 +7,7 @@ struct CCJournalDetailView: View {
             VStack(spacing: XuanSpacing.lg) {
                 VStack(spacing: XuanSpacing.sm) {
                     let emotionName = entry.emotion ?? ""
-                    Image(systemName: CCEmotion.allCases.first(where:{$0.rawValue==emotionName})?.iconName ?? "circle.fill")
+                    CCIconMapper.image(for: CCEmotion.allCases.first(where:{$0.rawValue==emotionName})?.iconName ?? "circle.fill")
                         .font(.system(size:64)).foregroundColor(emotionColor(emotionName))
                         .frame(width:100,height:100).background(emotionColor(emotionName).opacity(0.1)).cornerRadius(XuanRadius.xl)
                     Text(emotionName).font(.system(size:24,weight:.bold))

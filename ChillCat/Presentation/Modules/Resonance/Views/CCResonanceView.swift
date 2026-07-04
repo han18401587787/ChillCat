@@ -248,7 +248,7 @@ struct CCResonanceView: View {
                     viewModel.hugResonance(item, message: "💚")
                 }) {
                     HStack(spacing: 4) {
-                        Image(systemName: "arrowshape.turn.up.forward.fill")
+                        Image("common_share")
                             .font(.system(size: 12))
                         Text("传递")
                             .font(XuanFont.caption)
@@ -312,7 +312,7 @@ struct CCResonanceView: View {
                 }) {
                     HStack {
                         Spacer()
-                        Image(systemName: "paperplane.fill")
+                        Image("common_share")
                             .font(.system(size: 14))
                         Text("发送倾诉")
                             .font(XuanFont.bodyLMedium)

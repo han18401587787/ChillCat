@@ -324,7 +324,7 @@ struct CCStablePlanView: View {
             Spacer()
 
             // 状态图标
-            Image(systemName: task.status.icon)
+            CCIconMapper.image(for: task.status.icon)
                 .font(.system(size: 22))
                 .foregroundColor(task.status.color)
         }
@@ -343,7 +343,7 @@ struct CCStablePlanView: View {
             coordinator.navigate(to: .healing)
         }) {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "doc.text.magnifyingglass")
+                Image("common_search")
                     .font(.system(size: 16))
                 Text("查看完整计划")
                     .font(XuanFont.bodyLBold)

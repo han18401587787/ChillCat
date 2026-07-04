@@ -116,7 +116,7 @@ struct CCEmotionDecodeView: View {
     // MARK: - Confidence Badge
     private var confidenceBadge: some View {
         HStack(spacing: XuanSpacing.md) {
-            Image(systemName: viewModel.confidence >= 60 ? "checkmark.shield.fill" : "exclamationmark.shield.fill")
+            CCIconMapper.image(for: viewModel.confidence >= 60 ? "checkmark.shield.fill" : "exclamationmark.shield.fill")
                 .font(.system(size: 18))
                 .foregroundColor(viewModel.confidence >= 60 ? Color.xuanSuccess : Color.xuanWarning)
             
@@ -332,10 +332,10 @@ struct CCEmotionDecodeView: View {
             showCorrection = true
         } label: {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "pencil.circle")
+                Image("common_edit")
                 Text("这个解读不准，我要纠错")
                 Spacer()
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 14))
             }
             .font(XuanFont.bodyL)
@@ -405,7 +405,7 @@ struct CCEmotionDecodeView: View {
                 
                 Spacer()
                 
-                Image(systemName: "arrow.right.circle.fill")
+                Image("common_more")
                     .font(.system(size: 28))
                     .foregroundColor(Color.xuanInfo)
             }
@@ -530,7 +530,7 @@ struct DimensionTab: View {
     var body: some View {
         Button(action: action) {
             VStack(spacing: XuanSpacing.xs) {
-                Image(systemName: dimension.icon)
+                CCIconMapper.image(for: dimension.icon)
                     .font(.system(size: 18))
                     .foregroundColor(isSelected ? dimension.color : Color.xuanTextTertiary)
                 
@@ -720,7 +720,7 @@ struct DecodeCard: View {
     
     var body: some View {
         HStack(spacing: XuanSpacing.md) {
-            Image(systemName: icon)
+            CCIconMapper.image(for: icon)
                 .font(.system(size: 20))
                 .foregroundColor(color)
                 .frame(width: 32)

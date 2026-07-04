@@ -38,7 +38,7 @@ struct CCEmotionGridView: View {
                             height: UIScreen.main.bounds.width < 375 ? 48 : 56
                         )
                     
-                    Image(systemName: emotion.sfSymbol)
+                    CCIconMapper.image(for: emotion.sfSymbol)
                         .font(.system(size: UIScreen.main.bounds.width < 375 ? 20 : 24))
                         .foregroundColor(
                             selectedEmotion == emotion.chinese
@@ -81,7 +81,7 @@ struct EmotionTagView: View {
     
     var body: some View {
         HStack(spacing: 4) {
-            Image(systemName: icon)
+            CCIconMapper.image(for: icon)
                 .font(.system(size: 12))
             Text(emotion)
                 .font(XuanFont.caption)

@@ -112,7 +112,7 @@ struct AIChatView: View {
             Button {
                 viewModel.showOptions()
             } label: {
-                Image(systemName: "ellipsis.circle")
+                Image("common_more")
                     .font(.system(size: 22))
                     .foregroundColor(Color.xuanTextSecondary)
             }
@@ -218,7 +218,7 @@ struct AIChatView: View {
                         viewModel.sendQuickTopic(topic)
                     } label: {
                         HStack(spacing: 6) {
-                            Image(systemName: topicIcon(for: topic))
+                            CCIconMapper.image(for: topicIcon(for: topic))
                                 .font(.system(size: 13))
                             Text(topic)
                                 .font(XuanFont.bodyS)
@@ -252,7 +252,7 @@ struct AIChatView: View {
     // MARK: - Context Warning Banner
     private var contextWarningBanner: some View {
         HStack(spacing: XuanSpacing.md) {
-            Image(systemName: "exclamationmark.bubble.fill")
+            Image("alert_warn")
                 .font(.system(size: 20))
                 .foregroundColor(Color.xuanApricotDark)
 
@@ -308,7 +308,7 @@ struct AIChatView: View {
                     )
                     .frame(width: 160, height: 160)
 
-                Image(systemName: "heart.text.square.fill")
+                Image("healing_bookmark")
                     .font(.system(size: 48))
                     .foregroundColor(Color.xuanDanger)
             }
@@ -354,7 +354,7 @@ struct AIChatView: View {
                 showSafetyProtocol = false
             } label: {
                 HStack {
-                    Image(systemName: "bubble.left.and.bubble.right")
+                    Image("treehole_write")
                     Text("返回对话")
                 }
                 .font(XuanFont.bodyLBold)
@@ -457,7 +457,7 @@ struct AIChatView: View {
                     viewModel.sendMessage()
                     isInputFocused = false
                 } label: {
-                    Image(systemName: "arrow.up.circle.fill")
+                    Image("common_share")
                         .font(.system(size: 34))
                         .foregroundColor(
                             viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty

@@ -50,7 +50,7 @@ struct CCEmotionTagView: View {
     var body: some View {
         HStack(spacing: 3) {
             if showIcon {
-                Image(systemName: icon)
+                CCIconMapper.image(for: icon)
                     .font(.system(size: size.iconSize))
             }
             Text(emotion)

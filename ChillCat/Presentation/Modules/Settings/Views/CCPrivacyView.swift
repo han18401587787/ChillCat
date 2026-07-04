@@ -59,7 +59,7 @@ struct CCPrivacyView: View {
                 RoundedRectangle(cornerRadius: XuanRadius.md)
                     .fill(color.opacity(0.12))
                     .frame(width: 48, height: 48)
-                Image(systemName: icon)
+                CCIconMapper.image(for: icon)
                     .font(.system(size: 22))
                     .foregroundColor(color)
             }

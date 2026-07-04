@@ -85,7 +85,7 @@ struct CCResonanceDetailView: View {
                     isFocused = true
                 }) {
                     HStack(spacing: 6) {
-                        Image(systemName: "hand.wave.fill")
+                        Image("resonance_like")
                             .font(.system(size: 18))
                             .foregroundColor(Color.xuanApricotDark)
                         Text("鼓励")
@@ -111,13 +111,13 @@ struct CCResonanceDetailView: View {
                         .lineLimit(1)
 
                     Button(action: { showEmoji.toggle() }) {
-                        Image(systemName: "face.smiling")
+                        Image("emotion_happy")
                             .font(.system(size: 18))
                             .foregroundColor(Color.xuanTextSecondary)
                     }
 
                     Button(action: { sendReply() }) {
-                        Image(systemName: "paperplane.fill")
+                        Image("common_share")
                             .font(.system(size: 16))
                             .foregroundColor(.white)
                             .padding(8)
@@ -219,7 +219,7 @@ struct CCResonanceDetailView: View {
                     .fill(Color.xuanApricot.opacity(0.15))
                     .frame(width: 36, height: 36)
 
-                Image(systemName: "person.circle.fill")
+                Image("profile_user")
                     .font(.system(size: 20))
                     .foregroundColor(Color.xuanApricot.opacity(0.6))
             }
@@ -262,13 +262,13 @@ struct CCResonanceDetailView: View {
                     .lineLimit(1...3)
 
                 Button(action: { showEmoji.toggle() }) {
-                    Image(systemName: "face.smiling")
+                    Image("emotion_happy")
                         .font(.system(size: 20))
                         .foregroundColor(Color.xuanApricot)
                 }
 
                 Button(action: { sendReply() }) {
-                    Image(systemName: "paperplane.fill")
+                    Image("common_share")
                         .font(.system(size: 16))
                         .foregroundColor(.white)
                         .padding(12)

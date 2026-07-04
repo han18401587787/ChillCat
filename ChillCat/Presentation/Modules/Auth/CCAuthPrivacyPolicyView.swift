@@ -225,7 +225,7 @@ struct PrivacyConsentView: View {
             Spacer()
             
             // Logo
-            Image(systemName: "cat.fill")
+            Image("home_ai")
                 .font(.system(size: 60))
                 .foregroundColor(Color.xuanApricot)
             
@@ -246,7 +246,7 @@ struct PrivacyConsentView: View {
                     Button {
                         isAgreed.toggle()
                     } label: {
-                        Image(systemName: isAgreed ? "checkmark.circle.fill" : "circle")
+                        CCIconMapper.image(for: isAgreed ? "checkmark.circle.fill" : "circle")
                             .font(.system(size: 22))
                             .foregroundColor(isAgreed ? Color.xuanApricot : Color.xuanTextTertiary)
                     }
@@ -368,7 +368,7 @@ private struct ContactRow: View {
     
     var body: some View {
         HStack(spacing: 8) {
-            Image(systemName: icon)
+            CCIconMapper.image(for: icon)
                 .foregroundColor(Color.xuanApricot)
                 .frame(width: 20)
             Text(text)

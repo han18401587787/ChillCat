@@ -193,7 +193,7 @@ struct StepIntroView: View {
             } label: {
                 HStack {
                     Text("开始练习")
-                    Image(systemName: "arrow.right")
+                    Image("common_more")
                 }
             }
             .buttonStyle(ComponentStyles.PrimaryButtonStyle())
@@ -214,7 +214,7 @@ struct StepInfoRow: View {
     
     var body: some View {
         HStack(spacing: XuanSpacing.md) {
-            Image(systemName: icon)
+            CCIconMapper.image(for: icon)
                 .font(.system(size: 24))
                 .foregroundColor(color)
             
@@ -319,7 +319,7 @@ struct StepBreathingView: View {
                     } label: {
                         HStack {
                             Text("继续下一步")
-                            Image(systemName: "arrow.right")
+                            Image("common_more")
                         }
                     }
                     .buttonStyle(ComponentStyles.PrimaryButtonStyle())
@@ -328,7 +328,7 @@ struct StepBreathingView: View {
                         viewModel.resetBreathing()
                     } label: {
                         HStack {
-                            Image(systemName: "arrow.counterclockwise")
+                            Image("common_refresh")
                             Text("重新开始")
                         }
                     }
@@ -338,7 +338,7 @@ struct StepBreathingView: View {
                         viewModel.startBreathing()
                     } label: {
                         HStack {
-                            Image(systemName: "play.fill")
+                            Image("healing_course")
                             Text("开始呼吸练习")
                         }
                     }
@@ -378,7 +378,7 @@ struct StepWhiteNoiseView: View {
                     )
                     .frame(width: 180, height: 180)
                 
-                Image(systemName: viewModel.selectedWhiteNoise.sfSymbol)
+                CCIconMapper.image(for: viewModel.selectedWhiteNoise.sfSymbol)
                     .font(.system(size: 48))
                     .foregroundColor(viewModel.selectedWhiteNoise.color)
                     .scaleEffect(viewModel.isWhiteNoisePlaying ? 1.1 : 1.0)
@@ -430,7 +430,7 @@ struct StepWhiteNoiseView: View {
                                     )
                                     .frame(width: 64, height: 64)
                                 
-                                Image(systemName: option.sfSymbol)
+                                CCIconMapper.image(for: option.sfSymbol)
                                     .font(.system(size: 24))
                                     .foregroundColor(
                                         viewModel.selectedWhiteNoise == option
@@ -463,7 +463,7 @@ struct StepWhiteNoiseView: View {
             } label: {
                 HStack {
                     Text("完成放松")
-                    Image(systemName: "arrow.right")
+                    Image("common_more")
                 }
             }
             .buttonStyle(ComponentStyles.PrimaryButtonStyle())
@@ -534,7 +534,7 @@ struct StepRatingView: View {
                                 }
                             } label: {
                                 VStack(spacing: XuanSpacing.xs) {
-                                    Image(systemName: rating <= viewModel.selectedRating ? "star.fill" : "star")
+                                    CCIconMapper.image(for: rating <= viewModel.selectedRating ? "star.fill" : "star")
                                         .font(.system(size: 36))
                                         .foregroundColor(
                                             rating <= viewModel.selectedRating
@@ -562,7 +562,7 @@ struct StepRatingView: View {
                 
                 // 免责声明
                 VStack(spacing: XuanSpacing.sm) {
-                    Image(systemName: "info.circle")
+                    Image("profile_about")
                         .font(.system(size: 16))
                         .foregroundColor(Color.xuanTextTertiary)
                     
@@ -584,7 +584,7 @@ struct StepRatingView: View {
                 } label: {
                     HStack {
                         Text("完成")
-                        Image(systemName: "checkmark")
+                        Image("home_checkin")
                     }
                 }
                 .buttonStyle(ComponentStyles.PrimaryButtonStyle())

@@ -30,7 +30,7 @@ struct CCCoursesView: View {
     private var emptyState: some View {
         VStack(spacing: XuanSpacing.md) {
             Spacer().frame(height: 80)
-            Image(systemName: "book.pages")
+            Image("other_diary")
                 .font(.system(size: 48))
                 .foregroundColor(Color.xuanTextTertiary)
             Text("暂无课程")
@@ -42,7 +42,7 @@ struct CCCoursesView: View {
 
     func categorySection(title: String, icon: String, color: Color, courses: [CCXuanAPI.CourseItem]) -> some View {
         VStack(alignment: .leading, spacing: XuanSpacing.sm) {
-            HStack { Image(systemName: icon).foregroundColor(color); Text(title).font(.system(size: 18, weight: .semibold)) }
+            HStack { CCIconMapper.image(for: icon).foregroundColor(color); Text(title).font(.system(size: 18, weight: .semibold)) }
             ForEach(courses) { course in
                 NavigationLink(value: CCAppRoute.courseDetail(course)) {
                     HStack(spacing: 12) {
@@ -56,7 +56,7 @@ struct CCCoursesView: View {
                             }
                         }
                         Spacer()
-                        Image(systemName: "chevron.right").font(.system(size: 14)).foregroundColor(Color.xuanTextTertiary)
+                        Image("common_more").font(.system(size: 14)).foregroundColor(Color.xuanTextTertiary)
                     }.padding().background(Color.xuanWhite).cornerRadius(XuanRadius.md)
                 }
             }

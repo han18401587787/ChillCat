@@ -39,7 +39,7 @@ struct CCThankYouLetterView: View {
                 Circle()
                     .fill(Color.xuanPink.opacity(0.1))
                     .frame(width: 120, height: 120)
-                Image(systemName: "envelope.open.fill")
+                Image("other_mail")
                     .font(.system(size: 48))
                     .foregroundColor(Color.xuanPink.opacity(0.4))
             }
@@ -99,7 +99,7 @@ struct CCThankYouLetterView: View {
                     Circle()
                         .fill(Color.xuanPink.opacity(0.12))
                         .frame(width: 36, height: 36)
-                    Image(systemName: "person.circle.fill")
+                    Image("profile_user")
                         .font(.system(size: 20))
                         .foregroundColor(Color.xuanPink.opacity(0.6))
                 }

@@ -31,7 +31,7 @@ struct CCDeleteAccountView: View {
         VStack(spacing: XuanSpacing.lg) {
             Spacer()
 
-            Image(systemName: "heart.circle.fill")
+            Image("resonance_like")
                 .font(.system(size: 64)).foregroundColor(Color.xuanPink)
 
             Text("绪安 会想念你的。").font(.system(size: 22, weight: .bold))
@@ -109,7 +109,7 @@ struct CCDeleteAccountView: View {
 
     func warningRow(icon: String, text: String) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: icon).font(.system(size: 16)).foregroundColor(Color.xuanDanger).frame(width: 24)
+            CCIconMapper.image(for: icon).font(.system(size: 16)).foregroundColor(Color.xuanDanger).frame(width: 24)
             Text(text).font(.system(size: 14)).foregroundColor(Color.xuanTextSecondary)
             Spacer()
         }

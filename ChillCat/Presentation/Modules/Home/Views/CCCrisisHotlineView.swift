@@ -35,7 +35,7 @@ struct CCCrisisHotlineView: View {
         HStack {
             Spacer()
             Button(action: { dismiss() }) {
-                Image(systemName: "xmark.circle.fill")
+                Image("common_close")
                     .font(.system(size: 28))
                     .foregroundColor(Color.xuanTextSecondary)
             }
@@ -51,7 +51,7 @@ struct CCCrisisHotlineView: View {
                     .fill(Color.xuanApricotDark.opacity(0.15))
                     .frame(width: 100, height: 100)
 
-                Image(systemName: "heart.text.square.fill")
+                Image("healing_bookmark")
                     .font(.system(size: 44))
                     .foregroundColor(Color.xuanApricotDark)
             }
@@ -99,7 +99,7 @@ struct CCCrisisHotlineView: View {
     private func largeCallButton(name: String, number: String, icon: String, color: Color) -> some View {
         Link(destination: URL(string: "tel:\(number.replacingOccurrences(of: "-", with: ""))")!) {
             HStack(spacing: XuanSpacing.md) {
-                Image(systemName: icon)
+                CCIconMapper.image(for: icon)
                     .font(.system(size: 20))
                     .foregroundColor(.white)
                     .frame(width: 48, height: 48)
@@ -119,7 +119,7 @@ struct CCCrisisHotlineView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(Color.xuanTextSecondary)
             }

@@ -214,7 +214,7 @@ struct CCValuesExplorerView: View {
                                     .font(XuanFont.bodyL)
                                     .foregroundColor(isInTopFive ? Color.xuanTextPrimary : Color.xuanTextSecondary)
                                 Spacer()
-                                Image(systemName: isInTopFive ? "checkmark.circle.fill" : "circle")
+                                CCIconMapper.image(for: isInTopFive ? "checkmark.circle.fill" : "circle")
                                     .foregroundColor(isInTopFive ? Color.xuanApricotDark : Color.xuanTextSecondary)
                                     .font(.system(size: 20))
                             }
@@ -252,7 +252,7 @@ struct CCValuesExplorerView: View {
                                     .font(XuanFont.bodyLMedium)
                                     .foregroundColor(Color.xuanTextPrimary)
                                 Spacer()
-                                Image(systemName: "line.3.horizontal")
+                                Image("common_more")
                                     .foregroundColor(Color.xuanTextSecondary)
                             }
                             .padding(XuanSpacing.md)
@@ -397,7 +397,7 @@ struct CCValuesExplorerView: View {
                 Circle()
                     .fill(Color.xuanApricotDark.opacity(0.6))
                     .frame(width: 100, height: 100)
-                Image(systemName: "compass.drawing")
+                Image("other_map")
                     .font(.system(size: 44))
                     .foregroundColor(Color.xuanApricotDark)
             }
@@ -529,7 +529,7 @@ struct CCValuesExplorerView: View {
                     viewModel.goToPreviousStep()
                 } label: {
                     HStack {
-                        Image(systemName: "chevron.left")
+                        Image("common_back")
                         Text("上一步")
                     }
                     .font(XuanFont.bodyLMedium)
@@ -546,7 +546,7 @@ struct CCValuesExplorerView: View {
             } label: {
                 HStack {
                     Text(viewModel.currentStep == .actionPlan ? "完成探索" : "下一步")
-                    Image(systemName: viewModel.currentStep == .actionPlan ? "checkmark" : "chevron.right")
+                    CCIconMapper.image(for: viewModel.currentStep == .actionPlan ? "checkmark" : "chevron.right")
                 }
                 .font(XuanFont.bodyLMedium)
                 .foregroundColor(.white)

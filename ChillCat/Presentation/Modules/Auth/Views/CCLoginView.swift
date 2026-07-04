@@ -154,7 +154,7 @@ struct CCLoginView: View {
                                         Circle()
                                             .fill(Color.xuanSurface)
                                             .frame(width: 52, height: 52)
-                                        Image(systemName: "message.fill")
+                                        Image("other_mail")
                                             .font(.system(size: 24))
                                             .foregroundColor(Color.xuanSuccess)
                                     }
@@ -175,7 +175,7 @@ struct CCLoginView: View {
                                         Circle()
                                             .fill(Color.xuanSurface)
                                             .frame(width: 52, height: 52)
-                                        Image(systemName: "apple.logo")
+                                        Image("common_settings")
                                             .font(.system(size: 24))
                                             .foregroundColor(Color.xuanTextPrimary)
                                     }

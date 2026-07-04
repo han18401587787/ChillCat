@@ -183,7 +183,7 @@ struct StatPill: View {
     var body: some View {
         VStack(spacing: XuanSpacing.xs) {
             HStack(spacing: 4) {
-                Image(systemName: icon)
+                CCIconMapper.image(for: icon)
                     .font(.system(size: 12))
                     .foregroundColor(color)
                 

@@ -224,7 +224,7 @@ struct CCCheckinResultView: View {
                 coordinator.navigate(to: .resonanceWall)
             }) {
                 HStack(spacing: XuanSpacing.sm) {
-                    Image(systemName: "waveform.circle")
+                    Image("healing_sound")
                         .font(.system(size: 16))
                     Text("发布到共鸣墙")
                         .font(XuanFont.bodyLBold)
@@ -249,7 +249,7 @@ struct CCCheckinResultView: View {
                     Text("查看情绪解码")
                         .font(XuanFont.bodyLBold)
                         .foregroundColor(Color.xuanApricot)
-                    Image(systemName: "chevron.right")
+                    Image("common_more")
                         .font(.system(size: 12))
                         .foregroundColor(Color.xuanApricot)
                 }

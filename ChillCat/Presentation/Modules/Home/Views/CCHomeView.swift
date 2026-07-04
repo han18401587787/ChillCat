@@ -160,7 +160,7 @@ struct CCHomeView: View {
             coordinator.navigate(to: .checkinSuccess)
         }) {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: viewModel.hasCheckedIn ? "checkmark.circle.fill" : "heart.fill")
+                CCIconMapper.image(for: viewModel.hasCheckedIn ? "checkmark.circle.fill" : "heart.fill")
                     .font(.system(size: 16))
                 Text(viewModel.hasCheckedIn ? "今日已打卡 ✓" : "今日心情打卡")
                     .font(XuanFont.bodyLMedium)
@@ -303,7 +303,7 @@ struct CCHomeView: View {
                     HStack(spacing: 2) {
                         Text("查看全部")
                             .font(XuanFont.bodyS)
-                        Image(systemName: "chevron.right")
+                        Image("common_more")
                             .font(.system(size: 10))
                     }
                     .foregroundColor(Color.xuanTextTertiary)
@@ -384,7 +384,7 @@ struct CCHomeView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image("common_more")
                     .font(.system(size: 14))
                     .foregroundColor(Color.xuanTextTertiary)
             }

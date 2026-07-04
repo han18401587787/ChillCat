@@ -207,7 +207,7 @@ struct CCEmotionRecordView: View {
                     }
 
                     VStack(spacing: XuanSpacing.xs) {
-                        Image(systemName: isVoiceRecording ? "waveform" : "mic.fill")
+                        CCIconMapper.image(for: isVoiceRecording ? "waveform" : "mic.fill")
                             .font(.system(size: 28))
                             .foregroundColor(
                                 isVoiceRecording ? Color.xuanDanger : Color.xuanApricotDark

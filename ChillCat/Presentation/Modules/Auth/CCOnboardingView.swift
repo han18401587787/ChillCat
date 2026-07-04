@@ -128,7 +128,7 @@ struct OnboardingView: View {
                     .frame(width: 240, height: 240)
                 
                 VStack(spacing: XuanSpacing.md) {
-                    Image(systemName: "heart.circle.fill")
+                    Image("resonance_like")
                         .font(.system(size: 64))
                         .foregroundStyle(
                             LinearGradient(
@@ -351,7 +351,7 @@ struct OnboardingView: View {
                                 viewModel.toggleEmotionFocus(emotion.chinese)
                             } label: {
                                 HStack(spacing: XuanSpacing.sm) {
-                                    Image(systemName: emotion.sfSymbol)
+                                    CCIconMapper.image(for: emotion.sfSymbol)
                                         .font(.system(size: 14))
                                     
                                     Text(emotion.chinese)
@@ -482,7 +482,7 @@ struct FeatureIntroRow: View {
                     .fill(color.opacity(0.15))
                     .frame(width: 56, height: 56)
                 
-                Image(systemName: icon)
+                CCIconMapper.image(for: icon)
                     .font(.system(size: 28))
                     .foregroundColor(color)
             }
@@ -510,7 +510,7 @@ struct PrivacyPointRow: View {
     
     var body: some View {
         HStack(spacing: XuanSpacing.md) {
-            Image(systemName: icon)
+            CCIconMapper.image(for: icon)
                 .font(.system(size: 16))
                 .foregroundColor(Color.xuanSuccess)
                 .frame(width: 24)
@@ -584,7 +584,7 @@ struct PreferenceToggle: View {
     
     var body: some View {
         HStack(spacing: XuanSpacing.md) {
-            Image(systemName: icon)
+            CCIconMapper.image(for: icon)
                 .font(.system(size: 18))
                 .foregroundColor(Color.xuanApricot)
                 .frame(width: 28)

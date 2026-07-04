@@ -154,7 +154,7 @@ struct CCToolboxView: View {
                 Circle()
                     .fill(.white.opacity(0.25))
                     .frame(width: 44, height: 44)
-                Image(systemName: item.sfSymbol)
+                CCIconMapper.image(for: item.sfSymbol)
                     .font(.system(size: 20, weight: .medium))
                     .foregroundColor(.white)
             }

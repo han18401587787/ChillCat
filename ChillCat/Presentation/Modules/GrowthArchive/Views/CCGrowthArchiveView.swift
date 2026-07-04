@@ -81,7 +81,7 @@ struct CCGrowthArchiveView: View {
 
     private func statItem(value: String, label: String, icon: String, color: Color) -> some View {
         VStack(spacing: XuanSpacing.xs) {
-            Image(systemName: icon)
+            CCIconMapper.image(for: icon)
                 .font(.system(size: 18))
                 .foregroundColor(color)
                 .frame(height: 24)
@@ -174,7 +174,7 @@ struct CCGrowthArchiveView: View {
                 }
 
                 // Icon
-                Image(systemName: badge.iconName)
+                CCIconMapper.image(for: badge.iconName)
                     .font(.system(size: 20))
                     .foregroundColor(badge.isUnlocked ? badgeCategoryColor(badge.category) : Color.xuanTextSecondary)
 
@@ -256,7 +256,7 @@ struct CCGrowthArchiveView: View {
             // Content
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
-                    Image(systemName: milestone.type.iconName)
+                    CCIconMapper.image(for: milestone.type.iconName)
                         .font(.system(size: 12))
                         .foregroundColor(milestoneTypeColor(milestone.type))
 
@@ -306,7 +306,7 @@ struct CCGrowthArchiveView: View {
                     Circle()
                         .fill(Color.xuanApricot.opacity(0.12))
                         .frame(width: 48, height: 48)
-                    Image(systemName: "doc.text.magnifyingglass")
+                    Image("common_search")
                         .font(.system(size: 22))
                         .foregroundColor(Color.xuanApricot)
                 }
@@ -326,7 +326,7 @@ struct CCGrowthArchiveView: View {
                     Text("查看完整报告")
                         .font(XuanFont.bodyM)
                         .foregroundColor(Color.xuanApricot)
-                    Image(systemName: "chevron.right")
+                    Image("common_more")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(Color.xuanApricot)
                 }

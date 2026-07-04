@@ -291,7 +291,7 @@ struct CheckinCompleteAnimation: View {
 
             // 对勾
             if showCheckmark {
-                Image(systemName: "checkmark")
+                Image("home_checkin")
                     .font(.system(size: size * 0.4, weight: .bold))
                     .foregroundColor(color)
                     .scaleEffect(showCheckmark ? 1.0 : 0.0)

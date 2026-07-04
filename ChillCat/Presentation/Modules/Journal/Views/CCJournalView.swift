@@ -11,11 +11,11 @@ struct CCJournalView: View {
         ScrollView {
             VStack(spacing: XuanSpacing.lg) {
                 HStack {
-                    Button(action: { viewModel.previousMonth() }) { Image(systemName: "chevron.left") }
+                    Button(action: { viewModel.previousMonth() }) { Image("common_back") }
                     Spacer()
                     Text("\(String(viewModel.selectedYear))年\(viewModel.selectedMonth)月").font(.system(size: 18, weight: .semibold))
                     Spacer()
-                    Button(action: { viewModel.nextMonth() }) { Image(systemName: "chevron.right") }
+                    Button(action: { viewModel.nextMonth() }) { Image("common_more") }
                 }.padding(.horizontal)
 
                 VStack(spacing: 8) {
@@ -62,7 +62,7 @@ struct CCJournalView: View {
                         ForEach(viewModel.entries) { entry in
                             let emotionName = entry.emotion ?? ""
                             HStack(spacing: 12) {
-                                Image(systemName: CCEmotion.allCases.first(where: { $0.rawValue == emotionName })?.iconName ?? "circle.fill")
+                                CCIconMapper.image(for: CCEmotion.allCases.first(where: { $0.rawValue == emotionName })?.iconName ?? "circle.fill")
                                     .font(.system(size: 24))
                                     .foregroundColor(emotionColor(emotionName))
                                     .frame(width: 44, height: 44)

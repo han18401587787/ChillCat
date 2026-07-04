@@ -42,7 +42,7 @@ struct CCWatcherView: View {
                     .frame(width: 80, height: 80)
 
                 VStack(spacing: 0) {
-                    Image(systemName: "shield.checkered")
+                    Image("alert_guardian")
                         .font(.system(size: 28))
                         .foregroundColor(.white)
                     Text("Lv.3")
@@ -91,7 +91,7 @@ struct CCWatcherView: View {
         HStack(spacing: XuanSpacing.md) {
             ZStack {
                 Circle().fill(color.opacity(0.12)).frame(width: 32, height: 32)
-                Image(systemName: icon).font(.system(size: 14)).foregroundColor(color)
+                CCIconMapper.image(for: icon).font(.system(size: 14)).foregroundColor(color)
             }
             Text(text).font(XuanFont.bodyM).foregroundColor(Color.xuanTextPrimary)
             Spacer()

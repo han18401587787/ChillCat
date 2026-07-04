@@ -133,7 +133,7 @@ struct CCTreeHoleView: View {
                 }
             }) {
                 HStack(spacing: XuanSpacing.sm) {
-                    Image(systemName: "paperplane.fill")
+                    Image("common_share")
                         .font(.system(size: 14))
                     Text("发送倾诉")
                         .font(XuanFont.bodyLMedium)
@@ -265,7 +265,7 @@ struct CCTreeHoleView: View {
                                 .allowsHitTesting(false)
                                 .transition(.opacity)
                             }
-                            Image(systemName: post.hasResonated ? "heart.fill" : "heart")
+                            CCIconMapper.image(for: post.hasResonated ? "heart.fill" : "heart")
                                 .font(.system(size: 13))
                                 .foregroundColor(post.hasResonated ? Color.xuanDanger : Color.xuanPink)
                                 .scaleEffect(treeHoleHeartScale[post.id] ?? 1.0)

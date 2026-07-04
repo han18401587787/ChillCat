@@ -102,7 +102,7 @@ struct CCPaymentConfirmSheet: View {
 
     private func detailRow(icon: String, title: String, value: String) -> some View {
         HStack {
-            Image(systemName: icon)
+            CCIconMapper.image(for: icon)
                 .foregroundColor(Color.xuanApricot)
                 .frame(width: 24)
             Text(title)

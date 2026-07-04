@@ -175,7 +175,7 @@ struct CCEmotionStickerView: View {
 
     private var cardSticker: some View {
         HStack(spacing: 12) {
-            Image(systemName: data.emotion.iconName)
+            CCIconMapper.image(for: data.emotion.iconName)
                 .font(.system(size: 22))
                 .foregroundColor(data.emotion.emotionColor)
                 .frame(width: 44, height: 44)
@@ -214,7 +214,7 @@ struct CCEmotionStickerView: View {
         VStack(spacing: 0) {
             // Depth label badge
             HStack(spacing: 4) {
-                Image(systemName: depth.iconName)
+                CCIconMapper.image(for: depth.iconName)
                     .font(.system(size: 10))
                 Text(depth.label)
                     .font(.system(size: 11, weight: .medium))
@@ -267,9 +267,9 @@ struct CCEmotionLayerArrow: View {
 
     var body: some View {
         VStack(spacing: 2) {
-            Image(systemName: "chevron.compact.down")
+            Image("common_more")
                 .font(.system(size: 20, weight: .medium))
-            Image(systemName: "chevron.compact.down")
+            Image("common_more")
                 .font(.system(size: 20, weight: .medium))
                 .offset(y: -8)
         }
