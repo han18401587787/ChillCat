@@ -642,6 +642,14 @@ enum WhiteNoiseOption: String, CaseIterable {
         case .forest: return Color.xuanSuccess
         }
     }
+
+    var toCCType: CCWhiteNoiseType {
+        switch self {
+        case .rain: return .rain
+        case .ocean: return .ocean
+        case .forest: return .forest
+        }
+    }
 }
 
 // MARK: - ViewModel
@@ -814,15 +822,19 @@ final class HealingPlanViewModel: ObservableObject {
             startWhiteNoise()
         }
     }
-    
+
     func startWhiteNoise() {
         isWhiteNoisePlaying = true
         whiteNoiseRipple = true
+        // 接入真实白噪音播放器
+        let type = selectedWhiteNoise.toCCType
+        CCWhiteNoisePlayer.shared.play(type: type)
     }
-    
+
     func stopWhiteNoise() {
         isWhiteNoisePlaying = false
         whiteNoiseRipple = false
+        CCWhiteNoisePlayer.shared.stop()
     }
     
     deinit {

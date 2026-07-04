@@ -85,6 +85,7 @@ struct CCRainSoundView: View {
         }
         .onDisappear {
             isPlaying = false
+            CCWhiteNoisePlayer.shared.stop()
         }
     }
 
@@ -218,6 +219,11 @@ struct CCRainSoundView: View {
             // 播放/暂停 大按钮
             Button(action: {
                 isPlaying.toggle()
+                if isPlaying {
+                    CCWhiteNoisePlayer.shared.play(type: .rain)
+                } else {
+                    CCWhiteNoisePlayer.shared.stop()
+                }
             }) {
                 ZStack {
                     Circle()

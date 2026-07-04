@@ -15,6 +15,7 @@ struct CCMeditationView: View {
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     @State private var selectedAudio: HealingAudioType? = nil
+    @State private var whiteNoisePlayer = CCWhiteNoisePlayer.shared
 
     var body: some View {
         ScrollView {
@@ -147,7 +148,14 @@ struct CCMeditationView: View {
 
     private func audioCard(type: HealingAudioType, title: String, subtitle: String, icon: String, color: Color) -> some View {
         Button(action: {
-            selectedAudio = (selectedAudio == type) ? nil : type
+            let isNowSelected = (selectedAudio == type) ? false : true
+            selectedAudio = isNowSelected ? type : nil
+
+            if isNowSelected {
+                whiteNoisePlayer.play(type: type.toCCType)
+            } else {
+                whiteNoisePlayer.stop()
+            }
         }) {
             HStack(spacing: XuanSpacing.md) {
                 ZStack {
@@ -274,4 +282,12 @@ struct CCMeditationView: View {
 // MARK: - 治愈音频类型
 enum HealingAudioType {
     case rain, forest, piano
+
+    var toCCType: CCWhiteNoiseType {
+        switch self {
+        case .rain:   return .rain
+        case .forest: return .forest
+        case .piano:  return .piano
+        }
+    }
 }
