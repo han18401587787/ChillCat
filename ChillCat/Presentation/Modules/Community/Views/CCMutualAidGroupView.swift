@@ -207,12 +207,12 @@ struct CCMutualAidGroupView: View {
     }
 
     private func iconColor(for iconName: String) -> Color {
-        if iconName.contains("heart") { return Color.xuanPink }
-        if iconName.contains("leaf") { return Color.xuanMint }
-        if iconName.contains("wind") { return Color.xuanApricot }
-        if iconName.contains("cloud") || iconName.contains("moon") || iconName.contains("rain") { return Color(hex: "A085C6") }
-        if iconName.contains("briefcase") { return Color.xuanApricotDark }
-        if iconName.contains("book") { return Color.xuanApricotLight }
+        if iconName.contains("heart") || iconName.contains("sad") { return Color.xuanPink }
+        if iconName.contains("meditate") || iconName.contains("calm") { return Color.xuanMint }
+        if iconName.contains("breath") || iconName.contains("apricot") { return Color.xuanApricot }
+        if iconName.contains("rain") || iconName.contains("sound") || iconName.contains("moon") { return Color(hex: "A085C6") }
+        if iconName.contains("knowledge") || iconName.contains("briefcase") { return Color.xuanApricotDark }
+        if iconName.contains("course") || iconName.contains("book") || iconName.contains("diary") { return Color.xuanApricotLight }
         return Color.xuanApricot
     }
 }
