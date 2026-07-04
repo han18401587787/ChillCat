@@ -147,6 +147,6 @@ enum CCIconMapper {
         if let custom = customIcon(for: sfSymbol) {
             return Image(custom)
         }
-        return CCIconMapper.image(for: sfSymbol)
+        return Image(systemName: sfSymbol)
     }
 }
