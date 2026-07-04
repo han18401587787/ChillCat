@@ -1,12 +1,24 @@
 import SwiftUI
 import KeychainAccess
 
+#if DEBUG
+import LookinServer
+#endif
+
 struct CCApp: View {
     @State private var coordinator = CCAppCoordinator()
     @State private var themeManager = CCThemeManager()
     @State private var isInitializing = true
     @State private var initError: String?
     @State private var retryAttempt = 0
+
+    init() {
+        #if DEBUG
+        // 启动 Lookin Server 用于 UI 层级调试
+        // macOS 端从 https://lookin.work/ 下载 Lookin App
+        LookinServer.shared.start()
+        #endif
+    }
 
     /// XCUITest 可通过 launchArguments 跳过 Welcome: `-UITEST_SKIP_WELCOME`
     /// XCUITest 可通过 launchArguments 自动登录: `-UITEST_AUTO_LOGIN`
