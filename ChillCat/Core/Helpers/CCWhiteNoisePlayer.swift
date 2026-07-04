@@ -65,8 +65,7 @@ final class CCWhiteNoisePlayer {
 
         guard let url = Bundle.main.url(
             forResource: type.rawValue,
-            withExtension: "mp3",
-            subdirectory: "WhiteNoise"
+            withExtension: "mp3"
         ) else {
             print("⚠️ [WhiteNoise] 找不到音频文件: \(type.rawValue).mp3")
             return
