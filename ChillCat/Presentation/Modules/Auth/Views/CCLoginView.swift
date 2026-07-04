@@ -37,7 +37,7 @@ struct CCLoginView: View {
                             )
                             .frame(width: 80, height: 80)
 
-                        Image(systemName: "leaf.fill")
+                        Image("healing_meditate")
                             .font(.system(size: 36))
                             .foregroundColor(.white)
                     }

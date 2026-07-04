@@ -172,7 +172,7 @@ struct CCSafetyPlanView: View {
                 showingAddStrategy = true
             }) {
                 HStack {
-                    Image(systemName: "plus.circle.fill")
+                    Image("common_add")
                         .font(.system(size: 16))
                     Text("添加安抚策略")
                         .font(XuanFont.bodyL)
@@ -235,7 +235,7 @@ struct CCSafetyPlanView: View {
                 showingAddContact = true
             }) {
                 HStack {
-                    Image(systemName: "plus.circle.fill")
+                    Image("common_add")
                         .font(.system(size: 16))
                     Text("添加联系人")
                         .font(XuanFont.bodyL)
@@ -269,7 +269,7 @@ struct CCSafetyPlanView: View {
 
             if !contact.wrappedValue.phone.isEmpty {
                 Link(destination: URL(string: "tel:\(contact.wrappedValue.phone.replacingOccurrences(of: " ", with: ""))")!) {
-                    Image(systemName: "phone.fill")
+                    Image("alert_call")
                         .font(.system(size: 14))
                         .foregroundColor(Color.xuanApricot)
                         .frame(width: 32, height: 32)
@@ -314,7 +314,7 @@ struct CCSafetyPlanView: View {
     private func crisisLink(name: String, number: String) -> some View {
         Link(destination: URL(string: "tel:\(number.replacingOccurrences(of: "-", with: ""))")!) {
             HStack {
-                Image(systemName: "phone.fill")
+                Image("alert_call")
                     .font(.system(size: 14))
                     .foregroundColor(Color.xuanDanger)
 
@@ -347,7 +347,7 @@ struct CCSafetyPlanView: View {
             // Share action — in production this would invoke the system share sheet
         }) {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "square.and.arrow.up.fill")
+                Image("report_share")
                     .font(.system(size: 16))
                 Text("分享安全计划")
                     .font(XuanFont.bodyLMedium)

@@ -86,7 +86,7 @@ struct CCEmojiPicker: View {
 
     private var searchBar: some View {
         HStack(spacing: 8) {
-            Image(systemName: "magnifyingglass")
+            Image("common_search")
                 .font(.system(size: 14))
                 .foregroundColor(Color.xuanTextTertiary)
 
@@ -242,7 +242,7 @@ struct CCEmojiPicker: View {
 
     private var emptyState: some View {
         VStack(spacing: 8) {
-            Image(systemName: "magnifyingglass")
+            Image("common_search")
                 .font(.system(size: 28))
                 .foregroundColor(Color.xuanTextTertiary.opacity(0.5))
             Text("没有找到匹配的表情")

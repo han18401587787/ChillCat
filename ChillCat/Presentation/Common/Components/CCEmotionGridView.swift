@@ -240,7 +240,7 @@ struct EmotionCheckinSuccessView: View {
                     .frame(width: 100, height: 100)
                     .scaleEffect(scale)
                 
-                Image(systemName: "checkmark.circle.fill")
+                Image("home_checkin")
                     .font(.system(size: 60))
                     .foregroundColor(color)
                     .scaleEffect(scale)

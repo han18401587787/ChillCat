@@ -252,7 +252,7 @@ struct CCEmotionCorrectionView: View {
             dismiss()
         } label: {
             HStack {
-                Image(systemName: "checkmark.circle.fill")
+                Image("home_checkin")
                 Text("确认纠错")
             }
         }

@@ -93,7 +93,7 @@ struct VoiceRecorderView: View {
 
         case .completed(let transcription):
             VStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "checkmark.circle.fill")
+                Image("home_checkin")
                     .font(.system(size: 32))
                     .foregroundColor(Color.xuanSuccess)
 

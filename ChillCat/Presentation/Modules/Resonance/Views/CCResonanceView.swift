@@ -117,7 +117,7 @@ struct CCResonanceView: View {
                 Circle()
                     .fill(Color.white.opacity(0.5))
                     .frame(width: 44, height: 44)
-                Image(systemName: "hand.raised.fill")
+                Image("alert_help")
                     .font(.system(size: 20))
                     .foregroundColor(Color.xuanPinkDark)
             }
@@ -211,7 +211,7 @@ struct CCResonanceView: View {
                                 .transition(.opacity)
                             }
                             // 心形图标（Lottie 播放时隐藏，播完恢复）
-                            Image(systemName: "heart.fill")
+                            Image("resonance_like")
                                 .font(.system(size: 14))
                                 .foregroundColor(Color.xuanPink)
                                 .scaleEffect(heartScale[item.id] ?? 1.0)
@@ -230,7 +230,7 @@ struct CCResonanceView: View {
 
                 Button(action: { showComposer = true }) {
                     HStack(spacing: 4) {
-                        Image(systemName: "bubble.left")
+                        Image("resonance_comment")
                             .font(.system(size: 12))
                         Text("我也想说")
                             .font(XuanFont.caption)
@@ -272,7 +272,7 @@ struct CCResonanceView: View {
     private var composeFAB: some View {
         Button(action: { showComposer = true }) {
             HStack(spacing: 6) {
-                Image(systemName: "pencil.line")
+                Image("treehole_write")
                     .font(.system(size: 16))
                 Text("写下心情")
                     .font(XuanFont.bodyLBold)

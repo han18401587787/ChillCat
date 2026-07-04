@@ -156,7 +156,7 @@ struct CCValuesExplorerView: View {
             )
             .overlay(alignment: .topTrailing) {
                 if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
+                    Image("home_checkin")
                         .foregroundColor(.white)
                         .font(.system(size: 18))
                         .padding(4)

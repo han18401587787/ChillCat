@@ -62,7 +62,7 @@ struct CCEmotionDecodeResultView: View {
     private var surfaceCard: some View {
         VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "magnifyingglass")
+                Image("common_search")
                     .font(.system(size: 14))
                     .foregroundColor(Color.xuanTextSecondary)
                 Text("表层情绪")
@@ -109,7 +109,7 @@ struct CCEmotionDecodeResultView: View {
     private var suggestionCard: some View {
         VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "leaf.fill")
+                Image("healing_meditate")
                     .font(.system(size: 14))
                     .foregroundColor(Color.xuanMint)
                 Text("个性化建议")
@@ -132,7 +132,7 @@ struct CCEmotionDecodeResultView: View {
     private var deepNeedCard: some View {
         VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "heart.fill")
+                Image("resonance_like")
                     .font(.system(size: 14))
                     .foregroundColor(Color.xuanPink)
                 Text("深层需求")

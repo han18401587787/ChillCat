@@ -129,7 +129,7 @@ struct StepIntroView: View {
                     )
                     .frame(width: 200, height: 200)
                 
-                Image(systemName: "lungs.fill")
+                Image("healing_breath")
                     .font(.system(size: 64))
                     .foregroundStyle(
                         LinearGradient(
@@ -502,7 +502,7 @@ struct StepRatingView: View {
                             .frame(width: 160, height: 160)
                         
                         if showCompletionAnimation {
-                            Image(systemName: "checkmark.circle.fill")
+                            Image("home_checkin")
                                 .font(.system(size: 64))
                                 .foregroundColor(Color.xuanSuccess)
                                 .transition(.scale.combined(with: .opacity))

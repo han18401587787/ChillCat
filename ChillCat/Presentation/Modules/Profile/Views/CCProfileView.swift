@@ -72,7 +72,7 @@ struct CCProfileView: View {
                         )
                         .frame(width: 64, height: 64)
 
-                    Image(systemName: "person.fill")
+                    Image("profile_user")
                         .font(.system(size: 28))
                         .foregroundColor(.white)
                 }
@@ -157,7 +157,7 @@ struct CCProfileView: View {
                     Circle()
                         .fill(Color.white.opacity(0.25))
                         .frame(width: 48, height: 48)
-                    Image(systemName: "crown.fill")
+                    Image("profile_vip")
                         .font(.system(size: 22))
                         .foregroundColor(.white)
                 }
@@ -253,7 +253,7 @@ struct CCProfileView: View {
                     RoundedRectangle(cornerRadius: XuanRadius.sm)
                         .fill(Color.xuanSurface)
                         .frame(width: 40, height: 40)
-                    Image(systemName: "gearshape.fill")
+                    Image("common_settings")
                         .font(.system(size: 18))
                         .foregroundColor(Color.xuanTextSecondary)
                 }

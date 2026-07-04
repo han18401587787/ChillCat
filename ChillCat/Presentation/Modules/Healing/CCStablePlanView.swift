@@ -257,7 +257,7 @@ struct CCStablePlanView: View {
 
             // 鼓励文字
             HStack(spacing: XuanSpacing.xs) {
-                Image(systemName: "sparkles")
+                Image("home_quote")
                     .font(.system(size: 12))
                     .foregroundColor(Color.xuanMintDark)
                 Text(progressMessage)

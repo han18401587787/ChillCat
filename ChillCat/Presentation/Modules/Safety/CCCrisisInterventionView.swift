@@ -135,7 +135,7 @@ struct CCCrisisInterventionView: View {
     private var emergencyButton: some View {
         Link(destination: URL(string: "tel://4001619995")!) {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "phone.fill")
+                Image("alert_call")
                     .font(.system(size: 20))
                 Text("一键拨打热线 400-161-9995")
                     .font(XuanFont.bodyLMedium)
@@ -194,7 +194,7 @@ struct CCCrisisInterventionView: View {
                         )
                         .frame(width: 44, height: 44)
 
-                    Image(systemName: "phone.fill")
+                    Image("alert_call")
                         .font(.system(size: 16))
                         .foregroundColor(isEmergency ? Color.xuanDanger : Color.xuanMint)
                 }
@@ -256,7 +256,7 @@ struct CCCrisisInterventionView: View {
 
             Spacer()
 
-            Image(systemName: "phone.fill")
+            Image("alert_call")
                 .font(.system(size: 14))
                 .foregroundColor(Color.xuanApricot)
                 .frame(width: 36, height: 36)
@@ -332,7 +332,7 @@ struct CCCrisisInterventionView: View {
         VStack(spacing: XuanSpacing.md) {
             Button(action: { showHealingPlan = true }) {
                 HStack(spacing: XuanSpacing.sm) {
-                    Image(systemName: "leaf.fill")
+                    Image("healing_meditate")
                     Text("开始稳情练习")
                 }
             }

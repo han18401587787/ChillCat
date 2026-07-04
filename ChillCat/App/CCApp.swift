@@ -44,7 +44,7 @@ struct CCApp: View {
         ZStack {
             Color.xuanApricotBg.ignoresSafeArea()
             VStack(spacing: XuanSpacing.lg) {
-                Image(systemName: "leaf.circle.fill")
+                Image("emotion_calm")
                     .font(.system(size: 64))
                     .foregroundColor(Color.xuanMint)
 

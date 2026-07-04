@@ -56,7 +56,7 @@ struct EncourageDiscoverView: View {
     // MARK: - Search Bar
     private var searchBar: some View {
         HStack(spacing: XuanSpacing.md) {
-            Image(systemName: "magnifyingglass")
+            Image("common_search")
                 .font(.system(size: 16))
                 .foregroundColor(Color.xuanTextTertiary)
             

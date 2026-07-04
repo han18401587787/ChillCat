@@ -122,7 +122,7 @@ struct CCEncourageChainView: View {
 
             if viewModel.links.isEmpty {
                 VStack(spacing: XuanSpacing.lg) {
-                    Image(systemName: "flame.fill")
+                    Image("emotion_angry")
                         .font(.system(size: 48))
                         .foregroundColor(Color.xuanApricotDark)
 
@@ -259,7 +259,7 @@ struct CCEncourageChainView: View {
     // MARK: - Error Banner
     private func errorBanner(_ message: String) -> some View {
         HStack(spacing: XuanSpacing.sm) {
-            Image(systemName: "exclamationmark.triangle.fill")
+            Image("alert_warn")
                 .foregroundColor(Color.xuanDanger)
             Text(message)
                 .font(XuanFont.bodyS)

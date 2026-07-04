@@ -238,7 +238,7 @@ struct MyChainCard: View {
                 if isAnimating {
                     HStack(spacing: XuanSpacing.sm) {
                         ForEach(0..<5) { i in
-                            Image(systemName: "heart.fill")
+                            Image("resonance_like")
                                 .font(.system(size: 12))
                                 .foregroundColor(Color.xuanApricotDark)
                                 .offset(y: isAnimating ? -20 : 0)

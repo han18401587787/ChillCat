@@ -139,7 +139,7 @@ struct CCHeartBeatAnimation: View {
                 .animation(.spring(response: 0.3, dampingFraction: 0.5), value: trigger)
         } else {
             // Fallback: SwiftUI 原生心跳动画
-            Image(systemName: "heart.fill")
+            Image("resonance_like")
                 .font(.system(size: size * 0.5))
                 .foregroundColor(Color.xuanPink)
                 .scaleEffect(trigger ? 1.4 : 1.0)

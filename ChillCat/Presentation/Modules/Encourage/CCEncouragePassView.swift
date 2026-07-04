@@ -223,7 +223,7 @@ struct EncouragePassView: View {
                         .fill(Color.xuanApricotDark.opacity(0.15))
                         .frame(width: 100, height: 100)
                     
-                    Image(systemName: "heart.fill")
+                    Image("resonance_like")
                         .font(.system(size: 40))
                         .foregroundColor(Color.xuanApricotDark)
                 }

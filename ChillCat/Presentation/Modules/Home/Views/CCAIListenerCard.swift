@@ -63,7 +63,7 @@ struct CCAIListenerCard: View {
 
     private var headerSection: some View {
         HStack(spacing: XuanSpacing.sm) {
-            Image(systemName: "headphones")
+            Image("home_ai")
                 .font(.system(size: 20, weight: .medium))
                 .foregroundColor(Color.xuanApricot)
 
@@ -76,7 +76,7 @@ struct CCAIListenerCard: View {
             // 安全空间徽章
             if viewModel.crisisDetected && viewModel.riskLevel >= .medium {
                 HStack(spacing: 4) {
-                    Image(systemName: "shield.fill")
+                    Image("alert_guardian")
                         .font(.system(size: 12))
                     Text("安全空间")
                         .font(.system(size: 12, weight: .medium))
@@ -189,7 +189,7 @@ struct CCAIListenerCard: View {
 
                 // 语音日记入口 (min 44×44 触控区域)
                 NavigationLink(value: CCAppRoute.voiceCheckin) {
-                    Image(systemName: "mic.fill")
+                    Image("ai_listen")
                         .font(.system(size: 20))
                         .foregroundColor(Color.xuanApricot)
                         .frame(width: 44, height: 44)
@@ -203,7 +203,7 @@ struct CCAIListenerCard: View {
                     isInputFocused = false
                     viewModel.sendMessage()
                 } label: {
-                    Image(systemName: "sparkles")
+                    Image("home_quote")
                         .font(.system(size: 18, weight: .medium))
                         .foregroundColor(viewModel.isSendEnabled ? .white : Color.xuanTextSecondary)
                         .frame(width: 44, height: 44)
@@ -287,7 +287,7 @@ struct CCAIListenerCard: View {
             } else {
                 // 已反馈提示
                 HStack(spacing: 4) {
-                    Image(systemName: "checkmark.circle.fill")
+                    Image("home_checkin")
                         .font(.system(size: 12))
                     Text("感谢反馈")
                         .font(.system(size: 12))
@@ -334,7 +334,7 @@ struct CCAIListenerCard: View {
             viewModel.showHotlineSheet = true
         } label: {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "phone.fill")
+                Image("alert_call")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(Color.xuanDanger)
 

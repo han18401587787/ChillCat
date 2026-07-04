@@ -242,7 +242,7 @@ struct CCBodyScanView: View {
                         .fill(region.color.opacity(0.2))
                         .frame(width: 40, height: 40)
                         .overlay(
-                            Image(systemName: "eye.fill")
+                            Image("healing_scan")
                                 .font(.system(size: 16))
                                 .foregroundColor(region.color)
                         )
@@ -507,7 +507,7 @@ struct CCBodyScanView: View {
                 Circle()
                     .fill(Color.xuanMint.opacity(0.3))
                     .frame(width: 100, height: 100)
-                Image(systemName: "eye.fill")
+                Image("healing_scan")
                     .font(.system(size: 44))
                     .foregroundColor(Color.xuanMint)
             }

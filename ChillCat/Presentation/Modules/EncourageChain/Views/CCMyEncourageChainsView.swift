@@ -35,7 +35,7 @@ struct CCMyEncourageChainsView: View {
         .overlay(alignment: .top) {
             if let error = viewModel.errorMessageMyChains {
                 HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
+                    Image("alert_warn")
                         .foregroundColor(Color.xuanDanger)
                     Text(error)
                         .foregroundColor(Color.xuanDanger)
@@ -71,7 +71,7 @@ struct CCMyEncourageChainsView: View {
                 .lineLimit(3)
 
             HStack {
-                Image(systemName: "person.2.fill")
+                Image("resonance_people")
                     .font(.system(size: 12))
                     .foregroundColor(Color.xuanTextTertiary)
                 Text("\(chain.participantCount) 人参与")

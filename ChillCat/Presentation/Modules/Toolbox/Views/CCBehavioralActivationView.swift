@@ -394,7 +394,7 @@ struct CCBehavioralActivationView: View {
             }
         } label: {
             HStack {
-                Image(systemName: "plus.circle.fill")
+                Image("common_add")
                 Text("添加活动")
             }
             .font(XuanFont.bodyLMedium)

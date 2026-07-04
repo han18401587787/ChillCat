@@ -13,7 +13,7 @@ struct CCWelcomeView: View {
 
             VStack(spacing: 32) {
                 Spacer()
-                Image(systemName: "leaf.circle.fill").font(.system(size: 72)).foregroundColor(Color.xuanApricotDark)
+                Image("emotion_calm").font(.system(size: 72)).foregroundColor(Color.xuanApricotDark)
                 Text("绪安").font(.system(size: 36, weight: .bold))
                 Text("陪你温柔自愈").font(.system(size: 18)).foregroundColor(Color.xuanInfo)
                 VStack(spacing: 8) {

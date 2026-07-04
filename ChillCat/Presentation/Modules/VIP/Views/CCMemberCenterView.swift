@@ -238,7 +238,7 @@ struct CCMemberCenterView: View {
                     RoundedRectangle(cornerRadius: XuanRadius.sm)
                         .fill(Color.xuanApricot.opacity(0.1))
                         .frame(width: 36, height: 36)
-                    Image(systemName: "clock.arrow.circlepath")
+                    Image("ai_history")
                         .font(.system(size: 16))
                         .foregroundColor(Color.xuanApricot)
                 }

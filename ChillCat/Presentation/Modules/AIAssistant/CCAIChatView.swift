@@ -68,7 +68,7 @@ struct AIChatView: View {
                     )
                     .frame(width: 40, height: 40)
 
-                Image(systemName: "brain.head.profile")
+                Image("home_mood")
                     .font(.system(size: 18))
                     .foregroundColor(.white)
             }
@@ -181,7 +181,7 @@ struct AIChatView: View {
                     )
                     .frame(width: 80, height: 80)
 
-                Image(systemName: "brain.head.profile")
+                Image("home_mood")
                     .font(.system(size: 36))
                     .foregroundColor(Color.xuanTextSecondary)
             }
@@ -381,7 +381,7 @@ struct AIChatView: View {
                         .fill(Color.xuanTextSecondary.opacity(0.3))
                         .frame(width: 28, height: 28)
 
-                    Image(systemName: "brain.head.profile")
+                    Image("home_mood")
                         .font(.system(size: 14))
                         .foregroundColor(Color.xuanTextSecondary)
                 }
@@ -435,7 +435,7 @@ struct AIChatView: View {
                 Button {
                     showVoiceRecorder = true
                 } label: {
-                    Image(systemName: "mic.fill")
+                    Image("ai_listen")
                         .font(.system(size: 22))
                         .foregroundColor(Color.xuanTextSecondary)
                         .frame(width: 44, height: 44)
@@ -522,7 +522,7 @@ struct SafetyResourceCard: View {
                 .fill(color.opacity(0.15))
                 .frame(width: 40, height: 40)
                 .overlay {
-                    Image(systemName: "phone.fill")
+                    Image("alert_call")
                         .font(.system(size: 16))
                         .foregroundColor(color)
                 }
@@ -611,7 +611,7 @@ struct ChatBubble: View {
                 .fill(Color.xuanTextSecondary.opacity(0.2))
                 .frame(width: 28, height: 28)
 
-            Image(systemName: "brain.head.profile")
+            Image("home_mood")
                 .font(.system(size: 14))
                 .foregroundColor(Color.xuanTextSecondary)
         }

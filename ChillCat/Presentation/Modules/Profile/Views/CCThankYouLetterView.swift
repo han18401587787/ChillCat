@@ -59,7 +59,7 @@ struct CCThankYouLetterView: View {
                 coordinator.navigate(to: .resonanceWall)
             }) {
                 HStack(spacing: XuanSpacing.sm) {
-                    Image(systemName: "heart.fill")
+                    Image("resonance_like")
                         .font(.system(size: 14))
                     Text("去传递温暖")
                         .font(XuanFont.bodyLMedium)
@@ -131,7 +131,7 @@ struct CCThankYouLetterView: View {
 
             // 底部标签
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "heart.fill")
+                Image("resonance_like")
                     .font(.system(size: 10))
                     .foregroundColor(Color.xuanPink)
                 Text("来自你的一次温暖传递")
@@ -156,7 +156,7 @@ struct CCThankYouLetterView: View {
                         Circle()
                             .fill(Color.xuanPink.opacity(0.08))
                             .frame(width: 80, height: 80)
-                        Image(systemName: "envelope.fill")
+                        Image("other_mail")
                             .font(.system(size: 32))
                             .foregroundColor(Color.xuanPink)
                     }

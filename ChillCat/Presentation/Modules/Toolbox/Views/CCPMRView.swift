@@ -233,7 +233,7 @@ struct CCPMRView: View {
 
         return HStack(spacing: XuanSpacing.sm) {
             if isDone {
-                Image(systemName: "checkmark.circle.fill")
+                Image("home_checkin")
                     .foregroundColor(Color.xuanMint)
                     .font(.system(size: 14))
             } else if isActive {
@@ -395,7 +395,7 @@ struct CCPMRView: View {
                 ) {
                     ForEach(CCMuscleGroup.all) { group in
                         HStack(spacing: XuanSpacing.sm) {
-                            Image(systemName: "checkmark.circle.fill")
+                            Image("home_checkin")
                                 .foregroundColor(Color.xuanMint)
                                 .font(.system(size: 12))
                             Image(systemName: group.icon)

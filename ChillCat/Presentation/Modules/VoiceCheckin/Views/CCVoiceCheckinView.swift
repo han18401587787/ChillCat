@@ -229,7 +229,7 @@ struct CCVoiceCheckinView: View {
             Divider().background(Color.xuanApricot.opacity(0.6).opacity(0.3))
 
             HStack(alignment: .top, spacing: XuanSpacing.sm) {
-                Image(systemName: "doc.text.fill")
+                Image("report_weekly")
                     .font(.system(size: 14))
                     .foregroundColor(Color.xuanApricotLight)
                     .frame(width: 20)
@@ -243,7 +243,7 @@ struct CCVoiceCheckinView: View {
             }
 
             HStack(alignment: .top, spacing: XuanSpacing.sm) {
-                Image(systemName: "tag.fill")
+                Image("treehole_tag")
                     .font(.system(size: 14))
                     .foregroundColor(Color.xuanApricotLight)
                     .frame(width: 20)
@@ -339,7 +339,7 @@ struct CCVoiceCheckinView: View {
                     viewModel.addTag()
                     tagFocused = false
                 }) {
-                    Image(systemName: "plus.circle.fill")
+                    Image("common_add")
                         .font(.system(size: 24))
                         .foregroundColor(
                             viewModel.newTagInput.trimmingCharacters(in: .whitespaces).isEmpty
@@ -376,7 +376,7 @@ struct CCVoiceCheckinView: View {
                 Task { await viewModel.saveDiary() }
             }) {
                 HStack(spacing: 6) {
-                    Image(systemName: "square.and.arrow.down.fill")
+                    Image("other_download")
                         .font(.system(size: 15))
                     Text("保存日记")
                         .font(.system(size: 15, weight: .semibold))
@@ -412,7 +412,7 @@ struct CCVoiceCheckinView: View {
                 Spacer().frame(height: 40)
 
                 // 打卡成功图标
-                Image(systemName: "checkmark.circle.fill")
+                Image("home_checkin")
                     .font(.system(size: 64))
                     .foregroundColor(Color.xuanMint)
 
@@ -452,7 +452,7 @@ struct CCVoiceCheckinView: View {
                     Circle()
                         .fill(Color.xuanMint.opacity(0.15))
                         .frame(width: 36, height: 36)
-                    Image(systemName: "brain.head.profile")
+                    Image("home_mood")
                         .font(.system(size: 16))
                         .foregroundColor(Color.xuanMint)
                 }
@@ -494,7 +494,7 @@ struct CCVoiceCheckinView: View {
         VStack(spacing: XuanSpacing.sm) {
             Button(action: { coordinator.navigate(to: .aiListener) }) {
                 HStack(spacing: XuanSpacing.sm) {
-                    Image(systemName: "brain.head.profile")
+                    Image("home_mood")
                     Text("继续和AI聊聊")
                 }
                 .font(XuanFont.bodyLMedium)
@@ -507,7 +507,7 @@ struct CCVoiceCheckinView: View {
 
             Button(action: { coordinator.navigate(to: .resonanceWall) }) {
                 HStack(spacing: XuanSpacing.sm) {
-                    Image(systemName: "heart.fill")
+                    Image("resonance_like")
                     Text("匿名发布到共鸣墙")
                 }
                 .font(XuanFont.bodyLMedium)
@@ -524,7 +524,7 @@ struct CCVoiceCheckinView: View {
 
             Button(action: { coordinator.navigate(to: .emotionDecoder) }) {
                 HStack(spacing: XuanSpacing.sm) {
-                    Image(systemName: "chart.bar.fill")
+                    Image("report_overview")
                     Text("查看情绪解码")
                 }
                 .font(XuanFont.bodyLMedium)
@@ -625,7 +625,7 @@ struct CCVoiceCheckinView: View {
                 .frame(width: isPressed ? 70 : 80, height: isPressed ? 70 : 80)
                 .animation(.easeInOut(duration: 0.15), value: isPressed)
 
-            Image(systemName: "mic.fill")
+            Image("ai_listen")
                 .font(.system(size: 32))
                 .foregroundColor(.white)
         }

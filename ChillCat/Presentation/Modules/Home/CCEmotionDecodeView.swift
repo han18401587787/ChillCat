@@ -354,7 +354,7 @@ struct CCEmotionDecodeView: View {
     private var lowScoreWarning: some View {
         VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack {
-                Image(systemName: "exclamationmark.triangle.fill")
+                Image("alert_warn")
                     .font(.system(size: 20))
                     .foregroundColor(Color.xuanDanger)
                 
@@ -388,7 +388,7 @@ struct CCEmotionDecodeView: View {
                         .fill(Color.xuanInfo.opacity(0.15))
                         .frame(width: 48, height: 48)
                     
-                    Image(systemName: "lungs.fill")
+                    Image("healing_breath")
                         .font(.system(size: 22))
                         .foregroundColor(Color.xuanInfo)
                 }

@@ -109,7 +109,7 @@ struct CCSettingsView: View {
                                 RoundedRectangle(cornerRadius: XuanRadius.sm)
                                     .fill(Color.xuanDanger.opacity(0.1))
                                     .frame(width: 36, height: 36)
-                                Image(systemName: "trash.fill")
+                                Image("common_delete")
                                     .font(.system(size: 16))
                                     .foregroundColor(Color.xuanDanger)
                             }
@@ -134,7 +134,7 @@ struct CCSettingsView: View {
                             RoundedRectangle(cornerRadius: XuanRadius.sm)
                                 .fill(Color.xuanDanger.opacity(0.1))
                                 .frame(width: 36, height: 36)
-                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                            Image("profile_logout")
                                 .font(.system(size: 16))
                                 .foregroundColor(Color.xuanDanger)
                         }

@@ -64,7 +64,7 @@ struct CCResonanceDetailView: View {
                 // 共鸣按钮
                 Button(action: { /* 共鸣 */ }) {
                     HStack(spacing: 6) {
-                        Image(systemName: "heart.fill")
+                        Image("resonance_like")
                             .font(.system(size: 18))
                             .foregroundColor(Color.xuanPink)
                         Text("共鸣")
@@ -176,7 +176,7 @@ struct CCResonanceDetailView: View {
                 HStack(spacing: XuanSpacing.lg) {
                     Button(action: { /* 共鸣互动 */ }) {
                         HStack(spacing: 4) {
-                            Image(systemName: "heart.fill")
+                            Image("resonance_like")
                                 .font(.system(size: 14))
                                 .foregroundColor(Color.xuanPink)
                             Text("\(item.resonanceCount) 人共鸣")

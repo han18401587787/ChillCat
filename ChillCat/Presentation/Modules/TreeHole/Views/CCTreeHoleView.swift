@@ -353,7 +353,7 @@ struct CCTreeHoleView: View {
                     showGuidelineBanner = false
                 }
             }) {
-                Image(systemName: "xmark")
+                Image("common_close")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundColor(Color.xuanTextSecondary)
             }

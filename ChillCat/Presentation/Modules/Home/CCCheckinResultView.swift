@@ -136,7 +136,7 @@ struct CCCheckinResultView: View {
 
             // 陪伴天数
             HStack(spacing: XuanSpacing.xs) {
-                Image(systemName: "heart.fill")
+                Image("resonance_like")
                     .font(.system(size: 14))
                     .foregroundColor(Color.xuanPink)
 
@@ -163,7 +163,7 @@ struct CCCheckinResultView: View {
                     Circle()
                         .fill(Color.xuanApricot.opacity(0.25))
                         .frame(width: 36, height: 36)
-                    Image(systemName: "sparkles")
+                    Image("home_quote")
                         .font(.system(size: 14))
                         .foregroundColor(Color.xuanApricotDark)
                 }
@@ -205,7 +205,7 @@ struct CCCheckinResultView: View {
                 coordinator.navigate(to: .aiListener)
             }) {
                 HStack(spacing: XuanSpacing.sm) {
-                    Image(systemName: "bubble.left.and.bubble.right.fill")
+                    Image("treehole_write")
                         .font(.system(size: 16))
                     Text("继续和绪安聊聊")
                         .font(XuanFont.bodyLBold)

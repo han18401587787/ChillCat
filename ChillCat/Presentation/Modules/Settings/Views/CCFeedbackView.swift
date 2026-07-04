@@ -8,7 +8,7 @@ struct CCFeedbackView: View {
             VStack(spacing: XuanSpacing.lg) {
                 if viewModel.submitted {
                     VStack(spacing: XuanSpacing.md) {
-                        Image(systemName: "checkmark.circle.fill").font(.system(size:64)).foregroundColor(Color.xuanMint)
+                        Image("home_checkin").font(.system(size:64)).foregroundColor(Color.xuanMint)
                         Text("感谢反馈！").font(.system(size:22,weight:.bold))
                         Text("我们会认真阅读每一条意见").foregroundColor(Color.xuanTextSecondary)
                     }.padding(.top,80)

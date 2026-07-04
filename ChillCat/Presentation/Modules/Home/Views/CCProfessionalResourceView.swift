@@ -103,7 +103,7 @@ struct CCProfessionalResourceView: View {
                         .fontWeight(.medium)
                 }
                 Spacer()
-                Image(systemName: "phone.fill")
+                Image("alert_call")
                     .font(.system(size: 16))
                     .foregroundColor(Color.xuanApricot)
                     .frame(width: 36, height: 36)

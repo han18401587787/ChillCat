@@ -64,7 +64,7 @@ struct CCDeleteAccountView: View {
         VStack(spacing: XuanSpacing.lg) {
             Spacer()
 
-            Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 56)).foregroundColor(Color.xuanDanger)
+            Image("alert_warn").font(.system(size: 56)).foregroundColor(Color.xuanDanger)
 
             Text("注销后将永久失去").font(.system(size: 20, weight: .bold))
             Text("所有账号数据将从服务器永久删除，此操作不可撤销。").font(.system(size: 15))
@@ -94,7 +94,7 @@ struct CCDeleteAccountView: View {
     var deletedView: some View {
         VStack(spacing: XuanSpacing.lg) {
             Spacer()
-            Image(systemName: "leaf.circle.fill").font(.system(size: 64)).foregroundColor(Color.xuanApricotDark)
+            Image("emotion_calm").font(.system(size: 64)).foregroundColor(Color.xuanApricotDark)
             Text("绪安 会想念你的。").font(.system(size: 22, weight: .bold))
             Text("随时欢迎回来。").font(.system(size: 16)).foregroundColor(Color.xuanTextSecondary)
             Text("7 天内可撤销注销").font(.system(size: 13)).foregroundColor(Color.xuanTextTertiary)

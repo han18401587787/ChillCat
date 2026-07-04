@@ -247,7 +247,7 @@ struct CCCBTView: View {
                         .foregroundColor(isSelected ? .white : Color.xuanTextPrimary)
                     Spacer()
                     if isSelected {
-                        Image(systemName: "checkmark.circle.fill")
+                        Image("home_checkin")
                             .foregroundColor(.white)
                             .font(.system(size: 16))
                     }
@@ -362,7 +362,7 @@ struct CCCBTView: View {
                 Circle()
                     .fill(Color.xuanSuccess.opacity(0.25))
                     .frame(width: 100, height: 100)
-                Image(systemName: "checkmark.circle.fill")
+                Image("home_checkin")
                     .font(.system(size: 48))
                     .foregroundColor(Color.xuanSuccess)
             }

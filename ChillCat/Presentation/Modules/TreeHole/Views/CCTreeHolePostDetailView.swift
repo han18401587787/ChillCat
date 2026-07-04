@@ -78,7 +78,7 @@ struct CCTreeHolePostDetailView: View {
                         VStack(spacing: XuanSpacing.sm) {
                             ForEach(replies) { reply in
                                 HStack(alignment: .top, spacing: 10) {
-                                    Image(systemName: "heart.fill")
+                                    Image("resonance_like")
                                         .font(.system(size: 12))
                                         .foregroundColor(Color.xuanPink)
                                         .padding(.top, 2)

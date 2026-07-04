@@ -31,7 +31,7 @@ struct CCPrivacyView: View {
                 Circle()
                     .fill(Color.xuanMint.opacity(0.12))
                     .frame(width: 80, height: 80)
-                Image(systemName: "lock.shield.fill")
+                Image("profile_privacy")
                     .font(.system(size: 36))
                     .foregroundColor(Color.xuanMint)
             }

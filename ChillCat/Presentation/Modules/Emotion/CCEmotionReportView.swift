@@ -175,7 +175,7 @@ struct CCEmotionReportView: View {
                     Circle()
                         .fill(Color.xuanMint.opacity(0.15))
                         .frame(width: 36, height: 36)
-                    Image(systemName: "brain.head.profile")
+                    Image("home_mood")
                         .font(.system(size: 16))
                         .foregroundColor(Color.xuanMint)
                 }

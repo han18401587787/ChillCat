@@ -33,7 +33,7 @@ struct CCExportDataView: View {
 
     private var headerCard: some View {
         VStack(spacing: XuanSpacing.md) {
-            Image(systemName: "square.and.arrow.up.fill")
+            Image("report_share")
                 .font(.system(size: 36))
                 .foregroundColor(Color.xuanApricotDark)
 
@@ -107,7 +107,7 @@ struct CCExportDataView: View {
                                 .foregroundColor(Color.xuanTextPrimary)
                             Spacer()
                             if dateRange == range {
-                                Image(systemName: "checkmark.circle.fill")
+                                Image("home_checkin")
                                     .font(.system(size: 20))
                                     .foregroundColor(Color.xuanApricot)
                             }
@@ -138,7 +138,7 @@ struct CCExportDataView: View {
                 if isExporting {
                     ProgressView().tint(.white)
                 } else {
-                    Image(systemName: "square.and.arrow.up.fill")
+                    Image("report_share")
                 }
                 Text(isExporting ? "正在导出..." : "确认导出")
             }

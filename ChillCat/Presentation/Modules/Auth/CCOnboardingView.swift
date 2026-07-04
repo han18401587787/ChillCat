@@ -210,7 +210,7 @@ struct OnboardingView: View {
                     .fill(Color.xuanSuccess.opacity(0.1))
                     .frame(width: 160, height: 160)
                 
-                Image(systemName: "lock.shield.fill")
+                Image("profile_privacy")
                     .font(.system(size: 64))
                     .foregroundColor(Color.xuanSuccess)
             }

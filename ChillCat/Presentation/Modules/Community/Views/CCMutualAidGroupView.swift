@@ -56,7 +56,7 @@ struct CCMutualAidGroupView: View {
 
             if !viewModel.myGroups.isEmpty {
                 HStack(spacing: 4) {
-                    Image(systemName: "person.2.fill")
+                    Image("resonance_people")
                         .font(.system(size: 12))
                     Text("已加入 \(viewModel.myGroups.count) 个")
                         .font(.system(size: 12))

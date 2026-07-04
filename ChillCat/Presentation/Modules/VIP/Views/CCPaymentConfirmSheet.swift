@@ -39,7 +39,7 @@ struct CCPaymentConfirmSheet: View {
 
     private var headerSection: some View {
         VStack(spacing: XuanSpacing.sm) {
-            Image(systemName: "crown.fill")
+            Image("profile_vip")
                 .font(.system(size: 40))
                 .foregroundColor(Color.xuanApricotDark)
 

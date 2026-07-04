@@ -124,7 +124,7 @@ struct CCTrendsView: View {
 
     func insightCard(text: String, color: Color) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: "sparkles").foregroundColor(Color.xuanApricotDark)
+            Image("home_quote").foregroundColor(Color.xuanApricotDark)
             Text(text).font(.system(size: 14)).foregroundColor(Color.xuanTextSecondary).lineSpacing(4)
             Spacer()
         }.padding().background(color.opacity(0.25)).cornerRadius(XuanRadius.md)

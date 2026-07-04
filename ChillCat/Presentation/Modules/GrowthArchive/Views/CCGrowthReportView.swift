@@ -322,7 +322,7 @@ struct CCGrowthReportView: View {
                 VStack(spacing: XuanSpacing.sm) {
                     ForEach(Array(insights.enumerated()), id: \.offset) { _, insight in
                         HStack(alignment: .top, spacing: XuanSpacing.md) {
-                            Image(systemName: "lightbulb.fill")
+                            Image("ai_think")
                                 .font(.system(size: 14))
                                 .foregroundColor(Color.xuanApricotDark)
                                 .frame(width: 24, height: 24)
@@ -364,7 +364,7 @@ struct CCGrowthReportView: View {
             shareReport()
         }) {
             HStack(spacing: XuanSpacing.sm) {
-                Image(systemName: "square.and.arrow.up")
+                Image("common_share")
                     .font(.system(size: 16))
                 Text("分享成长报告")
                     .font(XuanFont.bodyLMedium)

@@ -82,7 +82,7 @@ struct CCHomeView: View {
                     .fill(Color.xuanApricot.opacity(0.3))
                     .frame(width: 40, height: 40)
                     .overlay(
-                        Image(systemName: "person.fill")
+                        Image("profile_user")
                             .font(.system(size: 20))
                             .foregroundColor(Color.xuanApricotDark)
                     )
@@ -261,7 +261,7 @@ struct CCHomeView: View {
                         .fill(Color.xuanApricot.opacity(0.2))
                         .frame(width: 60, height: 60)
                         .overlay(
-                            Image(systemName: "brain.head.profile")
+                            Image("home_mood")
                                 .font(.system(size: 24))
                                 .foregroundColor(Color.xuanApricotDark)
                         )

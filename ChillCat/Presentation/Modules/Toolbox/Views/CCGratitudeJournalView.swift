@@ -64,7 +64,7 @@ struct CCGratitudeJournalView: View {
 
     private var streakBanner: some View {
         HStack(spacing: XuanSpacing.sm) {
-            Image(systemName: "flame.fill")
+            Image("emotion_angry")
                 .font(.system(size: 24))
                 .foregroundColor(Color.xuanApricotDark)
             VStack(alignment: .leading, spacing: 2) {
@@ -90,7 +90,7 @@ struct CCGratitudeJournalView: View {
 
     private var dateSection: some View {
         HStack {
-            Image(systemName: "calendar")
+            Image("other_calendar")
                 .foregroundColor(Color.xuanApricot)
             DatePicker(
                 "选择日期",
@@ -216,7 +216,7 @@ struct CCGratitudeJournalView: View {
             viewModel.submitEntry()
         } label: {
             HStack {
-                Image(systemName: "heart.fill")
+                Image("resonance_like")
                 Text("记录今天的好事")
             }
             .font(XuanFont.bodyLMedium)
@@ -268,7 +268,7 @@ struct CCGratitudeJournalView: View {
                     return formatter.string(from: entry.date)
                 }()
 
-                Image(systemName: "calendar")
+                Image("other_calendar")
                     .font(.system(size: 12))
                     .foregroundColor(Color.xuanTextSecondary)
                 Text(dateStr)
