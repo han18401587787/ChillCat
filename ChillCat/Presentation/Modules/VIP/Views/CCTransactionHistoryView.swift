@@ -48,7 +48,7 @@ struct CCTransactionHistoryView: View {
 
     private func transactionRow(_ transaction: CCTransaction) -> some View {
         HStack(spacing: XuanSpacing.md) {
-            CCIconMapper.image(for: transaction.status.systemImage)
+            CCIconMapper.image(for: transaction.status.iconName)
                 .font(.title3)
                 .foregroundColor(statusColor(transaction.status))
 
