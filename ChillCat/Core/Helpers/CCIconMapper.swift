@@ -123,6 +123,8 @@ enum CCIconMapper {
         case "tornado": return "emotion_anxious"
         case "flame.fill": return "emotion_angry"
         case "star.fill": return "emotion_hopeful"
+        case "emotion_tired": return "emotion_tired"
+        case "emotion_grateful": return "emotion_grateful"
 
         // 其他
         case "calendar": return "other_calendar"

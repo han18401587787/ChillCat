@@ -33,7 +33,7 @@ struct CCExportDataView: View {
 
     private var headerCard: some View {
         VStack(spacing: XuanSpacing.md) {
-            Image("report_share")
+            Image("report_export")
                 .font(.system(size: 36))
                 .foregroundColor(Color.xuanApricotDark)
 
@@ -138,7 +138,7 @@ struct CCExportDataView: View {
                 if isExporting {
                     ProgressView().tint(.white)
                 } else {
-                    Image("report_share")
+                    Image("report_export")
                 }
                 Text(isExporting ? "正在导出..." : "确认导出")
             }

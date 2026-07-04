@@ -32,7 +32,7 @@ enum EmotionColors {
     static let allEmotions: [(name: String, chinese: String, color: Color, sfSymbol: String)] = [
         ("calm", "平静", calm, "leaf.fill"),
         ("happy", "开心", happy, "sun.max.fill"),
-        ("tired", "疲惫", tired, "cloud.fill"),
+        ("tired", "疲惫", tired, "emotion_tired"),
         ("anxious", "焦虑", anxious, "waveform.path.ecg"),
         ("wronged", "委屈", wronged, "drop.fill"),
         ("lonely", "孤独", lonely, "moon.fill"),
