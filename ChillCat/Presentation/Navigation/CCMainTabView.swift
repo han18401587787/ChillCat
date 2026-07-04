@@ -18,13 +18,14 @@ enum CCMainTab: Int, CaseIterable {
         }
     }
 
-    var sfSymbol: String {
+    /// 自定义图标名（对应 Assets.xcassets 中的 imageset）
+    var iconName: String {
         switch self {
-        case .home:          return "house.fill"
-        case .treeHole:      return "bubble.left.and.bubble.right.fill"
-        case .resonanceWall: return "heart.fill"
-        case .healing:       return "leaf.fill"
-        case .profile:       return "person.fill"
+        case .home:          return "home_home"
+        case .treeHole:      return "treehole_write"
+        case .resonanceWall: return "resonance_like"
+        case .healing:       return "healing_meditate"
+        case .profile:       return "profile_user"
         }
     }
 }
@@ -43,7 +44,7 @@ struct CCMainTabView: View {
                             .toolbar(.hidden, for: .tabBar)
                     }
             }
-            .tabItem { Label(CCMainTab.home.title, systemImage: CCMainTab.home.sfSymbol) }
+            .tabItem { Label { Text(CCMainTab.home.title) } icon: { Image(CCMainTab.home.iconName) } }
             .tag(CCMainTab.home)
             .accessibilityIdentifier("tab_\(CCMainTab.home.rawValue)")
 
@@ -54,7 +55,7 @@ struct CCMainTabView: View {
                             .toolbar(.hidden, for: .tabBar)
                     }
             }
-            .tabItem { Label(CCMainTab.treeHole.title, systemImage: CCMainTab.treeHole.sfSymbol) }
+            .tabItem { Label { Text(CCMainTab.treeHole.title) } icon: { Image(CCMainTab.treeHole.iconName) } }
             .tag(CCMainTab.treeHole)
             .accessibilityIdentifier("tab_\(CCMainTab.treeHole.rawValue)")
 
@@ -65,7 +66,7 @@ struct CCMainTabView: View {
                             .toolbar(.hidden, for: .tabBar)
                     }
             }
-            .tabItem { Label(CCMainTab.resonanceWall.title, systemImage: CCMainTab.resonanceWall.sfSymbol) }
+            .tabItem { Label { Text(CCMainTab.resonanceWall.title) } icon: { Image(CCMainTab.resonanceWall.iconName) } }
             .tag(CCMainTab.resonanceWall)
             .accessibilityIdentifier("tab_\(CCMainTab.resonanceWall.rawValue)")
 
@@ -76,7 +77,7 @@ struct CCMainTabView: View {
                             .toolbar(.hidden, for: .tabBar)
                     }
             }
-            .tabItem { Label(CCMainTab.healing.title, systemImage: CCMainTab.healing.sfSymbol) }
+            .tabItem { Label { Text(CCMainTab.healing.title) } icon: { Image(CCMainTab.healing.iconName) } }
             .tag(CCMainTab.healing)
             .accessibilityIdentifier("tab_\(CCMainTab.healing.rawValue)")
 
@@ -87,7 +88,7 @@ struct CCMainTabView: View {
                             .toolbar(.hidden, for: .tabBar)
                     }
             }
-            .tabItem { Label(CCMainTab.profile.title, systemImage: CCMainTab.profile.sfSymbol) }
+            .tabItem { Label { Text(CCMainTab.profile.title) } icon: { Image(CCMainTab.profile.iconName) } }
             .tag(CCMainTab.profile)
             .accessibilityIdentifier("tab_\(CCMainTab.profile.rawValue)")
         }

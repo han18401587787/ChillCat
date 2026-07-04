@@ -104,9 +104,13 @@ struct EncourageDiscoverView: View {
     private var activeChainsSection: some View {
         VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack {
-                Label("正在发生的温暖", systemImage: "heart.circle.fill")
-                    .font(XuanFont.h3)
-                    .foregroundColor(Color.xuanTextPrimary)
+                Label {
+                    Text("正在发生的温暖")
+                } icon: {
+                    Image("resonance_like")
+                }
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
                 
                 Spacer()
                 

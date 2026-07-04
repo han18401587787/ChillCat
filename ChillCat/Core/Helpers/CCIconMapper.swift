@@ -14,12 +14,13 @@ enum CCIconMapper {
         switch sfSymbol {
         // 首页
         case "house.fill": return "home_home"
-        case "brain.head.profile": return "home_mood"
+        case "brain.head.profile", "brain.head.profile.fill": return "home_mood"
         case "headphones": return "home_ai"
         case "sparkles": return "home_quote"
         case "checkmark.circle.fill": return "home_checkin"
         case "chart.line.uptrend.xyaxis": return "home_chart"
         case "square.grid.2x2.fill": return "home_apps"
+        case "bolt.fill": return "emotion_hopeful"
 
         // 树洞
         case "bubble.left.and.bubble.right.fill": return "treehole_write"

@@ -629,9 +629,9 @@ enum WhiteNoiseOption: String, CaseIterable {
     
     var sfSymbol: String {
         switch self {
-        case .rain: return "cloud.rain.fill"
-        case .ocean: return "water.waves"
-        case .forest: return "leaf.fill"
+        case .rain: return "emotion_sad"
+        case .ocean: return "healing_sound"
+        case .forest: return "healing_meditate"
         }
     }
     
