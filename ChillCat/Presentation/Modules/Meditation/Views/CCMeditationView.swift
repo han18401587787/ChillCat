@@ -111,6 +111,7 @@ struct CCMeditationView: View {
             .cornerRadius(XuanRadius.lg)
             .xuanCardShadow()
         }
+        .accessibilityIdentifier("meditation_session_\(session.title)")
     }
 
     // MARK: - 治愈音频

@@ -22,8 +22,11 @@ struct CCSettingsView: View {
                 // 账号与安全
                 sectionView("账号与安全") {
                     settingsRow(icon: "person.fill", title: "账号信息", color: Color.xuanApricot) {}
+                        .accessibilityIdentifier("settings_account_info")
                     settingsRow(icon: "lock.fill", title: "安全设置", color: Color.xuanMint) {}
+                        .accessibilityIdentifier("settings_security")
                     settingsRow(icon: "key.fill", title: "密码管理", color: Color.xuanInfo) {}
+                        .accessibilityIdentifier("settings_password")
                 }
 
                 // 消息通知
@@ -35,9 +38,12 @@ struct CCSettingsView: View {
                             get: { viewModel.notificationsEnabled },
                             set: { viewModel.notificationsEnabled = $0 }
                         ))
-                        .labelsHidden())
+                        .labelsHidden()
+                        .accessibilityIdentifier("settings_notifications_toggle"))
                     }
+                    .accessibilityIdentifier("settings_notifications")
                     settingsRow(icon: "moon.fill", title: "勿扰模式", color: Color(hex: "A085C6")) {}
+                        .accessibilityIdentifier("settings_dnd")
                 }
 
                 // 隐私设置
@@ -45,7 +51,9 @@ struct CCSettingsView: View {
                     settingsRow(icon: "hand.raised.fill", title: "隐私保护", color: Color.xuanInfo) {
                         coordinator.navigate(to: .privacy)
                     }
+                    .accessibilityIdentifier("settings_privacy")
                     settingsRow(icon: "eye.slash.fill", title: "匿名保护", color: Color.xuanTextTertiary) {}
+                        .accessibilityIdentifier("settings_anonymous")
                 }
 
                 // 外观
@@ -69,12 +77,14 @@ struct CCSettingsView: View {
                                 set: { _ in themeManager.toggleTheme() }
                             ))
                             .labelsHidden()
+                            .accessibilityIdentifier("settings_dark_mode_toggle")
                         }
                         .padding(XuanSpacing.md)
                         .background(Color.xuanWhite)
                         .cornerRadius(XuanRadius.md)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier("settings_dark_mode")
                 }
 
                 // 关于
@@ -84,18 +94,23 @@ struct CCSettingsView: View {
                             .font(XuanFont.bodyS)
                             .foregroundColor(Color.xuanTextTertiary))
                     }
+                    .accessibilityIdentifier("settings_version")
                     settingsRow(icon: "doc.text.fill", title: "用户协议", color: Color.xuanTextSecondary) {
                         coordinator.navigate(to: .userAgreement)
                     }
+                    .accessibilityIdentifier("settings_user_agreement")
                     settingsRow(icon: "shield.fill", title: "隐私政策", color: Color.xuanTextSecondary) {
                         coordinator.navigate(to: .privacyPolicy)
                     }
+                    .accessibilityIdentifier("settings_privacy_policy")
                     settingsRow(icon: "questionmark.circle.fill", title: "常见问题", color: Color.xuanTextSecondary) {
                         coordinator.navigate(to: .faq)
                     }
+                    .accessibilityIdentifier("settings_faq")
                     settingsRow(icon: "envelope.fill", title: "意见反馈", color: Color.xuanTextSecondary) {
                         coordinator.navigate(to: .feedback)
                     }
+                    .accessibilityIdentifier("settings_feedback")
                 }
 
                 // 数据管理
@@ -103,6 +118,7 @@ struct CCSettingsView: View {
                     settingsRow(icon: "externaldrive.fill", title: "数据管理", color: Color.xuanInfo) {
                         coordinator.navigate(to: .dataManagement)
                     }
+                    .accessibilityIdentifier("settings_data_management")
                     Button(action: { coordinator.navigate(to: .deleteAccount) }) {
                         HStack(spacing: XuanSpacing.md) {
                             ZStack {
@@ -123,6 +139,7 @@ struct CCSettingsView: View {
                         .cornerRadius(XuanRadius.md)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier("settings_delete_account")
                 }
 
                 // 退出登录
@@ -149,6 +166,7 @@ struct CCSettingsView: View {
                 }
                 .buttonStyle(.plain)
                 .contentShape(Rectangle())
+                .accessibilityIdentifier("settings_logout")
             }
             .padding(XuanSpacing.lg)
         }

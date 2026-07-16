@@ -64,6 +64,7 @@ struct CCTreeHolePostDetailView: View {
                         .background(didResonate ? Color.xuanPink.opacity(0.15) : Color.xuanApricot.opacity(0.08))
                         .cornerRadius(XuanRadius.md)
                     }
+                    .accessibilityIdentifier("treehole_detail_resonate")
 
                     // Resonance replies
                     if isLoadingReplies {
@@ -130,6 +131,7 @@ struct CCTreeHolePostDetailView: View {
                 .background(Color.xuanSurface)
                 .cornerRadius(XuanRadius.md)
                 .lineLimit(2...4)
+                .accessibilityIdentifier("treehole_detail_reply_input")
 
             HStack(spacing: 12) {
                 Button("取消") { showReplySheet = false }
@@ -170,6 +172,7 @@ struct CCTreeHolePostDetailView: View {
                         .background(Color.xuanApricot)
                         .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("treehole_detail_send_reply")
             }
         }
         .padding()

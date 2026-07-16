@@ -170,6 +170,7 @@ struct CCMemberCenterView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color.xuanWhite)
                     .cornerRadius(XuanRadius.md)
+                    .accessibilityIdentifier("member_privilege_\(privilege.title)")
                 }
             }
         }
@@ -228,6 +229,7 @@ struct CCMemberCenterView: View {
             .xuanCardShadow()
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("member_purchase_\(product.type.displayName)")
     }
 
     // MARK: - 购买记录
@@ -259,5 +261,5 @@ struct CCMemberCenterView: View {
             .xuanCardShadow()
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("member_purchase_history")
     }
-}

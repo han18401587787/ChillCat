@@ -95,6 +95,7 @@ struct CCMutualAidGroupView: View {
                             )
                             .cornerRadius(XuanRadius.full)
                     }
+                    .accessibilityIdentifier("mutual_aid_category_\(category)")
                 }
             }
             .padding(.horizontal)
@@ -181,6 +182,7 @@ struct CCMutualAidGroupView: View {
                         .cornerRadius(XuanRadius.sm)
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("mutual_aid_join_\(group.id)")
             }
             .padding(12)
             .background(Color.xuanWhite)
@@ -188,6 +190,7 @@ struct CCMutualAidGroupView: View {
             .shadow(color: Color.black.opacity(0.03), radius: 4, y: 2)
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("mutual_aid_group_\(group.id)")
     }
 
     // MARK: - Helpers

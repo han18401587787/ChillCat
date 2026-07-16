@@ -79,6 +79,7 @@ struct CCResonanceDetailView: View {
                     .background(Color.xuanPink.opacity(0.08))
                     .cornerRadius(XuanRadius.full)
                 }
+                .accessibilityIdentifier("resonance_detail_resonate")
 
                 // 鼓励按钮
                 Button(action: {
@@ -100,6 +101,7 @@ struct CCResonanceDetailView: View {
                     .background(Color.xuanApricotDark.opacity(0.08))
                     .cornerRadius(XuanRadius.full)
                 }
+                .accessibilityIdentifier("resonance_detail_encourage")
 
                 Spacer()
 
@@ -109,12 +111,14 @@ struct CCResonanceDetailView: View {
                         .focused($isFocused)
                         .font(XuanFont.bodyS)
                         .lineLimit(1)
+                        .accessibilityIdentifier("resonance_detail_reply_input")
 
                     Button(action: { showEmoji.toggle() }) {
                         Image("emotion_happy")
                             .font(.system(size: 18))
                             .foregroundColor(Color.xuanTextSecondary)
                     }
+                    .accessibilityIdentifier("resonance_detail_emoji")
 
                     Button(action: { sendReply() }) {
                         Image("common_share")
@@ -129,6 +133,7 @@ struct CCResonanceDetailView: View {
                             .clipShape(Circle())
                     }
                     .disabled(newReply.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .accessibilityIdentifier("resonance_detail_send")
                 }
                 .padding(.horizontal, XuanSpacing.md)
                 .padding(.vertical, XuanSpacing.xs)
@@ -195,6 +200,7 @@ struct CCResonanceDetailView: View {
         .background(Color.xuanWhite)
         .cornerRadius(XuanRadius.md)
         .xuanCardShadow()
+        .accessibilityIdentifier("resonance_detail_post_card")
     }
 
     // MARK: - 回应区

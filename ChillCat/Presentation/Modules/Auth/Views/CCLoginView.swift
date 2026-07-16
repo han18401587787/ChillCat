@@ -77,6 +77,7 @@ struct CCLoginView: View {
                             RoundedRectangle(cornerRadius: XuanRadius.md)
                                 .stroke(Color.xuanBorder, lineWidth: 1)
                         )
+                        .accessibilityIdentifier("login_phone_field")
 
                         // 验证码
                         HStack(spacing: XuanSpacing.sm) {
@@ -84,6 +85,7 @@ struct CCLoginView: View {
                                 .keyboardType(.numberPad)
                                 .font(XuanFont.bodyL)
                                 .padding(.leading, XuanSpacing.md)
+                                .accessibilityIdentifier("login_code_field")
 
                             Button(action: {
                                 sendVerificationCode()
@@ -95,6 +97,7 @@ struct CCLoginView: View {
                                     .padding(.vertical, XuanSpacing.sm)
                             }
                             .disabled(countdown > 0 || phoneNumber.count < 11)
+                            .accessibilityIdentifier("login_send_code")
                         }
                         .padding(.vertical, XuanSpacing.md)
                         .background(Color.xuanWhite)
@@ -165,6 +168,7 @@ struct CCLoginView: View {
                             }
                             .buttonStyle(.plain)
                             .contentShape(Circle())
+                            .accessibilityIdentifier("login_wechat")
 
                             // Apple 登录
                             Button(action: {
@@ -186,6 +190,7 @@ struct CCLoginView: View {
                             }
                             .buttonStyle(.plain)
                             .contentShape(Circle())
+                            .accessibilityIdentifier("login_apple")
                         }
                     }
                     .padding(.top, XuanSpacing.lg)
@@ -200,6 +205,7 @@ struct CCLoginView: View {
                         }
                         .font(XuanFont.caption)
                         .foregroundColor(Color.xuanApricot)
+                        .accessibilityIdentifier("login_user_agreement")
                         Text("和")
                             .font(XuanFont.caption)
                             .foregroundColor(Color.xuanTextTertiary)
@@ -208,6 +214,7 @@ struct CCLoginView: View {
                         }
                         .font(XuanFont.caption)
                         .foregroundColor(Color.xuanApricot)
+                        .accessibilityIdentifier("login_privacy_policy")
                     }
 
                     if let error = viewModel.errorMessage {

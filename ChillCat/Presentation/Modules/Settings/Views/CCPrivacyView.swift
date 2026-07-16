@@ -13,9 +13,13 @@ struct CCPrivacyView: View {
 
                 VStack(spacing: XuanSpacing.md) {
                     privacyItem(icon: "lock.shield.fill", title: "数据加密存储", desc: "所有你的情绪数据都经过AES-256加密后存储，即使服务端也无法直接读取明文内容。", color: Color.xuanMint)
+                        .accessibilityIdentifier("privacy_encryption")
                     privacyItem(icon: "eye.slash.fill", title: "匿名保护", desc: "你的身份信息与情绪数据完全隔离。在共鸣墙上发布的内容默认匿名，没有人知道你是谁。", color: Color.xuanInfo)
+                        .accessibilityIdentifier("privacy_anonymous")
                     privacyItem(icon: "trash.fill", title: "数据删除权利", desc: "你可以随时在「设置-数据管理」中一键删除所有数据。删除后数据不可恢复。", color: Color.xuanDanger)
+                        .accessibilityIdentifier("privacy_data_deletion")
                     privacyItem(icon: "hand.raised.fill", title: "不出售数据", desc: "我们承诺永远不出售、不分享你的个人数据给任何第三方。你的隐私是我们的底线。", color: Color.xuanApricotDark)
+                        .accessibilityIdentifier("privacy_no_sale")
                 }
             }
             .padding(XuanSpacing.lg)

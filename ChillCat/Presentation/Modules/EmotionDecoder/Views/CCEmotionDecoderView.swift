@@ -70,11 +70,13 @@ struct CCEmotionDecoderView: View {
                         )
                         .cornerRadius(XuanRadius.full)
                 }
+                .accessibilityIdentifier("decoder_period_\(period.rawValue)")
             }
         }
         .padding(4)
         .background(Color.xuanSurface)
         .cornerRadius(XuanRadius.full)
+        .accessibilityIdentifier("decoder_period_switcher")
     }
 
     // MARK: - 五维雷达图
@@ -87,11 +89,13 @@ struct CCEmotionDecoderView: View {
 
             radarChartContent
                 .frame(width: 300, height: 300)
+                .accessibilityIdentifier("decoder_radar_chart")
         }
         .padding(XuanSpacing.lg)
         .background(Color.xuanWhite)
         .cornerRadius(XuanRadius.lg)
         .xuanCardShadow()
+        .accessibilityIdentifier("decoder_radar_section")
     }
 
     private var radarChartContent: some View {
@@ -187,12 +191,14 @@ struct CCEmotionDecoderView: View {
                     }
                     .frame(height: 6)
                 }
+                .accessibilityIdentifier("decoder_progress_\(item.label)")
             }
         }
         .padding(XuanSpacing.lg)
         .background(Color.xuanWhite)
         .cornerRadius(XuanRadius.lg)
         .xuanCardShadow()
+        .accessibilityIdentifier("decoder_progress_section")
     }
 
     // MARK: - AI 洞察
@@ -219,13 +225,16 @@ struct CCEmotionDecoderView: View {
 
             HStack(spacing: XuanSpacing.sm) {
                 insightTag("💪 好转中", color: Color.xuanMint)
+                    .accessibilityIdentifier("decoder_insight_improving")
                 insightTag("🧘 推荐冥想", color: Color(hex: "A085C6"))
+                    .accessibilityIdentifier("decoder_insight_meditation")
             }
         }
         .padding(XuanSpacing.lg)
         .background(Color.xuanWhite)
         .cornerRadius(XuanRadius.lg)
         .xuanCardShadow()
+        .accessibilityIdentifier("decoder_ai_insight")
     }
 
     private func insightTag(_ text: String, color: Color) -> some View {
