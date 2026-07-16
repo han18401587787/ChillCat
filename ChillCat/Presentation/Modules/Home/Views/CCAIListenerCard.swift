@@ -155,6 +155,7 @@ struct CCAIListenerCard: View {
                     .padding(.horizontal, 12)
                     .padding(.vertical, 10)
                     .lineLimit(3...6)
+                    .accessibilityIdentifier("ai_listener_input")
             }
             .frame(minHeight: 80, alignment: .topLeading)
             .background(Color.xuanApricotBg)
@@ -215,6 +216,7 @@ struct CCAIListenerCard: View {
                         .cornerRadius(XuanRadius.sm)
                 }
                 .disabled(!viewModel.isSendEnabled)
+                .accessibilityIdentifier("ai_listener_send")
             }
         }
         // Emoji Picker Sheet
@@ -353,6 +355,7 @@ struct CCAIListenerCard: View {
             .cornerRadius(XuanRadius.md)
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("ai_listener_crisis_hotline")
     }
 
     // MARK: - Crisis Hotline Sheet

@@ -52,10 +52,12 @@ struct CCDeleteAccountView: View {
                     .frame(maxWidth: .infinity).padding(.vertical, 16)
                     .background(Color.xuanDanger).cornerRadius(XuanRadius.md)
             }.padding(.horizontal)
+            .accessibilityIdentifier("delete_account_confirm")
 
             Button(action: { coordinator.pop() }) {
                 Text("我再想想，先不注销").foregroundColor(Color.xuanApricot)
             }.padding(.bottom, XuanSpacing.xl)
+            .accessibilityIdentifier("delete_account_cancel")
         }.padding()
     }
 
@@ -81,10 +83,12 @@ struct CCDeleteAccountView: View {
             }
             .disabled(viewModel.isDeleting)
             .background(Color.xuanDanger).cornerRadius(XuanRadius.md).padding(.horizontal)
+            .accessibilityIdentifier("delete_account_final_confirm")
 
             Button(action: { confirmed = false }) {
                 Text("返回").foregroundColor(Color.xuanTextSecondary)
             }
+            .accessibilityIdentifier("delete_account_back")
 
             Spacer()
         }.padding()
@@ -104,6 +108,7 @@ struct CCDeleteAccountView: View {
                     .frame(maxWidth: .infinity).padding(.vertical, 16)
                     .background(Color.xuanApricotDark).cornerRadius(XuanRadius.md)
             }.padding(.horizontal).padding(.bottom, 50)
+            .accessibilityIdentifier("delete_account_go_home")
         }.padding()
     }
 

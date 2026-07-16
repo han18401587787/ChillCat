@@ -183,6 +183,7 @@ struct CCSafetyPlanView: View {
                 .background(Color.xuanMint.opacity(0.08))
                 .cornerRadius(XuanRadius.sm)
             }
+            .accessibilityIdentifier("safety_plan_add_strategy")
         }
     }
 
@@ -246,6 +247,7 @@ struct CCSafetyPlanView: View {
                 .background(Color(hex: "A085C6").opacity(0.08))
                 .cornerRadius(XuanRadius.sm)
             }
+            .accessibilityIdentifier("safety_plan_add_contact")
         }
     }
 
@@ -360,6 +362,7 @@ struct CCSafetyPlanView: View {
             .cornerRadius(XuanRadius.md)
         }
         .padding(.top, XuanSpacing.sm)
+        .accessibilityIdentifier("safety_plan_share")
     }
 
     // MARK: - Add Strategy Sheet
@@ -378,6 +381,7 @@ struct CCSafetyPlanView: View {
                     .background(Color.xuanSurface)
                     .cornerRadius(XuanRadius.md)
                     .lineLimit(2...4)
+                    .accessibilityIdentifier("safety_plan_strategy_input")
 
                 Button(action: {
                     guard !newStrategyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
@@ -394,6 +398,7 @@ struct CCSafetyPlanView: View {
                         .cornerRadius(XuanRadius.md)
                 }
                 .disabled(newStrategyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .accessibilityIdentifier("safety_plan_strategy_add")
 
                 Spacer()
             }
@@ -424,6 +429,7 @@ struct CCSafetyPlanView: View {
                     .padding(XuanSpacing.md)
                     .background(Color.xuanSurface)
                     .cornerRadius(XuanRadius.md)
+                    .accessibilityIdentifier("safety_plan_contact_name")
 
                 TextField("电话号码", text: $newContactPhone)
                     .font(XuanFont.bodyL)
@@ -431,6 +437,7 @@ struct CCSafetyPlanView: View {
                     .background(Color.xuanSurface)
                     .cornerRadius(XuanRadius.md)
                     .keyboardType(.phonePad)
+                    .accessibilityIdentifier("safety_plan_contact_phone")
 
                 Button(action: {
                     guard !newContactName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
@@ -452,6 +459,7 @@ struct CCSafetyPlanView: View {
                         .cornerRadius(XuanRadius.md)
                 }
                 .disabled(newContactName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .accessibilityIdentifier("safety_plan_contact_add")
 
                 Spacer()
             }

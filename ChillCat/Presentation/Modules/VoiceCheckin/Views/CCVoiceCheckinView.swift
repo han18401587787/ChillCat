@@ -84,6 +84,7 @@ struct CCVoiceCheckinView: View {
                             }
                         }
                 )
+                .accessibilityIdentifier("voice_checkin_record_button")
 
             Text("按住说话…")
                 .font(.system(size: 14))
@@ -296,6 +297,7 @@ struct CCVoiceCheckinView: View {
                     RoundedRectangle(cornerRadius: XuanRadius.md)
                         .stroke(transcriptionFocused ? Color.xuanApricot.opacity(0.4) : Color.clear, lineWidth: 1)
                 )
+                .accessibilityIdentifier("voice_checkin_transcription_editor")
         }
     }
 
@@ -334,6 +336,7 @@ struct CCVoiceCheckinView: View {
                     .padding(.vertical, 8)
                     .background(Color.xuanSurface)
                     .cornerRadius(XuanRadius.md)
+                    .accessibilityIdentifier("voice_checkin_tag_input")
 
                 Button(action: {
                     viewModel.addTag()
@@ -347,6 +350,7 @@ struct CCVoiceCheckinView: View {
                         )
                 }
                 .disabled(viewModel.newTagInput.trimmingCharacters(in: .whitespaces).isEmpty)
+                .accessibilityIdentifier("voice_checkin_tag_add")
             }
         }
     }
@@ -371,6 +375,7 @@ struct CCVoiceCheckinView: View {
                 .background(Color.xuanSurface)
                 .cornerRadius(XuanRadius.md)
             }
+            .accessibilityIdentifier("voice_checkin_re_record")
 
             Button(action: {
                 Task { await viewModel.saveDiary() }
@@ -387,6 +392,7 @@ struct CCVoiceCheckinView: View {
                 .background(Color.xuanApricot)
                 .cornerRadius(XuanRadius.md)
             }
+            .accessibilityIdentifier("voice_checkin_save")
         }
     }
 
@@ -504,6 +510,7 @@ struct CCVoiceCheckinView: View {
                 .background(Color.xuanApricot)
                 .cornerRadius(XuanRadius.lg)
             }
+            .accessibilityIdentifier("voice_checkin_talk_ai")
 
             Button(action: { coordinator.navigate(to: .resonanceWall) }) {
                 HStack(spacing: XuanSpacing.sm) {
@@ -521,6 +528,7 @@ struct CCVoiceCheckinView: View {
                         .stroke(Color(hex: "F2DBC9"), lineWidth: 1)
                 )
             }
+            .accessibilityIdentifier("voice_checkin_publish_resonance")
 
             Button(action: { coordinator.navigate(to: .emotionDecoder) }) {
                 HStack(spacing: XuanSpacing.sm) {
@@ -534,6 +542,7 @@ struct CCVoiceCheckinView: View {
                 .background(Color.xuanSurface)
                 .cornerRadius(XuanRadius.lg)
             }
+            .accessibilityIdentifier("voice_checkin_view_decoder")
         }
     }
 
@@ -566,6 +575,7 @@ struct CCVoiceCheckinView: View {
                     .background(Color.xuanSurface)
                     .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("voice_checkin_error_re_record")
 
                 Button(action: {
                     Task { await viewModel.saveDiary() }
@@ -579,6 +589,7 @@ struct CCVoiceCheckinView: View {
                         .cornerRadius(XuanRadius.md)
                 }
                 .disabled(viewModel.resultData == nil)
+                .accessibilityIdentifier("voice_checkin_error_retry_save")
             }
 
             Spacer()

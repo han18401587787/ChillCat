@@ -32,12 +32,14 @@ struct CCWelcomeView: View {
                     .frame(maxWidth: .infinity).padding(.vertical, 16)
                     .background(Color.xuanApricotDark).foregroundColor(.white).cornerRadius(12)
                     .disabled(viewModel.isLoading)
+                    .accessibilityIdentifier("welcome_anonymous_entry")
 
                     Button("已有账号登录") {
                         coordinator.hasSeenWelcome = true
                     }
                     .foregroundColor(Color.xuanApricotDark)
                     .disabled(viewModel.isLoading)
+                    .accessibilityIdentifier("welcome_login_entry")
                 }.padding(.horizontal, 32).padding(.bottom, 50)
             }
         }

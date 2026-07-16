@@ -198,6 +198,7 @@ struct CCEncourageChainView: View {
                         .padding(XuanSpacing.lg)
                         .background(Color.xuanSurface)
                         .cornerRadius(XuanRadius.md)
+                        .accessibilityIdentifier("encourage_chain_input")
 
                     Text("\(viewModel.characterCount)/140")
                         .font(XuanFont.caption)
@@ -247,6 +248,7 @@ struct CCEncourageChainView: View {
                         .cornerRadius(XuanRadius.md)
                     }
                     .disabled(!viewModel.canRelay || viewModel.isRelaying)
+                    .accessibilityIdentifier("encourage_chain_relay")
                 }
             }
             .padding(XuanSpacing.lg)
