@@ -32,6 +32,7 @@ struct CCPaymentConfirmSheet: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("取消") { dismiss(); onDismiss() }
                         .disabled(isProcessing)
+                        .accessibilityIdentifier("payment_cancel")
                 }
             }
         }
@@ -141,6 +142,7 @@ struct CCPaymentConfirmSheet: View {
                 .cornerRadius(XuanRadius.md)
             }
             .disabled(isProcessing)
+            .accessibilityIdentifier("payment_confirm")
 
             Text("支付即表示您同意服务条款和隐私政策")
                 .font(.caption2)

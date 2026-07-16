@@ -59,6 +59,7 @@ struct CCValuesExplorerView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
                     .foregroundColor(Color.xuanApricot)
+                    .accessibilityIdentifier("values_close")
             }
         }
     }
@@ -164,6 +165,7 @@ struct CCValuesExplorerView: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("values_card_\(value.id)")
     }
 
     // MARK: - Step 2: Rank Values
@@ -225,6 +227,7 @@ struct CCValuesExplorerView: View {
                             )
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("values_rank_\(valueId)")
                     }
                 }
             }
@@ -299,6 +302,7 @@ struct CCValuesExplorerView: View {
                         .background(Color.xuanSurface)
                         .cornerRadius(XuanRadius.sm)
                         .lineLimit(2...4)
+                        .accessibilityIdentifier("values_reflection_\(valueId)")
                     }
                     .padding(XuanSpacing.lg)
                     .background(Color.xuanWhite)
@@ -339,6 +343,7 @@ struct CCValuesExplorerView: View {
 
                 Slider(value: $viewModel.alignmentRating, in: 1...10, step: 1)
                     .tint(Color.xuanApricotDark)
+                    .accessibilityIdentifier("values_alignment_slider")
 
                 if !viewModel.alignmentDescription.isEmpty {
                     Text(viewModel.alignmentDescription)
@@ -378,6 +383,7 @@ struct CCValuesExplorerView: View {
                         RoundedRectangle(cornerRadius: XuanRadius.sm)
                             .stroke(Color.xuanBorder, lineWidth: 0.5)
                     )
+                    .accessibilityIdentifier("values_action_plan")
 
                 Text("例如：这周给妈妈打三次电话（体现「家庭」价值观）")
                     .font(XuanFont.bodyM)
@@ -495,6 +501,7 @@ struct CCValuesExplorerView: View {
                         .background(Color.xuanApricotDark)
                         .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("values_retry")
 
                 Button {
                     coordinator.dismiss()
@@ -503,6 +510,7 @@ struct CCValuesExplorerView: View {
                         .font(XuanFont.bodyLMedium)
                         .foregroundColor(Color.xuanTextSecondary)
                 }
+                .accessibilityIdentifier("values_back")
             }
             .padding(.top, XuanSpacing.lg)
         }
@@ -539,6 +547,7 @@ struct CCValuesExplorerView: View {
                     .background(Color.xuanApricotDark.opacity(0.1))
                     .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("values_prev_step")
             }
 
             Button {
@@ -556,6 +565,7 @@ struct CCValuesExplorerView: View {
                 .cornerRadius(XuanRadius.md)
             }
             .disabled(!canProceed)
+            .accessibilityIdentifier("values_next_step")
         }
     }
 

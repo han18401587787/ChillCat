@@ -65,6 +65,7 @@ struct CCGrowthReportView: View {
                                 : Color.clear
                         )
                 }
+                .accessibilityIdentifier("growth_report_period_\(period)")
             }
         }
         .background(Color.xuanSurface)
@@ -377,6 +378,7 @@ struct CCGrowthReportView: View {
             .cornerRadius(XuanRadius.md)
         }
         .padding(.top, XuanSpacing.sm)
+        .accessibilityIdentifier("growth_report_share")
     }
 
     private func shareReport() {

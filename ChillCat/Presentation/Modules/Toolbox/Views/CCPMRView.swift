@@ -34,6 +34,7 @@ struct CCPMRView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
                     .foregroundColor(Color.xuanApricot)
+                    .accessibilityIdentifier("pmr_close")
             }
         }
         .onDisappear {
@@ -287,6 +288,7 @@ struct CCPMRView: View {
                     .background(Color.xuanApricot)
                     .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("pmr_start")
 
             default:
                 // Pause/Resume
@@ -304,6 +306,7 @@ struct CCPMRView: View {
                     .background(Color.xuanApricot.opacity(0.1))
                     .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("pmr_pause_resume")
 
                 // Reset
                 Button {
@@ -320,6 +323,7 @@ struct CCPMRView: View {
                     .background(Color.xuanSurface)
                     .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("pmr_reset")
             }
         }
     }
@@ -371,6 +375,7 @@ struct CCPMRView: View {
 
                 Slider(value: $viewModel.bodyFeelingRating, in: 1...10, step: 1)
                     .tint(Color.xuanMint)
+                    .accessibilityIdentifier("pmr_body_feeling_slider")
 
                 Text(viewModel.completionMessage)
                     .font(XuanFont.bodyL)
@@ -426,6 +431,7 @@ struct CCPMRView: View {
                         .background(Color.xuanApricot)
                         .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("pmr_retry")
 
                 Button {
                     coordinator.dismiss()
@@ -434,6 +440,7 @@ struct CCPMRView: View {
                         .font(XuanFont.bodyLMedium)
                         .foregroundColor(Color.xuanTextSecondary)
                 }
+                .accessibilityIdentifier("pmr_back")
             }
             .padding(.top, XuanSpacing.lg)
         }

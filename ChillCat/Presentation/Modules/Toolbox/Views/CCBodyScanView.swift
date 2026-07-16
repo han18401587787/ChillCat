@@ -41,6 +41,7 @@ struct CCBodyScanView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
                     .foregroundColor(Color.xuanApricot)
+                    .accessibilityIdentifier("body_scan_close")
             }
         }
         .onDisappear {
@@ -309,6 +310,7 @@ struct CCBodyScanView: View {
                 .padding(XuanSpacing.sm)
                 .background(Color.xuanSurface)
                 .cornerRadius(XuanRadius.sm)
+                .accessibilityIdentifier("body_scan_note")
             }
         }
         .padding(XuanSpacing.lg)
@@ -345,6 +347,7 @@ struct CCBodyScanView: View {
                                 )
                                 .cornerRadius(XuanRadius.sm)
                         }
+                        .accessibilityIdentifier("body_scan_duration_\(seconds)")
                     }
                 }
             }
@@ -360,6 +363,7 @@ struct CCBodyScanView: View {
                 }
             }
             .tint(Color.xuanApricot)
+            .accessibilityIdentifier("body_scan_audio_toggle")
         }
         .padding(XuanSpacing.lg)
         .background(Color.xuanWhite)
@@ -443,6 +447,7 @@ struct CCBodyScanView: View {
                     .background(Color.xuanApricot)
                     .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("body_scan_start")
 
             case .scanning:
                 // Pause/Resume
@@ -460,6 +465,7 @@ struct CCBodyScanView: View {
                     .background(Color.xuanApricot.opacity(0.1))
                     .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("body_scan_pause_resume")
 
                 // Skip
                 Button {
@@ -476,6 +482,7 @@ struct CCBodyScanView: View {
                     .background(Color.xuanSurface)
                     .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("body_scan_skip")
 
                 // Reset
                 Button {
@@ -492,6 +499,7 @@ struct CCBodyScanView: View {
                     .background(Color.xuanSurface)
                     .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("body_scan_reset")
 
             default:
                 EmptyView()
@@ -571,6 +579,7 @@ struct CCBodyScanView: View {
                         .background(Color.xuanApricot)
                         .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("body_scan_retry")
 
                 Button {
                     coordinator.dismiss()
@@ -579,6 +588,7 @@ struct CCBodyScanView: View {
                         .font(XuanFont.bodyLMedium)
                         .foregroundColor(Color.xuanTextSecondary)
                 }
+                .accessibilityIdentifier("body_scan_back")
             }
             .padding(.top, XuanSpacing.lg)
         }

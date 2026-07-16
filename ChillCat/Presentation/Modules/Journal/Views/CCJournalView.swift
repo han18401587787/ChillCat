@@ -12,10 +12,12 @@ struct CCJournalView: View {
             VStack(spacing: XuanSpacing.lg) {
                 HStack {
                     Button(action: { viewModel.previousMonth() }) { Image("common_back") }
+                        .accessibilityIdentifier("journal_prev_month")
                     Spacer()
                     Text("\(String(viewModel.selectedYear))年\(viewModel.selectedMonth)月").font(.system(size: 18, weight: .semibold))
                     Spacer()
                     Button(action: { viewModel.nextMonth() }) { Image("common_more") }
+                        .accessibilityIdentifier("journal_next_month")
                 }.padding(.horizontal)
 
                 VStack(spacing: 8) {
@@ -35,6 +37,7 @@ struct CCJournalView: View {
                             }.frame(height: 40).frame(maxWidth: .infinity)
                             .background(hasEntry ? Color.xuanApricotDark.opacity(0.1) : Color.clear).cornerRadius(6)
                             .contentShape(Rectangle())
+                            .accessibilityIdentifier("journal_day_\(day)")
                             .onTapGesture {
                                 guard hasEntry else { return }
                                 let dayStr = String(format: "%04d-%02d-%02d", viewModel.selectedYear, viewModel.selectedMonth, day)

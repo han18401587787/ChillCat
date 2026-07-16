@@ -76,6 +76,7 @@ struct CCMeditationPlayerView: View {
                 }
             }
             .disabled(viewModel.isLoading)
+            .accessibilityIdentifier("meditation_player_play_pause")
 
             // 定时关闭
             VStack(spacing: XuanSpacing.sm) {
@@ -175,6 +176,7 @@ struct CCMeditationPlayerView: View {
                 .cornerRadius(XuanRadius.full)
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("meditation_player_timer_\(minutes)")
     }
 
     private var hintText: Text {

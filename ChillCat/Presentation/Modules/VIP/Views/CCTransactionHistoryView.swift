@@ -40,7 +40,9 @@ struct CCTransactionHistoryView: View {
             Button("重试") {
                 viewModel.load()
             }
+            .accessibilityIdentifier("transaction_retry")
             Button("取消", role: .cancel) { }
+                .accessibilityIdentifier("transaction_cancel")
         } message: {
             Text(viewModel.errorMessage ?? "加载购买记录失败")
         }

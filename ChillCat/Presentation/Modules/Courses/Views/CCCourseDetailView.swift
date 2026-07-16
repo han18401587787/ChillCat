@@ -25,6 +25,7 @@ struct CCCourseDetailView: View {
                 Button(action: { withAnimation { progress = min(1, progress + 0.25) } }) {
                     Text(progress >= 1 ? "已完成" : "标记进展").fontWeight(.medium).foregroundColor(.white).frame(maxWidth:.infinity).padding(.vertical,14).background(progress>=1 ? Color.xuanMint : Color.xuanApricotDark).cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("course_detail_progress")
             }.padding()
         }.background(Color.xuanApricotBg).navigationTitle("课程详情")
     }

@@ -70,6 +70,7 @@ struct CCThankYouLetterView: View {
                 .background(Color.xuanApricot)
                 .cornerRadius(XuanRadius.lg)
             }
+            .accessibilityIdentifier("thank_you_go_warm")
 
             Spacer()
         }
@@ -85,6 +86,7 @@ struct CCThankYouLetterView: View {
                         .onTapGesture {
                             selectedLetter = letter
                         }
+                        .accessibilityIdentifier("thank_you_letter_\(letter.id)")
                 }
             }
             .padding(XuanSpacing.lg)
@@ -181,6 +183,7 @@ struct CCThankYouLetterView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("关闭") { selectedLetter = nil }
+                        .accessibilityIdentifier("thank_you_detail_close")
                 }
             }
         }

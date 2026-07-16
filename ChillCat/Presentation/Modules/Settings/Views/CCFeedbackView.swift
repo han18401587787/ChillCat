@@ -15,15 +15,15 @@ struct CCFeedbackView: View {
                 } else {
                     VStack(alignment:.leading,spacing:XuanSpacing.sm) {
                         Text("反馈类型").font(.system(size:15,weight:.medium))
-                        Picker("", selection: $viewModel.feedbackType) { ForEach(types,id:\.self){Text($0).tag($0)} }.pickerStyle(.segmented)
+                        Picker("", selection: $viewModel.feedbackType) { ForEach(types,id:\.self){Text($0).tag($0)} }.pickerStyle(.segmented).accessibilityIdentifier("feedback_type_picker")
                     }
                     VStack(alignment:.leading,spacing:XuanSpacing.sm) {
                         Text("详细描述").font(.system(size:15,weight:.medium))
-                        TextEditor(text: $viewModel.feedbackContent).frame(minHeight:120).padding(8).background(Color.xuanWhite).cornerRadius(XuanRadius.md).overlay(RoundedRectangle(cornerRadius:XuanRadius.md).stroke(Color.gray.opacity(0.2)))
+                        TextEditor(text: $viewModel.feedbackContent).frame(minHeight:120).padding(8).background(Color.xuanWhite).cornerRadius(XuanRadius.md).overlay(RoundedRectangle(cornerRadius:XuanRadius.md).stroke(Color.gray.opacity(0.2))).accessibilityIdentifier("feedback_content")
                     }
                     VStack(alignment:.leading,spacing:XuanSpacing.sm) {
                         Text("联系方式（选填）").font(.system(size:15,weight:.medium))
-                        TextField("邮箱或手机号", text: $viewModel.feedbackContact).textFieldStyle(.roundedBorder)
+                        TextField("邮箱或手机号", text: $viewModel.feedbackContact).textFieldStyle(.roundedBorder).accessibilityIdentifier("feedback_contact")
                     }
                     Button(action: { Task { await viewModel.submitFeedback() } }) {
                         if viewModel.isSubmitting {
@@ -36,6 +36,7 @@ struct CCFeedbackView: View {
                     .background(viewModel.feedbackContent.isEmpty || viewModel.isSubmitting ? Color.gray : Color.xuanApricotDark)
                     .cornerRadius(XuanRadius.md)
                     .disabled(viewModel.feedbackContent.isEmpty || viewModel.isSubmitting)
+                    .accessibilityIdentifier("feedback_submit")
                 }
             }.padding()
         }

@@ -133,6 +133,7 @@ struct CCToolboxView: View {
                     toolCard(item: item)
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("toolbox_\(item.id)")
                 .contentShape(RoundedRectangle(cornerRadius: XuanRadius.lg))
                 .accessibilityLabel("\(item.name)：\(item.description)")
                 .opacity(appeared ? 1 : 0)

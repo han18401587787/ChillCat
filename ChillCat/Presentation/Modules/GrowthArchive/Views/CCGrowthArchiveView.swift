@@ -157,6 +157,7 @@ struct CCGrowthArchiveView: View {
                 .background(isSelected ? Color.xuanApricot : Color.xuanSurface)
                 .cornerRadius(XuanRadius.full)
         }
+        .accessibilityIdentifier("growth_archive_category_\(label)")
     }
 
     private func badgeCell(_ badge: CCAchievementBadge) -> some View {
@@ -340,6 +341,7 @@ struct CCGrowthArchiveView: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("growth_archive_report")
     }
 
     // MARK: - Bottom Padding

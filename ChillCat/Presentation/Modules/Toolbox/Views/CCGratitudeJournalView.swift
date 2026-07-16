@@ -50,6 +50,7 @@ struct CCGratitudeJournalView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
                     .foregroundColor(Color.xuanApricot)
+                    .accessibilityIdentifier("gratitude_close")
             }
         }
         .cc_emojiPickerOverlay(isShowing: $viewModel.showEmojiPicker) { emoji in
@@ -99,6 +100,7 @@ struct CCGratitudeJournalView: View {
             )
             .labelsHidden()
             .tint(Color.xuanApricot)
+            .accessibilityIdentifier("gratitude_date_picker")
 
             Text(viewModel.formattedDate)
                 .font(XuanFont.bodyL)
@@ -169,6 +171,7 @@ struct CCGratitudeJournalView: View {
                         .background(color.opacity(0.15))
                         .cornerRadius(XuanRadius.sm)
                 }
+                .accessibilityIdentifier("gratitude_emoji_\(index)")
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(label)
@@ -187,6 +190,7 @@ struct CCGratitudeJournalView: View {
                 .padding(XuanSpacing.sm)
                 .background(Color.xuanSurface)
                 .cornerRadius(XuanRadius.sm)
+                .accessibilityIdentifier("gratitude_thing_\(index)_title")
 
             VStack(alignment: .leading, spacing: XuanSpacing.xs) {
                 Text("原因是什么？")
@@ -198,6 +202,7 @@ struct CCGratitudeJournalView: View {
                     .background(Color.xuanSurface)
                     .cornerRadius(XuanRadius.sm)
                     .lineLimit(2...4)
+                    .accessibilityIdentifier("gratitude_thing_\(index)_reason")
             }
         }
         .padding(XuanSpacing.lg)
@@ -239,6 +244,7 @@ struct CCGratitudeJournalView: View {
             .cornerRadius(XuanRadius.md)
         }
         .disabled(!viewModel.canSubmit)
+        .accessibilityIdentifier("gratitude_submit")
     }
 
     // MARK: - History

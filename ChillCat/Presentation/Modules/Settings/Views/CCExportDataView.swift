@@ -75,6 +75,7 @@ struct CCExportDataView: View {
                         .background(selectedFormat == format ? Color.xuanApricot : Color.xuanSurface)
                         .cornerRadius(XuanRadius.md)
                     }
+                    .accessibilityIdentifier("export_format_\(format.rawValue)")
                 }
             }
         }
@@ -117,6 +118,7 @@ struct CCExportDataView: View {
                         .cornerRadius(XuanRadius.md)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier("export_range_\(range.rawValue)")
                 }
             }
         }
@@ -150,6 +152,7 @@ struct CCExportDataView: View {
             .cornerRadius(XuanRadius.lg)
         }
         .disabled(isExporting)
+        .accessibilityIdentifier("export_confirm")
     }
 }
 

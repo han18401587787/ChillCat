@@ -55,6 +55,7 @@ struct CCCBTView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
                     .foregroundColor(Color.xuanApricot)
+                    .accessibilityIdentifier("cbt_close")
             }
         }
     }
@@ -137,6 +138,7 @@ struct CCCBTView: View {
                     .background(Color.xuanSurface)
                     .cornerRadius(XuanRadius.sm)
                     .lineLimit(3...6)
+                    .accessibilityIdentifier("cbt_situation_text")
             }
             .padding(XuanSpacing.lg)
             .background(Color.xuanWhite)
@@ -160,6 +162,7 @@ struct CCCBTView: View {
                         RoundedRectangle(cornerRadius: XuanRadius.sm)
                             .stroke(Color.xuanBorder, lineWidth: 0.5)
                     )
+                    .accessibilityIdentifier("cbt_automatic_thought")
             }
             .padding(XuanSpacing.lg)
             .background(Color.xuanWhite)
@@ -218,6 +221,7 @@ struct CCCBTView: View {
                                             .font(.system(size: 12))
                                             .foregroundColor(Color(hex: "A085C6").opacity(0.5).opacity(0.6))
                                     }
+                                    .accessibilityIdentifier("cbt_remove_distortion_\(id)")
                                 }
                                 .padding(.horizontal, XuanSpacing.sm)
                                 .padding(.vertical, XuanSpacing.xs)
@@ -269,6 +273,7 @@ struct CCCBTView: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("cbt_distortion_\(distortion.id)")
     }
 
     // MARK: - Step 3: Reframe
@@ -310,6 +315,7 @@ struct CCCBTView: View {
                         RoundedRectangle(cornerRadius: XuanRadius.sm)
                             .stroke(Color.xuanSuccess.opacity(0.4), lineWidth: 1)
                     )
+                    .accessibilityIdentifier("cbt_balanced_thought")
             }
             .padding(XuanSpacing.lg)
             .background(Color.xuanWhite)
@@ -350,6 +356,7 @@ struct CCCBTView: View {
             }
             Slider(value: value, in: 1...10, step: 1)
                 .tint(color)
+                .accessibilityIdentifier("cbt_emotion_\(label)_slider")
         }
     }
 
@@ -440,6 +447,7 @@ struct CCCBTView: View {
                         .background(Color.xuanApricot)
                         .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("cbt_retry")
 
                 Button {
                     coordinator.dismiss()
@@ -448,6 +456,7 @@ struct CCCBTView: View {
                         .font(XuanFont.bodyL)
                         .foregroundColor(Color.xuanTextSecondary)
                 }
+                .accessibilityIdentifier("cbt_back")
             }
             .padding(.top, XuanSpacing.lg)
         }
@@ -486,6 +495,7 @@ struct CCCBTView: View {
                     .background(Color.xuanApricot.opacity(0.1))
                     .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("cbt_prev_step")
             }
 
             Button {
@@ -503,6 +513,7 @@ struct CCCBTView: View {
                 .cornerRadius(XuanRadius.md)
             }
             .disabled(!canProceed)
+            .accessibilityIdentifier("cbt_next_step")
         }
     }
 

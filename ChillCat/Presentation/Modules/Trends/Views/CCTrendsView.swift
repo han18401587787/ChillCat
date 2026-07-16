@@ -9,7 +9,7 @@ struct CCTrendsView: View {
             VStack(spacing: XuanSpacing.lg) {
                 Picker("", selection: $selectedTab) {
                     Text("本周").tag(0); Text("本月").tag(1); Text("成长").tag(2)
-                }.pickerStyle(.segmented).padding(.horizontal)
+                }.pickerStyle(.segmented).padding(.horizontal).accessibilityIdentifier("trends_tab_picker")
 
                 if selectedTab == 0 { weekView }
                 else if selectedTab == 1 { monthView }
@@ -20,7 +20,9 @@ struct CCTrendsView: View {
         .task { await viewModel.loadStats() }
         .alert("提示", isPresented: .constant(viewModel.errorMessage != nil)) {
             Button("重试") { Task { await viewModel.retry() } }
+                .accessibilityIdentifier("trends_retry")
             Button("取消", role: .cancel) { viewModel.errorMessage = nil }
+                .accessibilityIdentifier("trends_cancel")
         } message: {
             Text(viewModel.errorMessage ?? "")
         }

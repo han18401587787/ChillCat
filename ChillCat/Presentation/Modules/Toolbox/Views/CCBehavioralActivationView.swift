@@ -56,6 +56,7 @@ struct CCBehavioralActivationView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("关闭") { coordinator.dismiss() }
                     .foregroundColor(Color.xuanApricot)
+                    .accessibilityIdentifier("ba_close")
             }
         }
     }
@@ -83,6 +84,7 @@ struct CCBehavioralActivationView: View {
                         )
                         .cornerRadius(XuanRadius.sm)
                 }
+                .accessibilityIdentifier("ba_view_mode_\(mode.rawValue)")
             }
         }
         .padding(4)
@@ -304,6 +306,7 @@ struct CCBehavioralActivationView: View {
                     .font(.system(size: 22))
                     .foregroundColor(activity.isCompleted ? Color.xuanMint : Color.xuanTextSecondary)
             }
+            .accessibilityIdentifier("ba_activity_check_\(activity.id)")
 
             // Type icon
             CCIconMapper.image(for: activity.type.icon)
@@ -354,6 +357,7 @@ struct CCBehavioralActivationView: View {
                     .foregroundColor(Color.xuanTextSecondary)
             }
             .opacity(0.5)
+            .accessibilityIdentifier("ba_activity_delete_\(activity.id)")
         }
         .padding(XuanSpacing.md)
         .background(Color.xuanWhite)
@@ -404,6 +408,7 @@ struct CCBehavioralActivationView: View {
             .background(Color.xuanApricotDark)
             .cornerRadius(XuanRadius.md)
         }
+        .accessibilityIdentifier("ba_add_activity")
     }
 
     // MARK: - New Activity Overlay
@@ -433,6 +438,7 @@ struct CCBehavioralActivationView: View {
                         .padding(XuanSpacing.md)
                         .background(Color.xuanSurface)
                         .cornerRadius(XuanRadius.sm)
+                        .accessibilityIdentifier("ba_new_activity_name")
                 }
 
                 // Type selector
@@ -461,6 +467,7 @@ struct CCBehavioralActivationView: View {
                                 )
                                 .cornerRadius(XuanRadius.full)
                             }
+                            .accessibilityIdentifier("ba_new_activity_type_\(type.rawValue)")
                         }
                     }
                 }
@@ -478,6 +485,7 @@ struct CCBehavioralActivationView: View {
                     }
                     Slider(value: $viewModel.newExpectedMoodBoost, in: 1...10, step: 1)
                         .tint(Color.xuanApricotDark)
+                        .accessibilityIdentifier("ba_new_mood_boost_slider")
                 }
 
                 // Scheduled time
@@ -489,6 +497,7 @@ struct CCBehavioralActivationView: View {
                 .font(XuanFont.bodyS)
                 .foregroundColor(Color.xuanTextSecondary)
                 .tint(Color.xuanApricot)
+                .accessibilityIdentifier("ba_new_scheduled_time")
 
                 // Action buttons
                 HStack(spacing: XuanSpacing.md) {
@@ -505,6 +514,7 @@ struct CCBehavioralActivationView: View {
                             .background(Color.xuanSurface)
                             .cornerRadius(XuanRadius.md)
                     }
+                    .accessibilityIdentifier("ba_new_activity_cancel")
 
                     Button {
                         viewModel.addActivity()
@@ -521,6 +531,7 @@ struct CCBehavioralActivationView: View {
                             .cornerRadius(XuanRadius.md)
                     }
                     .disabled(viewModel.newActivityName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .accessibilityIdentifier("ba_new_activity_confirm")
                 }
             }
             .padding(XuanSpacing.xl)
@@ -569,6 +580,7 @@ struct CCBehavioralActivationView: View {
 
                 Slider(value: $viewModel.ratingValue, in: 1...10, step: 1)
                     .tint(Color.xuanMint)
+                    .accessibilityIdentifier("ba_rating_slider")
 
                 Button {
                     viewModel.submitRating()
@@ -581,6 +593,7 @@ struct CCBehavioralActivationView: View {
                         .background(Color.xuanMint)
                         .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("ba_rating_confirm")
             }
             .padding(XuanSpacing.xl)
             .background(

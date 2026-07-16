@@ -114,6 +114,7 @@ struct CCProfessionalResourceView: View {
             .background(Color.xuanWhite)
             .cornerRadius(XuanRadius.md)
         }
+        .accessibilityIdentifier("pro_resource_hotline_\(number.replacingOccurrences(of: "-", with: "_"))")
     }
 
     // MARK: - Online Platform Section
@@ -209,6 +210,7 @@ struct CCProfessionalResourceView: View {
             .background(Color.xuanWhite)
             .cornerRadius(XuanRadius.md)
         }
+        .accessibilityIdentifier("pro_resource_safety_plan")
     }
 
     // MARK: - Disclaimer

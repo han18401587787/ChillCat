@@ -39,6 +39,7 @@ struct CCCrisisHotlineView: View {
                     .font(.system(size: 28))
                     .foregroundColor(Color.xuanTextSecondary)
             }
+            .accessibilityIdentifier("crisis_hotline_close")
         }
     }
 
@@ -79,6 +80,7 @@ struct CCCrisisHotlineView: View {
                 icon: "phone.fill",
                 color: Color.xuanApricot
             )
+            .accessibilityIdentifier("crisis_hotline_national")
 
             largeCallButton(
                 name: "北京心理危机研究与干预中心",
@@ -86,6 +88,7 @@ struct CCCrisisHotlineView: View {
                 icon: "phone.fill",
                 color: Color.xuanMint
             )
+            .accessibilityIdentifier("crisis_hotline_beijing")
 
             largeCallButton(
                 name: "生命热线",
@@ -93,6 +96,7 @@ struct CCCrisisHotlineView: View {
                 icon: "phone.fill",
                 color: Color(hex: "A085C6")
             )
+            .accessibilityIdentifier("crisis_hotline_life")
         }
     }
 
@@ -143,7 +147,9 @@ struct CCCrisisHotlineView: View {
 
             HStack(spacing: XuanSpacing.lg) {
                 emergencyNumberLink(number: "120", label: "急救")
+                    .accessibilityIdentifier("crisis_emergency_120")
                 emergencyNumberLink(number: "110", label: "报警")
+                    .accessibilityIdentifier("crisis_emergency_110")
             }
         }
         .padding(XuanSpacing.xl)

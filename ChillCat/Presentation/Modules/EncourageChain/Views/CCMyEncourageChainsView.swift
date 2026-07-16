@@ -18,6 +18,7 @@ struct CCMyEncourageChainsView: View {
                 ) {
                     coordinator.navigate(to: .encourageChain)
                 }
+                .accessibilityIdentifier("my_chains_empty_action")
             } else {
                 ScrollView {
                     VStack(spacing: XuanSpacing.sm) {
@@ -88,6 +89,7 @@ struct CCMyEncourageChainsView: View {
                         .font(.system(size: 12, weight: .medium))
                         .foregroundColor(Color.xuanApricot)
                 }
+                .accessibilityIdentifier("my_chains_detail_\(chain.chainId)")
             }
         }
         .padding()

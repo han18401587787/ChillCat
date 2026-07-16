@@ -106,6 +106,7 @@ struct CCRainSoundView: View {
                     .foregroundColor(Color.xuanTextTertiary)
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("rain_sound_close")
         }
         .padding(.horizontal, XuanSpacing.lg)
         .padding(.top, XuanSpacing.lg)
@@ -215,6 +216,7 @@ struct CCRainSoundView: View {
                 .frame(width: 56, height: 56)
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("rain_sound_backward")
 
             // 播放/暂停 大按钮
             Button(action: {
@@ -238,6 +240,7 @@ struct CCRainSoundView: View {
             }
             .buttonStyle(.plain)
             .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isPlaying)
+            .accessibilityIdentifier("rain_sound_play_pause")
 
             // 前进15s
             Button(action: {
@@ -253,6 +256,7 @@ struct CCRainSoundView: View {
                 .frame(width: 56, height: 56)
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("rain_sound_forward")
         }
     }
 
@@ -289,6 +293,7 @@ struct CCRainSoundView: View {
         }
         .buttonStyle(.plain)
         .animation(.easeInOut(duration: 0.2), value: timerOption)
+        .accessibilityIdentifier("rain_sound_timer_\(option.rawValue)")
     }
 
     // MARK: - Helpers
