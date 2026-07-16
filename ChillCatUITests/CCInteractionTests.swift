@@ -34,7 +34,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_Home_NeedButtonsAreButtons() throws {
         app.tabHome.tap()
-        sleep(1)
+        _ = app.tabHome.waitForExistence(timeout: 3)
 
         // 4个需求标签应该是Button类型
         let needs = ["被倾听", "被理解", "被鼓励", "只是想说说"]
@@ -52,7 +52,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_Home_CheckinButton() throws {
         app.tabHome.tap()
-        sleep(1)
+        _ = app.tabHome.waitForExistence(timeout: 3)
 
         let checkinBtn = app.buttons["今日心情打卡"].firstMatch
         if checkinBtn.waitForExistence(timeout: 3) {
@@ -64,7 +64,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_Home_NavigateToEmotionDecoder() throws {
         app.tabHome.tap()
-        sleep(1)
+        _ = app.tabHome.waitForExistence(timeout: 3)
         app.swipeUp(); app.swipeUp()
 
         let exploreBtn = app.buttons["情绪解码"].firstMatch
@@ -79,11 +79,12 @@ final class CCInteractionTests: XCTestCase {
         app.tabHome.tap()
         app.swipeUp(); app.swipeUp(); app.swipeUp()
 
-        let aiBtn = app.buttons["和绪安聊聊"].firstMatch
+        // 使用 accessibilityIdentifier 定位 AI 入口（比文本匹配更可靠）
+        let aiBtn = app.buttons["home_ai_listener_entry"].firstMatch
         if aiBtn.waitForExistence(timeout: 5) {
             aiBtn.tap()
-            // AI倾听官页面应该有输入框
-            let inputExists = app.textFields.firstMatch.waitForExistence(timeout: 5)
+            // AI 聊天页使用 TextField，有明确的 accessibilityIdentifier
+            let inputExists = app.textFields["ai_chat_input"].waitForExistence(timeout: 5)
             XCTAssertTrue(inputExists, "AI对话页应该有输入框")
         }
     }
@@ -92,7 +93,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_TreeHole_PublishBoxIsEditable() throws {
         app.tabTreeHole.tap()
-        sleep(1)
+        _ = app.tabTreeHole.waitForExistence(timeout: 3)
 
         // 输入框应该是可编辑的
         let editor = app.textViews.firstMatch
@@ -105,7 +106,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_TreeHole_PublishButtonState() throws {
         app.tabTreeHole.tap()
-        sleep(1)
+        _ = app.tabTreeHole.waitForExistence(timeout: 3)
 
         let publishBtn = app.buttons["发送倾诉"].firstMatch
         if publishBtn.waitForExistence(timeout: 3) {
@@ -119,7 +120,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_Resonance_NotAloneBanner() throws {
         app.tabResonance.tap()
-        sleep(2)
+        _ = app.tabResonance.waitForExistence(timeout: 5)
 
         // 多策略查找 "你并不孤单"（CI 安全：仅用 firstMatch，避免 allElementsBoundByIndex）
         var found = false
@@ -145,7 +146,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_Resonance_FABButton() throws {
         app.tabResonance.tap()
-        sleep(2)
+        _ = app.tabResonance.waitForExistence(timeout: 5)
 
         let fab = app.buttons["写下心情"].firstMatch
         if fab.waitForExistence(timeout: 5) {
@@ -158,7 +159,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_Healing_MeditationCards() throws {
         app.tabHealing.tap()
-        sleep(2)
+        _ = app.tabHealing.waitForExistence(timeout: 5)
 
         // 冥想练习卡片
         let cards = ["睡前助眠", "独处放松", "焦虑治愈"]
@@ -185,7 +186,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_Profile_UserCardTappable() throws {
         app.tabProfile.tap()
-        sleep(2)
+        _ = app.tabProfile.waitForExistence(timeout: 5)
 
         // 用户卡片可点击（未登录时跳转登录页）
         let userCard = app.buttons["点击登录"].firstMatch
@@ -196,7 +197,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_Profile_VIPBannerTappable() throws {
         app.tabProfile.tap()
-        sleep(2)
+        _ = app.tabProfile.waitForExistence(timeout: 5)
 
         let vipBanner = app.buttons["心光会员"].firstMatch
         if vipBanner.waitForExistence(timeout: 3) {
@@ -218,13 +219,13 @@ final class CCInteractionTests: XCTestCase {
 
     func test_TabSwitchPreservesState() throws {
         app.tabTreeHole.tap()
-        sleep(1)
+        XCTAssertTrue(app.tabTreeHole.waitForExistence(timeout: 3))
         app.tabHome.tap()
-        sleep(1)
+        XCTAssertTrue(app.tabHome.waitForExistence(timeout: 3))
         XCTAssertTrue(app.tabHome.isSelected)
 
         app.tabProfile.tap()
-        sleep(1)
+        XCTAssertTrue(app.tabProfile.waitForExistence(timeout: 3))
         XCTAssertTrue(app.tabProfile.isSelected)
     }
 
@@ -232,7 +233,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_NoTappableTextLabels() throws {
         app.tabHome.tap()
-        sleep(1)
+        _ = app.tabHome.waitForExistence(timeout: 3)
 
         // CI 安全：仅统计数量，不逐个遍历
         let stCount = app.staticTexts.count
@@ -243,15 +244,13 @@ final class CCInteractionTests: XCTestCase {
 
     func test_Login_PhoneInputIsTextField() throws {
         app.tabProfile.tap()
-        sleep(1)
+        _ = app.tabProfile.waitForExistence(timeout: 5)
 
         // 点击登录区域
         let loginBtn = app.buttons["点击登录"].firstMatch
         if loginBtn.waitForExistence(timeout: 3) {
             loginBtn.tap()
-            sleep(2)
-
-            // 验证手机号输入框存在且是TextField
+            // 等待登录页加载
             let phoneField = app.textFields.firstMatch
             XCTAssertTrue(phoneField.waitForExistence(timeout: 5), "登录页应有手机号输入框")
             phoneField.tap()
@@ -264,7 +263,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_Healing_AudioCardsAreButtons() throws {
         app.tabHealing.tap()
-        sleep(2)
+        _ = app.tabHealing.waitForExistence(timeout: 5)
 
         let audioCards = ["白噪音·雨声", "森林声音", "钢琴曲"]
         for card in audioCards {
@@ -279,7 +278,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_Settings_ToggleExists() throws {
         app.tabProfile.tap()
-        sleep(1)
+        _ = app.tabProfile.waitForExistence(timeout: 5)
 
         // 个人中心页面应该显示设置入口
         XCTAssertTrue(app.tabProfile.isSelected, "应该能切换到个人中心Tab")
@@ -290,7 +289,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_VIP_BannerNavigates() throws {
         app.tabProfile.tap()
-        sleep(1)
+        _ = app.tabProfile.waitForExistence(timeout: 5)
 
         let vipBtn = app.buttons["心光会员"].firstMatch
         if vipBtn.waitForExistence(timeout: 3) {
@@ -304,7 +303,7 @@ final class CCInteractionTests: XCTestCase {
 
     func test_SafetyPlan_Navigates() throws {
         app.tabProfile.tap()
-        sleep(1)
+        _ = app.tabProfile.waitForExistence(timeout: 5)
 
         let safetyBtn = app.buttons["情绪趋势"].firstMatch
         if !safetyBtn.waitForExistence(timeout: 2) {

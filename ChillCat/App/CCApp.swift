@@ -31,15 +31,27 @@ struct CCApp: View {
 
     var body: some View {
         Group {
-            if isInitializing && !isUITesting {
+            if isUITesting {
+                // UITest 模式：跳过初始化和欢迎页，直接进入主界面
+                // - 有 -UITEST_AUTO_LOGIN → coordinator.isLoggedIn = true（模拟已登录）
+                // - 无 -UITEST_AUTO_LOGIN → 未登录状态（测试登录页/离线场景）
+                CCMainTabView()
+                    .onAppear {
+                        if isUITestAutoLogin {
+                            coordinator.isLoggedIn = true
+                            coordinator.isOffline = false
+                        }
+                        print("🧪 [UITest] 启动模式: isAutoLogin=\(isUITestAutoLogin)")
+                    }
+            } else if isInitializing {
                 splashView
-            } else if isUITestAutoLogin || coordinator.isLoggedIn {
+            } else if coordinator.isLoggedIn {
                 CCMainTabView()
-            } else if isUITesting {
-                // UITest 未设置自动登录 → 直接显示主界面（允许未登录状态测试）
-                CCMainTabView()
-            } else if coordinator.hasSeenWelcome {
+            } else if !coordinator.hasSeenWelcome {
                 CCWelcomeView()
+            } else {
+                // 兜底：已看过欢迎页但未登录 → 也显示主界面（允许游客浏览）
+                CCMainTabView()
             }
         }
         .environment(coordinator)

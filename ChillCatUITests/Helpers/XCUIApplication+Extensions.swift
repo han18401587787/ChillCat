@@ -192,7 +192,7 @@ extension XCUIApplication {
     func skipWelcomeAndLaunch() {
         launchArguments = ["-UITEST_SKIP_WELCOME"]
         launch()
-        let _ = buttons["tab_home"].waitForExistence(timeout: 10)
+        let _ = tabHome.waitForExistence(timeout: 10)
     }
 
     /// 匿名登录 → 进入主页（支持离线兜底）

@@ -451,6 +451,7 @@ struct AIChatView: View {
                     .cornerRadius(XuanRadius.lg)
                     .focused($isInputFocused)
                     .lineLimit(1...5)
+                    .accessibilityIdentifier("ai_chat_input")
 
                 // 发送按钮
                 Button {

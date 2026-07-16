@@ -46,7 +46,6 @@ struct CCMainTabView: View {
             }
             .tabItem { Label { Text(CCMainTab.home.title) } icon: { Image(CCMainTab.home.iconName) } }
             .tag(CCMainTab.home)
-            .accessibilityIdentifier("tab_\(CCMainTab.home.rawValue)")
 
             NavigationStack(path: $coordinator.treeHolePath) {
                 coordinator.buildView(for: .treeHole)
@@ -57,7 +56,6 @@ struct CCMainTabView: View {
             }
             .tabItem { Label { Text(CCMainTab.treeHole.title) } icon: { Image(CCMainTab.treeHole.iconName) } }
             .tag(CCMainTab.treeHole)
-            .accessibilityIdentifier("tab_\(CCMainTab.treeHole.rawValue)")
 
             NavigationStack(path: $coordinator.resonancePath) {
                 coordinator.buildView(for: .resonanceWall)
@@ -68,7 +66,6 @@ struct CCMainTabView: View {
             }
             .tabItem { Label { Text(CCMainTab.resonanceWall.title) } icon: { Image(CCMainTab.resonanceWall.iconName) } }
             .tag(CCMainTab.resonanceWall)
-            .accessibilityIdentifier("tab_\(CCMainTab.resonanceWall.rawValue)")
 
             NavigationStack(path: $coordinator.healingPath) {
                 coordinator.buildView(for: .healing)
@@ -79,7 +76,6 @@ struct CCMainTabView: View {
             }
             .tabItem { Label { Text(CCMainTab.healing.title) } icon: { Image(CCMainTab.healing.iconName) } }
             .tag(CCMainTab.healing)
-            .accessibilityIdentifier("tab_\(CCMainTab.healing.rawValue)")
 
             NavigationStack(path: $coordinator.profilePath) {
                 coordinator.buildView(for: .profile)
@@ -90,7 +86,6 @@ struct CCMainTabView: View {
             }
             .tabItem { Label { Text(CCMainTab.profile.title) } icon: { Image(CCMainTab.profile.iconName) } }
             .tag(CCMainTab.profile)
-            .accessibilityIdentifier("tab_\(CCMainTab.profile.rawValue)")
         }
         .tint(Color.xuanApricot)
         .onChange(of: selectedTab) { _, newTab in
@@ -103,18 +98,33 @@ struct CCMainTabView: View {
     }
 
     /// 通过 UIKit 桥接设置 TabBar 按钮的 accessibilityIdentifier
+    /// 带重试机制：SwiftUI TabView 的 UITabBarItem 可能在首帧后才就绪，需要轮询等待
     private func setupTabAccessibility() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            guard let tabBarController = findTabBarController() else { return }
-            let tabBar = tabBarController.tabBar
+        let maxRetries = 10
+        let retryInterval: TimeInterval = 0.2
+        var attempt = 0
+
+        func trySetup() {
+            guard let tabBarController = findTabBarController(),
+                  let items = tabBarController.tabBar.items,
+                  items.count >= CCMainTab.allCases.count else {
+                attempt += 1
+                if attempt < maxRetries {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + retryInterval, execute: trySetup)
+                } else {
+                    print("⚠️ [UITest] TabBar accessibilityIdentifier 设置失败：超时（\(maxRetries)次重试）")
+                }
+                return
+            }
 
             let tabs = CCMainTab.allCases
             for (index, tab) in tabs.enumerated() {
-                if index < tabBar.items?.count ?? 0 {
-                    tabBar.items?[index].accessibilityIdentifier = "tab_\(tab.title)"
-                }
+                items[index].accessibilityIdentifier = "tab_\(tab.title)"
             }
+            print("✅ [UITest] TabBar accessibilityIdentifier 已设置（第\(attempt + 1)次尝试）")
         }
+
+        DispatchQueue.main.async(execute: trySetup)
     }
 
     private func findTabBarController() -> UITabBarController? {

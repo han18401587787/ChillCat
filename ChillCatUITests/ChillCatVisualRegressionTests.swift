@@ -13,6 +13,9 @@
 
 import XCTest
 
+/// 视觉回归测试中页面切换动画完成所需的等待时间
+private let pageTransitionDelay: UInt32 = 1
+
 final class ChillCatVisualRegressionTests: XCTestCase {
     let app = XCUIApplication()
 
@@ -20,8 +23,8 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         continueAfterFailure = true
         // 确保前一个测试的 app 完全终止
         app.terminate()
-        // 等待进程完全释放
-        sleep(2)
+        // 等待进程完全释放（terminate 是异步的，需短暂等待）
+        sleep(1)
         app.launchArguments = ["-UITEST_SKIP_WELCOME", "-UITEST_AUTO_LOGIN"]
         let apiURL = ProcessInfo.processInfo.environment["CHILLCAT_API_URL"] ?? "http://81.70.178.249:8080"
         app.launchEnvironment = ["CHILLCAT_API_URL": apiURL]
@@ -33,7 +36,6 @@ final class ChillCatVisualRegressionTests: XCTestCase {
     override func tearDownWithError() throws {
         // 确保测试结束后 app 完全终止
         app.terminate()
-        sleep(1)
     }
 
     // MARK: - 🔍 环境自检
@@ -49,7 +51,7 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         app.tabHome.tap()
         // 等待首页内容加载完成（今日心情打卡按钮出现 = 数据就绪）
         _ = app.buttons["今日心情打卡"].waitForExistence(timeout: 10)
-        sleep(1)
+        sleep(pageTransitionDelay)
         try await VisualTesting.analyzeWithAI(
             named: "home",
             in: app,
@@ -60,7 +62,9 @@ final class ChillCatVisualRegressionTests: XCTestCase {
     /// 树洞 — page_19
     func testVisual_TreeHolePage() async throws {
         app.tabTreeHole.tap()
-        sleep(2)
+        // 等待树洞内容加载（发布框或空状态出现）
+        _ = app.textViews.firstMatch.waitForExistence(timeout: 5)
+        sleep(pageTransitionDelay)
         try await VisualTesting.analyzeWithAI(
             named: "treehole",
             in: app,
@@ -71,7 +75,9 @@ final class ChillCatVisualRegressionTests: XCTestCase {
     /// 共鸣墙 — page_20
     func testVisual_ResonanceWallPage() async throws {
         app.tabResonance.tap()
-        sleep(2)
+        // 等待共鸣墙内容加载
+        _ = app.buttons["写下心情"].waitForExistence(timeout: 5)
+        sleep(pageTransitionDelay)
         try await VisualTesting.analyzeWithAI(
             named: "resonance",
             in: app,
@@ -87,7 +93,7 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         let healingEntry = app.buttons["治愈空间"]
         if healingEntry.waitForExistence(timeout: 5) {
             healingEntry.tap()
-            sleep(2)
+            sleep(pageTransitionDelay)
             try await VisualTesting.analyzeWithAI(named: "healing", in: app)
         }
     }
@@ -95,13 +101,17 @@ final class ChillCatVisualRegressionTests: XCTestCase {
     /// 个人中心 — page_22
     func testVisual_ProfilePage() async throws {
         app.tabProfile.tap()
-        sleep(2)
+        // 等待个人中心内容加载（用户卡片或加载失败提示）
+        let contentLoaded = app.buttons["profile_user_card"].waitForExistence(timeout: 5)
+            || app.staticTexts["加载失败，请下拉刷新重试"].waitForExistence(timeout: 5)
+        _ = contentLoaded
 
         // UITest 未登录时显示「加载失败」是正常的，跳过视觉校验
         if app.staticTexts["加载失败，请下拉刷新重试"].exists {
             print("   ⚠️ 个人中心加载失败（UITest未登录），跳过视觉校验")
             return
         }
+        sleep(pageTransitionDelay)
         try await VisualTesting.analyzeWithAI(
             named: "profile",
             in: app,
@@ -118,7 +128,9 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         let decoderEntry = app.buttons["情绪解码"]
         if decoderEntry.waitForExistence(timeout: 5) {
             decoderEntry.tap()
-            sleep(2)
+            // 等待解码结果加载
+            _ = app.buttons["decode_continue_chat"].waitForExistence(timeout: 5)
+            sleep(pageTransitionDelay)
             try await VisualTesting.analyzeWithAI(named: "emotion_decoder", in: app)
         }
     }
@@ -130,7 +142,7 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         let needBtn = app.buttons["被倾听"].firstMatch
         if needBtn.waitForExistence(timeout: 5) {
             needBtn.tap()
-            sleep(1)
+            sleep(pageTransitionDelay)
             try await VisualTesting.analyzeWithAI(named: "emotion_record", in: app)
         }
     }
@@ -141,7 +153,9 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         let checkinBtn = app.buttons["今日心情打卡"]
         if checkinBtn.waitForExistence(timeout: 5) {
             checkinBtn.tap()
-            sleep(3)
+            // 打卡成功页可能需要网络请求，给更长等待
+            _ = app.staticTexts.firstMatch.waitForExistence(timeout: 5)
+            sleep(pageTransitionDelay * 2)
             try await VisualTesting.analyzeWithAI(named: "checkin_success", in: app)
         }
     }
@@ -152,7 +166,7 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         let planCard = app.buttons["稳情计划"]
         if planCard.waitForExistence(timeout: 5) {
             planCard.tap()
-            sleep(2)
+            sleep(pageTransitionDelay)
             try await VisualTesting.analyzeWithAI(named: "stable_plan", in: app)
         }
     }
@@ -164,11 +178,11 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         let healingEntry = app.buttons["治愈空间"]
         if healingEntry.waitForExistence(timeout: 5) {
             healingEntry.tap()
-            sleep(1)
+            sleep(pageTransitionDelay)
             let rainCard = app.buttons["白噪音·雨声"]
             if rainCard.waitForExistence(timeout: 5) {
                 rainCard.tap()
-                sleep(2)
+                sleep(pageTransitionDelay)
                 try await VisualTesting.analyzeWithAI(named: "rain_sound", in: app)
             }
         }
@@ -179,7 +193,7 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         app.tabProfile.tap()
         if app.profileSafetyPlan.waitForExistence(timeout: 5) {
             app.profileSafetyPlan.tap()
-            sleep(2)
+            sleep(pageTransitionDelay)
             try await VisualTesting.analyzeWithAI(named: "safety_plan", in: app)
         }
     }
@@ -190,7 +204,7 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         let vipBanner = app.buttons["心光会员"]
         if vipBanner.waitForExistence(timeout: 5) {
             vipBanner.tap()
-            sleep(2)
+            sleep(pageTransitionDelay)
             try await VisualTesting.analyzeWithAI(named: "vip", in: app)
         }
     }
@@ -200,21 +214,24 @@ final class ChillCatVisualRegressionTests: XCTestCase {
     /// 首页像素对比
     func testPixelDiff_HomePage() throws {
         app.tabHome.tap()
-        sleep(2)
+        _ = app.buttons["今日心情打卡"].waitForExistence(timeout: 5)
+        sleep(pageTransitionDelay)
         VisualTesting.compareWithBaseline(named: "home_page_v3", in: app)
     }
 
     /// 个人中心像素对比
     func testPixelDiff_ProfilePage() throws {
         app.tabProfile.tap()
-        sleep(2)
+        _ = app.buttons["profile_user_card"].waitForExistence(timeout: 5)
+        sleep(pageTransitionDelay)
         VisualTesting.compareWithBaseline(named: "profile_page_v3", in: app)
     }
 
     /// 树洞像素对比
     func testPixelDiff_TreeHolePage() throws {
         app.tabTreeHole.tap()
-        sleep(2)
+        _ = app.textViews.firstMatch.waitForExistence(timeout: 5)
+        sleep(pageTransitionDelay)
         VisualTesting.compareWithBaseline(named: "treehole_page_v3", in: app)
     }
 
@@ -230,7 +247,7 @@ final class ChillCatVisualRegressionTests: XCTestCase {
 
         for (name, navigate) in pages {
             navigate()
-            sleep(2)
+            sleep(pageTransitionDelay)
             try VisualTesting.captureBaseline(name: name, in: app)
             print("📸 基线截图已保存: \(name)")
         }

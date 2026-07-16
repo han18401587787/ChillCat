@@ -75,7 +75,7 @@ final class ChillCatV3UITests: XCTestCase {
     func testNavigateToGrowthArchiveFromHome() throws {
         // v3.0 成长档案入口在个人中心
         app.tabProfile.tap()
-        sleep(1)
+        _ = app.tabProfile.waitForExistence(timeout: 5)
         // 个人中心有功能入口列表，情绪趋势等
         XCTAssertTrue(app.tabProfile.isSelected)
     }
@@ -155,25 +155,25 @@ final class ChillCatV3UITests: XCTestCase {
 
     func testVisualIntegrity_HomePage() async throws {
         app.tabHome.tap()
-        sleep(2)
+        _ = app.buttons["今日心情打卡"].waitForExistence(timeout: 5)
         try await VisualTesting.analyzeWithAI(named: "home", in: app)
     }
 
     func testVisualIntegrity_HealingPage() async throws {
         app.tabHealing.tap()
-        sleep(2)
+        _ = app.tabHealing.waitForExistence(timeout: 5)
         try await VisualTesting.analyzeWithAI(named: "healing", in: app)
     }
 
     func testVisualIntegrity_TreeHolePage() async throws {
         app.tabTreeHole.tap()
-        sleep(2)
+        _ = app.tabTreeHole.waitForExistence(timeout: 5)
         try await VisualTesting.analyzeWithAI(named: "treehole", in: app)
     }
 
     func testVisualIntegrity_ProfilePage() async throws {
         app.tabProfile.tap()
-        sleep(2)
+        _ = app.tabProfile.waitForExistence(timeout: 5)
         try await VisualTesting.analyzeWithAI(named: "profile", in: app)
     }
 
