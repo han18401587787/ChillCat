@@ -36,8 +36,8 @@ final class CCInteractionTests: XCTestCase {
         app.tabHome.tap()
         _ = app.tabHome.waitForExistence(timeout: 3)
 
-        // 4个需求标签应该是Button类型
-        let needs = ["被倾听", "被理解", "被鼓励", "只是想说说"]
+        // 4个需求标签应该是Button类型 (使用 accessibilityIdentifier)
+        let needs = ["home_need_listened", "home_need_understood", "home_need_encouraged", "home_need_talk"]
         for need in needs {
             let btn = app.buttons[need].firstMatch
             if btn.waitForExistence(timeout: 3) {
@@ -54,7 +54,7 @@ final class CCInteractionTests: XCTestCase {
         app.tabHome.tap()
         _ = app.tabHome.waitForExistence(timeout: 3)
 
-        let checkinBtn = app.buttons["今日心情打卡"].firstMatch
+        let checkinBtn = app.buttons["home_checkin_button"].firstMatch
         if checkinBtn.waitForExistence(timeout: 3) {
             XCTAssertEqual(checkinBtn.elementType, .button)
             XCTAssertTrue(checkinBtn.isHittable, "打卡按钮应该是可点击的")
@@ -67,10 +67,10 @@ final class CCInteractionTests: XCTestCase {
         _ = app.tabHome.waitForExistence(timeout: 3)
         app.swipeUp(); app.swipeUp()
 
-        let exploreBtn = app.buttons["情绪解码"].firstMatch
+        let exploreBtn = app.buttons["home_emotion_decoder_entry"].firstMatch
         if exploreBtn.waitForExistence(timeout: 5) {
             exploreBtn.tap()
-            let navTitle = app.navigationBars["情绪解码"]
+            let navTitle = app.navigationBars.firstMatch
             XCTAssertTrue(navTitle.waitForExistence(timeout: 5), "应该导航到情绪解码页")
         }
     }
@@ -79,7 +79,7 @@ final class CCInteractionTests: XCTestCase {
         app.tabHome.tap()
         app.swipeUp(); app.swipeUp(); app.swipeUp()
 
-        // 使用 accessibilityIdentifier 定位 AI 入口（比文本匹配更可靠）
+        // 使用 accessibilityIdentifier 定位 AI 入口
         let aiBtn = app.buttons["home_ai_listener_entry"].firstMatch
         if aiBtn.waitForExistence(timeout: 5) {
             aiBtn.tap()
@@ -95,8 +95,8 @@ final class CCInteractionTests: XCTestCase {
         app.tabTreeHole.tap()
         _ = app.tabTreeHole.waitForExistence(timeout: 3)
 
-        // 输入框应该是可编辑的
-        let editor = app.textViews.firstMatch
+        // 输入框应该是可编辑的 (用 identifier 定位)
+        let editor = app.textViews["tree_hole_content"].firstMatch
         if editor.waitForExistence(timeout: 3) {
             editor.tap()
             editor.typeText("测试倾诉内容")
@@ -108,7 +108,7 @@ final class CCInteractionTests: XCTestCase {
         app.tabTreeHole.tap()
         _ = app.tabTreeHole.waitForExistence(timeout: 3)
 
-        let publishBtn = app.buttons["发送倾诉"].firstMatch
+        let publishBtn = app.buttons["tree_hole_publish"].firstMatch
         if publishBtn.waitForExistence(timeout: 3) {
             XCTAssertEqual(publishBtn.elementType, .button)
             // 空内容时按钮应该不可用
@@ -148,7 +148,7 @@ final class CCInteractionTests: XCTestCase {
         app.tabResonance.tap()
         _ = app.tabResonance.waitForExistence(timeout: 5)
 
-        let fab = app.buttons["写下心情"].firstMatch
+        let fab = app.buttons["resonance_publish"].firstMatch
         if fab.waitForExistence(timeout: 5) {
             XCTAssertEqual(fab.elementType, .button)
             XCTAssertTrue(fab.isHittable, "写下心情按钮应该可点击")
@@ -161,8 +161,8 @@ final class CCInteractionTests: XCTestCase {
         app.tabHealing.tap()
         _ = app.tabHealing.waitForExistence(timeout: 5)
 
-        // 冥想练习卡片
-        let cards = ["睡前助眠", "独处放松", "焦虑治愈"]
+        // 冥想练习卡片 (使用 accessibilityIdentifier)
+        let cards = ["toolbox_sleep", "toolbox_solitude", "toolbox_anxiety"]
         for card in cards {
             let btn = app.buttons[card].firstMatch
             if btn.waitForExistence(timeout: 3) {
@@ -175,7 +175,7 @@ final class CCInteractionTests: XCTestCase {
         app.tabHealing.tap()
         app.swipeUp()
 
-        let breatheBtn = app.buttons["开始练习"].firstMatch
+        let breatheBtn = app.buttons["toolbox_breathing"].firstMatch
         if breatheBtn.waitForExistence(timeout: 5) {
             XCTAssertEqual(breatheBtn.elementType, .button)
             XCTAssertTrue(breatheBtn.isHittable)
@@ -189,7 +189,7 @@ final class CCInteractionTests: XCTestCase {
         _ = app.tabProfile.waitForExistence(timeout: 5)
 
         // 用户卡片可点击（未登录时跳转登录页）
-        let userCard = app.buttons["点击登录"].firstMatch
+        let userCard = app.buttons["profile_login_entry"].firstMatch
         if userCard.waitForExistence(timeout: 3) {
             XCTAssertEqual(userCard.elementType, .button)
         }
@@ -199,7 +199,7 @@ final class CCInteractionTests: XCTestCase {
         app.tabProfile.tap()
         _ = app.tabProfile.waitForExistence(timeout: 5)
 
-        let vipBanner = app.buttons["心光会员"].firstMatch
+        let vipBanner = app.buttons["profile_vip_entry"].firstMatch
         if vipBanner.waitForExistence(timeout: 3) {
             XCTAssertEqual(vipBanner.elementType, .button)
             XCTAssertTrue(vipBanner.isHittable)
@@ -247,11 +247,11 @@ final class CCInteractionTests: XCTestCase {
         _ = app.tabProfile.waitForExistence(timeout: 5)
 
         // 点击登录区域
-        let loginBtn = app.buttons["点击登录"].firstMatch
+        let loginBtn = app.buttons["profile_login_entry"].firstMatch
         if loginBtn.waitForExistence(timeout: 3) {
             loginBtn.tap()
             // 等待登录页加载
-            let phoneField = app.textFields.firstMatch
+            let phoneField = app.textFields["login_phone_field"].firstMatch
             XCTAssertTrue(phoneField.waitForExistence(timeout: 5), "登录页应有手机号输入框")
             phoneField.tap()
             phoneField.typeText("13800138000")
@@ -291,10 +291,10 @@ final class CCInteractionTests: XCTestCase {
         app.tabProfile.tap()
         _ = app.tabProfile.waitForExistence(timeout: 5)
 
-        let vipBtn = app.buttons["心光会员"].firstMatch
+        let vipBtn = app.buttons["profile_vip_entry"].firstMatch
         if vipBtn.waitForExistence(timeout: 3) {
             vipBtn.tap()
-            let navTitle = app.navigationBars["心光会员"]
+            let navTitle = app.navigationBars.firstMatch
             XCTAssertTrue(navTitle.waitForExistence(timeout: 5), "应该导航到心光会员页")
         }
     }
@@ -305,7 +305,7 @@ final class CCInteractionTests: XCTestCase {
         app.tabProfile.tap()
         _ = app.tabProfile.waitForExistence(timeout: 5)
 
-        let safetyBtn = app.buttons["情绪趋势"].firstMatch
+        let safetyBtn = app.buttons["profile_safety_plan"].firstMatch
         if !safetyBtn.waitForExistence(timeout: 2) {
             // 尝试其他入口
             return

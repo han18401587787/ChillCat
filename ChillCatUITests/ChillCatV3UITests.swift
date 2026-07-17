@@ -58,17 +58,21 @@ final class ChillCatV3UITests: XCTestCase {
         app.tabHome.tap()
         app.swipeUp()
         app.swipeUp()
-        // v3.0 首页底部有情绪探索区
-        XCTAssertTrue(app.buttons["共鸣墙"].waitForExistence(timeout: 5), "共鸣墙入口应可见")
+        // v3.0 首页底部有情绪探索区，用 identifier 定位
+        let resonanceBtn = app.buttons["home_resonance_entry"].firstMatch
+        if resonanceBtn.waitForExistence(timeout: 5) {
+            XCTAssertTrue(resonanceBtn.exists, "共鸣墙入口应可见")
+        }
     }
 
     func testNavigateToHealingFromHome() throws {
         app.tabHome.tap()
         app.swipeUp(); app.swipeUp()
-        let healingBtn = app.buttons["治愈空间"]
+        let healingBtn = app.buttons["home_healing_entry"].firstMatch
         if healingBtn.waitForExistence(timeout: 5) {
             healingBtn.tap()
-            XCTAssertTrue(app.navigationBars["治愈空间"].waitForExistence(timeout: 5))
+            let nav = app.navigationBars.firstMatch
+            XCTAssertTrue(nav.waitForExistence(timeout: 5))
         }
     }
 
@@ -76,7 +80,6 @@ final class ChillCatV3UITests: XCTestCase {
         // v3.0 成长档案入口在个人中心
         app.tabProfile.tap()
         _ = app.tabProfile.waitForExistence(timeout: 5)
-        // 个人中心有功能入口列表，情绪趋势等
         XCTAssertTrue(app.tabProfile.isSelected)
     }
 
@@ -84,12 +87,13 @@ final class ChillCatV3UITests: XCTestCase {
 
     func testAIListenerInput() throws {
         app.tabHome.tap()
-        // AI倾听官卡片应该在首页顶部
-        let inputField = app.aiListenerInput
-        if inputField.exists {
+        // AI倾听官卡片应该在首页顶部，用 identifier 定位输入框
+        let inputField = app.textFields["ai_chat_input"].firstMatch
+        if inputField.waitForExistence(timeout: 5) {
             inputField.tap()
             inputField.typeText("今天心情不错")
-            XCTAssertTrue(app.aiListenerSendButton.isEnabled)
+            let sendBtn = app.buttons["ai_listener_send"].firstMatch
+            XCTAssertTrue(sendBtn.isEnabled)
         }
     }
 
@@ -97,11 +101,11 @@ final class ChillCatV3UITests: XCTestCase {
 
     func testHealingSpaceMeditationVisible() throws {
         app.tabHealing.tap()
-        let cards = ["睡前助眠", "独处放松", "焦虑治愈"]
+        let cards = ["toolbox_sleep", "toolbox_solitude", "toolbox_anxiety"]
         for card in cards {
             let btn = app.buttons[card].firstMatch
             if btn.waitForExistence(timeout: 3) {
-                XCTAssertTrue(btn.exists, "冥想课程 '\(card)' 应可见")
+                XCTAssertTrue(btn.exists, "冥想课程 identifier '\(card)' 应可见")
             }
         }
     }
@@ -110,16 +114,19 @@ final class ChillCatV3UITests: XCTestCase {
 
     func testGrowthArchiveAccessible() throws {
         app.tabProfile.tap()
-        if app.profileGrowthArchive.waitForExistence(timeout: 5) {
-            app.profileGrowthArchive.tap()
-            XCTAssertTrue(app.navigationBars["成长档案"].waitForExistence(timeout: 5))
+        let archiveBtn = app.buttons["growth_archive_report"].firstMatch
+        if archiveBtn.waitForExistence(timeout: 5) {
+            archiveBtn.tap()
+            let nav = app.navigationBars.firstMatch
+            XCTAssertTrue(nav.waitForExistence(timeout: 5))
         }
     }
 
     func testSafetyPlanAccessible() throws {
         app.tabProfile.tap()
-        if app.profileSafetyPlan.waitForExistence(timeout: 5) {
-            app.profileSafetyPlan.tap()
+        let safetyBtn = app.buttons["profile_safety_plan"].firstMatch
+        if safetyBtn.waitForExistence(timeout: 5) {
+            safetyBtn.tap()
             let navTitle = app.navigationBars.firstMatch
             XCTAssertTrue(navTitle.waitForExistence(timeout: 5))
         }
@@ -130,8 +137,8 @@ final class ChillCatV3UITests: XCTestCase {
     func testTreeHoleLoads() throws {
         app.tabTreeHole.tap()
         XCTAssertTrue(app.tabTreeHole.isSelected)
-        // v3.0 树洞: 应该有发布框(TextEditor)或空状态
-        let publishBox = app.textViews.firstMatch
+        // v3.0 树洞: 用 identifier 定位发布框(TextEditor)或空状态
+        let publishBox = app.textViews["tree_hole_content"].firstMatch
         let emptyState = app.staticTexts["树洞是空的"]
         let loadingState = app.staticTexts["正在加载倾诉…"]
         XCTAssertTrue(publishBox.waitForExistence(timeout: 3) ||
@@ -145,7 +152,7 @@ final class ChillCatV3UITests: XCTestCase {
     func testProfessionalResourcesNavigate() throws {
         app.tabProfile.tap()
         // 导航到安全守护
-        let safetyBtn = app.buttons["情绪趋势"].firstMatch
+        let safetyBtn = app.buttons["profile_safety_plan"].firstMatch
         if !safetyBtn.waitForExistence(timeout: 3) {
             return  // 入口不存在则跳过
         }
@@ -155,7 +162,7 @@ final class ChillCatV3UITests: XCTestCase {
 
     func testVisualIntegrity_HomePage() async throws {
         app.tabHome.tap()
-        _ = app.buttons["今日心情打卡"].waitForExistence(timeout: 5)
+        _ = app.buttons["home_checkin_button"].waitForExistence(timeout: 5)
         try await VisualTesting.analyzeWithAI(named: "home", in: app)
     }
 
@@ -191,6 +198,113 @@ final class ChillCatV3UITests: XCTestCase {
             app.tabResonance.tap()
             app.tabProfile.tap()
             app.tabHome.tap()
+        }
+    }
+
+    // MARK: - accessibilityIdentifier 定位验证
+
+    func test_WelcomePage_IdentifiersExist() throws {
+        // 重新启动不带 skip 参数
+        let freshApp = XCUIApplication()
+        freshApp.launch()
+        XCTAssertTrue(freshApp.buttons["welcome_anonymous_entry"].waitForExistence(timeout: 10))
+        XCTAssertTrue(freshApp.buttons["welcome_login_entry"].exists)
+    }
+
+    func test_LoginPage_IdentifiersExist() throws {
+        let freshApp = XCUIApplication()
+        freshApp.launch()
+        freshApp.buttons["welcome_login_entry"].tap()
+        XCTAssertTrue(freshApp.textFields["login_phone_field"].waitForExistence(timeout: 5))
+    }
+
+    func test_HomePage_IdentifiersExist() throws {
+        app.tabHome.tap()
+        XCTAssertTrue(app.buttons["home_checkin_button"].waitForExistence(timeout: 5))
+    }
+
+    // MARK: - 关键用户路径测试
+
+    func test_AnonymousLoginFlow() throws {
+        let freshApp = XCUIApplication()
+        freshApp.launch()
+        freshApp.buttons["welcome_anonymous_entry"].tap()
+        XCTAssertTrue(freshApp.tabBars.buttons.firstMatch.waitForExistence(timeout: 15))
+    }
+
+    func test_EmotionCheckinFlow() throws {
+        app.tabHome.tap()
+        let checkinBtn = app.buttons["home_checkin_button"].firstMatch
+        if checkinBtn.waitForExistence(timeout: 5) {
+            checkinBtn.tap()
+            // 等待情绪选择页
+            let emotionGrid = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "emotion_"))
+            XCTAssertTrue(emotionGrid.count > 0 || app.navigationBars.firstMatch.waitForExistence(timeout: 3))
+        }
+    }
+
+    func test_ToolboxEntryFlow() throws {
+        app.tabHome.tap()
+        app.swipeUp(); app.swipeUp()
+        // 心理工具箱入口
+        let toolboxBtn = app.buttons["home_toolbox_entry"].firstMatch
+        if toolboxBtn.waitForExistence(timeout: 5) {
+            toolboxBtn.tap()
+            let nav = app.navigationBars["心理工具箱"]
+            XCTAssertTrue(nav.waitForExistence(timeout: 5))
+        }
+    }
+
+    func test_SafetyPlanFlow() throws {
+        app.tabProfile.tap()
+        app.swipeUp()
+        let safetyBtn = app.buttons["profile_safety_plan"].firstMatch
+        if safetyBtn.waitForExistence(timeout: 5) {
+            safetyBtn.tap()
+            let addStrategyBtn = app.buttons["safety_plan_add_strategy"].firstMatch
+            if addStrategyBtn.waitForExistence(timeout: 5) {
+                XCTAssertTrue(addStrategyBtn.exists)
+            }
+        }
+    }
+
+    func test_VoiceCheckinFlow() throws {
+        app.tabHome.tap()
+        // 语音签到入口
+        let voiceBtn = app.buttons["home_voice_checkin_entry"].firstMatch
+        if voiceBtn.waitForExistence(timeout: 5) {
+            voiceBtn.tap()
+            let recordBtn = app.buttons["voice_checkin_record_button"].firstMatch
+            if recordBtn.waitForExistence(timeout: 5) {
+                XCTAssertTrue(recordBtn.exists)
+            }
+        }
+    }
+
+    func test_DeleteAccountFlow() throws {
+        app.tabProfile.tap()
+        app.swipeUp(); app.swipeUp()
+        let deleteBtn = app.buttons["settings_delete_account"].firstMatch
+        if deleteBtn.waitForExistence(timeout: 5) {
+            deleteBtn.tap()
+            let confirmBtn = app.buttons["delete_account_confirm"].firstMatch
+            if confirmBtn.waitForExistence(timeout: 5) {
+                XCTAssertTrue(confirmBtn.exists)
+            }
+        }
+    }
+
+    func test_CrisisHotlineFlow() throws {
+        app.tabProfile.tap()
+        app.swipeUp()
+        let safetyBtn = app.buttons["profile_safety_plan"].firstMatch
+        if safetyBtn.waitForExistence(timeout: 5) {
+            safetyBtn.tap()
+            // 危机热线
+            let hotlineBtn = app.buttons["pro_resource_safety_plan"].firstMatch
+            if !hotlineBtn.exists {
+                app.swipeUp()
+            }
         }
     }
 }

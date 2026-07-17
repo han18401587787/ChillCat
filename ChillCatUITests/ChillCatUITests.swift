@@ -14,8 +14,8 @@ final class ChillCatUITests: XCTestCase {
     }
 
     func test_appLaunches_showsWelcome() {
-        XCTAssertTrue(app.buttons["匿名进入"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["已有账号登录"].exists)
+        XCTAssertTrue(app.buttons["welcome_anonymous_entry"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["welcome_login_entry"].exists)
     }
 
     func test_visual_welcome() {

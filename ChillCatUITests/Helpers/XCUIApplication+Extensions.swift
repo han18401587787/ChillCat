@@ -2,36 +2,36 @@ import XCTest
 
 extension XCUIApplication {
 
-    // MARK: - 页面元素访问器
+    // MARK: - 页面元素访问器 (基于 accessibilityIdentifier)
 
     /// 绪安欢迎页 - 匿名进入按钮
     var welcomeAnonymousButton: XCUIElement {
-        buttons["匿名进入"].firstMatch
+        buttons["welcome_anonymous_entry"].firstMatch
     }
 
     /// 绪安欢迎页 - 已有账号登录按钮
     var welcomeLoginButton: XCUIElement {
-        buttons["已有账号登录"].firstMatch
+        buttons["welcome_login_entry"].firstMatch
     }
 
-    /// 登录页 - 用户名输入框
+    /// 登录页 - 手机号输入框
     var loginUsernameField: XCUIElement {
-        textFields["用户名"].firstMatch
+        textFields["login_phone_field"].firstMatch
     }
 
     /// 登录页 - 密码输入框
     var loginPasswordField: XCUIElement {
-        secureTextFields["密码"].firstMatch
+        secureTextFields["login_password_field"].firstMatch
     }
 
     /// 登录页 - 登录按钮
     var loginSubmitButton: XCUIElement {
-        buttons["登录"].firstMatch
+        buttons["login_submit"].firstMatch
     }
 
     /// 登录页 - 注册按钮
     var loginRegisterToggle: XCUIElement {
-        buttons["没有账号？去注册"].firstMatch
+        buttons["login_register_toggle"].firstMatch
     }
 
     /// 首页 - 情绪按钮网格中的具体情绪
@@ -41,10 +41,17 @@ extension XCUIApplication {
 
     /// 首页 - 情绪确认按钮
     var emotionConfirmButton: XCUIElement {
-        buttons["就是这样，进去看看"].firstMatch
+        buttons["emotion_confirm"].firstMatch
     }
 
-    /// TabBar - 首页 (通过 accessibilityIdentifier 定位)
+    /// 首页 - 今日心情打卡按钮
+    var homeCheckinButton: XCUIElement {
+        buttons["home_checkin_button"].firstMatch
+    }
+
+    // MARK: - TabBar (通过 accessibilityIdentifier 定位)
+
+    /// TabBar - 首页
     var tabHome: XCUIElement {
         tabBars.buttons["tab_首页"].firstMatch.exists
             ? tabBars.buttons["tab_首页"].firstMatch
@@ -91,11 +98,11 @@ extension XCUIApplication {
     }
 
     /// 验证输入框可编辑
-    func assertTextField(_ placeholder: String, file: StaticString = #file, line: UInt = #line) -> XCUIElement {
-        let field = textFields[placeholder].firstMatch.exists
-            ? textFields[placeholder].firstMatch
-            : textViews.firstMatch
-        XCTAssertTrue(field.waitForExistence(timeout: 5), "输入框「\(placeholder)」应该存在", file: file, line: line)
+    func assertTextField(_ identifier: String, file: StaticString = #file, line: UInt = #line) -> XCUIElement {
+        let field = textFields[identifier].firstMatch.exists
+            ? textFields[identifier].firstMatch
+            : textViews[identifier].firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "输入框「\(identifier)」应该存在", file: file, line: line)
         return field
     }
 
@@ -107,66 +114,253 @@ extension XCUIApplication {
             "「\(element.identifier)」点击高度 \(element.frame.height) < \(minHeight)", file: file, line: line)
     }
 
-    // MARK: - v3.0 新功能页面元素
+    // MARK: - v3.0 首页入口元素
 
     /// AI倾听官 - 输入框
     var aiListenerInput: XCUIElement {
-        textFields.firstMatch
+        textFields["ai_chat_input"].firstMatch
     }
 
     /// AI倾听官 - 发送按钮
     var aiListenerSendButton: XCUIElement {
-        buttons["sparkles"].firstMatch
+        buttons["ai_listener_send"].firstMatch
+    }
+
+    /// 首页 - AI倾听官入口
+    var homeAIListenerEntry: XCUIElement {
+        buttons["home_ai_listener_entry"].firstMatch
+    }
+
+    /// 首页 - 情绪解码入口
+    var homeEmotionDecoderEntry: XCUIElement {
+        buttons["home_emotion_decoder_entry"].firstMatch
+    }
+
+    /// 首页 - 共鸣墙入口
+    var homeResonanceEntry: XCUIElement {
+        buttons["home_resonance_entry"].firstMatch
+    }
+
+    /// 首页 - 安全计划入口
+    var homeSafetyPlanEntry: XCUIElement {
+        buttons["home_safety_plan_entry"].firstMatch
     }
 
     /// 首页 - 工具箱入口卡片
     var homeToolboxEntry: XCUIElement {
-        buttons["工具箱"].firstMatch
+        buttons["home_toolbox_entry"].firstMatch
     }
 
     /// 首页 - 成长档案入口卡片
     var homeGrowthArchiveEntry: XCUIElement {
-        buttons["成长档案"].firstMatch
+        buttons["home_growth_archive_entry"].firstMatch
     }
 
     /// 首页 - 互助小组入口卡片
     var homeMutualAidEntry: XCUIElement {
-        buttons["互助小组"].firstMatch
+        buttons["home_mutual_aid_entry"].firstMatch
     }
 
     /// 首页 - 专业资源入口卡片
     var homeProfessionalEntry: XCUIElement {
-        buttons["专业资源"].firstMatch
+        buttons["home_professional_entry"].firstMatch
     }
+
+    // MARK: - v3.0 功能页面元素
 
     /// 工具箱 - 工具卡片 (按名称)
     func toolboxItem(_ name: String) -> XCUIElement {
         buttons[name].firstMatch
     }
 
-    /// 成长档案 - 成就徽章
-    var growthArchiveBadge: XCUIElement {
-        staticTexts["成就徽章"].firstMatch
+    /// 工具箱 - CBT 入口
+    var toolboxCBTEntry: XCUIElement {
+        buttons["toolbox_cbt"].firstMatch
     }
 
-    /// 互助小组 - 加入按钮
-    var mutualAidJoinButton: XCUIElement {
-        buttons["加入"].firstMatch
+    /// 工具箱 - 身体扫描入口
+    var toolboxBodyScanEntry: XCUIElement {
+        buttons["toolbox_bodyscan"].firstMatch
     }
 
-    /// 专业资源 - 热线链接
-    var professionalHotlineLink: XCUIElement {
-        links.firstMatch
+    /// 工具箱 - 呼吸练习入口
+    var toolboxBreathingEntry: XCUIElement {
+        buttons["toolbox_breathing"].firstMatch
     }
+
+    /// 工具箱 - 助眠入口
+    var toolboxSleepEntry: XCUIElement {
+        buttons["toolbox_sleep"].firstMatch
+    }
+
+    /// 工具箱 - 独处入口
+    var toolboxSolitudeEntry: XCUIElement {
+        buttons["toolbox_solitude"].firstMatch
+    }
+
+    /// 工具箱 - 焦虑入口
+    var toolboxAnxietyEntry: XCUIElement {
+        buttons["toolbox_anxiety"].firstMatch
+    }
+
+    // MARK: - 个人中心元素
 
     /// 个人中心 - 成长档案菜单
     var profileGrowthArchive: XCUIElement {
-        buttons["成长档案"].firstMatch
+        buttons["growth_archive_report"].firstMatch
     }
 
     /// 个人中心 - 安全计划菜单
     var profileSafetyPlan: XCUIElement {
-        buttons["我的安全计划"].firstMatch
+        buttons["profile_safety_plan"].firstMatch
+    }
+
+    /// 个人中心 - 登录入口
+    var profileLoginEntry: XCUIElement {
+        buttons["profile_login_entry"].firstMatch
+    }
+
+    /// 个人中心 - 会员入口
+    var profileVIPEntry: XCUIElement {
+        buttons["profile_vip_entry"].firstMatch
+    }
+
+    // MARK: - 设置页元素
+
+    /// 设置 - 账号信息
+    var settingsAccountInfo: XCUIElement {
+        buttons["settings_account_info"].firstMatch
+    }
+
+    /// 设置 - 隐私入口
+    var settingsPrivacy: XCUIElement {
+        buttons["settings_privacy_entry"].firstMatch
+    }
+
+    /// 设置 - 删除账号
+    var settingsDeleteAccount: XCUIElement {
+        buttons["settings_delete_account"].firstMatch
+    }
+
+    // MARK: - 树洞/共鸣元素
+
+    /// 树洞 - 内容输入框 (TextEditor)
+    var treeHoleContent: XCUIElement {
+        textViews["tree_hole_content"].firstMatch
+    }
+
+    /// 树洞 - 发布按钮
+    var treeHolePublish: XCUIElement {
+        buttons["tree_hole_publish"].firstMatch
+    }
+
+    /// 共鸣墙 - 发布按钮
+    var resonancePublish: XCUIElement {
+        buttons["resonance_publish"].firstMatch
+    }
+
+    // MARK: - 会员中心
+
+    /// 会员中心入口
+    var memberCenterEntry: XCUIElement {
+        buttons["member_privilege_entry"].firstMatch
+    }
+
+    // MARK: - 鼓励链
+
+    /// 鼓励链 - 输入框
+    var encourageChainInput: XCUIElement {
+        textFields["encourage_chain_input"].firstMatch.exists
+            ? textFields["encourage_chain_input"].firstMatch
+            : textViews["encourage_chain_input"].firstMatch
+    }
+
+    /// 鼓励链 - 接力按钮
+    var encourageChainRelay: XCUIElement {
+        buttons["encourage_chain_relay"].firstMatch
+    }
+
+    // MARK: - 成长档案
+
+    /// 成长档案 - 日报入口
+    var growthArchiveReport: XCUIElement {
+        buttons["growth_archive_report"].firstMatch
+    }
+
+    // MARK: - 心情日记
+
+    /// 日记 - 按日期单元格
+    func journalDayCell(_ day: String) -> XCUIElement {
+        buttons["journal_day_\(day)"].firstMatch
+    }
+
+    // MARK: - 冥想/音频播放器
+
+    /// 冥想播放器 - 播放/暂停
+    var meditationPlayerPlayPause: XCUIElement {
+        buttons["meditation_player_play_pause"].firstMatch
+    }
+
+    /// 雨声 - 播放/暂停
+    var rainSoundPlayPause: XCUIElement {
+        buttons["rain_sound_play_pause"].firstMatch
+    }
+
+    // MARK: - 语音签到
+
+    /// 语音签到 - 录音按钮
+    var voiceCheckinRecord: XCUIElement {
+        buttons["voice_checkin_record_button"].firstMatch
+    }
+
+    /// 语音签到 - 转写编辑器
+    var voiceCheckinTranscription: XCUIElement {
+        textViews["voice_checkin_transcription_editor"].firstMatch
+    }
+
+    // MARK: - 导出
+
+    /// 导出 - PDF格式
+    var exportFormatPDF: XCUIElement {
+        buttons["export_format_PDF"].firstMatch
+    }
+
+    /// 导出 - 确认按钮
+    var exportConfirm: XCUIElement {
+        buttons["export_confirm"].firstMatch
+    }
+
+    // MARK: - 反馈
+
+    /// 反馈 - 提交按钮
+    var feedbackSubmit: XCUIElement {
+        buttons["feedback_submit"].firstMatch
+    }
+
+    // MARK: - 支付
+
+    /// 支付 - 确认按钮
+    var paymentConfirm: XCUIElement {
+        buttons["payment_confirm"].firstMatch
+    }
+
+    // MARK: - 危机热线
+
+    /// 危机热线 - 全国热线
+    var crisisHotlineNational: XCUIElement {
+        buttons["crisis_hotline_national"].firstMatch
+    }
+
+    /// 专业资源 - 安全计划
+    var proResourceSafetyPlan: XCUIElement {
+        buttons["pro_resource_safety_plan"].firstMatch
+    }
+
+    // MARK: - 删除账号确认
+
+    /// 删除账号 - 确认按钮
+    var deleteAccountConfirm: XCUIElement {
+        buttons["delete_account_confirm"].firstMatch
     }
 
     // MARK: - 页面断言
