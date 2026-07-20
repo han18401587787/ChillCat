@@ -551,7 +551,8 @@ struct CCBehavioralActivationView: View {
             Color.black.opacity(0.3)
                 .ignoresSafeArea()
                 .onTapGesture {
-                    viewModel.submitRating()
+                    // 点背景关闭浮层，而非误提交评分
+                    viewModel.showRating = false
                 }
 
             VStack(spacing: XuanSpacing.lg) {

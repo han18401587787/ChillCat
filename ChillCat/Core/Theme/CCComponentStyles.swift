@@ -10,50 +10,52 @@ import SwiftUI
 enum ComponentStyles {
     // MARK: - 按钮样式
 
-    /// 主按钮 (标注规范: 暖杏填充 #E8C4A3, Pressed #C49E7D+press阴影)
+    /// 主按钮 (标注规范: 暖杏填充 #E8C4A3, Pressed #C49E7D+press阴影, Disabled: 置灰)
     struct PrimaryButtonStyle: ButtonStyle {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
                 .font(XuanFont.bodyLBold)
-                .foregroundColor(.white)
+                .foregroundColor(configuration.isEnabled ? .white : Color.xuanTextSecondary.opacity(0.5))
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .background(
-                    configuration.isPressed
-                        ? Color(hex: "C49E7D")
-                        : Color.xuanApricot
+                    configuration.isEnabled
+                        ? (configuration.isPressed
+                            ? Color(hex: "C49E7D")
+                            : Color.xuanApricot)
+                        : Color.xuanBorder
                 )
                 .cornerRadius(XuanRadius.lg)
                 .shadow(
-                    color: Color(hex: "2C2416").opacity(configuration.isPressed ? 0.08 : 0.06),
-                    radius: configuration.isPressed ? 4 : 12,
+                    color: Color(hex: "2C2416").opacity(configuration.isPressed && configuration.isEnabled ? 0.08 : 0.0),
+                    radius: configuration.isPressed && configuration.isEnabled ? 4 : 12,
                     x: 0,
-                    y: configuration.isPressed ? 1 : 2
+                    y: configuration.isPressed && configuration.isEnabled ? 1 : 2
                 )
-                .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+                .scaleEffect(configuration.isPressed && configuration.isEnabled ? 0.97 : 1.0)
                 .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
         }
     }
 
-    /// 次要按钮 (标注规范: 浅暖杏 #F2DBC9, Pressed 深暖杏填充+白字)
+    /// 次要按钮 (标注规范: 浅暖杏 #F2DBC9, Pressed 深暖杏填充+白字, Disabled: 置灰)
     struct SecondaryButtonStyle: ButtonStyle {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
                 .font(XuanFont.bodyLBold)
                 .foregroundColor(
-                    configuration.isPressed
-                        ? .white
-                        : Color.xuanApricotDark
+                    configuration.isEnabled
+                        ? (configuration.isPressed ? .white : Color.xuanApricotDark)
+                        : Color.xuanTextSecondary.opacity(0.4)
                 )
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .background(
-                    configuration.isPressed
-                        ? Color.xuanApricotDark
-                        : Color(hex: "F2DBC9")
+                    configuration.isEnabled
+                        ? (configuration.isPressed ? Color.xuanApricotDark : Color(hex: "F2DBC9"))
+                        : Color.xuanBorder.opacity(0.5)
                 )
                 .cornerRadius(XuanRadius.lg)
-                .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+                .scaleEffect(configuration.isPressed && configuration.isEnabled ? 0.97 : 1.0)
                 .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
         }
     }
@@ -80,13 +82,15 @@ enum ComponentStyles {
         }
     }
 
-    /// 文字按钮
+    /// 文字按钮 (Disabled: 置灰)
     struct TextButtonStyle: ButtonStyle {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
                 .font(XuanFont.bodyLBold)
-                .foregroundColor(Color.xuanApricot)
-                .opacity(configuration.isPressed ? 0.6 : 1.0)
+                .foregroundColor(
+                    configuration.isEnabled ? Color.xuanApricot : Color.xuanTextSecondary.opacity(0.4)
+                )
+                .opacity(configuration.isPressed && configuration.isEnabled ? 0.6 : 1.0)
         }
     }
 

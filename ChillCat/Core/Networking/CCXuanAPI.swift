@@ -169,10 +169,29 @@ enum CCXuanAPI {
         let start = CFAbsoluteTimeGetCurrent()
         LogD("→ POST \(path)", module: .network, category: "TreeHole")
         do {
-            let _ = try await session.request(fullURL(path), method: .post)
+            let data = try await session.request(fullURL(path), method: .post)
                 .validate().serializingData().value
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+
+            // 检测 HTML 响应（DNS 劫持）
+            if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
+                LogW("← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)", module: .network, category: "TreeHole")
+                throw CCAPIError.serverError(0)
+            }
+
+            // 解析业务码
+            let resp = try decoder.decode(CCAPIResponse<CCEmptyResponse>.self, from: data)
+            guard resp.isSuccess else {
+                LogE("← code=\(resp.code) \(resp.message) (\(elapsed)ms)", module: .network, category: "TreeHole")
+                if resp.code == 10002 {
+                    try await refreshTokenAndRetry()
+                    return try await hugPost(id: id)
+                }
+                throw apiError(for: resp.code, message: resp.message)
+            }
             LogD("← 200 \(path) (\(elapsed)ms)", module: .network, category: "TreeHole")
+        } catch let error as CCAPIError {
+            throw error
         } catch {
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
             LogE("← error \(path): \(error.localizedDescription) (\(elapsed)ms)", module: .network, category: "TreeHole", error: error)
@@ -375,11 +394,30 @@ enum CCXuanAPI {
         let start = CFAbsoluteTimeGetCurrent()
         LogD("→ POST \(path)", module: .network, category: "Resonance")
         do {
-            let _ = try await session.request(fullURL(path), method: .post,
+            let data = try await session.request(fullURL(path), method: .post,
                 parameters: ["message": message].compactMapValues { $0 }, encoder: JSONParameterEncoder.default)
                 .validate().serializingData().value
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
+
+            // 检测 HTML 响应（DNS 劫持）
+            if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
+                LogW("← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)", module: .network, category: "Resonance")
+                throw CCAPIError.serverError(0)
+            }
+
+            // 解析业务码
+            let resp = try decoder.decode(CCAPIResponse<CCEmptyResponse>.self, from: data)
+            guard resp.isSuccess else {
+                LogE("← code=\(resp.code) \(resp.message) (\(elapsed)ms)", module: .network, category: "Resonance")
+                if resp.code == 10002 {
+                    try await refreshTokenAndRetry()
+                    return try await hugResonance(id: id, message: message)
+                }
+                throw apiError(for: resp.code, message: resp.message)
+            }
             LogD("← 200 \(path) (\(elapsed)ms)", module: .network, category: "Resonance")
+        } catch let error as CCAPIError {
+            throw error
         } catch {
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
             LogE("← error \(path): \(error.localizedDescription) (\(elapsed)ms)", module: .network, category: "Resonance", error: error)
@@ -852,12 +890,16 @@ final class XuanAuthInterceptor: RequestInterceptor {
             return
         }
 
-        // 5xx 服务端错误：重试 1 次
+        // 5xx 服务端错误：使用 CCNetworkConfig 配置的重试次数
         if let statusCode = request.response?.statusCode, (500...599).contains(statusCode) {
-            guard request.retryCount < 1 else {
+            let maxRetry = CCNetworkConfig.maxRetryCount
+            guard request.retryCount < maxRetry else {
+                LogE("5xx 已达最大重试次数(\(maxRetry))，放弃重试", module: .network, category: "Interceptor")
                 completion(.doNotRetry); return
             }
-            completion(.retryWithDelay(CCNetworkConfig.retryBaseDelay))
+            let delay = CCNetworkConfig.retryDelay(for: request.retryCount + 1)
+            LogW("5xx 第 \(request.retryCount + 1)/\(maxRetry) 次重试，延迟 \(String(format: "%.1f", delay))s", module: .network, category: "Interceptor")
+            completion(.retryWithDelay(delay))
             return
         }
 
@@ -866,11 +908,15 @@ final class XuanAuthInterceptor: RequestInterceptor {
         if nsError.domain == NSURLErrorDomain {
             switch nsError.code {
             case NSURLErrorTimedOut:
-                // 超时重试 1 次
-                guard request.retryCount < 1 else {
+                // 超时重试（使用配置的重试次数）
+                let maxRetry = CCNetworkConfig.maxRetryCount
+                guard request.retryCount < maxRetry else {
+                    LogE("超时已达最大重试次数(\(maxRetry))，放弃重试", module: .network, category: "Interceptor")
                     completion(.doNotRetry); return
                 }
-                completion(.retryWithDelay(1.0))
+                let delay = CCNetworkConfig.retryDelay(for: request.retryCount + 1)
+                LogW("超时第 \(request.retryCount + 1)/\(maxRetry) 次重试，延迟 \(String(format: "%.1f", delay))s", module: .network, category: "Interceptor")
+                completion(.retryWithDelay(delay))
                 return
             case NSURLErrorCancelled,
                  NSURLErrorCannotConnectToHost,
@@ -884,11 +930,15 @@ final class XuanAuthInterceptor: RequestInterceptor {
             }
         }
 
-        // 其他连接错误：重试 1 次
-        guard request.retryCount < 1 else {
+        // 其他连接错误：使用配置的重试次数和指数退避
+        let maxRetry = CCNetworkConfig.maxRetryCount
+        guard request.retryCount < maxRetry else {
+            LogE("连接错误已达最大重试次数(\(maxRetry))，放弃重试", module: .network, category: "Interceptor")
             completion(.doNotRetry); return
         }
-        completion(.retryWithDelay(0.5))
+        let delay = CCNetworkConfig.retryDelay(for: request.retryCount + 1)
+        LogW("连接错误第 \(request.retryCount + 1)/\(maxRetry) 次重试，延迟 \(String(format: "%.1f", delay))s", module: .network, category: "Interceptor")
+        completion(.retryWithDelay(delay))
     }
 }
 

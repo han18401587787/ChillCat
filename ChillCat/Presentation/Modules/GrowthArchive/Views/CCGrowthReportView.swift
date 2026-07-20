@@ -382,8 +382,32 @@ struct CCGrowthReportView: View {
     }
 
     private func shareReport() {
-        // In a real app, this would render the view as an image and present a share sheet
-        print("📤 [GrowthReport] Share triggered")
+        // 将报告视图渲染为 UIImage 并通过系统分享面板分享
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else {
+            LogW("无法获取 window 进行分享截图", module: .ui, category: "Share")
+            return
+        }
+
+        let renderer = UIGraphicsImageRenderer(bounds: window.bounds)
+        let image = renderer.image { _ in
+            window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+        }
+
+        let activityVC = UIActivityViewController(
+            activityItems: [image],
+            applicationActivities: nil
+        )
+
+        // iPad 适配
+        if let popover = activityVC.popoverPresentationController {
+            popover.sourceView = window.rootViewController?.view
+            popover.sourceRect = CGRect(x: window.bounds.midX, y: window.bounds.midY, width: 0, height: 0)
+            popover.permittedArrowDirections = []
+        }
+
+        window.rootViewController?.present(activityVC, animated: true)
+        LogI("分享成长报告面板已弹出", module: .ui, category: "Share")
     }
 
     // MARK: - Helpers
