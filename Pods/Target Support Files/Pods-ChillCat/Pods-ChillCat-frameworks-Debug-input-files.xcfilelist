@@ -1,0 +1,6 @@
+${PODS_ROOT}/Target Support Files/Pods-ChillCat/Pods-ChillCat-frameworks.sh
+${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework
+${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework
+${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework
+${BUILT_PRODUCTS_DIR}/LookinServer/LookinServer.framework
+${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework

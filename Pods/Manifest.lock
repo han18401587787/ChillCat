@@ -1,0 +1,34 @@
+PODS:
+  - Alamofire (5.11.2)
+  - KeychainAccess (4.2.2)
+  - Kingfisher (8.11.0)
+  - LookinServer (1.2.8):
+    - LookinServer/Core (= 1.2.8)
+  - LookinServer/Core (1.2.8)
+  - lottie-ios (4.6.1)
+
+DEPENDENCIES:
+  - Alamofire (~> 5.9)
+  - KeychainAccess (~> 4.2)
+  - Kingfisher (~> 8.0)
+  - LookinServer
+  - lottie-ios (~> 4.6)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - KeychainAccess
+    - Kingfisher
+    - LookinServer
+    - lottie-ios
+
+SPEC CHECKSUMS:
+  Alamofire: 400275dd1c6d87d95a041861d2a59da4b520a203
+  KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
+  Kingfisher: ee4ff4936d5b399164b6d01a0dfc0388583287b6
+  LookinServer: 1b2b61c6402ae29fa22182d48f5cd067b4e99e80
+  lottie-ios: 6467ca7035120c5b0e0acee58bb679cf15875686
+
+PODFILE CHECKSUM: 5d5508dec1854ef9971c05581c7273eb910121cb
+
+COCOAPODS: 1.17.0

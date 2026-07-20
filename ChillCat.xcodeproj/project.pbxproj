@@ -7,11 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7A2D32022FD7ADE3004F8DCC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 7A2D32012FD7ADE3004F8DCC /* Alamofire */; };
-		7A2D32072FD7ADEF004F8DCC /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 7A2D32062FD7ADEF004F8DCC /* KeychainAccess */; };
-		7A2D320F2FD7AE11004F8DCC /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 7A2D320E2FD7AE11004F8DCC /* Kingfisher */; };
-		7AE9E8632FF7ACBF0065A696 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 7AE9E8622FF7ACBF0065A696 /* Lottie */; };
-		7A0000012FF80001001D0053 /* LookinServer in Frameworks */ = {isa = PBXBuildFile; productRef = 7A0000022FF80001001D0053 /* LookinServer */; };
+		6268107383B8EBDB2F70AF82 /* Pods_ChillCat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404DEF0C774AC7721096EA8C /* Pods_ChillCat.framework */; };
+		6F73F873C07632E765F11441 /* Pods_ChillCatUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 805E6D83308DF2F842C99563 /* Pods_ChillCatUITests.framework */; };
+		CFC321F8206DA575AB1F201D /* Pods_ChillCatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C7EB57F702BB67EE1CBCC2D /* Pods_ChillCatTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,9 +30,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		01836CFE44F9AD71F1026EB6 /* Pods-ChillCat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChillCat.release.xcconfig"; path = "Target Support Files/Pods-ChillCat/Pods-ChillCat.release.xcconfig"; sourceTree = "<group>"; };
+		01B489A478ED1490A4FC3A24 /* Pods-ChillCat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChillCat.debug.xcconfig"; path = "Target Support Files/Pods-ChillCat/Pods-ChillCat.debug.xcconfig"; sourceTree = "<group>"; };
+		404DEF0C774AC7721096EA8C /* Pods_ChillCat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChillCat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		71C3711285C8B9E86AD06E53 /* Pods-ChillCatUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChillCatUITests.debug.xcconfig"; path = "Target Support Files/Pods-ChillCatUITests/Pods-ChillCatUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		7A8F02762FAF1FB3001D0053 /* ChillCat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChillCat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A9D2A632FEE66B900288912 /* ChillCatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChillCatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AB3D3512FD7CCD300CCD8A8 /* ChillCatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChillCatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C7EB57F702BB67EE1CBCC2D /* Pods_ChillCatTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChillCatTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		805E6D83308DF2F842C99563 /* Pods_ChillCatUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChillCatUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1ED3C274B385666146DAA61 /* Pods-ChillCatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChillCatTests.release.xcconfig"; path = "Target Support Files/Pods-ChillCatTests/Pods-ChillCatTests.release.xcconfig"; sourceTree = "<group>"; };
+		BC63B73C065BAF3B326D3770 /* Pods-ChillCatTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChillCatTests.debug.xcconfig"; path = "Target Support Files/Pods-ChillCatTests/Pods-ChillCatTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F6390B0936788B783C52044A /* Pods-ChillCatUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChillCatUITests.release.xcconfig"; path = "Target Support Files/Pods-ChillCatUITests/Pods-ChillCatUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -83,6 +90,7 @@
 				7A2D32072FD7ADEF004F8DCC /* KeychainAccess in Frameworks */,
 				7AE9E8632FF7ACBF0065A696 /* Lottie in Frameworks */,
 				7A0000012FF80001001D0053 /* LookinServer in Frameworks */,
+				6268107383B8EBDB2F70AF82 /* Pods_ChillCat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFC321F8206DA575AB1F201D /* Pods_ChillCatTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,18 +106,31 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F73F873C07632E765F11441 /* Pods_ChillCatUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2069A171DB03211E3181501F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				404DEF0C774AC7721096EA8C /* Pods_ChillCat.framework */,
+				7C7EB57F702BB67EE1CBCC2D /* Pods_ChillCatTests.framework */,
+				805E6D83308DF2F842C99563 /* Pods_ChillCatUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		7A8F026D2FAF1FB3001D0053 = {
 			isa = PBXGroup;
 			children = (
 				7A8F02782FAF1FB3001D0053 /* ChillCat */,
 				7AB3D3522FD7CCD400CCD8A8 /* ChillCatUITests */,
 				7A8F02772FAF1FB3001D0053 /* Products */,
+				AA414DC325B2523E2FDFF573 /* Pods */,
+				2069A171DB03211E3181501F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -122,6 +144,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		AA414DC325B2523E2FDFF573 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				01B489A478ED1490A4FC3A24 /* Pods-ChillCat.debug.xcconfig */,
+				01836CFE44F9AD71F1026EB6 /* Pods-ChillCat.release.xcconfig */,
+				BC63B73C065BAF3B326D3770 /* Pods-ChillCatTests.debug.xcconfig */,
+				A1ED3C274B385666146DAA61 /* Pods-ChillCatTests.release.xcconfig */,
+				71C3711285C8B9E86AD06E53 /* Pods-ChillCatUITests.debug.xcconfig */,
+				F6390B0936788B783C52044A /* Pods-ChillCatUITests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -129,9 +165,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7A8F02892FAF1FB4001D0053 /* Build configuration list for PBXNativeTarget "ChillCat" */;
 			buildPhases = (
+				6159DDA9D6D32A6F043F68D9 /* [CP] Check Pods Manifest.lock */,
 				7A8F02722FAF1FB3001D0053 /* Sources */,
 				7A8F02732FAF1FB3001D0053 /* Frameworks */,
 				7A8F02742FAF1FB3001D0053 /* Resources */,
+				306C07DBDC7ACF5A01079B76 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -141,13 +179,6 @@
 				7A8F02782FAF1FB3001D0053 /* ChillCat */,
 			);
 			name = ChillCat;
-			packageProductDependencies = (
-				7A2D32012FD7ADE3004F8DCC /* Alamofire */,
-				7A2D32062FD7ADEF004F8DCC /* KeychainAccess */,
-				7A2D320E2FD7AE11004F8DCC /* Kingfisher */,
-				7AE9E8622FF7ACBF0065A696 /* Lottie */,
-				7A0000022FF80001001D0053 /* LookinServer */,
-			);
 			productName = ChillCat;
 			productReference = 7A8F02762FAF1FB3001D0053 /* ChillCat.app */;
 			productType = "com.apple.product-type.application";
@@ -156,6 +187,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7A9D2A6B2FEE66B900288912 /* Build configuration list for PBXNativeTarget "ChillCatTests" */;
 			buildPhases = (
+				6468D5236413D118EEBDAA6C /* [CP] Check Pods Manifest.lock */,
 				7A9D2A5F2FEE66B900288912 /* Sources */,
 				7A9D2A602FEE66B900288912 /* Frameworks */,
 				7A9D2A612FEE66B900288912 /* Resources */,
@@ -166,8 +198,6 @@
 				7A9D2A682FEE66B900288912 /* PBXTargetDependency */,
 			);
 			name = ChillCatTests;
-			packageProductDependencies = (
-			);
 			productName = ChillCatTests;
 			productReference = 7A9D2A632FEE66B900288912 /* ChillCatTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -176,6 +206,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7AB3D35B2FD7CCD400CCD8A8 /* Build configuration list for PBXNativeTarget "ChillCatUITests" */;
 			buildPhases = (
+				EA16F3FE8FCB46F3C2E5C58C /* [CP] Check Pods Manifest.lock */,
 				7AB3D34D2FD7CCD300CCD8A8 /* Sources */,
 				7AB3D34E2FD7CCD300CCD8A8 /* Frameworks */,
 				7AB3D34F2FD7CCD300CCD8A8 /* Resources */,
@@ -189,8 +220,6 @@
 				7AB3D3522FD7CCD400CCD8A8 /* ChillCatUITests */,
 			);
 			name = ChillCatUITests;
-			packageProductDependencies = (
-			);
 			productName = ChillCatUITests;
 			productReference = 7AB3D3512FD7CCD300CCD8A8 /* ChillCatUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -227,13 +256,6 @@
 			);
 			mainGroup = 7A8F026D2FAF1FB3001D0053;
 			minimizedProjectReferenceProxies = 1;
-			packageReferences = (
-				7A2D32002FD7ADE3004F8DCC /* XCRemoteSwiftPackageReference "Alamofire" */,
-				7A2D32052FD7ADEF004F8DCC /* XCRemoteSwiftPackageReference "KeychainAccess" */,
-				7A2D320D2FD7AE11004F8DCC /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				7AE9E8612FF7ACBF0065A696 /* XCRemoteSwiftPackageReference "lottie-ios" */,
-				7A0000032FF80001001D0053 /* XCRemoteSwiftPackageReference "LookinServer" */,
-			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7A8F02772FAF1FB3001D0053 /* Products */;
 			projectDirPath = "";
@@ -269,6 +291,92 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		306C07DBDC7ACF5A01079B76 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChillCat/Pods-ChillCat-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChillCat/Pods-ChillCat-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChillCat/Pods-ChillCat-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6159DDA9D6D32A6F043F68D9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ChillCat-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6468D5236413D118EEBDAA6C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ChillCatTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EA16F3FE8FCB46F3C2E5C58C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ChillCatUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7A8F02722FAF1FB3001D0053 /* Sources */ = {
@@ -310,6 +418,7 @@
 /* Begin XCBuildConfiguration section */
 		7A8F028A2FAF1FB4001D0053 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 01B489A478ED1490A4FC3A24 /* Pods-ChillCat.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -342,6 +451,7 @@
 		};
 		7A8F028B2FAF1FB4001D0053 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 01836CFE44F9AD71F1026EB6 /* Pods-ChillCat.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -495,6 +605,7 @@
 		};
 		7A9D2A692FEE66B900288912 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BC63B73C065BAF3B326D3770 /* Pods-ChillCatTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -517,6 +628,7 @@
 		};
 		7A9D2A6A2FEE66B900288912 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1ED3C274B385666146DAA61 /* Pods-ChillCatTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -539,6 +651,7 @@
 		};
 		7AB3D3592FD7CCD400CCD8A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 71C3711285C8B9E86AD06E53 /* Pods-ChillCatUITests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -561,6 +674,7 @@
 		};
 		7AB3D35A2FD7CCD400CCD8A8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F6390B0936788B783C52044A /* Pods-ChillCatUITests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -622,76 +736,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		7A2D32002FD7ADE3004F8DCC /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.12.0;
-			};
-		};
-		7A2D32052FD7ADEF004F8DCC /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		7A2D320D2FD7AE11004F8DCC /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 8.9.0;
-			};
-		};
-		7AE9E8612FF7ACBF0065A696 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.6.1;
-			};
-		};
-		7A0000032FF80001001D0053 /* XCRemoteSwiftPackageReference "LookinServer" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/QMUI/LookinServer.git";
-			requirement = {
-				branch = develop;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		7A2D32012FD7ADE3004F8DCC /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7A2D32002FD7ADE3004F8DCC /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-		7A2D32062FD7ADEF004F8DCC /* KeychainAccess */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7A2D32052FD7ADEF004F8DCC /* XCRemoteSwiftPackageReference "KeychainAccess" */;
-			productName = KeychainAccess;
-		};
-		7A2D320E2FD7AE11004F8DCC /* Kingfisher */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7A2D320D2FD7AE11004F8DCC /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = Kingfisher;
-		};
-		7AE9E8622FF7ACBF0065A696 /* Lottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7AE9E8612FF7ACBF0065A696 /* XCRemoteSwiftPackageReference "lottie-ios" */;
-			productName = Lottie;
-		};
-		7A0000022FF80001001D0053 /* LookinServer */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7A0000032FF80001001D0053 /* XCRemoteSwiftPackageReference "LookinServer" */;
-			productName = LookinServer;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7A8F026E2FAF1FB3001D0053 /* Project object */;
 }
