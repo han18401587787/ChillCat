@@ -14,9 +14,8 @@ struct CCApp: View {
 
     init() {
         #if DEBUG
-        // 启动 Lookin Server 用于 UI 层级调试
-        // macOS 端从 https://lookin.work/ 下载 Lookin App
-        LookinServer.shared.start()
+        // Lookin Server 通过 CocoaPods 自动启动，无需手动调用
+        // macOS 端从 https://lookin.work/ 下载 Lookin App 连接调试
         #endif
     }
 

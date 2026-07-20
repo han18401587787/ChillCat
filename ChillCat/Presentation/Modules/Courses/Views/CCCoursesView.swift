@@ -60,7 +60,7 @@ struct CCCoursesView: View {
                         Image("common_more").font(.system(size: 14)).foregroundColor(Color.xuanTextTertiary)
                     }.padding().background(Color.xuanWhite).cornerRadius(XuanRadius.md)
                 }
-                .accessibilityIdentifier("courses_item_\(course.id ?? "unknown")")
+                .accessibilityIdentifier("courses_item_\(course.id)")
             }
         }
     }

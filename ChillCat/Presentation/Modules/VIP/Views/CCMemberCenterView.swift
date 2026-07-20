@@ -264,3 +264,5 @@ struct CCMemberCenterView: View {
         .buttonStyle(.plain)
         .accessibilityIdentifier("member_purchase_history")
     }
+
+}
