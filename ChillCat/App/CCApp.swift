@@ -41,7 +41,7 @@ struct CCApp: View {
                             coordinator.isLoggedIn = true
                             coordinator.isOffline = false
                         }
-                        print("🧪 [UITest] 启动模式: isAutoLogin=\(isUITestAutoLogin)")
+                        LogI("UITest 启动模式: isAutoLogin=\(isUITestAutoLogin)", module: .ui, category: "Launch")
                     }
             } else if isInitializing {
                 splashView
@@ -94,7 +94,7 @@ struct CCApp: View {
                             .padding(.top, XuanSpacing.sm)
 
                             Button("离线使用") {
-                                print("🌐 [App] 用户选择离线模式")
+                                LogI("用户选择离线模式", module: .ui, category: "Launch")
                                 coordinator.isLoggedIn = true
                                 coordinator.isOffline = true
                                 isInitializing = false
@@ -124,7 +124,7 @@ struct CCApp: View {
 
         // 如果已有有效 token，直接进入
         if let existingToken = keychain["access_token"], !existingToken.isEmpty {
-            print("✅ [App] 已有 Token, 跳过匿名登录")
+            LogI("已有 Token, 跳过匿名登录", module: .auth, category: "Launch")
             coordinator.isLoggedIn = true
             coordinator.isOffline = false
             isInitializing = false
@@ -137,23 +137,24 @@ struct CCApp: View {
 
         for attempt in 1...maxRetries {
             retryAttempt = attempt
-            print("🌐 [App] 匿名登录尝试 \(attempt)/\(maxRetries) → \(CCAppEnvironment.current.baseURL)")
+            LogI("匿名登录尝试 \(attempt)/\(maxRetries) → \(CCAppEnvironment.current.baseURL)", module: .auth, category: "Launch")
 
             do {
                 let resp = try await CCXuanAPI.anonymousLogin()
                 keychain["access_token"] = resp.token
-                print("✅ [App] 匿名登录成功 user=\(resp.username)")
+                LogI("匿名登录成功 user=\(resp.username)", module: .auth, category: "Launch")
                 coordinator.isLoggedIn = true
                 coordinator.isOffline = false
                 isInitializing = false
                 return
             } catch {
-                print("❌ [App] 匿名登录失败 (attempt \(attempt)/\(maxRetries)): \(error.localizedDescription)")
+                LogE("匿名登录失败 (attempt \(attempt)/\(maxRetries)): \(error.localizedDescription)", module: .auth, category: "Launch", error: error)
+                CCErrorReporter.shared.report(error, context: ["stage": "app_init", "attempt": attempt, "maxRetries": maxRetries])
 
                 if attempt < maxRetries {
                     // 指数退避：1s → 2s → 4s
                     let delay = baseDelay * UInt64(pow(2.0, Double(attempt - 1)))
-                    print("⏳ [App] 等待 \(Double(delay) / 1_000_000_000)s 后重试...")
+                    LogD("等待 \(Double(delay) / 1_000_000_000)s 后重试...", module: .network, category: "Launch")
                     try? await Task.sleep(nanoseconds: delay)
                 } else {
                     // 所有重试均失败 — 允许离线模式进入

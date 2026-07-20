@@ -61,7 +61,7 @@ extension CCNetworkConfig {
                 lastError = error
                 if attempt < maxAttempts {
                     let delay = retryDelay(for: attempt)
-                    print("⏳ [Retry] 第 \(attempt) 次失败，\(String(format: "%.1f", delay))s 后重试: \(error.localizedDescription)")
+                    LogW("第 \(attempt) 次失败，\(String(format: "%.1f", delay))s 后重试: \(error.localizedDescription)", module: .network, category: "Retry")
                     try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
                 }
             }

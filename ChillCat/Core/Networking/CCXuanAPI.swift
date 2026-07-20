@@ -167,15 +167,16 @@ enum CCXuanAPI {
     static func hugPost(id: Int64) async throws {
         let path = "/api/v1/treehole/posts/\(id)/hug"
         let start = CFAbsoluteTimeGetCurrent()
-        print("🌐 [API] → POST \(path)")
+        LogD("→ POST \(path)", module: .network, category: "TreeHole")
         do {
             let _ = try await session.request(fullURL(path), method: .post)
                 .validate().serializingData().value
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
-            print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
+            LogD("← 200 \(path) (\(elapsed)ms)", module: .network, category: "TreeHole")
         } catch {
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
-            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            LogE("← error \(path): \(error.localizedDescription) (\(elapsed)ms)", module: .network, category: "TreeHole", error: error)
+            CCErrorReporter.shared.report(error, context: ["path": path, "elapsed_ms": elapsed])
             throw error
         }
     }
@@ -339,47 +340,50 @@ enum CCXuanAPI {
     static func getResonanceDetail(id: Int64) async throws -> ResonanceItem {
         // 后端返回扁平的 ResonanceItem 结构，直接解码
         let start = CFAbsoluteTimeGetCurrent()
-        print("🌐 [API] → GET /api/v1/resonance/stories/\(id)")
+        LogD("→ GET /api/v1/resonance/stories/\(id)", module: .network, category: "Resonance")
         do {
             let data = try await session.request(fullURL("/api/v1/resonance/stories/\(id)")).validate().serializingData().value
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
 
             if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
+                LogW("← HTML response (可能DNS劫持) /api/v1/resonance/stories/\(id) (\(elapsed)ms)", module: .network, category: "Resonance")
                 throw CCAPIError.serverError(0)
             }
 
             let resp = try decoder.decode(CCAPIResponse<ResonanceItem>.self, from: data)
             guard resp.isSuccess, let d = resp.data else {
-                print("❌ [API] ← code=\(resp.code) \(resp.message) (\(elapsed)ms)")
+                LogE("← code=\(resp.code) \(resp.message) (\(elapsed)ms)", module: .network, category: "Resonance")
                 if resp.code == 10002 {
                     try await refreshTokenAndRetry()
                     return try await getResonanceDetail(id: id)
                 }
                 throw apiError(for: resp.code, message: resp.message)
             }
-            print("✅ [API] ← 200 /api/v1/resonance/stories/\(id) (\(elapsed)ms)")
+            LogD("← 200 /api/v1/resonance/stories/\(id) (\(elapsed)ms)", module: .network, category: "Resonance")
             return d
         } catch let error as CCAPIError {
             throw error
         } catch {
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
-            print("❌ [API] ← error /api/v1/resonance/stories/\(id): \(error.localizedDescription) (\(elapsed)ms)")
+            LogE("← error /api/v1/resonance/stories/\(id): \(error.localizedDescription) (\(elapsed)ms)", module: .network, category: "Resonance", error: error)
+            CCErrorReporter.shared.report(error, context: ["path": "/api/v1/resonance/stories/\(id)", "elapsed_ms": elapsed])
             throw error
         }
     }
     static func hugResonance(id: Int64, message: String? = nil) async throws {
         let path = "/api/v1/resonance/stories/\(id)/resonate"
         let start = CFAbsoluteTimeGetCurrent()
-        print("🌐 [API] → POST \(path)")
+        LogD("→ POST \(path)", module: .network, category: "Resonance")
         do {
             let _ = try await session.request(fullURL(path), method: .post,
                 parameters: ["message": message].compactMapValues { $0 }, encoder: JSONParameterEncoder.default)
                 .validate().serializingData().value
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
-            print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
+            LogD("← 200 \(path) (\(elapsed)ms)", module: .network, category: "Resonance")
         } catch {
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
-            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            LogE("← error \(path): \(error.localizedDescription) (\(elapsed)ms)", module: .network, category: "Resonance", error: error)
+            CCErrorReporter.shared.report(error, context: ["path": path, "elapsed_ms": elapsed])
             throw error
         }
     }
@@ -587,24 +591,25 @@ enum CCXuanAPI {
     /// 返回完整 CCAPIResponse，供需要检查 code 的场景使用
     private static func getRaw<T: Decodable>(_ path: String) async throws -> CCAPIResponse<T> {
         let start = CFAbsoluteTimeGetCurrent()
-        print("🌐 [API] → GET \(path)")
+        LogD("→ GET \(path)", module: .network, category: "API")
         do {
             let data = try await session.request(fullURL(path)).validate().serializingData().value
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
 
             if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
-                print("⚠️ [API] ← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)")
+                LogW("← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)", module: .network, category: "API")
                 throw CCAPIError.serverError(0)
             }
 
             let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
-            print("✅ [API] ← 200 \(path) code=\(resp.code) (\(elapsed)ms)")
+            LogD("← 200 \(path) code=\(resp.code) (\(elapsed)ms)", module: .network, category: "API")
             return resp
         } catch let error as CCAPIError {
             throw error
         } catch {
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
-            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            LogE("← error \(path): \(error.localizedDescription) (\(elapsed)ms)", module: .network, category: "API", error: error)
+            CCErrorReporter.shared.report(error, context: ["path": path, "elapsed_ms": elapsed])
             throw error
         }
     }
@@ -612,28 +617,29 @@ enum CCXuanAPI {
     /// DELETE 请求辅助方法
     private static func delete<T: Decodable>(_ path: String) async throws -> T {
         let start = CFAbsoluteTimeGetCurrent()
-        print("🌐 [API] → DELETE \(path)")
+        LogD("→ DELETE \(path)", module: .network, category: "API")
         do {
             let data = try await session.request(fullURL(path), method: .delete).validate().serializingData().value
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
 
             if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
-                print("⚠️ [API] ← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)")
+                LogW("← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)", module: .network, category: "API")
                 throw CCAPIError.serverError(0)
             }
 
             let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
             guard resp.isSuccess, let d = resp.data else {
-                print("❌ [API] ← code=\(resp.code) \(resp.message) (\(elapsed)ms)")
+                LogE("← code=\(resp.code) \(resp.message) (\(elapsed)ms)", module: .network, category: "API")
                 throw CCAPIError.badRequest
             }
-            print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
+            LogD("← 200 \(path) (\(elapsed)ms)", module: .network, category: "API")
             return d
         } catch let error as CCAPIError {
             throw error
         } catch {
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
-            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            LogE("← error \(path): \(error.localizedDescription) (\(elapsed)ms)", module: .network, category: "API", error: error)
+            CCErrorReporter.shared.report(error, context: ["path": path, "elapsed_ms": elapsed])
             throw error
         }
     }
@@ -681,7 +687,7 @@ enum CCXuanAPI {
             refreshLock.unlock()
         }
 
-        print("🔄 [API] 业务码 10002，自动刷新 token...")
+        LogI("业务码 10002，自动刷新 token...", module: .auth, category: "Token")
         let keychain = Keychain(service: "app.xuanpeace.token")
 
         // 优先尝试 refresh_token
@@ -692,10 +698,10 @@ enum CCXuanAPI {
                 if !resp.refreshToken.isEmpty {
                     keychain["refresh_token"] = resp.refreshToken
                 }
-                print("✅ [API] refresh_token 刷新成功")
+                LogI("refresh_token 刷新成功", module: .auth, category: "Token")
                 return
             } catch {
-                print("⚠️ [API] refresh_token 刷新失败: \(error)，尝试匿名登录")
+                LogW("refresh_token 刷新失败: \(error)，尝试匿名登录", module: .auth, category: "Token")
             }
         }
 
@@ -703,9 +709,10 @@ enum CCXuanAPI {
         do {
             let resp = try await anonymousLogin()
             keychain["access_token"] = resp.token
-            print("✅ [API] 匿名登录获取新 token 成功")
+            LogI("匿名登录获取新 token 成功", module: .auth, category: "Token")
         } catch {
-            print("❌ [API] 匿名登录也失败: \(error)")
+            LogE("匿名登录也失败: \(error)", module: .auth, category: "Token", error: error)
+            CCErrorReporter.shared.report(error, context: ["stage": "refresh_token_and_retry"])
             try? keychain.remove("access_token")
             try? keychain.remove("refresh_token")
             throw CCAPIError.unauthorized
@@ -718,37 +725,38 @@ enum CCXuanAPI {
 
     private static func getWithRetry<T: Decodable>(_ path: String, retryCount: Int) async throws -> T {
         let start = CFAbsoluteTimeGetCurrent()
-        print("🌐 [API] → GET \(path)")
+        LogD("→ GET \(path)", module: .network, category: "API")
         do {
             let data = try await session.request(fullURL(path)).validate().serializingData().value
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
 
             // 检测 HTML 响应（DNS 劫持/备案拦截）
             if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
-                print("⚠️ [API] ← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)")
+                LogW("← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)", module: .network, category: "API")
                 throw CCAPIError.serverError(0)
             }
 
             let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
             guard resp.isSuccess, let d = resp.data else {
-                print("❌ [API] ← code=\(resp.code) \(resp.message) (\(elapsed)ms)")
+                LogE("← code=\(resp.code) \(resp.message) (\(elapsed)ms)", module: .network, category: "API")
 
                 // 业务码 10002 = token 过期，自动刷新重试一次
                 if resp.code == 10002 && retryCount < 1 {
                     try await refreshTokenAndRetry()
-                    print("🔄 [API] token 已刷新，重试 GET \(path)")
+                    LogI("token 已刷新，重试 GET \(path)", module: .network, category: "API")
                     return try await getWithRetry(path, retryCount: retryCount + 1)
                 }
 
                 throw apiError(for: resp.code, message: resp.message)
             }
-            print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
+            LogD("← 200 \(path) (\(elapsed)ms)", module: .network, category: "API")
             return d
         } catch let error as CCAPIError {
             throw error
         } catch {
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
-            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            LogE("← error \(path): \(error.localizedDescription) (\(elapsed)ms)", module: .network, category: "API", error: error)
+            CCErrorReporter.shared.report(error, context: ["path": path, "elapsed_ms": elapsed])
             throw error
         }
     }
@@ -766,38 +774,39 @@ enum CCXuanAPI {
                   let str = String(data: json, encoding: .utf8) else { return "<encodable>" }
             return String(str.prefix(200))
         }()
-        print("🌐 [API] → POST \(path)")
-        if body != nil { print("   📤 \(bodyPreview)") }
+        LogD("→ POST \(path)", module: .network, category: "API")
+        if body != nil { LogD("  📤 \(bodyPreview)", module: .network, category: "API") }
         do {
             let data = try await session.request(fullURL(path), method: .post, parameters: body, encoder: JSONParameterEncoder.default).validate().serializingData().value
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
 
             // 检测 HTML 响应
             if let str = String(data: data, encoding: .utf8), str.hasPrefix("<!DOCTYPE") || str.hasPrefix("<html") {
-                print("⚠️ [API] ← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)")
+                LogW("← HTML response (可能DNS劫持) \(path) (\(elapsed)ms)", module: .network, category: "API")
                 throw CCAPIError.serverError(0)
             }
 
             let resp = try decoder.decode(CCAPIResponse<T>.self, from: data)
             guard resp.isSuccess, let d = resp.data else {
-                print("❌ [API] ← code=\(resp.code) \(resp.message) (\(elapsed)ms)")
+                LogE("← code=\(resp.code) \(resp.message) (\(elapsed)ms)", module: .network, category: "API")
 
                 // 业务码 10002 = token 过期，自动刷新重试一次
                 if resp.code == 10002 && retryCount < 1 {
                     try await refreshTokenAndRetry()
-                    print("🔄 [API] token 已刷新，重试 POST \(path)")
+                    LogI("token 已刷新，重试 POST \(path)", module: .network, category: "API")
                     return try await postWithRetry(path, body: body, retryCount: retryCount + 1)
                 }
 
                 throw apiError(for: resp.code, message: resp.message)
             }
-            print("✅ [API] ← 200 \(path) (\(elapsed)ms)")
+            LogD("← 200 \(path) (\(elapsed)ms)", module: .network, category: "API")
             return d
         } catch let error as CCAPIError {
             throw error
         } catch {
             let elapsed = Int((CFAbsoluteTimeGetCurrent() - start) * 1000)
-            print("❌ [API] ← error \(path): \(error.localizedDescription) (\(elapsed)ms)")
+            LogE("← error \(path): \(error.localizedDescription) (\(elapsed)ms)", module: .network, category: "API", error: error)
+            CCErrorReporter.shared.report(error, context: ["path": path, "elapsed_ms": elapsed])
             throw error
         }
     }
@@ -824,15 +833,16 @@ final class XuanAuthInterceptor: RequestInterceptor {
         // 401 时尝试重新匿名登录获取新 token
         if let statusCode = request.response?.statusCode, statusCode == 401 {
             if request.retryCount == 0 {
-                print("🔄 [Auth] 401 自动重试匿名登录...")
+                LogW("401 自动重试匿名登录...", module: .auth, category: "Interceptor")
                 Task {
                     do {
                         let resp = try await CCXuanAPI.anonymousLogin()
                         keychain["access_token"] = resp.token
-                        print("✅ [Auth] 重试登录成功")
+                        LogI("重试登录成功", module: .auth, category: "Interceptor")
                         completion(.retry)
                     } catch {
-                        print("❌ [Auth] 重试登录失败: \(error)")
+                        LogE("重试登录失败: \(error)", module: .auth, category: "Interceptor", error: error)
+                        CCErrorReporter.shared.report(error, context: ["stage": "401_retry"])
                         completion(.doNotRetryWithError(error))
                     }
                 }
