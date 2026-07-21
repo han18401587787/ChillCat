@@ -254,6 +254,7 @@ private struct BugDraftView: View {
 
     enum SubmitResult {
         case success(issueURL: String)
+        case queued                       // 提交失败，已存本地队列，将自动补传
         case failure(message: String)
     }
 
@@ -416,6 +417,18 @@ private struct BugDraftView: View {
                                 Text(msg)
                                     .font(.caption)
                             }
+                        case .queued:
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Image(systemName: "tray.and.arrow.down.fill")
+                                        .foregroundColor(.orange)
+                                    Text("已保存到本地，将在网络恢复后自动提交")
+                                        .fontWeight(.semibold)
+                                }
+                                Text("当前网络异常，草稿已暂存。App 重启或网络恢复后会自动补传，无需手动操作。")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                 }
@@ -486,17 +499,21 @@ private struct BugDraftView: View {
         let body = bugReportMarkdown
 
         Task {
-            do {
-                let issueURL = try await reporter.submit(
-                    title: title,
-                    body: body,
-                    screenshot: capturedScreenshot?.pngData()
-                )
+            let result = await reporter.submitWithQueue(
+                title: title,
+                body: body,
+                screenshot: capturedScreenshot?.pngData()
+            )
+            switch result {
+            case .success(let issueURL):
                 submitResult = .success(issueURL: issueURL)
                 // 自动复制 Issue 链接
                 UIPasteboard.general.string = issueURL
                 LogI("Bug 已提交到 GitHub: \(issueURL)", module: .ui, category: "BugReport")
-            } catch {
+            case .queued:
+                submitResult = .queued
+                LogW("Bug 提交失败，已存入本地队列等待补传", module: .ui, category: "BugReport")
+            case .failure(let error):
                 submitResult = .failure(message: error.localizedDescription)
                 LogE("Bug 提交失败: \(error.localizedDescription)", module: .ui, category: "BugReport", error: error)
             }

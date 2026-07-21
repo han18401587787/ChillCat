@@ -60,6 +60,10 @@ struct CCApp: View {
         .task {
             guard !isUITesting else { return }
             await initializeApp()
+            #if DEBUG
+            // 冷启补传：自动重试本地队列中未提交的 Bug 草稿
+            await CCGitHubIssueReporter.shared.processPendingQueue()
+            #endif
         }
     }
 

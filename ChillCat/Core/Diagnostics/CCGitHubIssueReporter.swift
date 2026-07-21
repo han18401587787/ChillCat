@@ -12,39 +12,103 @@ final class CCGitHubIssueReporter {
     private let repo = "han18401587787/ChillCat"
     private let baseURL = "https://api.github.com"
 
-    /// 提交 Bug 报告到 GitHub Issue
+    /// 提交结果 — 区分成功 / 入队 / 配置错误
+    enum CCBugSubmissionResult {
+        case success(issueURL: String)
+        case queued                       // 最终失败，已存本地队列等待补传
+        case failed(Error)               // 配置类错误（token 缺失/无效），无法重试
+    }
+
+    /// 提交 Bug 报告到 GitHub Issue（带指数退避重试 + 失败落队）
     /// - Parameters:
     ///   - title: Issue 标题
     ///   - body: Issue 正文（Markdown 格式）
     ///   - screenshot: 可选的截图 Data
     ///   - labels: 标签，默认 ["bug", "from-debug-panel"]
-    /// - Returns: Issue URL
-    func submit(
+    /// - Returns: 提交结果
+    func submitWithQueue(
         title: String,
         body: String,
         screenshot: Data? = nil,
         labels: [String] = ["bug", "from-debug-panel"]
-    ) async throws -> String {
-        // 1. 获取 GitHub Token
+    ) async -> CCBugSubmissionResult {
+        // Token 缺失/无效属于配置错误，重试无意义，直接报错
         guard let token = getToken() else {
-            throw CCGitHubError.missingToken
+            return .failed(CCGitHubError.missingToken)
         }
 
-        // 2. 创建 Issue
-        let issueURL = try await createIssue(title: title, body: body, labels: labels, token: token)
+        let maxRetries = 3
+        var lastError: Error?
 
-        // 3. 如果有截图，上传到 Issue
-        if let screenshot = screenshot, let issueNumber = extractIssueNumber(from: issueURL) {
-            let imageURL = try await uploadImage(screenshot, token: token)
-            // 在 Issue 中添加截图评论
-            try await addComment(
-                issueNumber: issueNumber,
-                body: "![截图](\(imageURL))",
-                token: token
-            )
+        for attempt in 1...maxRetries {
+            do {
+                let issueURL = try await createIssue(title: title, body: body, labels: labels, token: token)
+                if let screenshot = screenshot, let issueNumber = extractIssueNumber(from: issueURL) {
+                    let imageURL = try await uploadImage(screenshot, token: token)
+                    try? await addComment(issueNumber: issueNumber, body: "![截图](\(imageURL))", token: token)
+                }
+                return .success(issueURL: issueURL)
+            } catch {
+                lastError = error
+                if attempt < maxRetries {
+                    // 指数退避：1s → 2s → 4s
+                    let delay = UInt64(pow(2.0, Double(attempt - 1))) * 1_000_000_000
+                    LogW("Bug 提交失败 (attempt \(attempt)/\(maxRetries))，\(Double(delay) / 1e9)s 后重试: \(error.localizedDescription)", module: .network, category: "GitHub")
+                    try? await Task.sleep(nanoseconds: delay)
+                }
+            }
         }
 
-        return issueURL
+        // 最终失败 — 判断是否可以入队（仅网络/服务端错误入队，配置错误不入队）
+        if shouldQueue(lastError) {
+            CCBugSubmissionQueue.shared.enqueue(title: title, body: body, screenshot: screenshot, labels: labels)
+            LogW("Bug 提交最终失败，已存入本地队列等待补传: \(title)", module: .network, category: "GitHub")
+            return .queued
+        } else {
+            return .failed(lastError ?? CCGitHubError.networkFailure)
+        }
+    }
+
+    /// 判断错误是否可入队重试（网络/服务端临时错误可重试；token 配置错误不可重试）
+    private func shouldQueue(_ error: Error?) -> Bool {
+        guard let error = error as? CCGitHubError else { return true }
+        switch error {
+        case .missingToken, .invalidToken:
+            return false
+        case .networkFailure, .apiError, .parseError:
+            return true
+        }
+    }
+
+    /// 冷启补传 — 静默重试本地队列中所有待提交项
+    /// 在网络可用时自动补传，用户无感
+    func processPendingQueue() async {
+        let pending = CCBugSubmissionQueue.shared.pendingItems()
+        guard !pending.isEmpty else { return }
+
+        LogI("冷启检测到 \(pending.count) 条未提交 Bug 草稿，开始自动补传", module: .ui, category: "BugReport")
+
+        guard let token = getToken() else {
+            LogW("本地有 \(pending.count) 条未提交 Bug，但 GitHub Token 未配置，跳过补传（联网配置后下次启动自动补传）", module: .ui, category: "BugReport")
+            return
+        }
+
+        for item in pending {
+            do {
+                let issueURL = try await createIssue(title: item.title, body: item.body, labels: item.labels, token: token)
+                if let base64 = item.screenshotBase64,
+                   let data = Data(base64Encoded: base64),
+                   let issueNumber = extractIssueNumber(from: issueURL) {
+                    let imageURL = try await uploadImage(data, token: token)
+                    try? await addComment(issueNumber: issueNumber, body: "![截图](\(imageURL))", token: token)
+                }
+                CCBugSubmissionQueue.shared.remove(item.id)
+                LogI("未提交 Bug 补传成功: \(item.title) → \(issueURL)", module: .ui, category: "BugReport")
+            } catch {
+                CCBugSubmissionQueue.shared.incrementRetry(item.id, error: error.localizedDescription)
+                LogW("未提交 Bug 补传失败（剩余 \(CCBugSubmissionQueue.shared.count()) 条待处理）: \(error.localizedDescription)", module: .ui, category: "BugReport")
+            }
+        }
     }
 
     // MARK: - Token 管理
