@@ -1,0 +1,57 @@
+name: Debug Issue Triage
+
+# 当 Debug 诊断面板自动创建的 Issue（标签 from-debug-panel）被打开时，
+# 自动添加分诊标签、指派、并评论说明 Agent 处理流程。
+# 注意：本 Action 只做轻量分诊（永远可用，不依赖外部沙箱）。
+# 真正的代码修复由 bug-fixer Agent 在沙箱内执行（见 scripts/process_debug_issues.sh）。
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  triage:
+    name: Triage Debug Issue
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'from-debug-panel')
+    steps:
+      - name: Add triage label & comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const issueNumber = issue.number;
+
+            // 添加处理中标签
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              labels: ['auto-triage']
+            });
+
+            // 评论说明自动处理流程
+            const body = `🤖 **Debug Issue 自动分诊**
+
+此 Issue 由 App 内 Debug 诊断面板自动创建，包含：
+- 页面名、设备信息、App 版本
+- 问题描述 / 期望结果 / 实际结果
+- 自动附加的诊断日志（含 \`@ file:line\` 锚点）
+
+**处理流程**：
+1. ✅ 已自动打标 \`auto-triage\`
+2. ⏳ bug-fixer Agent 将分析诊断日志
+3. 🔧 高置信度问题自动生成修复 PR（分支 \`fix/issue-${issueNumber}-*\`）
+4. 👀 **PR 需人工 Review 后合并**（Agent 绝不自动合并）
+
+> 若问题描述模糊或无诊断日志锚点，Agent 会跳过并请求补充信息。`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: body
+            });
