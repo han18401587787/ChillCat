@@ -250,6 +250,7 @@ struct CCLoginView: View {
         .onChange(of: viewModel.isLoggedIn) { _, newValue in
             if newValue { coordinator.isLoggedIn = true }
         }
+        .trackPage("Auth:CCLoginView")
     }
 
     private func sendVerificationCode() {

@@ -15,7 +15,7 @@ final class CCTrendsViewModel {
     var errorMessage: String?
 
     func loadStats() async {
-        print("🔄 [Trends] loadStats start")
+        LogD("[Trends] loadStats start", module: .network, category: "Trends")
         isLoading = true
         errorMessage = nil
         do {
@@ -29,12 +29,12 @@ final class CCTrendsViewModel {
                 counts[dayNames[idx], default: 0] += 1
             }
             weekData = dayNames.map { ($0, counts[$0] ?? 0) }
-            print("✅ [Trends] loadStats done: \(s.totalCount) entries, top=\(s.topEmotion), streak=\(s.streakDays)")
+            LogI("[Trends] loadStats done: \(s.totalCount) entries, top=\(s.topEmotion), streak=\(s.streakDays)", module: .network, category: "Trends")
         } catch {
             stats = nil
             weekData = []
             errorMessage = "数据加载失败，请检查网络后重试"
-            print("⚠️ [Trends] API failed: \(error)")
+            LogW("[Trends] API failed: \(error)", module: .network, category: "Trends")
         }
         isLoading = false
     }

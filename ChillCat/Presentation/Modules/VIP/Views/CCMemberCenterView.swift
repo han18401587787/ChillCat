@@ -55,6 +55,7 @@ struct CCMemberCenterView: View {
         } message: {
             Text(viewModel.errorMessage ?? "加载数据失败")
         }
+        .trackPage("VIP:CCMemberCenterView")
     }
 
     // MARK: - 主内容

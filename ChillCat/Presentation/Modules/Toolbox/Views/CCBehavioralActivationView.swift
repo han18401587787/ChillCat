@@ -59,6 +59,7 @@ struct CCBehavioralActivationView: View {
                     .accessibilityIdentifier("ba_close")
             }
         }
+        .trackPage("Toolbox:CCBehavioralActivationView")
     }
 
     // MARK: - View Mode Picker

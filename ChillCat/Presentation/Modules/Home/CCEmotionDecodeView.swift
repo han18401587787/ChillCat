@@ -679,7 +679,7 @@ final class EmotionDecodeViewModel: ObservableObject {
                 intensityDistribution[idx - 1] = 0.8
             }
         } catch {
-            print("⚠️ [EmotionDecode] API failed: \(error)")
+            LogW("API failed: \(error)", module: .network, category: "EmotionDecode")
         }
         isLoadingDecode = false
     }
@@ -706,7 +706,7 @@ final class EmotionDecodeViewModel: ObservableObject {
                 showLowScoreWarning = weeklyTrend.count >= 3
             }
         } catch {
-            print("⚠️ [EmotionDecode] WeeklyStats API failed: \(error)")
+            LogW("WeeklyStats API failed: \(error)", module: .network, category: "EmotionDecode")
         }
     }
 }

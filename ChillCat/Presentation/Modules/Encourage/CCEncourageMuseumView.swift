@@ -320,7 +320,7 @@ final class EncourageMuseumViewModel: ObservableObject {
         } catch {
             completedChains = []
             errorMessage = "数据加载失败"
-            print("⚠️ [EncourageMuseum] API failed: \(error)")
+            LogW("API failed: \(error)", module: .network, category: "EncourageMuseum")
         }
         
         // Load badges from achievements
@@ -337,7 +337,7 @@ final class EncourageMuseumViewModel: ObservableObject {
                 )
             }
         } catch {
-            print("⚠️ [EncourageMuseum] Achievements API failed: \(error)")
+            LogW("Achievements API failed: \(error)", module: .network, category: "EncourageMuseum")
         }
         
         isLoading = false

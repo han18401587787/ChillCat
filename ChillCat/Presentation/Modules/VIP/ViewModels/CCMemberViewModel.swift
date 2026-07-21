@@ -59,7 +59,7 @@ final class CCMemberViewModel {
             memberInfo = try await fetchMemberInfoUseCase.execute()
         } catch {
             errorMessage = "会员信息加载失败"
-            print("⚠️ [Member] API failed: \(error)")
+            LogW("[Member] API failed: \(error)", module: .network, category: "Member")
         }
         products = CCMemberViewModel.defaultProducts()
         privileges = CCMemberViewModel.defaultPrivileges()

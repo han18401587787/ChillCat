@@ -43,6 +43,7 @@ struct CCWelcomeView: View {
                 }.padding(.horizontal, 32).padding(.bottom, 50)
             }
         }
+        .trackPage("Onboarding:CCWelcomeView")
         .alert("提示", isPresented: Binding(
             get: { viewModel.errorMessage != nil },
             set: { if !$0 { viewModel.errorMessage = nil } }

@@ -26,6 +26,7 @@ struct CCProfileView: View {
         .navigationTitle("我的")
         .navigationBarTitleDisplayMode(.large)
         .task { await viewModel.loadProfile() }
+        .trackPage("Profile:CCProfileView")
     }
 
     // MARK: - 主内容

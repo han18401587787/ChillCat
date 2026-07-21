@@ -40,6 +40,7 @@ struct CCResonanceView: View {
         .task { await viewModel.loadResonance() }
         .sheet(isPresented: $showComposer) { composeSheet }
         .animation(.easeInOut(duration: 0.25), value: showComposer)
+        .trackPage("Resonance:CCResonanceView")
     }
 
     // MARK: - Toolbar

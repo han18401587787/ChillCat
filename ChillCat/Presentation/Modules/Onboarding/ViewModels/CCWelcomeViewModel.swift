@@ -14,22 +14,22 @@ final class CCWelcomeViewModel {
 
         // 已有有效 token，直接进入
         if let existingToken = keychain["access_token"], !existingToken.isEmpty {
-            print("✅ [Welcome] 已有 Token, 直接进入")
+            LogI("[Welcome] 已有 Token, 直接进入", module: .auth, category: "Welcome")
             coordinator.isLoggedIn = true
             return
         }
 
         isLoading = true
         errorMessage = nil
-        print("🌐 [Welcome] 后台获取Token → \(CCAppEnvironment.current.baseURL)")
+        LogD("[Welcome] 后台获取Token → \(CCAppEnvironment.current.baseURL)", module: .network, category: "Welcome")
         Task {
             do {
                 let resp = try await CCXuanAPI.anonymousLogin()
-                print("✅ [Welcome] Token已缓存 user=\(resp.username)")
+                LogI("[Welcome] Token已缓存 user=\(resp.username)", module: .auth, category: "Welcome")
                 keychain["access_token"] = resp.token
                 coordinator.isLoggedIn = true
             } catch {
-                print("⚠️ [Welcome] Token获取失败: \(error.localizedDescription)")
+                LogW("[Welcome] Token获取失败: \(error.localizedDescription)", module: .auth, category: "Welcome")
                 // TLS 错误给出明确提示
                 let nsError = error as NSError
                 if nsError.domain == NSURLErrorDomain && nsError.code == -1200 {

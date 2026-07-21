@@ -27,6 +27,7 @@ struct CCPrivacyView: View {
         .background(Color.xuanApricotBg)
         .navigationTitle("隐私保护")
         .navigationBarTitleDisplayMode(.large)
+        .trackPage("Settings:CCPrivacyView")
     }
 
     private var headerSection: some View {

@@ -55,57 +55,57 @@ final class CCTreeHoleViewModel {
             let remote = try await CCXuanAPI.fetchWarmTemplates()
             guard !remote.isEmpty else { return }
             warmTemplates = remote
-            print("✅ [TreeHole] loadWarmTemplates: \(remote.count) from API")
+            LogI("[TreeHole] loadWarmTemplates: \(remote.count) from API", module: .network, category: "TreeHole")
         } catch {
             warmTemplates = CCWarmResponseTemplate.presets
-            print("⚠️ [TreeHole] loadWarmTemplates fallback to presets: \(error)")
+            LogW("[TreeHole] loadWarmTemplates fallback to presets: \(error)", module: .network, category: "TreeHole")
         }
     }
 
     func loadPosts() async {
-        print("🔄 [TreeHole] loadPosts start")
+        LogD("[TreeHole] loadPosts start", module: .network, category: "TreeHole")
         isLoading = true; currentPage = 1
         do {
             let page = try await CCXuanAPI.listPosts(page: 1)
             posts = mapPosts(page.list ?? [])
             hasMore = (page.total ?? 0) > posts.count
-            print("✅ [TreeHole] loadPosts done: \(posts.count) posts, \(onlineCount) online")
+            LogI("[TreeHole] loadPosts done: \(posts.count) posts, \(onlineCount) online", module: .network, category: "TreeHole")
         } catch {
             errorMessage = "加载失败，请重试"
-            print("❌ [TreeHole] loadPosts failed: \(error)")
+            LogE("[TreeHole] loadPosts failed: \(error)", module: .network, category: "TreeHole")
         }
         isLoading = false
     }
 
     func refresh() async {
-        print("🔄 [TreeHole] refresh start")
+        LogD("[TreeHole] refresh start", module: .network, category: "TreeHole")
         isRefreshing = true; currentPage = 1
         do {
             let page = try await CCXuanAPI.listPosts(page: 1)
             posts = mapPosts(page.list ?? [])
             hasMore = (page.total ?? 0) > posts.count
-            print("✅ [TreeHole] refresh done: \(posts.count) posts")
+            LogI("[TreeHole] refresh done: \(posts.count) posts", module: .network, category: "TreeHole")
         } catch {
             errorMessage = "刷新失败，请重试"
-            print("❌ [TreeHole] refresh failed: \(error)")
+            LogE("[TreeHole] refresh failed: \(error)", module: .network, category: "TreeHole")
         }
         isRefreshing = false
     }
 
     func loadMore() async {
         guard !isLoadingMore, hasMore else { return }
-        print("🔄 [TreeHole] loadMore start page=\(currentPage + 1)")
+        LogD("[TreeHole] loadMore start page=\(currentPage + 1)", module: .network, category: "TreeHole")
         isLoadingMore = true; currentPage += 1
         do {
             let page = try await CCXuanAPI.listPosts(page: currentPage)
             let newPosts = mapPosts(page.list ?? [])
             posts += newPosts
             hasMore = (page.total ?? 0) > posts.count
-            print("✅ [TreeHole] loadMore done: +\(newPosts.count) posts, total=\(posts.count)")
+            LogI("[TreeHole] loadMore done: +\(newPosts.count) posts, total=\(posts.count)", module: .network, category: "TreeHole")
         } catch {
             currentPage -= 1
             errorMessage = "加载更多失败，请重试"
-            print("❌ [TreeHole] loadMore failed: \(error)")
+            LogE("[TreeHole] loadMore failed: \(error)", module: .network, category: "TreeHole")
         }
         isLoadingMore = false
     }
@@ -138,12 +138,12 @@ final class CCTreeHoleViewModel {
         Task {
             do {
                 let _ = try await CCXuanAPI.createPost(content: text, scope: scope == .public ? "public" : "comforters", isAnonymous: anon)
-                print("✅ [TreeHole] publishPost done")
+                LogI("[TreeHole] publishPost done", module: .network, category: "TreeHole")
                 await loadPosts()
             } catch {
                 newPostText = text
                 errorMessage = "发布失败，请重试"
-                print("❌ [TreeHole] publishPost failed: \(error)")
+                LogE("[TreeHole] publishPost failed: \(error)", module: .network, category: "TreeHole")
             }
         }
     }
@@ -157,10 +157,10 @@ final class CCTreeHoleViewModel {
                     posts[idx].resonanceCount += 1
                     posts[idx].hasResonated = true
                 }
-                print("✅ [TreeHole] resonatePost done id=\(id)")
+                LogI("[TreeHole] resonatePost done id=\(id)", module: .network, category: "TreeHole")
             } catch {
                 errorMessage = "共鸣失败，请重试"
-                print("❌ [TreeHole] resonatePost failed id=\(id): \(error)")
+                LogE("[TreeHole] resonatePost failed id=\(id): \(error)", module: .network, category: "TreeHole")
             }
         }
     }

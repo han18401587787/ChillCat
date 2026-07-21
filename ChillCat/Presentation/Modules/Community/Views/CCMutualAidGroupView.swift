@@ -38,6 +38,7 @@ struct CCMutualAidGroupView: View {
         }
         .background(Color.xuanApricotBg)
         .task { await viewModel.loadGroups() }
+        .trackPage("Community:CCMutualAidGroupView")
     }
 
     // MARK: - Header

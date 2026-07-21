@@ -336,7 +336,7 @@ final class EncouragePassViewModel: ObservableObject {
                 )
             }
         } catch {
-            print("⚠️ [EncouragePass] API failed: \(error)")
+            LogW("API failed: \(error)", module: .network, category: "EncouragePass")
         }
         isLoadingMessages = false
     }

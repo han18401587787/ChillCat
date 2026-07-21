@@ -58,7 +58,7 @@ final class CCEmotionViewModel {
     }
 
     func loadToday() async {
-        print("🔄 [Emotion] loadToday start")
+        LogD("[Emotion] loadToday start", module: .network, category: "Emotion")
         do {
             let today = try await CCXuanAPI.getToday()
             if let id = today.id, id > 0 {
@@ -71,25 +71,25 @@ final class CCEmotionViewModel {
             }
             streakDays = Int(today.streakDays ?? 0)
             totalDays = Int(today.streakDays ?? 0)
-            print("✅ [Emotion] loadToday done: checkedIn=\(hasCheckedIn), streak=\(streakDays)")
+            LogI("[Emotion] loadToday done: checkedIn=\(hasCheckedIn), streak=\(streakDays)", module: .network, category: "Emotion")
         } catch {
             weeklyNote = "加载中，请稍后重试"
-            print("⚠️ [Emotion] loadToday API failed: \(error)")
+            LogW("[Emotion] loadToday API failed: \(error)", module: .network, category: "Emotion")
         }
         await loadWeeklyStats()
     }
 
     private func loadWeeklyStats() async {
-        print("🔄 [Emotion] loadWeeklyStats start")
+        LogD("[Emotion] loadWeeklyStats start", module: .network, category: "Emotion")
         do {
             let stats = try await CCXuanAPI.getWeeklyStats()
             let count = stats.totalCount ?? 0
             let top = stats.topEmotion ?? "平静"
             weeklyNote = "本周记录 \(count) 次，你的情绪以「\(top)」为主"
-            print("✅ [Emotion] loadWeeklyStats done: \(count) entries, top=\(top)")
+            LogI("[Emotion] loadWeeklyStats done: \(count) entries, top=\(top)", module: .network, category: "Emotion")
         } catch {
             weeklyNote = "本周数据加载失败"
-            print("⚠️ [Emotion] loadWeeklyStats API failed: \(error)")
+            LogW("[Emotion] loadWeeklyStats API failed: \(error)", module: .network, category: "Emotion")
         }
     }
 
@@ -113,10 +113,10 @@ final class CCEmotionViewModel {
                 totalDays = Int(result.streakDays ?? 0)
                 // 同步数据到 Widget
                 CCWidgetDataSync.update(emotion: emotionToCheckin.rawValue, streak: Int(result.streakDays ?? 0), quote: quote)
-                print("✅ [Emotion] checkin success: streak=\(streakDays)")
+                LogI("[Emotion] checkin success: streak=\(streakDays)", module: .network, category: "Emotion")
             } catch {
                 // 已打卡或其他错误 — 仍保持已打卡状态
-                print("⚠️ [Emotion] checkin API error (已打卡?): \(error)")
+                LogW("[Emotion] checkin API error (已打卡?): \(error)", module: .network, category: "Emotion")
             }
         }
     }

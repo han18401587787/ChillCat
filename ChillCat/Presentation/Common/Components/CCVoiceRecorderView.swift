@@ -468,9 +468,9 @@ struct WaveformAnimation: View {
 #Preview {
     VStack {
         VoiceRecorderView { transcription in
-            print("转录: \(transcription)")
+            LogD("转录: \(transcription)", module: .audio, category: "VoiceRecorder")
         } onCancel: {
-            print("取消")
+            LogD("取消录音", module: .audio, category: "VoiceRecorder")
         }
 
         Spacer()

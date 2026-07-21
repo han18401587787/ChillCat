@@ -25,6 +25,7 @@ struct CCCoursesView: View {
         }
         .background(Color.xuanApricotBg).navigationTitle("小课堂")
         .task { await viewModel.loadCourses() }
+        .trackPage("Courses:CCCoursesView")
     }
 
     private var emptyState: some View {

@@ -45,6 +45,7 @@ struct CCMeditationView: View {
             default:     breathPhase = "呼气"
             }
         }
+        .trackPage("Meditation:CCMeditationView")
     }
 
     // MARK: - 冥想练习

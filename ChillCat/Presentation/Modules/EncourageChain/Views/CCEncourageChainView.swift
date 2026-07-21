@@ -75,6 +75,7 @@ struct CCEncourageChainView: View {
                 await viewModel.loadCurrentChain()
             }
         }
+        .trackPage("EncourageChain:CCEncourageChainView")
     }
 
     // MARK: - Header

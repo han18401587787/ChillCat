@@ -127,7 +127,7 @@ struct CCMainTabView: View {
             for (index, tab) in tabs.enumerated() {
                 items[index].accessibilityIdentifier = "tab_\(tab.title)"
             }
-            print("✅ [UITest] TabBar accessibilityIdentifier 已设置（第\(attempt + 1)次尝试）")
+            LogD("TabBar accessibilityIdentifier 已设置（第\(attempt + 1)次尝试）", module: .ui, category: "UITest")
         }
 
         DispatchQueue.main.async(execute: trySetup)

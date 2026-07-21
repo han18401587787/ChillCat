@@ -67,7 +67,7 @@ final class CCWhiteNoisePlayer {
             forResource: type.rawValue,
             withExtension: "mp3"
         ) else {
-            print("⚠️ [WhiteNoise] 找不到音频文件: \(type.rawValue).mp3")
+            LogW("找不到音频文件: \(type.rawValue).mp3", module: .audio, category: "WhiteNoise")
             return
         }
 
@@ -82,9 +82,9 @@ final class CCWhiteNoisePlayer {
 
             currentType = type
             isPlaying = true
-            print("🎵 [WhiteNoise] 开始播放: \(type.displayName)")
+            LogI("开始播放: \(type.displayName)", module: .audio, category: "WhiteNoise")
         } catch {
-            print("❌ [WhiteNoise] 播放失败: \(error.localizedDescription)")
+            LogE("播放失败: \(error.localizedDescription)", module: .audio, category: "WhiteNoise")
         }
     }
 
@@ -94,7 +94,7 @@ final class CCWhiteNoisePlayer {
         player = nil
         isPlaying = false
         currentType = nil
-        print("⏹ [WhiteNoise] 已停止")
+        LogI("已停止", module: .audio, category: "WhiteNoise")
     }
 
     /// 设置音量 (0.0 ~ 1.0)

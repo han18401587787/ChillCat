@@ -106,6 +106,7 @@ struct CCToolboxView: View {
         .navigationTitle("心理工具箱")
         .navigationBarTitleDisplayMode(.large)
         .onAppear { withAnimation(.easeOut(duration: 0.4)) { appeared = true } }
+        .trackPage("Toolbox:CCToolboxView")
     }
 
     // MARK: - Header

@@ -49,6 +49,7 @@ struct CCEmotionDecoderView: View {
         .background(Color.xuanApricotBg)
         .navigationTitle("情绪地图")
         .navigationBarTitleDisplayMode(.large)
+        .trackPage("EmotionDecoder:CCEmotionDecoderView")
     }
 
     // MARK: - 周期切换

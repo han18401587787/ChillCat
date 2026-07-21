@@ -64,6 +64,7 @@ struct CCTreeHoleView: View {
         .onReceive(NotificationCenter.default.publisher(for: .treeHoleDidUpdate)) { _ in
             Task { await viewModel.refresh() }
         }
+        .trackPage("TreeHole:CCTreeHoleView")
     }
 
     // MARK: - Header

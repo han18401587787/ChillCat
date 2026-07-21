@@ -89,6 +89,7 @@ struct CCJournalView: View {
         }.background(Color.xuanApricotBg).navigationTitle("情绪日记")
         .refreshable { await viewModel.loadJournal() }
         .task { await viewModel.loadJournal() }
+        .trackPage("Journal:CCJournalView")
         .alert("加载失败", isPresented: Binding<Bool>(
             get: { viewModel.error != nil },
             set: { if !$0 { viewModel.error = nil } }

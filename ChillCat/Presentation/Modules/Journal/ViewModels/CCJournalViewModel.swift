@@ -16,18 +16,18 @@ final class CCJournalViewModel {
     var error: Error?
 
     func loadJournal() async {
-        print("🔄 [Journal] loadJournal start month=\(selectedYear)-\(selectedMonth)")
+        LogD("[Journal] loadJournal start month=\(selectedYear)-\(selectedMonth)", module: .network, category: "Journal")
         isLoading = true
         error = nil
         let m = String(format: "%04d-%02d", selectedYear, selectedMonth)
         do {
             let page = try await CCXuanAPI.getJournal(month: m)
             entries = page.list ?? []
-            print("✅ [Journal] loadJournal done: \(page.list?.count ?? 0) entries, total=\(page.total ?? 0)")
+            LogI("[Journal] loadJournal done: \(page.list?.count ?? 0) entries, total=\(page.total ?? 0)", module: .network, category: "Journal")
         } catch {
             entries = []
             self.error = error
-            print("⚠️ [Journal] API failed: \(error)")
+            LogW("[Journal] API failed: \(error)", module: .network, category: "Journal")
         }
         isLoading = false
     }

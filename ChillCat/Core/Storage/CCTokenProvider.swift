@@ -72,27 +72,27 @@ final class CCTokenProvider: CCTokenProviderProtocol {
         // 获取 refresh token
         guard let refreshTokenValue = await getRefreshToken() else {
             // 没有 refresh token，尝试匿名登录获取新 token
-            print("🔄 [Token] 无 refresh token，尝试匿名登录")
+            LogD("无 refresh token，尝试匿名登录", module: .auth, category: "Token")
             do {
                 let resp = try await CCXuanAPI.anonymousLogin()
                 try keychain.set(resp.token, for: CCKeys.accessToken)
-                print("✅ [Token] 匿名登录获取新 token 成功")
+                LogI("匿名登录获取新 token 成功", module: .auth, category: "Token")
                 return
             } catch {
-                print("❌ [Token] 匿名登录获取新 token 失败: \(error)")
+                LogE("匿名登录获取新 token 失败: \(error)", module: .auth, category: "Token")
                 await clearTokens()
                 throw CCAppError.authentication
             }
         }
 
         // 调用刷新接口
-        print("🔄 [Token] 开始刷新 token")
+        LogD("开始刷新 token", module: .auth, category: "Token")
         do {
             let resp = try await CCXuanAPI.refreshToken(refreshToken: refreshTokenValue)
             try await saveTokens(access: resp.accessToken, refresh: resp.refreshToken)
-            print("✅ [Token] 刷新成功")
+            LogI("刷新成功", module: .auth, category: "Token")
         } catch {
-            print("❌ [Token] 刷新失败: \(error)")
+            LogE("刷新失败: \(error)", module: .auth, category: "Token")
             // 刷新失败，清除旧 token，需要重新登录
             await clearTokens()
             throw CCAppError.tokenExpired

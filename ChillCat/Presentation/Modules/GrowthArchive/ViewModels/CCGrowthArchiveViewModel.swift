@@ -58,7 +58,7 @@ final class CCGrowthArchiveViewModel {
     // MARK: - Load
 
     func loadData() async {
-        print("🔄 [GrowthArchive] loadData start")
+        LogD("[GrowthArchive] loadData start", module: .network, category: "GrowthArchive")
         isLoading = true
         error = nil
 
@@ -70,31 +70,31 @@ final class CCGrowthArchiveViewModel {
             // Map server VOs to local badge definitions
             let mapped = serverBadges.compactMap { Self.mapAchievement($0) }
             achievements = mergeAchievements(local: CCAchievementBadge.allBadges, server: mapped)
-            print("✅ [GrowthArchive] loaded \(serverBadges.count) server achievements")
+            LogI("[GrowthArchive] loaded \(serverBadges.count) server achievements", module: .network, category: "GrowthArchive")
         } catch {
             // Keep predefined badges as placeholders; API unavailable
-            print("⚠️ [GrowthArchive] API failed, keeping default badges: \(error)")
+            LogW("[GrowthArchive] API failed, keeping default badges: \(error)", module: .network, category: "GrowthArchive")
         }
 
         // Load milestones
         do {
             let serverMilestones = try await CCXuanAPI.getMilestones()
             milestones = serverMilestones.map { Self.mapMilestone($0) }
-            print("✅ [GrowthArchive] loaded \(serverMilestones.count) server milestones")
+            LogI("[GrowthArchive] loaded \(serverMilestones.count) server milestones", module: .network, category: "GrowthArchive")
         } catch {
             milestones = []
-            print("⚠️ [GrowthArchive] API failed, no milestones loaded: \(error)")
+            LogW("[GrowthArchive] API failed, no milestones loaded: \(error)", module: .network, category: "GrowthArchive")
         }
 
         // Load stats
         do {
             let serverStats = try await CCXuanAPI.getGrowthStats()
             stats = Self.mapGrowthStats(serverStats)
-            print("✅ [GrowthArchive] loaded stats")
+            LogI("[GrowthArchive] loaded stats", module: .network, category: "GrowthArchive")
         } catch {
             stats = nil
             self.error = error
-            print("⚠️ [GrowthArchive] API failed: \(error)")
+            LogW("[GrowthArchive] API failed: \(error)", module: .network, category: "GrowthArchive")
         }
 
         isLoading = false

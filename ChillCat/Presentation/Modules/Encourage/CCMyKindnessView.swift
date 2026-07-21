@@ -311,7 +311,7 @@ final class MyKindnessViewModel: ObservableObject {
             participatedChains = []
             initiatedChains = []
             errorMessage = "数据加载失败"
-            print("⚠️ [MyKindness] API failed: \(error)")
+            LogW("API failed: \(error)", module: .network, category: "MyKindness")
         }
         isLoading = false
     }

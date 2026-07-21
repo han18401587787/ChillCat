@@ -304,7 +304,7 @@ final class EncourageDiscoverViewModel: ObservableObject {
             activeChains = []
             recommendedChains = []
             errorMessage = "鼓励链加载失败"
-            print("⚠️ [EncourageDiscover] API failed: \(error)")
+            LogW("API failed: \(error)", module: .network, category: "EncourageDiscover")
         }
         isLoading = false
     }

@@ -63,6 +63,7 @@ struct CCHomeView: View {
         .background(Color.xuanApricotBg)
         .scrollDismissesKeyboard(.interactively)
         .task { await viewModel.loadData() }
+        .trackPage("Home:CCHomeView")
     }
 
     // MARK: - 1. 顶部状态栏

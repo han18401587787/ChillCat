@@ -29,14 +29,14 @@ final class CCMutualAidGroupViewModel {
             let remote = try await CCXuanAPI.fetchMutualAidGroups()
             if !remote.isEmpty {
                 groups = remote
-                print("✅ [MutualAid] loadGroups: \(remote.count) from API")
+                LogI("[MutualAid] loadGroups: \(remote.count) from API", module: .network, category: "MutualAid")
             } else {
                 groups = CCMutualAidGroup.presetGroups
-                print("⚠️ [MutualAid] loadGroups: empty API, using presets")
+                LogW("[MutualAid] loadGroups: empty API, using presets", module: .network, category: "MutualAid")
             }
         } catch {
             groups = CCMutualAidGroup.presetGroups
-            print("⚠️ [MutualAid] loadGroups fallback to presets: \(error)")
+            LogW("[MutualAid] loadGroups fallback to presets: \(error)", module: .network, category: "MutualAid")
         }
 
         myGroups = groups.filter { $0.isJoined }
@@ -59,14 +59,14 @@ final class CCMutualAidGroupViewModel {
         do {
             try await CCXuanAPI.joinMutualAidGroup(id: id)
             myGroups = groups.filter { $0.isJoined }
-            print("✅ [MutualAid] joinGroup id=\(id)")
+            LogI("[MutualAid] joinGroup id=\(id)", module: .network, category: "MutualAid")
         } catch {
             // Revert on failure
             if let idx = groups.firstIndex(where: { $0.id == id }) {
                 groups[idx].isJoined = false
             }
             errorMessage = "加入失败，请重试"
-            print("❌ [MutualAid] joinGroup failed id=\(id): \(error)")
+            LogE("[MutualAid] joinGroup failed id=\(id): \(error)", module: .network, category: "MutualAid")
         }
     }
 
@@ -83,14 +83,14 @@ final class CCMutualAidGroupViewModel {
         do {
             try await CCXuanAPI.leaveMutualAidGroup(id: id)
             myGroups = groups.filter { $0.isJoined }
-            print("✅ [MutualAid] leaveGroup id=\(id)")
+            LogI("[MutualAid] leaveGroup id=\(id)", module: .network, category: "MutualAid")
         } catch {
             // Revert on failure
             if let idx = groups.firstIndex(where: { $0.id == id }) {
                 groups[idx].isJoined = true
             }
             errorMessage = "退出失败，请重试"
-            print("❌ [MutualAid] leaveGroup failed id=\(id): \(error)")
+            LogE("[MutualAid] leaveGroup failed id=\(id): \(error)", module: .network, category: "MutualAid")
         }
     }
 }

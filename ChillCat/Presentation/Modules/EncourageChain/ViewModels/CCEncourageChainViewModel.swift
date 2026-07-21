@@ -52,7 +52,7 @@ final class CCEncourageChainViewModel {
             links = ChainLinkDisplay.sampleLinks
             chainId = 1
             participantCount = Int64(links.count)
-            print("⚠️ [EncourageChain] API failed, using mock data: \(error)")
+            LogW("[EncourageChain] API failed, using mock data: \(error)", module: .network, category: "EncourageChain")
         }
         isLoading = false
     }
@@ -77,7 +77,7 @@ final class CCEncourageChainViewModel {
             links = ChainLinkDisplay.sampleLinks
             chainId = id
             participantCount = Int64(links.count)
-            print("⚠️ [EncourageChain] loadChain API failed, using mock data: \(error)")
+            LogW("[EncourageChain] loadChain API failed, using mock data: \(error)", module: .network, category: "EncourageChain")
         }
         isLoading = false
     }
@@ -113,7 +113,7 @@ final class CCEncourageChainViewModel {
         } catch {
             // API 不可用时使用 mock 数据
             myChains = ChainSummary.sampleChains
-            print("⚠️ [EncourageChain] loadMyChains API failed, using mock data: \(error)")
+            LogW("[EncourageChain] loadMyChains API failed, using mock data: \(error)", module: .network, category: "EncourageChain")
         }
         isLoadingMyChains = false
     }

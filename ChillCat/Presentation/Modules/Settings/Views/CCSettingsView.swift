@@ -173,6 +173,7 @@ struct CCSettingsView: View {
         .background(Color.xuanApricotBg)
         .navigationTitle("设置")
         .navigationBarTitleDisplayMode(.large)
+        .trackPage("Settings:CCSettingsView")
         .alert("退出登录", isPresented: $showLogoutConfirm) {
             Button("取消", role: .cancel) {}
             Button("退出", role: .destructive) {

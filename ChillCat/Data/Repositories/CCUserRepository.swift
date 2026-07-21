@@ -29,7 +29,7 @@ final class CCUserRepository: CCUserRepositoryProtocol {
         // 将 token 写入 Keychain，CCXuanAPI 的 XuanAuthInterceptor 需要
         if let token = dto.token {
             keychain["access_token"] = token
-            print("✅ [Login] Token已缓存")
+            LogI("Token已缓存", module: .auth, category: "Login")
         }
         return user
     }

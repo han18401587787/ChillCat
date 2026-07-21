@@ -58,6 +58,7 @@ struct CCCBTView: View {
                     .accessibilityIdentifier("cbt_close")
             }
         }
+        .trackPage("Toolbox:CCCBTView")
     }
 
     // MARK: - Step Progress Bar

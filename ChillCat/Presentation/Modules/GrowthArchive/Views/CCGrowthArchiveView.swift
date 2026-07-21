@@ -29,6 +29,7 @@ struct CCGrowthArchiveView: View {
         .navigationBarTitleDisplayMode(.large)
         .refreshable { await viewModel.loadData() }
         .task { await viewModel.loadData() }
+        .trackPage("GrowthArchive:CCGrowthArchiveView")
     }
 
     // MARK: - Stats Summary Card

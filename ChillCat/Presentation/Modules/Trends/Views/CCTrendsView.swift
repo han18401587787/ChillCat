@@ -18,6 +18,7 @@ struct CCTrendsView: View {
         }
         .background(Color.xuanApricotBg).navigationTitle("情绪趋势")
         .task { await viewModel.loadStats() }
+        .trackPage("Trends:CCTrendsView")
         .alert("提示", isPresented: .constant(viewModel.errorMessage != nil)) {
             Button("重试") { Task { await viewModel.retry() } }
                 .accessibilityIdentifier("trends_retry")

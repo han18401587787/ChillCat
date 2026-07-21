@@ -31,14 +31,14 @@ final class CCCoursesViewModel {
     ]
 
     func loadCourses() async {
-        print("🔄 [Courses] loadCourses start")
+        LogD("[Courses] loadCourses start", module: .network, category: "Courses")
         loadState = .loading
         do {
             let all = try await CCXuanAPI.getCourses()
             if all.isEmpty {
                 loadState = .empty
                 categories = []
-                print("✅ [Courses] loadCourses done: empty")
+                LogI("[Courses] loadCourses done: empty", module: .network, category: "Courses")
             } else {
                 let grouped = Dictionary(grouping: all, by: { $0.category ?? "其他" })
                 categories = grouped.map { (name, items) in
@@ -46,12 +46,12 @@ final class CCCoursesViewModel {
                     return (name, icon, color, items)
                 }
                 loadState = .loaded
-                print("✅ [Courses] loadCourses done: \(all.count) courses, \(categories.count) categories")
+                LogI("[Courses] loadCourses done: \(all.count) courses, \(categories.count) categories", module: .network, category: "Courses")
             }
         } catch {
             loadState = .error(error.localizedDescription)
             categories = []
-            print("❌ [Courses] loadCourses failed: \(error)")
+            LogE("[Courses] loadCourses failed: \(error)", module: .network, category: "Courses")
         }
     }
 }
