@@ -57,6 +57,7 @@ struct CCApp: View {
         .environment(coordinator)
         .environment(themeManager)
         .preferredColorScheme(themeManager.colorScheme)
+        .withDiagnosticPanel()
         .task {
             guard !isUITesting else { return }
             await initializeApp()

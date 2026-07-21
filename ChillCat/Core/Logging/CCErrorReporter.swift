@@ -36,6 +36,17 @@ final class CCErrorReporter: CCErrorReporterProtocol {
         enrichedContext["errorCode"] = error.code
         enrichedContext["isRetryable"] = error.isRetryable
         reporters.forEach { $0.report(error, context: enrichedContext) }
+
+        #if DEBUG
+        CCDiagnosticCollector.shared.record(
+            level: .error,
+            message: error.errorDescription ?? "\(error)",
+            module: "ErrorReporter",
+            category: "Reported",
+            errorDescription: error.errorDescription,
+            traceID: CCTraceManager.shared.currentTraceID
+        )
+        #endif
     }
 
     @MainActor

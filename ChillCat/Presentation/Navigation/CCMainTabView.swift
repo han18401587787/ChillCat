@@ -90,10 +90,16 @@ struct CCMainTabView: View {
         .tint(Color.xuanApricot)
         .onChange(of: selectedTab) { _, newTab in
             coordinator.activeTab = newTab.rawValue
+            #if DEBUG
+            CCDiagnosticCollector.shared.currentPage = "Tab:\(newTab.title)"
+            #endif
         }
         .onAppear {
             coordinator.activeTab = selectedTab.rawValue
             setupTabAccessibility()
+            #if DEBUG
+            CCDiagnosticCollector.shared.currentPage = "Tab:\(selectedTab.title)"
+            #endif
         }
     }
 
@@ -112,7 +118,7 @@ struct CCMainTabView: View {
                 if attempt < maxRetries {
                     DispatchQueue.main.asyncAfter(deadline: .now() + retryInterval, execute: trySetup)
                 } else {
-                    print("⚠️ [UITest] TabBar accessibilityIdentifier 设置失败：超时（\(maxRetries)次重试）")
+                    LogW("TabBar accessibilityIdentifier 设置失败：超时（\(maxRetries)次重试）", module: .ui, category: "UITest")
                 }
                 return
             }

@@ -788,6 +788,9 @@ enum CCXuanAPI {
                 throw apiError(for: resp.code, message: resp.message)
             }
             LogD("← 200 \(path) (\(elapsed)ms)", module: .network, category: "API")
+            if elapsed > 10_000 {
+                LogW("慢请求 GET \(path) 耗时 \(elapsed)ms", module: .network, category: "Performance")
+            }
             return d
         } catch let error as CCAPIError {
             throw error
@@ -838,6 +841,9 @@ enum CCXuanAPI {
                 throw apiError(for: resp.code, message: resp.message)
             }
             LogD("← 200 \(path) (\(elapsed)ms)", module: .network, category: "API")
+            if elapsed > 10_000 {
+                LogW("慢请求 POST \(path) 耗时 \(elapsed)ms", module: .network, category: "Performance")
+            }
             return d
         } catch let error as CCAPIError {
             throw error

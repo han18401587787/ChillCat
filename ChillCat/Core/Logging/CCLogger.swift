@@ -120,6 +120,13 @@ final class CCLogger: CCLoggerProtocol {
         )
 
         os_log("%{public}@", log: osLog, type: level.osLogType, entry.toReadableString())
+
+        // 桥接到诊断收集器（仅 WARNING 和 ERROR 级别）
+        #if DEBUG
+        if level >= .warning {
+            CCDiagnosticCollector.shared.record(from: entry)
+        }
+        #endif
     }
 }
 

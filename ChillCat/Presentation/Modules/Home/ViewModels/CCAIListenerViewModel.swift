@@ -225,8 +225,14 @@ final class CCAIListenerViewModel {
     }
 
     private func fetchAIResponse(for text: String, riskLevel: CCAIRiskLevel) async {
+        let watchdogID = CCLoadingWatchdog.shared.startWatching(label: "AIListener.fetchResponse")
+        defer { CCLoadingWatchdog.shared.stopWatching(watchdogID) }
+
         do {
             let resp = try await CCXuanAPI.getEmpathyResponses(text: text)
+            if resp.responses.isEmpty {
+                LogW("AI 共情接口返回空响应列表", module: .ui, category: "AIListener")
+            }
             await deliverResponses(resp.responses)
             // 危机模式下追加安全提示
             if riskLevel >= .medium {
@@ -234,6 +240,7 @@ final class CCAIListenerViewModel {
             }
         } catch {
             // 网络失败时使用本地回退回应
+            LogW("AI 共情接口失败，使用本地兜底: \(error.localizedDescription)", module: .ui, category: "AIListener")
             let fallbackTexts = Self.fallbackResponses.map { $0.text }
             await deliverResponses(fallbackTexts)
             if riskLevel >= .medium {
