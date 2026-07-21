@@ -15,24 +15,22 @@ enum ComponentStyles {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
                 .font(XuanFont.bodyLBold)
-                .foregroundColor(configuration.isEnabled ? .white : Color.xuanTextSecondary.opacity(0.5))
+                .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .background(
-                    configuration.isEnabled
-                        ? (configuration.isPressed
-                            ? Color(hex: "C49E7D")
-                            : Color.xuanApricot)
-                        : Color.xuanBorder
+                    configuration.isPressed
+                        ? Color(hex: "C49E7D")
+                        : Color.xuanApricot
                 )
                 .cornerRadius(XuanRadius.lg)
                 .shadow(
-                    color: Color(hex: "2C2416").opacity(configuration.isPressed && configuration.isEnabled ? 0.08 : 0.0),
-                    radius: configuration.isPressed && configuration.isEnabled ? 4 : 12,
+                    color: Color(hex: "2C2416").opacity(configuration.isPressed ? 0.08 : 0.0),
+                    radius: configuration.isPressed ? 4 : 12,
                     x: 0,
-                    y: configuration.isPressed && configuration.isEnabled ? 1 : 2
+                    y: configuration.isPressed ? 1 : 2
                 )
-                .scaleEffect(configuration.isPressed && configuration.isEnabled ? 0.97 : 1.0)
+                .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
                 .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
         }
     }
@@ -43,19 +41,15 @@ enum ComponentStyles {
             configuration.label
                 .font(XuanFont.bodyLBold)
                 .foregroundColor(
-                    configuration.isEnabled
-                        ? (configuration.isPressed ? .white : Color.xuanApricotDark)
-                        : Color.xuanTextSecondary.opacity(0.4)
+                    configuration.isPressed ? .white : Color.xuanApricotDark
                 )
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .background(
-                    configuration.isEnabled
-                        ? (configuration.isPressed ? Color.xuanApricotDark : Color(hex: "F2DBC9"))
-                        : Color.xuanBorder.opacity(0.5)
+                    configuration.isPressed ? Color.xuanApricotDark : Color(hex: "F2DBC9")
                 )
                 .cornerRadius(XuanRadius.lg)
-                .scaleEffect(configuration.isPressed && configuration.isEnabled ? 0.97 : 1.0)
+                .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
                 .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
         }
     }
@@ -87,10 +81,8 @@ enum ComponentStyles {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
                 .font(XuanFont.bodyLBold)
-                .foregroundColor(
-                    configuration.isEnabled ? Color.xuanApricot : Color.xuanTextSecondary.opacity(0.4)
-                )
-                .opacity(configuration.isPressed && configuration.isEnabled ? 0.6 : 1.0)
+                .foregroundColor(Color.xuanApricot)
+                .opacity(configuration.isPressed ? 0.6 : 1.0)
         }
     }
 

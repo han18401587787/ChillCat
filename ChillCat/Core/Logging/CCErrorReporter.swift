@@ -8,7 +8,6 @@
 
 import Foundation
 
-@MainActor
 protocol CCErrorReporterProtocol {
     func report(_ error: CCAppError, context: [String: Any]?)
     func report(_ error: Error, context: [String: Any]?)
@@ -28,11 +27,9 @@ final class CCErrorReporter: CCErrorReporterProtocol {
     func setSampleRate(_ rate: Double) { sampleRate = max(0.0, min(1.0, rate)) }
     func setEnabled(_ enabled: Bool) { isEnabled = enabled }
 
-    @MainActor
     func report(_ error: CCAppError, context: [String: Any]? = nil) {
         guard isEnabled, shouldSample() else { return }
         var enrichedContext = context ?? [:]
-        enrichedContext["traceID"] = CCTraceManager.shared.currentTraceID
         enrichedContext["errorCode"] = error.code
         enrichedContext["isRetryable"] = error.isRetryable
         reporters.forEach { $0.report(error, context: enrichedContext) }
@@ -44,17 +41,15 @@ final class CCErrorReporter: CCErrorReporterProtocol {
             module: "ErrorReporter",
             category: "Reported",
             errorDescription: error.errorDescription,
-            traceID: CCTraceManager.shared.currentTraceID
+            traceID: nil
         )
         #endif
     }
 
-    @MainActor
     func report(_ error: Error, context: [String: Any]? = nil) {
         report(error.asCCAppError, context: context)
     }
 
-    @MainActor
     func reportMessage(_ message: String, level: CCLogLevel, context: [String: Any]? = nil) {
         guard isEnabled, shouldSample() else { return }
         CCLogger.shared.info(message, module: .default, category: "ErrorReporter")

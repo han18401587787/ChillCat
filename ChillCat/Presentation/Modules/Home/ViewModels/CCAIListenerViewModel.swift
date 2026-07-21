@@ -5,6 +5,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 /// AI 回应消息模型
 struct CCAIResponseMessage: Identifiable, Equatable {

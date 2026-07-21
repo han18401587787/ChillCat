@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 
 struct CCTraceContext: Sendable, Codable {
     let traceID: String

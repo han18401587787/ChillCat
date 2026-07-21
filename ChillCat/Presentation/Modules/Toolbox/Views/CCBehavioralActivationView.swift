@@ -553,7 +553,7 @@ struct CCBehavioralActivationView: View {
                 .ignoresSafeArea()
                 .onTapGesture {
                     // 点背景关闭浮层，而非误提交评分
-                    viewModel.showRating = false
+                    viewModel.showRatingSheet = false
                 }
 
             VStack(spacing: XuanSpacing.lg) {

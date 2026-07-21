@@ -5,6 +5,7 @@
 
 import AVFoundation
 import SwiftUI
+import Combine
 
 /// 白噪音类型
 enum CCWhiteNoiseType: String, CaseIterable {

@@ -9,7 +9,6 @@
 import Foundation
 import OSLog
 
-@MainActor
 protocol CCLoggerProtocol {
     func debug(_ message: String, module: CCLogModule, category: String,
                file: String, function: String, line: Int)
@@ -63,43 +62,36 @@ final class CCLogger: CCLoggerProtocol {
         queue.sync { moduleLevelOverrides[module] = level }
     }
 
-    @MainActor
     func debug(_ message: String, module: CCLogModule = .default, category: String = "General",
                file: String = #file, function: String = #function, line: Int = #line) {
         log(level: .debug, message: message, module: module, category: category,
             file: file, function: function, line: line, error: nil)
     }
 
-    @MainActor
     func info(_ message: String, module: CCLogModule = .default, category: String = "General",
               file: String = #file, function: String = #function, line: Int = #line) {
         log(level: .info, message: message, module: module, category: category,
             file: file, function: function, line: line, error: nil)
     }
 
-    @MainActor
     func warning(_ message: String, module: CCLogModule = .default, category: String = "General",
                  file: String = #file, function: String = #function, line: Int = #line) {
         log(level: .warning, message: message, module: module, category: category,
             file: file, function: function, line: line, error: nil)
     }
 
-    @MainActor
     func error(_ message: String, module: CCLogModule = .default, category: String = "General",
                file: String = #file, function: String = #function, line: Int = #line, error: Error? = nil) {
         log(level: .error, message: message, module: module, category: category,
             file: file, function: function, line: line, error: error)
     }
 
-    @MainActor
     private func log(level: CCLogLevel, message: String, module: CCLogModule, category: String,
                      file: String, function: String, line: Int, error: Error?) {
         let minLevel = moduleLevelOverrides[module] ?? CCAppEnvironment.current.logLevel
         guard level >= minLevel else { return }
 
         let fileName = (file as NSString).lastPathComponent
-        let traceID = traceManager.currentTraceID
-        let spanID = traceManager.currentSpan?.spanID
 
         var errorInfo: CCLogEntry.CCLogErrorInfo? = nil
         if let err = error {
@@ -114,9 +106,9 @@ final class CCLogger: CCLoggerProtocol {
 
         let entry = CCLogEntry(
             timestamp: Date(), level: level.label, module: module.rawValue,
-            category: category, message: message, traceID: traceID, spanID: spanID,
+            category: category, message: message, traceID: nil, spanID: nil,
             file: fileName, function: function, line: line,
-            tags: traceManager.currentSpan?.tags, metadata: nil, error: errorInfo
+            tags: nil, metadata: nil, error: errorInfo
         )
 
         os_log("%{public}@", log: osLog, type: level.osLogType, entry.toReadableString())
@@ -124,7 +116,9 @@ final class CCLogger: CCLoggerProtocol {
         // 桥接到诊断收集器（仅 WARNING 和 ERROR 级别）
         #if DEBUG
         if level >= .warning {
-            CCDiagnosticCollector.shared.record(from: entry)
+            DispatchQueue.main.async {
+                CCDiagnosticCollector.shared.record(from: entry)
+            }
         }
         #endif
     }
@@ -132,7 +126,6 @@ final class CCLogger: CCLoggerProtocol {
 
 // MARK: - Global Log Functions
 
-@MainActor
 func LogD(_ message: @autoclosure () -> String, module: CCLogModule = .default,
           category: String = "General", file: String = #file,
           function: String = #function, line: Int = #line) {
@@ -140,7 +133,6 @@ func LogD(_ message: @autoclosure () -> String, module: CCLogModule = .default,
                            file: file, function: function, line: line)
 }
 
-@MainActor
 func LogI(_ message: @autoclosure () -> String, module: CCLogModule = .default,
           category: String = "General", file: String = #file,
           function: String = #function, line: Int = #line) {
@@ -148,7 +140,6 @@ func LogI(_ message: @autoclosure () -> String, module: CCLogModule = .default,
                           file: file, function: function, line: line)
 }
 
-@MainActor
 func LogW(_ message: @autoclosure () -> String, module: CCLogModule = .default,
           category: String = "General", file: String = #file,
           function: String = #function, line: Int = #line) {
@@ -156,7 +147,6 @@ func LogW(_ message: @autoclosure () -> String, module: CCLogModule = .default,
                             file: file, function: function, line: line)
 }
 
-@MainActor
 func LogE(_ message: @autoclosure () -> String, module: CCLogModule = .default,
           category: String = "General", file: String = #file,
           function: String = #function, line: Int = #line, error: Error? = nil) {

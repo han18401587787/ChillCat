@@ -52,7 +52,6 @@ struct CCDiagnosticEvent: Identifiable, Sendable {
 
 /// 全局诊断数据收集器 — 收集 LogE/LogW 级别日志和 CCErrorReporter 上报的错误
 /// 仅在 #if DEBUG 下激活，Release 编译自动剔除
-@MainActor
 final class CCDiagnosticCollector: ObservableObject {
     static let shared = CCDiagnosticCollector()
 

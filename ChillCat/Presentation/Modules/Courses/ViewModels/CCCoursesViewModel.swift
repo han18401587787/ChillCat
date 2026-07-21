@@ -1,5 +1,6 @@
 import SwiftUI
 import Observation
+import Combine
 
 enum CCCoursesLoadState: Equatable {
     case loading
