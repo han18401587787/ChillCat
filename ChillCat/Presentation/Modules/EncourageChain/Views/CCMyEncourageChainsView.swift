@@ -4,7 +4,6 @@ import SwiftUI
 struct CCMyEncourageChainsView: View {
     @State private var viewModel = CCEncourageChainViewModel()
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
 
     var body: some View {
         Group {
@@ -19,16 +18,17 @@ struct CCMyEncourageChainsView: View {
                 ) {
                     coordinator.navigate(to: .encourageChain)
                 }
+                .accessibilityIdentifier("my_chains_empty_action")
             } else {
                 ScrollView {
-                    VStack(spacing: theme.spacingSM) {
+                    VStack(spacing: XuanSpacing.sm) {
                         ForEach(viewModel.myChains) { chain in
                             chainCard(chain)
                         }
                     }
                     .padding()
                 }
-                .background(theme.background)
+                .background(Color.xuanApricotBg)
             }
         }
         .navigationTitle("我的鼓励链")
@@ -36,15 +36,15 @@ struct CCMyEncourageChainsView: View {
         .overlay(alignment: .top) {
             if let error = viewModel.errorMessageMyChains {
                 HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(theme.error)
+                    Image("alert_warn")
+                        .foregroundColor(Color.xuanDanger)
                     Text(error)
-                        .foregroundColor(theme.error)
+                        .foregroundColor(Color.xuanDanger)
                 }
                 .font(.system(size: 14))
                 .padding()
-                .background(theme.error.opacity(0.08))
-                .cornerRadius(theme.radiusSM)
+                .background(Color.xuanDanger.opacity(0.08))
+                .cornerRadius(XuanRadius.sm)
                 .padding(.horizontal)
                 .padding(.top, 8)
                 .transition(.move(edge: .top).combined(with: .opacity))
@@ -58,26 +58,26 @@ struct CCMyEncourageChainsView: View {
             HStack {
                 Text("🌟 鼓励链")
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(theme.warm)
+                    .foregroundColor(Color.xuanApricotDark)
                 Spacer()
                 Text("\(chain.linkCount) 条接力")
                     .font(.system(size: 12))
-                    .foregroundColor(theme.textMuted)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
 
             Text(chain.firstMessage)
                 .font(.system(size: 15))
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(Color.xuanTextPrimary)
                 .lineSpacing(4)
                 .lineLimit(3)
 
             HStack {
-                Image(systemName: "person.2.fill")
+                Image("resonance_people")
                     .font(.system(size: 12))
-                    .foregroundColor(theme.textMuted)
+                    .foregroundColor(Color.xuanTextTertiary)
                 Text("\(chain.participantCount) 人参与")
                     .font(.system(size: 12))
-                    .foregroundColor(theme.textMuted)
+                    .foregroundColor(Color.xuanTextTertiary)
 
                 Spacer()
 
@@ -87,12 +87,13 @@ struct CCMyEncourageChainsView: View {
                 }) {
                     Text("查看详情")
                         .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(theme.primary)
+                        .foregroundColor(Color.xuanApricot)
                 }
+                .accessibilityIdentifier("my_chains_detail_\(chain.chainId)")
             }
         }
         .padding()
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.md)
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 
 struct CCTraceContext: Sendable, Codable {
     let traceID: String
@@ -45,13 +46,13 @@ struct CCTraceContext: Sendable, Codable {
 @MainActor
 @Observable
 final class CCTraceManager {
-    static let shared = CCTraceManager()
+    nonisolated static let shared = CCTraceManager()
 
     private var traceStack: [CCTraceContext] = []
     private var completedSpans: [CCTraceContext] = []
     private let maxSpans = 1000
 
-    private init() {}
+    nonisolated private init() {}
 
     @discardableResult
     func startTrace(operationName: String) -> CCTraceContext {

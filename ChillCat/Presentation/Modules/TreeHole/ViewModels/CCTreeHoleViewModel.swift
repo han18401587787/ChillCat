@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor @Observable
 final class CCTreeHoleViewModel {
@@ -13,53 +14,99 @@ final class CCTreeHoleViewModel {
     var hasMore = true
     var onlineCount: Int64 = 0
     var errorMessage: String?
+    var warmTemplates: [CCWarmResponseTemplate] = CCWarmResponseTemplate.presets
+    var showCommunityGuideline = false
     private var currentPage = 1
 
     init() {}
 
+    /// Check content for potentially negative/unfriendly keywords before publishing.
+    /// Returns false if potentially harmful content is detected, triggering a guideline alert.
+    func checkContentBeforePublish(_ text: String) -> Bool {
+        let lowercased = text.lowercased()
+
+        let negativeKeywords: Set<String> = [
+            "傻逼", "sb", "fuck", "shit", "废物", "垃圾", "滚",
+            "去死", "死了算了", "没用", "loser", "idiot", "stupid",
+            "恨你", "恶心", "诅咒", "去你妈的", "tmd", "cnm",
+        ]
+
+        for keyword in negativeKeywords {
+            if lowercased.contains(keyword) {
+                return false
+            }
+        }
+
+        // Also check for excessive negative self-talk patterns
+        let selfHarmPatterns: Set<String> = [
+            "不想活了", "活不下去", "自杀", "结束自己", "kill myself",
+        ]
+        for pattern in selfHarmPatterns {
+            if lowercased.contains(pattern) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    func loadWarmTemplates() async {
+        // Attempt to load from API; fallback to presets on failure
+        do {
+            let remote = try await CCXuanAPI.fetchWarmTemplates()
+            guard !remote.isEmpty else { return }
+            warmTemplates = remote
+            LogI("[TreeHole] loadWarmTemplates: \(remote.count) from API", module: .network, category: "TreeHole")
+        } catch {
+            warmTemplates = CCWarmResponseTemplate.presets
+            LogW("[TreeHole] loadWarmTemplates fallback to presets: \(error)", module: .network, category: "TreeHole")
+        }
+    }
+
     func loadPosts() async {
-        print("🔄 [TreeHole] loadPosts start")
+        LogD("[TreeHole] loadPosts start", module: .network, category: "TreeHole")
         isLoading = true; currentPage = 1
         do {
             let page = try await CCXuanAPI.listPosts(page: 1)
-            posts = mapPosts(page.list)
-            hasMore = page.total > posts.count
-            print("✅ [TreeHole] loadPosts done: \(posts.count) posts, \(onlineCount) online")
+            posts = mapPosts(page.list ?? [])
+            hasMore = (page.total ?? 0) > posts.count
+            LogI("[TreeHole] loadPosts done: \(posts.count) posts, \(onlineCount) online", module: .network, category: "TreeHole")
         } catch {
             errorMessage = "加载失败，请重试"
-            print("❌ [TreeHole] loadPosts failed: \(error)")
+            LogE("[TreeHole] loadPosts failed: \(error)", module: .network, category: "TreeHole")
         }
         isLoading = false
     }
 
     func refresh() async {
-        print("🔄 [TreeHole] refresh start")
+        LogD("[TreeHole] refresh start", module: .network, category: "TreeHole")
         isRefreshing = true; currentPage = 1
         do {
             let page = try await CCXuanAPI.listPosts(page: 1)
-            posts = mapPosts(page.list)
-            hasMore = page.total > posts.count
-            print("✅ [TreeHole] refresh done: \(posts.count) posts")
+            posts = mapPosts(page.list ?? [])
+            hasMore = (page.total ?? 0) > posts.count
+            LogI("[TreeHole] refresh done: \(posts.count) posts", module: .network, category: "TreeHole")
         } catch {
             errorMessage = "刷新失败，请重试"
-            print("❌ [TreeHole] refresh failed: \(error)")
+            LogE("[TreeHole] refresh failed: \(error)", module: .network, category: "TreeHole")
         }
         isRefreshing = false
     }
 
     func loadMore() async {
         guard !isLoadingMore, hasMore else { return }
-        print("🔄 [TreeHole] loadMore start page=\(currentPage + 1)")
+        LogD("[TreeHole] loadMore start page=\(currentPage + 1)", module: .network, category: "TreeHole")
         isLoadingMore = true; currentPage += 1
         do {
             let page = try await CCXuanAPI.listPosts(page: currentPage)
-            posts += mapPosts(page.list)
-            hasMore = page.total > posts.count
-            print("✅ [TreeHole] loadMore done: +\(page.list.count) posts, total=\(posts.count)")
+            let newPosts = mapPosts(page.list ?? [])
+            posts += newPosts
+            hasMore = (page.total ?? 0) > posts.count
+            LogI("[TreeHole] loadMore done: +\(newPosts.count) posts, total=\(posts.count)", module: .network, category: "TreeHole")
         } catch {
             currentPage -= 1
             errorMessage = "加载更多失败，请重试"
-            print("❌ [TreeHole] loadMore failed: \(error)")
+            LogE("[TreeHole] loadMore failed: \(error)", module: .network, category: "TreeHole")
         }
         isLoadingMore = false
     }
@@ -67,30 +114,37 @@ final class CCTreeHoleViewModel {
     private func mapPosts(_ list: [CCXuanAPI.PostResponse]) -> [CCResonancePost] {
         list.map { p in
             CCResonancePost(
-                id: String(p.id), content: p.content,
+                id: String(p.id), content: p.content ?? "",
                 emotion: "", emotionColor: "primaryMuted",
-                resonanceCount: Int(p.hugs),
-                isAnonymous: p.isAnonymous, displayName: p.displayName,
-                createdAt: ISO8601DateFormatter().date(from: p.createdAt) ?? Date()
+                resonanceCount: Int(p.hugs ?? 0),
+                isAnonymous: p.isAnonymous ?? true, displayName: p.displayName ?? "匿名用户",
+                createdAt: ISO8601DateFormatter().date(from: p.createdAt ?? "") ?? Date()
             )
         }
     }
 
     func toggleAnonymous() { isAnonymous.toggle() }
 
-    func publishPost() {
+    func publishPost(force: Bool = false) {
         guard !newPostText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+
+        // Community guideline check — unless forced
+        if !force && !checkContentBeforePublish(newPostText) {
+            showCommunityGuideline = true
+            return
+        }
+
         let text = newPostText; newPostText = ""
         let scope = selectedScope; let anon = isAnonymous
         Task {
             do {
                 let _ = try await CCXuanAPI.createPost(content: text, scope: scope == .public ? "public" : "comforters", isAnonymous: anon)
-                print("✅ [TreeHole] publishPost done")
+                LogI("[TreeHole] publishPost done", module: .network, category: "TreeHole")
                 await loadPosts()
             } catch {
                 newPostText = text
                 errorMessage = "发布失败，请重试"
-                print("❌ [TreeHole] publishPost failed: \(error)")
+                LogE("[TreeHole] publishPost failed: \(error)", module: .network, category: "TreeHole")
             }
         }
     }
@@ -104,10 +158,10 @@ final class CCTreeHoleViewModel {
                     posts[idx].resonanceCount += 1
                     posts[idx].hasResonated = true
                 }
-                print("✅ [TreeHole] resonatePost done id=\(id)")
+                LogI("[TreeHole] resonatePost done id=\(id)", module: .network, category: "TreeHole")
             } catch {
                 errorMessage = "共鸣失败，请重试"
-                print("❌ [TreeHole] resonatePost failed id=\(id): \(error)")
+                LogE("[TreeHole] resonatePost failed id=\(id): \(error)", module: .network, category: "TreeHole")
             }
         }
     }

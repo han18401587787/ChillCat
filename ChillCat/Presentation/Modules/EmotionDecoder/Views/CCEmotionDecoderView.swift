@@ -1,340 +1,269 @@
 import SwiftUI
 
-/// 情绪解码器 — §2.5
+// MARK: - 情绪地图 (对照截图 #8 像素级还原)
+/// 布局: 本月/本周切换 → 五维雷达图谱 → 5条进度条 → AI建议卡片
+
 struct CCEmotionDecoderView: View {
     @State private var viewModel = CCEmotionDecoderViewModel()
+    @State private var selectedPeriod: Period = .month
     @State private var showEmoji = false
-    @Environment(\.ccAppTheme) private var theme
     @FocusState private var isFocused: Bool
+
+    enum Period: String, CaseIterable { case week = "本周", month = "本月" }
+
+    // 五维情绪数据
+    struct RadarData: Identifiable {
+        let id = UUID()
+        let label: String
+        let value: Double  // 0-1
+        let color: Color
+    }
+
+    private let radarValues: [RadarData] = [
+        RadarData(label: "焦虑", value: 0.6, color: Color(hex: "A085C6")),
+        RadarData(label: "平静", value: 0.8, color: Color.xuanMint),
+        RadarData(label: "开心", value: 0.5, color: Color.xuanApricotDark),
+        RadarData(label: "委屈", value: 0.35, color: Color.xuanPink),
+        RadarData(label: "疲惫", value: 0.55, color: Color.xuanInfo),
+    ]
 
     var body: some View {
         ScrollView {
-            VStack(spacing: theme.spacingLG) {
-                // Header
-                headerSection
+            VStack(spacing: XuanSpacing.xl2) {
+                // 周期切换
+                periodSwitcher
 
-                // Input area
-                if !viewModel.showResult {
-                    inputSection
-                }
+                // 五维雷达图
+                radarChartSection
 
-                // Loading
-                if viewModel.isLoading {
-                    VStack(spacing: theme.spacingMD) {
-                        ProgressView()
-                            .scaleEffect(1.3)
-                        Text("正在解码你的情绪…")
-                            .font(.system(size: 15))
-                            .foregroundColor(theme.textSecondary)
-                    }
-                    .padding(.vertical, 60)
-                }
+                // 5条进度条
+                progressBarsSection
 
-                // Result layers
-                if viewModel.showResult {
-                    resultDisplay
+                // AI 洞察卡片
+                aiInsightCard
 
-                    // Reset button
-                    Button(action: { viewModel.reset() }) {
-                        Text("再试一次")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(theme.primary)
-                            .padding(.horizontal, 24)
-                            .padding(.vertical, 10)
-                            .background(theme.primary.opacity(0.1))
-                            .cornerRadius(theme.radiusMD)
-                    }
-                    .padding(.top, theme.spacingSM)
-                }
-
-                // Error
-                if let error = viewModel.errorMessage {
-                    HStack {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundColor(theme.error)
-                        Text(error)
-                            .foregroundColor(theme.error)
-                    }
-                    .font(.system(size: 14))
-                    .padding()
-                    .background(theme.error.opacity(0.08))
-                    .cornerRadius(theme.radiusSM)
-                }
+                Spacer(minLength: 40)
             }
-            .padding()
+            .padding(XuanSpacing.lg)
         }
-        .background(theme.background)
-        .overlay(alignment: .bottom) {
-            if showEmoji {
-                CCEmojiPicker(isShowing: $showEmoji) { emoji in
-                    viewModel.inputText += emoji
-                }
-                .frame(height: 280)
-                .transition(.move(edge: .bottom))
-            }
-        }
-        .animation(.easeInOut, value: showEmoji)
-        .navigationTitle("情绪解码")
+        .background(Color.xuanApricotBg)
+        .navigationTitle("情绪地图")
+        .navigationBarTitleDisplayMode(.large)
+        .trackPage("EmotionDecoder:CCEmotionDecoderView")
     }
 
-    // MARK: - Header
-
-    private var headerSection: some View {
-        HStack {
-            Text("🧠 情绪解码")
-                .font(.system(size: 22, weight: .bold))
-                .foregroundColor(theme.textPrimary)
-            Spacer()
-        }
-    }
-
-    // MARK: - Input
-
-    private var inputSection: some View {
-        VStack(spacing: theme.spacingMD) {
-            Text("写下让你困惑的感受，AI 帮你一层层拆解")
-                .font(.system(size: 14))
-                .foregroundColor(theme.textSecondary)
-
-            ZStack(alignment: .bottomTrailing) {
-                TextEditor(text: $viewModel.inputText)
-                    .focused($isFocused)
-                    .font(.system(size: 15))
-                    .scrollContentBackground(.hidden)
-                    .background(Color.clear)
-                    .frame(minHeight: 100, maxHeight: 160)
-                    .padding(12)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
-
-                HStack(spacing: 8) {
-                    Button(action: { showEmoji.toggle() }) {
-                        Image(systemName: "face.smiling")
-                            .font(.system(size: 18))
-                            .foregroundColor(theme.primary)
-                            .frame(width: 36, height: 36)
-                            .background(theme.primary.opacity(0.1))
-                            .clipShape(Circle())
-                    }
-                    .padding(.bottom, 8)
-                    .padding(.trailing, 4)
+    // MARK: - 周期切换
+    private var periodSwitcher: some View {
+        HStack(spacing: 0) {
+            ForEach(Period.allCases, id: \.self) { period in
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.2)) { selectedPeriod = period }
+                }) {
+                    Text(period.rawValue)
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(selectedPeriod == period ? .white : Color.xuanTextSecondary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, XuanSpacing.sm)
+                        .background(
+                            selectedPeriod == period
+                                ? Color.xuanApricot
+                                : Color.clear
+                        )
+                        .cornerRadius(XuanRadius.full)
                 }
-            }
-
-            Button(action: {
-                CCHaptic.medium()
-                isFocused = false
-                Task { await viewModel.decode() }
-            }) {
-                HStack(spacing: 6) {
-                    Image(systemName: "sparkle.magnifyingglass")
-                    Text("开始解码")
-                        .fontWeight(.medium)
-                }
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 14)
-                .background(viewModel.canDecode ? theme.primary : theme.textMuted)
-                .cornerRadius(theme.radiusMD)
-            }
-            .disabled(!viewModel.canDecode)
-        }
-    }
-
-    // MARK: - Result Display
-
-    private var resultDisplay: some View {
-        VStack(spacing: 0) {
-            // Layer 1: Surface Emotion
-            if viewModel.showSurface {
-                layerCard(
-                    title: "表层情绪",
-                    icon: viewModel.surfaceEmotion?.icon ?? "😰",
-                    label: viewModel.surfaceEmotion?.label ?? "",
-                    confidence: viewModel.surfaceEmotion?.confidence,
-                    color: theme.softPurple,
-                    bgColor: theme.softPurpleLight.opacity(0.2)
-                )
-                .transition(.opacity.combined(with: .move(edge: .top)))
-            } else if viewModel.showResult {
-                // Placeholder
-                Rectangle()
-                    .fill(Color.clear)
-                    .frame(height: 40)
-            }
-
-            // Arrow
-            animatedArrow
-                .opacity(viewModel.showSurface ? 1 : 0)
-
-            // Layer 2: Middle Emotions
-            if viewModel.showMiddle {
-                VStack(spacing: 8) {
-                    Text("中层情绪")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(theme.textSecondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 4)
-
-                    ForEach(viewModel.middleEmotions) { emotion in
-                        HStack(spacing: 10) {
-                            Text(emotion.icon)
-                                .font(.system(size: 20))
-                            Text(emotion.label)
-                                .font(.system(size: 15))
-                                .foregroundColor(theme.textPrimary)
-                            Spacer()
-                            if let confidence = emotion.confidence {
-                                Text("\(Int(confidence * 100))%")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(theme.textMuted)
-                            }
-                        }
-                        .padding()
-                        .background(theme.softPink.opacity(0.15))
-                        .cornerRadius(theme.radiusMD)
-                    }
-                }
-                .transition(.opacity.combined(with: .move(edge: .leading)))
-            } else if viewModel.showSurface {
-                Rectangle()
-                    .fill(Color.clear)
-                    .frame(height: 40)
-            }
-
-            // Arrow
-            if viewModel.showMiddle {
-                animatedArrow
-            }
-
-            // Layer 3: Deep Needs
-            if viewModel.showDeep {
-                VStack(spacing: 8) {
-                    Text("深层需求")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(theme.textSecondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 4)
-
-                    ForEach(viewModel.deepNeeds) { need in
-                        HStack(spacing: 10) {
-                            Text("💚")
-                                .font(.system(size: 18))
-                            Text(need.label)
-                                .font(.system(size: 15, weight: .medium))
-                                .foregroundColor(theme.textPrimary)
-                            Spacer()
-                        }
-                        .padding()
-                        .background(theme.softGreenLight.opacity(0.3))
-                        .cornerRadius(theme.radiusMD)
-                    }
-                }
-                .transition(.opacity.combined(with: .move(edge: .leading)))
-            } else if viewModel.showMiddle {
-                Rectangle()
-                    .fill(Color.clear)
-                    .frame(height: 40)
-            }
-
-            // Suggestions
-            if viewModel.showSuggestions {
-                VStack(alignment: .leading, spacing: theme.spacingSM) {
-                    Text("💡 建议行动")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(theme.textPrimary)
-
-                    ForEach(viewModel.suggestions) { suggestion in
-                        HStack(spacing: 12) {
-                            Image(systemName: suggestion.iconName)
-                                .font(.system(size: 20))
-                                .foregroundColor(suggestionColor(suggestion.colorName))
-                                .frame(width: 36, height: 36)
-                                .background(suggestionColor(suggestion.colorName).opacity(0.15))
-                                .cornerRadius(theme.radiusSM)
-
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(suggestion.title)
-                                    .font(.system(size: 15, weight: .medium))
-                                    .foregroundColor(theme.textPrimary)
-                                Text(suggestion.description)
-                                    .font(.system(size: 13))
-                                    .foregroundColor(theme.textSecondary)
-                                    .lineSpacing(3)
-                            }
-
-                            Spacer()
-                        }
-                        .padding()
-                        .background(theme.cardBackground)
-                        .cornerRadius(theme.radiusMD)
-                    }
-                }
-                .transition(.move(edge: .trailing).combined(with: .opacity))
+                .accessibilityIdentifier("decoder_period_\(period.rawValue)")
             }
         }
+        .padding(4)
+        .background(Color.xuanSurface)
+        .cornerRadius(XuanRadius.full)
+        .accessibilityIdentifier("decoder_period_switcher")
     }
 
-    // MARK: - Layer Card
-
-    private func layerCard(title: String, icon: String, label: String, confidence: Double?, color: Color, bgColor: Color) -> some View {
-        VStack(spacing: 8) {
-            Text(title)
-                .font(.system(size: 13, weight: .medium))
-                .foregroundColor(theme.textSecondary)
+    // MARK: - 五维雷达图
+    private var radarChartSection: some View {
+        VStack(spacing: XuanSpacing.md) {
+            Text("情绪分布")
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 4)
 
-            HStack(spacing: 10) {
-                Text(icon)
-                    .font(.system(size: 24))
-                Text(label)
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(theme.textPrimary)
-                Spacer()
-                if let confidence = confidence {
-                    Text("\(Int(confidence * 100))%")
-                        .font(.system(size: 12))
-                        .foregroundColor(theme.textMuted)
-                }
+            radarChartContent
+                .frame(width: 300, height: 300)
+                .accessibilityIdentifier("decoder_radar_chart")
+        }
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
+        .accessibilityIdentifier("decoder_radar_section")
+    }
+
+    private var radarChartContent: some View {
+        AnyView(
+            ZStack {
+                radarGridBackground
+                radarDataOverlay
+                radarLabels
             }
-            .padding()
-            .background(bgColor)
-            .cornerRadius(theme.radiusMD)
+        )
+    }
+
+    private var radarGridBackground: some View {
+        Group {
+            gridPentagon(level: 1)
+            gridPentagon(level: 2)
+            gridPentagon(level: 3)
+            gridPentagon(level: 4)
+            gridPentagon(level: 5)
         }
     }
 
-    // MARK: - Animated Arrow
+    private func gridPentagon(level: Int) -> some View {
+        let scale = CGFloat(level) / 5.0
+        return Pentagon()
+            .stroke(Color.xuanBorder.opacity(0.5), lineWidth: 1)
+            .frame(width: 200 * scale, height: 200 * scale)
+    }
 
-    private var animatedArrow: some View {
-        VStack(spacing: 0) {
-            Rectangle()
-                .fill(theme.primaryMuted.opacity(0.4))
-                .frame(width: 2, height: 24)
-            Image(systemName: "arrowtriangle.down.fill")
-                .font(.system(size: 8))
-                .foregroundColor(theme.primaryMuted.opacity(0.6))
-                .scaleEffect(arrowScale)
-                .animation(
-                    .easeInOut(duration: 1.2).repeatForever(autoreverses: true),
-                    value: arrowScale
+    private var radarDataOverlay: some View {
+        AnyView(
+            Pentagon()
+                .fill(Color.xuanMint.opacity(0.2))
+                .overlay(
+                    Pentagon()
+                        .stroke(Color.xuanMint, lineWidth: 2)
                 )
-        }
-        .onAppear { arrowScale = 1.2 }
+                .frame(width: 200, height: 200)
+                .scaleEffect(x: 0.65, y: 0.65, anchor: .center)
+        )
     }
 
-    @State private var arrowScale: CGFloat = 1.0
+    private var radarLabels: some View {
+        AnyView(
+            ForEach(Array(radarValues.enumerated()), id: \.element.id) { index, item in
+                radarLabelView(index: index, item: item)
+            }
+        )
+    }
 
-    // MARK: - Helpers
+    private func radarLabelView(index: Int, item: RadarData) -> some View {
+        let angle = Double(index) / Double(radarValues.count) * 2 * .pi - .pi / 2
+        let radius: CGFloat = 120
+        let xPos: CGFloat = 150 + cos(angle) * radius
+        let yPos: CGFloat = 150 + sin(angle) * radius
+        return Text(item.label)
+            .font(XuanFont.caption)
+            .foregroundColor(item.color)
+            .position(x: xPos, y: yPos)
+    }
 
-    private func suggestionColor(_ name: String) -> Color {
-        switch name {
-        case "softPurple": return theme.softPurple
-        case "softPink": return theme.softPink
-        case "warmLight": return theme.warmLight
-        case "softGreen": return theme.softGreen
-        case "primaryMuted": return theme.primaryMuted
-        default: return theme.primaryMuted
+    // MARK: - 5条进度条
+    private var progressBarsSection: some View {
+        VStack(spacing: XuanSpacing.md) {
+            Text("情绪强度")
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            ForEach(radarValues) { item in
+                VStack(spacing: XuanSpacing.xs) {
+                    HStack {
+                        Circle()
+                            .fill(item.color)
+                            .frame(width: 8, height: 8)
+                        Text(item.label)
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextPrimary)
+                        Spacer()
+                        Text("\(Int(item.value * 100))%")
+                            .font(XuanFont.caption)
+                            .foregroundColor(Color.xuanTextTertiary)
+                    }
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(Color.xuanSurface)
+                                .frame(height: 6)
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(item.color)
+                                .frame(width: geo.size.width * item.value, height: 6)
+                        }
+                    }
+                    .frame(height: 6)
+                }
+                .accessibilityIdentifier("decoder_progress_\(item.label)")
+            }
         }
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
+        .accessibilityIdentifier("decoder_progress_section")
+    }
+
+    // MARK: - AI 洞察
+    private var aiInsightCard: some View {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            HStack(spacing: XuanSpacing.sm) {
+                ZStack {
+                    Circle()
+                        .fill(Color.xuanMint.opacity(0.15))
+                        .frame(width: 36, height: 36)
+                    Image("home_mood")
+                        .font(.system(size: 16))
+                        .foregroundColor(Color.xuanMint)
+                }
+                Text("AI 洞察")
+                    .font(XuanFont.h3)
+                    .foregroundColor(Color.xuanTextPrimary)
+            }
+
+            Text("本月你的主导情绪是「平静」，焦虑情绪较上周下降 12%。你正在逐渐找到内心的平衡。建议继续保持每日冥想练习。")
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextSecondary)
+                .lineSpacing(6)
+
+            HStack(spacing: XuanSpacing.sm) {
+                insightTag("💪 好转中", color: Color.xuanMint)
+                    .accessibilityIdentifier("decoder_insight_improving")
+                insightTag("🧘 推荐冥想", color: Color(hex: "A085C6"))
+                    .accessibilityIdentifier("decoder_insight_meditation")
+            }
+        }
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
+        .accessibilityIdentifier("decoder_ai_insight")
+    }
+
+    private func insightTag(_ text: String, color: Color) -> some View {
+        Text(text)
+            .font(XuanFont.caption)
+            .foregroundColor(color)
+            .padding(.horizontal, XuanSpacing.sm)
+            .padding(.vertical, 2)
+            .background(color.opacity(0.1))
+            .cornerRadius(XuanRadius.full)
+    }
+}
+
+// MARK: - 五边形 Shape
+struct Pentagon: Shape {
+    func path(in rect: CGRect) -> Path {
+        let center = CGPoint(x: rect.midX, y: rect.midY)
+        let radius = min(rect.width, rect.height) / 2
+        let count = 5
+        var path = Path()
+        for i in 0..<count {
+            let angle = Double(i) / Double(count) * 2 * .pi - .pi / 2
+            let x = center.x + cos(angle) * radius
+            let y = center.y + sin(angle) * radius
+            if i == 0 { path.move(to: CGPoint(x: x, y: y)) }
+            else { path.addLine(to: CGPoint(x: x, y: y)) }
+        }
+        path.closeSubpath()
+        return path
     }
 }

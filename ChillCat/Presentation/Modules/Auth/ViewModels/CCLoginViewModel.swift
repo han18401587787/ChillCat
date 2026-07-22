@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 @Observable
@@ -53,6 +54,8 @@ final class CCLoginViewModel {
     func login() async {
         isLoading = true
         errorMessage = nil
+        let watchdogID = CCLoadingWatchdog.shared.startWatching(label: "LoginViewModel.login")
+        defer { CCLoadingWatchdog.shared.stopWatching(watchdogID) }
 
         do {
             let user = try await loginUseCase.execute(username: username, password: password)
@@ -75,6 +78,8 @@ final class CCLoginViewModel {
 
         isLoading = true
         errorMessage = nil
+        let watchdogID = CCLoadingWatchdog.shared.startWatching(label: "LoginViewModel.register")
+        defer { CCLoadingWatchdog.shared.stopWatching(watchdogID) }
 
         do {
             let user = try await userRepository.register(

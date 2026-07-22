@@ -1,5 +1,6 @@
 import SwiftUI
 import Observation
+import Combine
 
 enum CCCoursesLoadState: Equatable {
     case loading
@@ -23,35 +24,35 @@ final class CCCoursesViewModel {
     var categories: [(name: String, icon: String, color: Color, items: [CCXuanAPI.CourseItem])] = []
 
     private let icons: [String: (String, Color)] = [
-        "情绪管理": ("heart.text.clipboard.fill", Color(hex: "D4C8E8")),
-        "焦虑治愈": ("leaf.circle.fill", Color(hex: "D5E8D4")),
-        "睡前助眠": ("moon.stars.fill", Color(hex: "B8D4E3")),
-        "职场解压": ("briefcase.fill", Color(hex: "E8D9F0")),
-        "成长": ("sparkles", Color(hex: "E8D9C8")),
+        "情绪管理": ("heart.text.clipboard.fill", Color(hex: "A085C6")),
+        "焦虑治愈": ("leaf.circle.fill", Color.xuanMint.opacity(0.3)),
+        "睡前助眠": ("moon.stars.fill", Color.xuanInfo),
+        "职场解压": ("briefcase.fill", Color(hex: "A085C6").opacity(0.3)),
+        "成长": ("sparkles", Color.xuanApricotLight),
     ]
 
     func loadCourses() async {
-        print("🔄 [Courses] loadCourses start")
+        LogD("[Courses] loadCourses start", module: .network, category: "Courses")
         loadState = .loading
         do {
             let all = try await CCXuanAPI.getCourses()
             if all.isEmpty {
                 loadState = .empty
                 categories = []
-                print("✅ [Courses] loadCourses done: empty")
+                LogI("[Courses] loadCourses done: empty", module: .network, category: "Courses")
             } else {
-                let grouped = Dictionary(grouping: all, by: { $0.category })
+                let grouped = Dictionary(grouping: all, by: { $0.category ?? "其他" })
                 categories = grouped.map { (name, items) in
-                    let (icon, color) = icons[name] ?? ("book.fill", Color(hex: "D4C8E8"))
+                    let (icon, color) = icons[name] ?? ("book.fill", Color(hex: "A085C6"))
                     return (name, icon, color, items)
                 }
                 loadState = .loaded
-                print("✅ [Courses] loadCourses done: \(all.count) courses, \(categories.count) categories")
+                LogI("[Courses] loadCourses done: \(all.count) courses, \(categories.count) categories", module: .network, category: "Courses")
             }
         } catch {
             loadState = .error(error.localizedDescription)
             categories = []
-            print("❌ [Courses] loadCourses failed: \(error)")
+            LogE("[Courses] loadCourses failed: \(error)", module: .network, category: "Courses")
         }
     }
 }

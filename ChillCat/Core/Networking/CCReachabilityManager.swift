@@ -8,6 +8,7 @@
 
 import Foundation
 import Network
+import Combine
 
 @MainActor
 @Observable

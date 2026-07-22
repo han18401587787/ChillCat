@@ -2,7 +2,6 @@ import SwiftUI
 
 struct CCTreeHolePostDetailView: View {
     let post: CCResonancePost
-    @Environment(\.ccAppTheme) private var theme
     @State private var resonanceCount: Int
     @State private var didResonate = false
     @State private var showReplySheet = false
@@ -17,7 +16,7 @@ struct CCTreeHolePostDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: theme.spacingLG) {
+            VStack(alignment: .leading, spacing: XuanSpacing.lg) {
                 // Post header
                 HStack {
                     Circle()
@@ -29,42 +28,43 @@ struct CCTreeHolePostDetailView: View {
                     Spacer()
                     Text(post.timeAgo)
                         .font(.system(size: 13))
-                        .foregroundColor(theme.textMuted)
+                        .foregroundColor(Color.xuanTextTertiary)
                 }
 
                 // Post content
                 Text(post.content)
                     .font(.system(size: 17))
                     .lineSpacing(6)
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Divider()
-                    .padding(.vertical, theme.spacingSM)
+                    .padding(.vertical, XuanSpacing.sm)
 
                 // Resonance section
-                VStack(spacing: theme.spacingSM) {
+                VStack(spacing: XuanSpacing.sm) {
                     HStack {
                         Text("\(post.formattedResonance) 人共鸣")
                             .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(theme.textPrimary)
+                            .foregroundColor(Color.xuanTextPrimary)
                         Spacer()
                     }
 
                     // Resonate button
                     Button(action: { showReplySheet = true }) {
                         HStack(spacing: 6) {
-                            Image(systemName: didResonate ? "heart.fill" : "heart")
+                            CCIconMapper.image(for: didResonate ? "heart.fill" : "heart")
                                 .font(.system(size: 16))
                             Text(didResonate ? "已共鸣" : "我也有过这种感觉")
                                 .font(.system(size: 15, weight: .medium))
                         }
-                        .foregroundColor(didResonate ? theme.error : theme.primary)
+                        .foregroundColor(didResonate ? Color.xuanDanger : Color.xuanApricot)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
-                        .background(didResonate ? theme.softPink.opacity(0.15) : theme.primary.opacity(0.08))
-                        .cornerRadius(theme.radiusMD)
+                        .background(didResonate ? Color.xuanPink.opacity(0.15) : Color.xuanApricot.opacity(0.08))
+                        .cornerRadius(XuanRadius.md)
                     }
+                    .accessibilityIdentifier("treehole_detail_resonate")
 
                     // Resonance replies
                     if isLoadingReplies {
@@ -72,29 +72,29 @@ struct CCTreeHolePostDetailView: View {
                     } else if replies.isEmpty {
                         Text("成为第一个表达共鸣的人")
                             .font(.system(size: 14))
-                            .foregroundColor(theme.textMuted)
+                            .foregroundColor(Color.xuanTextTertiary)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, theme.spacingLG)
+                            .padding(.vertical, XuanSpacing.lg)
                     } else {
-                        VStack(spacing: theme.spacingSM) {
+                        VStack(spacing: XuanSpacing.sm) {
                             ForEach(replies) { reply in
                                 HStack(alignment: .top, spacing: 10) {
-                                    Image(systemName: "heart.fill")
+                                    Image("resonance_like")
                                         .font(.system(size: 12))
-                                        .foregroundColor(theme.softPink)
+                                        .foregroundColor(Color.xuanPink)
                                         .padding(.top, 2)
-                                    Text(reply.content)
+                                    Text(reply.content ?? "")
                                         .font(.system(size: 14))
-                                        .foregroundColor(theme.textSecondary)
+                                        .foregroundColor(Color.xuanTextSecondary)
                                         .lineSpacing(4)
                                     Spacer()
-                                    Text(timeAgo(from: reply.createdAt))
+                                    Text(timeAgo(from: reply.createdAt ?? ""))
                                         .font(.system(size: 11))
-                                        .foregroundColor(theme.textMuted)
+                                        .foregroundColor(Color.xuanTextTertiary)
                                 }
                                 .padding()
-                                .background(theme.surface)
-                                .cornerRadius(theme.radiusSM)
+                                .background(Color.xuanSurface)
+                                .cornerRadius(XuanRadius.sm)
                             }
                         }
                     }
@@ -102,13 +102,13 @@ struct CCTreeHolePostDetailView: View {
 
                 Text("共鸣墙没有评判，只有温柔理解。")
                     .font(.system(size: 13))
-                    .foregroundColor(theme.textMuted)
-                    .padding(.top, theme.spacingSM)
+                    .foregroundColor(Color.xuanTextTertiary)
+                    .padding(.top, XuanSpacing.sm)
                     .frame(maxWidth: .infinity)
             }
             .padding()
         }
-        .background(theme.background)
+        .background(Color.xuanApricotBg)
         .navigationTitle("共鸣详情")
         .sheet(isPresented: $showReplySheet) {
             replySheetView
@@ -123,22 +123,23 @@ struct CCTreeHolePostDetailView: View {
         VStack(spacing: 16) {
             Text("我也有过这种感觉")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(Color.xuanTextPrimary)
 
             TextField("说一句鼓励的话吧", text: $replyMessage, axis: .vertical)
                 .font(.system(size: 15))
                 .padding()
-                .background(theme.surface)
-                .cornerRadius(theme.radiusMD)
+                .background(Color.xuanSurface)
+                .cornerRadius(XuanRadius.md)
                 .lineLimit(2...4)
+                .accessibilityIdentifier("treehole_detail_reply_input")
 
             HStack(spacing: 12) {
                 Button("取消") { showReplySheet = false }
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.md)
 
                 Button(action: {
                     CCHaptic.success()
@@ -168,13 +169,14 @@ struct CCTreeHolePostDetailView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
-                        .background(theme.primary)
-                        .cornerRadius(theme.radiusMD)
+                        .background(Color.xuanApricot)
+                        .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("treehole_detail_send_reply")
             }
         }
         .padding()
-        .background(theme.background)
+        .background(Color.xuanApricotBg)
     }
 
     // MARK: - Helpers
@@ -182,8 +184,9 @@ struct CCTreeHolePostDetailView: View {
     private func loadReplies() async {
         isLoadingReplies = true
         do {
-            let detail = try await CCXuanAPI.getResonanceDetail(id: Int64(post.id) ?? 0)
-            replies = detail.replies
+            let _ = try await CCXuanAPI.getResonanceDetail(id: Int64(post.id) ?? 0)
+            // getResonanceDetail 返回 ResonanceItem（扁平结构），replies 暂为空
+            replies = []
         } catch { /* keep empty */ }
         isLoadingReplies = false
     }
@@ -197,16 +200,16 @@ struct CCTreeHolePostDetailView: View {
 
     private func emotionColorFor(_ colorName: String) -> Color {
         switch colorName {
-        case "softGreen": return theme.softGreen
-        case "warmLight": return theme.warmLight
-        case "primaryMuted": return theme.primaryMuted
-        case "softPurple": return theme.softPurple
-        case "softPink": return theme.softPink
-        case "primaryLight": return theme.primaryLight
-        case "error": return theme.error
-        case "softPurpleLight": return theme.softPurpleLight
-        case "warm": return theme.warm
-        default: return theme.primaryMuted
+        case "softGreen": return Color.xuanSuccess
+        case "warmLight": return Color.xuanApricotLight
+        case "primaryMuted": return Color.xuanApricot.opacity(0.6)
+        case "softPurple": return Color(hex: "A085C6").opacity(0.5)
+        case "softPink": return Color.xuanPink
+        case "primaryLight": return Color.xuanApricotLight
+        case "error": return Color.xuanDanger
+        case "softPurpleLight": return Color(hex: "A085C6").opacity(0.25)
+        case "warm": return Color.xuanApricotDark
+        default: return Color.xuanApricot.opacity(0.6)
         }
     }
 }

@@ -19,6 +19,11 @@ struct CCUser: Identifiable, Codable, Equatable {
     var createdAt: Date
     var updatedAt: Date
 
+    // v3.0 统计字段 (Ardot 个人中心)
+    var totalCheckins: Int?
+    var streakDays: Int?
+    var resonanceCount: Int?
+
     init(
         id: String = UUID().uuidString,
         name: String,
@@ -28,7 +33,10 @@ struct CCUser: Identifiable, Codable, Equatable {
         gender: CCGender = .unknown,
         birthday: Date? = nil,
         createdAt: Date = Date(),
-        updatedAt: Date = Date()
+        updatedAt: Date = Date(),
+        totalCheckins: Int? = nil,
+        streakDays: Int? = nil,
+        resonanceCount: Int? = nil
     ) {
         self.id = id
         self.name = name
@@ -39,6 +47,9 @@ struct CCUser: Identifiable, Codable, Equatable {
         self.birthday = birthday
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.totalCheckins = totalCheckins
+        self.streakDays = streakDays
+        self.resonanceCount = resonanceCount
     }
 }
 

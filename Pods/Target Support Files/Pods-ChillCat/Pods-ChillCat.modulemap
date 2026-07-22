@@ -1,0 +1,6 @@
+framework module Pods_ChillCat {
+  umbrella header "Pods-ChillCat-umbrella.h"
+
+  export *
+  module * { export * }
+}

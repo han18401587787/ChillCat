@@ -1,31 +1,42 @@
 import SwiftUI
 struct CCJournalDetailView: View {
     let entry: CCXuanAPI.JournalEntry
-    @Environment(\.ccAppTheme) private var theme
 
     var body: some View {
         ScrollView {
-            VStack(spacing: theme.spacingLG) {
-                VStack(spacing: theme.spacingSM) {
-                    Image(systemName: CCEmotion.allCases.first(where:{$0.rawValue==entry.emotion})?.iconName ?? "circle.fill")
-                        .font(.system(size:64)).foregroundColor(emotionColor(entry.emotion))
-                        .frame(width:100,height:100).background(emotionColor(entry.emotion).opacity(0.1)).cornerRadius(theme.radiusXL)
-                    Text(entry.emotion).font(.system(size:24,weight:.bold))
-                    Text(entry.hasDoodle ? "含涂鸦" : "纯文字").font(.system(size:13)).foregroundColor(theme.textMuted)
-                }.padding(.top,theme.spacingXL)
-                VStack(alignment:.leading,spacing:theme.spacingSM) {
-                    Text(entry.note.isEmpty ? "（未记录文字）" : entry.note).font(.system(size:16)).lineSpacing(6).foregroundColor(entry.note.isEmpty ? theme.textMuted : theme.textPrimary)
-                }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD)
+            VStack(spacing: XuanSpacing.lg) {
+                VStack(spacing: XuanSpacing.sm) {
+                    let emotionName = entry.emotion ?? ""
+                    CCIconMapper.image(for: CCEmotion.allCases.first(where:{$0.rawValue==emotionName})?.iconName ?? "circle.fill")
+                        .font(.system(size:64)).foregroundColor(emotionColor(emotionName))
+                        .frame(width:100,height:100).background(emotionColor(emotionName).opacity(0.1)).cornerRadius(XuanRadius.xl)
+                    Text(emotionName).font(.system(size:24,weight:.bold))
+                    Text((entry.hasDoodle ?? false) ? "含涂鸦" : "纯文字").font(.system(size:13)).foregroundColor(Color.xuanTextTertiary)
+                }.padding(.top,XuanSpacing.xl)
+                VStack(alignment:.leading,spacing:XuanSpacing.sm) {
+                    Text((entry.note ?? "").isEmpty ? "（未记录文字）" : (entry.note ?? "")).font(.system(size:16)).lineSpacing(6).foregroundColor((entry.note ?? "").isEmpty ? Color.xuanTextTertiary : Color.xuanTextPrimary)
+                }.padding().background(Color.xuanWhite).cornerRadius(XuanRadius.md)
                 HStack {
-                    Text("📅 \(entry.checkinDate)").font(.system(size:13)).foregroundColor(theme.textMuted)
+                    Text("📅 \(entry.checkinDate ?? "")").font(.system(size:13)).foregroundColor(Color.xuanTextTertiary)
                     Spacer()
-                    Text("🕐 \(entry.createdAt)").font(.system(size:13)).foregroundColor(theme.textMuted)
+                    Text("🕐 \(entry.createdAt ?? "")").font(.system(size:13)).foregroundColor(Color.xuanTextTertiary)
                 }
             }.padding()
-        }.background(theme.background).navigationTitle("日记详情")
+        }.background(Color.xuanApricotBg).navigationTitle("日记详情")
     }
     private func emotionColor(_ name: String) -> Color {
-        let m:[String:String]=["平静":"66BB6A","开心":"C9A063","疲惫":"7A9AAA","焦虑":"D4C8E8","委屈":"E8B8C8","孤独":"A8C9D7","烦躁":"E57373","迷茫":"D9C8E3","易怒":"8B6F47","内耗":"AAAAAA"]
-        return Color(hex:m[name] ?? "B8D4E3")
+        switch name {
+        case "平静": return Color.xuanMint
+        case "开心": return Color.xuanApricotDark
+        case "疲惫": return Color.xuanInfo
+        case "焦虑": return Color(hex: "A085C6")
+        case "委屈": return Color.xuanPink
+        case "烦躁": return Color.xuanDanger
+        case "易怒": return Color.xuanApricotDark
+        case "内耗": return Color.xuanTextTertiary
+        case "孤独": return Color(hex: "A8C9D7")
+        case "迷茫": return Color(hex: "D9C8E3")
+        default: return Color.xuanInfo
+        }
     }
 }

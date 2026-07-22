@@ -64,12 +64,19 @@ enum CCAPIError: LocalizedError, Equatable {
         switch (lhs, rhs) {
         case (.invalidURL, .invalidURL): return true
         case (.invalidResponse, .invalidResponse): return true
+        case (.badRequest, .badRequest): return true
         case (.unauthorized, .unauthorized): return true
         case (.forbidden, .forbidden): return true
         case (.notFound, .notFound): return true
+        case (.conflict, .conflict): return true
+        case (.unprocessableEntity, .unprocessableEntity): return true
+        case (.tooManyRequests, .tooManyRequests): return true
+        case (.redirection(let a), .redirection(let b)): return a == b
         case (.serverError(let a), .serverError(let b)): return a == b
+        case (.unexpectedStatusCode(let a), .unexpectedStatusCode(let b)): return a == b
         case (.networkFailure, .networkFailure): return true
         case (.decodingFailure, .decodingFailure): return true
+        case (.cancelled, .cancelled): return true
         default: return false
         }
     }

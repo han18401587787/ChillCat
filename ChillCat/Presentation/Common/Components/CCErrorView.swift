@@ -11,29 +11,28 @@ import SwiftUI
 struct CCErrorView: View {
     let error: Error
     let retryAction: (() async -> Void)?
-    @Environment(\.ccAppTheme) private var theme
 
     var body: some View {
-        VStack(spacing: theme.spacingMD) {
-            Image(systemName: "exclamationmark.triangle")
+        VStack(spacing: XuanSpacing.md) {
+            Image("alert_warn")
                 .font(.system(size: 48))
-                .foregroundColor(theme.error)
+                .foregroundColor(Color.xuanDanger)
 
             Text(error.localizedDescription)
                 .font(.system(size: 15))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, theme.spacingXL)
+                .padding(.horizontal, XuanSpacing.xl)
 
             if let retryAction = retryAction {
                 Button("重试") {
                     Task { await retryAction() }
                 }
                 .buttonStyle(.bordered)
-                .tint(theme.primary)
+                .tint(Color.xuanApricot)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(theme.background)
+        .background(Color.xuanApricotBg)
     }
 }

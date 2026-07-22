@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor @Observable
 final class CCEncourageChainViewModel {
@@ -29,23 +30,30 @@ final class CCEncourageChainViewModel {
         isLoading = true
         errorMessage = nil
         do {
-            let chain = try await CCXuanAPI.getCurrentChain()
-            chainId = chain.chainId
-            links = chain.links.map {
+            let chains = try await CCXuanAPI.listChains(status: "active", page: 1)
+            guard let chain = chains.first else {
+                links = ChainLinkDisplay.sampleLinks
+                chainId = 1
+                participantCount = Int64(links.count)
+                isLoading = false
+                return
+            }
+            chainId = chain.chainId ?? 0
+            links = (chain.links ?? []).map {
                 ChainLinkDisplay(
                     id: String($0.id),
-                    content: $0.content,
-                    position: $0.position,
-                    createdAt: ISO8601DateFormatter().date(from: $0.createdAt) ?? Date()
+                    content: $0.content ?? "",
+                    position: $0.position ?? 0,
+                    createdAt: ISO8601DateFormatter().date(from: $0.createdAt ?? "") ?? Date()
                 )
             }
-            participantCount = chain.participantCount
+            participantCount = chain.participantCount ?? 0
         } catch {
             // API 不可用时使用 mock 数据
             links = ChainLinkDisplay.sampleLinks
             chainId = 1
             participantCount = Int64(links.count)
-            print("⚠️ [EncourageChain] API failed, using mock data: \(error)")
+            LogW("[EncourageChain] API failed, using mock data: \(error)", module: .network, category: "EncourageChain")
         }
         isLoading = false
     }
@@ -55,22 +63,22 @@ final class CCEncourageChainViewModel {
         errorMessage = nil
         do {
             let chain = try await CCXuanAPI.getChain(id: id)
-            chainId = chain.chainId
-            links = chain.links.map {
+            chainId = chain.chainId ?? 0
+            links = (chain.links ?? []).map {
                 ChainLinkDisplay(
                     id: String($0.id),
-                    content: $0.content,
-                    position: $0.position,
-                    createdAt: ISO8601DateFormatter().date(from: $0.createdAt) ?? Date()
+                    content: $0.content ?? "",
+                    position: $0.position ?? 0,
+                    createdAt: ISO8601DateFormatter().date(from: $0.createdAt ?? "") ?? Date()
                 )
             }
-            participantCount = chain.participantCount
+            participantCount = chain.participantCount ?? 0
         } catch {
             // API 不可用时使用 mock 数据
             links = ChainLinkDisplay.sampleLinks
             chainId = id
             participantCount = Int64(links.count)
-            print("⚠️ [EncourageChain] loadChain API failed, using mock data: \(error)")
+            LogW("[EncourageChain] loadChain API failed, using mock data: \(error)", module: .network, category: "EncourageChain")
         }
         isLoading = false
     }
@@ -82,7 +90,7 @@ final class CCEncourageChainViewModel {
         let text = relayText.trimmingCharacters(in: .whitespacesAndNewlines)
         relayText = ""
         do {
-            let _ = try await CCXuanAPI.participateInChain(content: text)
+            let _ = try await CCXuanAPI.joinChain(id: chainId, content: text)
             await loadCurrentChain()
         } catch {
             errorMessage = "发送失败，请重试"
@@ -97,16 +105,16 @@ final class CCEncourageChainViewModel {
             let chains = try await CCXuanAPI.getMyChains()
             myChains = chains.map {
                 ChainSummary(
-                    chainId: String($0.chainId),
-                    firstMessage: $0.links.first?.content ?? "",
-                    participantCount: Int($0.participantCount),
-                    linkCount: $0.links.count
+                    chainId: String($0.chainId ?? 0),
+                    firstMessage: $0.links?.first?.content ?? "",
+                    participantCount: Int($0.participantCount ?? 0),
+                    linkCount: $0.links?.count ?? 0
                 )
             }
         } catch {
             // API 不可用时使用 mock 数据
             myChains = ChainSummary.sampleChains
-            print("⚠️ [EncourageChain] loadMyChains API failed, using mock data: \(error)")
+            LogW("[EncourageChain] loadMyChains API failed, using mock data: \(error)", module: .network, category: "EncourageChain")
         }
         isLoadingMyChains = false
     }

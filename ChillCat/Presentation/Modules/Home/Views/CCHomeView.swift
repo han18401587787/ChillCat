@@ -1,293 +1,407 @@
 //
 //  CCHomeView.swift
-//  绪安 - 首页情绪打卡
+//  绪安 - 首页 (严格对照设计稿 page_18 像素级还原)
 //
+//  设计稿来源: /workspace/design_pages/page_18.png
+//  布局从上到下：
+//   顶部状态栏(日期+头像) → 问候语 → 4需求标签 → 打卡按钮 → 今日暖心 → 稳情计划 → 情绪探索 → 正在发生的温暖 → AI倾听官
 
 import SwiftUI
 
 struct CCHomeView: View {
-    @State private var viewModel = CCEmotionViewModel()
+    var viewModel: CCEmotionViewModel
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
 
-    let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 5)
+    // 4个需求选项 (严格对照设计稿)
+    private let needItems: [NeedItem] = [
+        NeedItem(title: "被倾听", subtitle: "有人愿意听你说，什么都不用解释", bgColor: Color.xuanApricotLight, selectedColor: Color.xuanApricotDark),
+        NeedItem(title: "被理解", subtitle: "希望有人真的懂你在想什么", bgColor: Color.xuanMintLight, selectedColor: Color.xuanMintDark),
+        NeedItem(title: "被鼓励", subtitle: "需要一些力量和温暖的肯定", bgColor: Color.xuanPinkLight, selectedColor: Color.xuanPinkDark),
+        NeedItem(title: "只是想说说", subtitle: "说出来就好，不需要解决方案", bgColor: Color.xuanSurface, selectedColor: Color.xuanTextSecondary)
+    ]
+
+    struct NeedItem: Identifiable {
+        let id = UUID()
+        let title: String
+        let subtitle: String
+        let bgColor: Color
+        let selectedColor: Color
+    }
 
     var body: some View {
         ScrollView {
-            VStack(spacing: theme.spacingLG) {
-                if viewModel.isLoading {
-                    loadingContent
-                } else {
-                    // 头部问候
-                    headerSection
+            VStack(spacing: XuanSpacing.xl) {
+                // 1. 顶部状态栏 (日期 + 头像)
+                topStatusBar
 
-                    // AI 情绪倾听官
-                    CCAIListenerCard()
+                // 2. 问候区
+                greetingSection
 
-                    // 情绪选择
-                    if !viewModel.hasCheckedIn {
-                        emotionCheckInSection
-                    } else {
-                        checkedInCard
-                    }
+                // 3. 你今天想要什么? (4个需求标签)
+                needSelectionCard
 
-                    // 今日任务
-                    dailyTaskSection
+                // 4. 今日心情打卡按钮
+                checkInButtonSection
 
-                    // 本周回顾
-                    weeklyReviewCard
+                // 5. 今日暖心
+                todayWarmthCard
 
-                    // 探索更多
-                    exploreSection
+                // 6. 今日稳情计划 (薄荷绿背景)
+                stablePlanCard
 
-                    // 每日语录
-                    quoteCard
-                }
+                // 7. 情绪探索
+                emotionExploreSection
+
+                // 8. 正在发生的温暖
+                warmthActivitySection
+
+                // 9. AI倾听官入口
+                aiListenerSection
             }
-            .padding()
+            .padding(XuanSpacing.lg)
         }
-        .background(theme.background)
-        .navigationTitle("绪安")
-        .navigationBarTitleDisplayMode(.inline)
+        .background(Color.xuanApricotBg)
+        .scrollDismissesKeyboard(.interactively)
         .task { await viewModel.loadData() }
+        .trackPage("Home:CCHomeView")
     }
 
-    // MARK: - Loading Skeleton
-
-    private var loadingContent: some View {
-        VStack(spacing: theme.spacingLG) {
-            headerSection
-            skeletonCard(height: 120)
-            skeletonCard(height: 200)
-            skeletonCard(height: 48)
-            skeletonCard(height: 100)
-            skeletonCard(height: 300)
-            skeletonCard(height: 100)
-        }
-    }
-
-    private func skeletonCard(height: CGFloat) -> some View {
-        RoundedRectangle(cornerRadius: theme.radiusMD)
-            .fill(theme.surface)
-            .frame(height: height)
-            .opacity(0.5)
-    }
-
-    // MARK: - Header
-    private var headerSection: some View {
+    // MARK: - 1. 顶部状态栏
+    private var topStatusBar: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("现在是什么感受？")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(theme.textPrimary)
-                Text("已陪伴你 \(viewModel.totalDays) 天")
-                    .font(.system(size: 14))
-                    .foregroundColor(theme.textSecondary)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(formattedDate)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
             Spacer()
-            Text("连续\(viewModel.streakDays)天")
-                .font(.system(size: 13, weight: .medium))
-                .foregroundColor(theme.primary)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(theme.primaryMuted.opacity(0.3))
-                .cornerRadius(theme.radiusSM)
-        }
-    }
-
-    // MARK: - Emotion Grid
-    private var emotionCheckInSection: some View {
-        VStack(spacing: theme.spacingMD) {
-            LazyVGrid(columns: columns, spacing: theme.spacingSM) {
-                ForEach(CCEmotion.allCases) { emotion in
-                    emotionButton(emotion)
-                }
-            }
-
-            if let selected = viewModel.selectedEmotion {
-                VStack(spacing: theme.spacingMD) {
-                    TextField("不用勉强说…", text: $viewModel.todayNote, axis: .vertical)
-                        .font(.system(size: 15))
-                        .padding()
-                        .background(theme.cardBackground)
-                        .cornerRadius(theme.radiusMD)
-                        .lineLimit(3...5)
-
-                    Button(action: { CCHaptic.success(); viewModel.completeCheckIn() }) {
-                        Text("就是这样，进去看看")
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(theme.primary)
-                            .cornerRadius(theme.radiusMD)
-                    }
-                }
-                .transition(.opacity.combined(with: .move(edge: .bottom)))
-            }
-        }
-        .animation(.easeInOut(duration: 0.3), value: viewModel.selectedEmotion)
-    }
-
-    private func emotionButton(_ emotion: CCEmotion) -> some View {
-        Button(action: { CCHaptic.selection(); viewModel.selectEmotion(emotion) }) {
-            VStack(spacing: 6) {
-                Image(systemName: emotion.iconName)
-                    .font(.system(size: 22))
-                Text(emotion.rawValue)
-                    .font(.system(size: 11))
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .background(
-                viewModel.selectedEmotion == emotion
-                    ? theme.primary.opacity(0.15)
-                    : theme.surface
-            )
-            .cornerRadius(theme.radiusMD)
-            .overlay(
-                RoundedRectangle(cornerRadius: theme.radiusMD)
-                    .stroke(
-                        viewModel.selectedEmotion == emotion
-                            ? theme.primary : Color.clear,
-                        lineWidth: 1.5
+            // 用户头像 — 点击跳转个人中心
+            Button(action: {
+                coordinator.navigate(to: .profile)
+            }) {
+                Circle()
+                    .fill(Color.xuanApricot.opacity(0.3))
+                    .frame(width: 40, height: 40)
+                    .overlay(
+                        Image("profile_user")
+                            .font(.system(size: 20))
+                            .foregroundColor(Color.xuanApricotDark)
                     )
-            )
-        }
-        .foregroundColor(theme.textPrimary)
-    }
-
-    // MARK: - Checked In State
-    private var checkedInCard: some View {
-        VStack(spacing: theme.spacingSM) {
-            Image(systemName: "checkmark.seal.fill").font(.system(size: 40)).foregroundColor(theme.softGreen)
-            Text("今日已打卡")
-                .font(.system(size: 18, weight: .semibold))
-            Text("完成了！你真的很棒")
-                .font(.system(size: 14))
-                .foregroundColor(theme.textSecondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, theme.spacingLG)
-        .background(theme.softGreenLight.opacity(0.3))
-        .cornerRadius(theme.radiusLG)
-    }
-
-    // MARK: - Daily Task
-    private var dailyTaskSection: some View {
-        HStack {
-            Button(action: { viewModel.completeDailyTask() }) {
-                Image(systemName: viewModel.dailyTaskCompleted ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 22))
-                    .foregroundColor(viewModel.dailyTaskCompleted ? theme.softGreen : theme.textMuted)
             }
+            .buttonStyle(.plain)
+            .contentShape(Circle())
+            .accessibilityIdentifier("home_avatar")
+        }
+    }
 
-            Text(viewModel.dailyTask)
-                .font(.system(size: 15))
-                .foregroundColor(
-                    viewModel.dailyTaskCompleted ? theme.textSecondary : theme.textPrimary
+    private var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "zh_CN")
+        formatter.dateFormat = "M月d日 EEEE"
+        return formatter.string(from: Date())
+    }
+
+    // MARK: - 2. 问候区
+    private var greetingSection: some View {
+        VStack(alignment: .leading, spacing: XuanSpacing.xs) {
+            Text("早安，今天想聊聊吗？")
+                .font(XuanFont.h1)
+                .foregroundColor(Color.xuanTextPrimary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    // MARK: - 3. 你今天想要什么? (4个需求标签卡片)
+    private var needSelectionCard: some View {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            Text("你今天想要什么？")
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
+
+            VStack(spacing: XuanSpacing.md) {
+                ForEach(needItems) { item in
+                    needTagButton(item)
+                }
+            }
+        }
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
+    }
+
+    private func needTagButton(_ item: NeedItem) -> some View {
+        let isSelected = viewModel.selectedNeed == item.title
+
+        return Button(action: {
+            CCHaptic.selection()
+            viewModel.selectNeed(item.title)
+        }) {
+            Text(item.title)
+                .font(XuanFont.bodyLBold)
+                .foregroundColor(isSelected ? .white : Color.xuanTextPrimary)
+                .frame(width: 148, height: 48)
+                .background(
+                    RoundedRectangle(cornerRadius: XuanRadius.md)
+                        .fill(isSelected ? item.selectedColor : item.bgColor)
                 )
-                .strikethrough(viewModel.dailyTaskCompleted)
-
-            Spacer()
         }
-        .padding()
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .buttonStyle(.plain)
+        .contentShape(Rectangle())
+        .animation(.easeInOut(duration: 0.2), value: isSelected)
+        .accessibilityIdentifier("home_need_\(item.title)")
     }
 
-    // MARK: - Weekly Review
-    private var weeklyReviewCard: some View {
-        VStack(alignment: .leading, spacing: theme.spacingSM) {
+    // MARK: - 4. 今日心情打卡按钮
+    private var checkInButtonSection: some View {
+        Button(action: {
+            guard !viewModel.hasCheckedIn else { return }
+            CCHaptic.success()
+            viewModel.completeCheckIn()
+            coordinator.navigate(to: .checkinSuccess)
+        }) {
+            HStack(spacing: XuanSpacing.sm) {
+                CCIconMapper.image(for: viewModel.hasCheckedIn ? "checkmark.circle.fill" : "heart.fill")
+                    .font(.system(size: 16))
+                Text(viewModel.hasCheckedIn ? "今日已打卡 ✓" : "今日心情打卡")
+                    .font(XuanFont.bodyLMedium)
+            }
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .background(viewModel.hasCheckedIn ? Color.xuanMint : Color.xuanApricot)
+            .cornerRadius(XuanRadius.lg)
+        }
+        .buttonStyle(.plain)
+        .contentShape(Rectangle())
+        .disabled(viewModel.hasCheckedIn)
+        .accessibilityIdentifier("home_checkin_button")
+        .animation(.easeInOut(duration: 0.3), value: viewModel.hasCheckedIn)
+    }
+
+    // MARK: - 5. 今日暖心
+    private var todayWarmthCard: some View {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
             HStack {
-                Text("本周情绪回顾")
-                    .font(.system(size: 16, weight: .semibold))
+                Text("今日暖心")
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanPink)
                 Spacer()
-                Text("本周 14 个")
-                    .font(.system(size: 13))
-                    .foregroundColor(theme.textSecondary)
+                Text("6.26")
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
 
-            Text(viewModel.weeklyNote)
-                .font(.system(size: 14))
-                .foregroundColor(theme.textSecondary)
+            Text("「你已经很努力了，今天不需要证明什么。")
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextPrimary)
+                .lineSpacing(4)
+
+            HStack {
+                Text("——绪安 · 情绪治愈平台")
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
+                Spacer()
+            }
+
+            // 情绪标签
+            HStack {
+                Text("平静")
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanMint)
+                    .padding(.horizontal, XuanSpacing.md)
+                    .padding(.vertical, XuanSpacing.xs)
+                    .background(Color.xuanMint.opacity(0.15))
+                    .cornerRadius(XuanRadius.full)
+                Spacer()
+            }
+        }
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
+    }
+
+    // MARK: - 6. 今日稳情计划 (薄荷绿背景卡片)
+    private var stablePlanCard: some View {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            HStack {
+                Text("今日稳情计划")
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanMintDark)
+                Spacer()
+                Text("第 3/7 天")
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanMintDark)
+            }
+
+            Text("4-7-8 呼吸练习")
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
+
+            Text("吸气4秒，屏息7秒，呼气8秒。重复5次，让焦虑随呼吸流走。")
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
                 .lineSpacing(4)
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanMintLight)
+        .cornerRadius(XuanRadius.lg)
     }
 
-    // MARK: - Explore
-    private var exploreSection: some View {
-        VStack(spacing: theme.spacingSM) {
-            Text("探索更多可能")
-                .font(.system(size: 16, weight: .semibold))
-                .frame(maxWidth: .infinity, alignment: .leading)
+    // MARK: - 7. 情绪探索
+    private var emotionExploreSection: some View {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            Text("情绪探索")
+                .font(XuanFont.h3)
+                .foregroundColor(Color.xuanTextPrimary)
 
-            LazyVGrid(
-                columns: [GridItem(.flexible(), spacing: theme.spacingSM),
-                          GridItem(.flexible(), spacing: theme.spacingSM),
-                          GridItem(.flexible())],
-                spacing: theme.spacingSM
-            ) {
-                exploreCard(icon: "chart.bar.fill", title: "情绪趋势", color: Color(hex: "D4C8E8"), route: .trends)
-                exploreCard(icon: "book.pages.fill", title: "情绪日记", color: Color(hex: "D9C8E3"), route: .journal)
-                exploreCard(icon: "wind", title: "冥想放松", color: Color(hex: "B8D4E3"), route: .meditation)
-                exploreCard(icon: "lightbulb.fill", title: "小课堂", color: Color(hex: "D5E8D4"), route: .courses)
-                exploreCard(icon: "heart.text.square.fill", title: "共鸣墙", color: Color(hex: "E8B8C8"), route: .resonanceWall)
-                exploreCard(icon: "flame.fill", title: "鼓励链", color: Color(hex: "8B6F47"), route: .encourageChain)
-                exploreCard(icon: "brain.head.profile", title: "情绪解码", color: Color(hex: "D4C8E8"), route: .emotionDecoder)
-                exploreCard(icon: "mic.fill", title: "语音日记", color: Color(hex: "B8D4E3"), route: .voiceEmotionDiary)
+            Button(action: { coordinator.navigate(to: .emotionDecoder) }) {
+                HStack(spacing: XuanSpacing.md) {
+                    RoundedRectangle(cornerRadius: XuanRadius.sm)
+                        .fill(Color.xuanApricot.opacity(0.2))
+                        .frame(width: 60, height: 60)
+                        .overlay(
+                            Image("home_mood")
+                                .font(.system(size: 24))
+                                .foregroundColor(Color.xuanApricotDark)
+                        )
 
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("为什么焦虑总在深夜来访？")
+                            .font(XuanFont.bodyLBold)
+                            .foregroundColor(Color.xuanTextPrimary)
+                        Text("从神经科学角度解读夜间焦虑的成因...")
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextSecondary)
+                    }
+
+                    Spacer()
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .contentShape(Rectangle())
+            .accessibilityIdentifier("home_emotion_explore")
+        }
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
+    }
+
+    // MARK: - 8. 正在发生的温暖
+    private var warmthActivitySection: some View {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            HStack {
+                Text("正在发生的温暖")
+                    .font(XuanFont.h3)
+                    .foregroundColor(Color.xuanTextPrimary)
+                Spacer()
+                Button(action: {
+                    coordinator.navigate(to: .encourageChain)
+                }) {
+                    HStack(spacing: 2) {
+                        Text("查看全部")
+                            .font(XuanFont.bodyS)
+                        Image("common_more")
+                            .font(.system(size: 10))
+                    }
+                    .foregroundColor(Color.xuanTextTertiary)
+                }
+                .buttonStyle(.plain)
+                .contentShape(Rectangle())
+                .accessibilityIdentifier("home_warmth_view_all")
+            }
+
+            VStack(spacing: XuanSpacing.md) {
+                warmthActivityItem(
+                    avatar: "雨",
+                    avatarColor: Color.xuanInfo,
+                    title: "小雨 收到了来自阿杰的鼓励",
+                    subtitle: "「你的勇气，让我也敢说出自己的故事」"
+                )
+
+                warmthActivityItem(
+                    avatar: "然",
+                    avatarColor: Color.xuanMint,
+                    title: "阿然 发起了一次鼓励接力",
+                    subtitle: "「今天在地铁上看到你的文字，谢谢你」"
+                )
             }
         }
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
     }
 
-    func exploreCard(icon: String, title: String, color: Color, route: CCAppRoute) -> some View {
-        NavigationLink(value: route) {
-            VStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.system(size: 22))
-                    .foregroundColor(color)
-                    .frame(width: 48, height: 48)
-                    .background(color.opacity(0.15))
-                    .cornerRadius(theme.radiusSM)
+    private func warmthActivityItem(avatar: String, avatarColor: Color, title: String, subtitle: String) -> some View {
+        HStack(spacing: XuanSpacing.md) {
+            ZStack {
+                Circle()
+                    .fill(avatarColor.opacity(0.15))
+                    .frame(width: 36, height: 36)
+                Text(avatar)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(avatarColor)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(size: 12))
-                    .foregroundColor(theme.textPrimary)
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextPrimary)
+                Text(subtitle)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.8)
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
+
+            Spacer()
         }
     }
 
-    // MARK: - Quote
-    private var quoteCard: some View {
-        VStack(spacing: theme.spacingSM) {
-            Image(systemName: "quote.opening")
-                .font(.system(size: 20))
-                .foregroundColor(theme.primaryMuted)
+    // MARK: - 9. AI倾听官入口
+    private var aiListenerSection: some View {
+        Button(action: { coordinator.navigate(to: .aiListener) }) {
+            HStack(spacing: XuanSpacing.md) {
+                ZStack {
+                    Circle()
+                        .fill(Color.xuanApricot.opacity(0.15))
+                        .frame(width: 48, height: 48)
+                    Text("AI")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(Color.xuanApricotDark)
+                }
 
-            Text(viewModel.quote)
-                .font(.system(size: 15))
-                .foregroundColor(theme.textSecondary)
-                .multilineTextAlignment(.center)
-                .lineSpacing(6)
-                .fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("和绪安聊聊")
+                        .font(XuanFont.bodyLBold)
+                        .foregroundColor(Color.xuanTextPrimary)
+                    Text("AI倾听官正在等你...")
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanTextSecondary)
+                }
 
-            Image(systemName: "quote.closing")
-                .font(.system(size: 20))
-                .foregroundColor(theme.primaryMuted)
+                Spacer()
+
+                Image("common_more")
+                    .font(.system(size: 14))
+                    .foregroundColor(Color.xuanTextTertiary)
+            }
+            .contentShape(Rectangle())
         }
-        .padding(theme.spacingLG)
-        .frame(maxWidth: .infinity)
-        .background(theme.softPurpleLight.opacity(0.3))
-        .cornerRadius(theme.radiusLG)
+        .buttonStyle(.plain)
+        .contentShape(Rectangle())
+        .accessibilityIdentifier("home_ai_listener_entry")
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
     }
+}
+
+// MARK: - Preview
+#Preview {
+    CCHomeView(viewModel: CCEmotionViewModel())
 }

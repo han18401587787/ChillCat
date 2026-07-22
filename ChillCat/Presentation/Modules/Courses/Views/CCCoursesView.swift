@@ -1,12 +1,11 @@
 import SwiftUI
 
 struct CCCoursesView: View {
-    @Environment(\.ccAppTheme) private var theme
     @State private var viewModel = CCCoursesViewModel()
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: theme.spacingLG) {
+            VStack(alignment: .leading, spacing: XuanSpacing.lg) {
                 Text("小课堂").font(.system(size: 24, weight: .bold))
                 switch viewModel.loadState {
                 case .loading:
@@ -24,42 +23,44 @@ struct CCCoursesView: View {
                 }
             }.padding()
         }
-        .background(theme.background).navigationTitle("小课堂")
+        .background(Color.xuanApricotBg).navigationTitle("小课堂")
         .task { await viewModel.loadCourses() }
+        .trackPage("Courses:CCCoursesView")
     }
 
     private var emptyState: some View {
-        VStack(spacing: theme.spacingMD) {
+        VStack(spacing: XuanSpacing.md) {
             Spacer().frame(height: 80)
-            Image(systemName: "book.pages")
+            Image("other_diary")
                 .font(.system(size: 48))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
             Text("暂无课程")
                 .font(.system(size: 15))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
         }
         .frame(maxWidth: .infinity)
     }
 
     func categorySection(title: String, icon: String, color: Color, courses: [CCXuanAPI.CourseItem]) -> some View {
-        VStack(alignment: .leading, spacing: theme.spacingSM) {
-            HStack { Image(systemName: icon).foregroundColor(color); Text(title).font(.system(size: 18, weight: .semibold)) }
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
+            HStack { CCIconMapper.image(for: icon).foregroundColor(color); Text(title).font(.system(size: 18, weight: .semibold)) }
             ForEach(courses) { course in
                 NavigationLink(value: CCAppRoute.courseDetail(course)) {
                     HStack(spacing: 12) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(course.title).font(.system(size: 15, weight: .medium))
+                            Text(course.title ?? "").font(.system(size: 15, weight: .medium))
                             HStack(spacing: 8) {
-                                Text(course.tag).font(.system(size: 11)).foregroundColor(Color(hex: "5A7A8A"))
+                                Text(course.tag ?? "").font(.system(size: 11)).foregroundColor(Color.xuanApricotDark)
                                     .padding(.horizontal, 8).padding(.vertical, 2)
-                                    .background(Color(hex: "B8D4E3").opacity(0.3)).cornerRadius(4)
-                                Text("\(course.duration / 60) 分钟").font(.system(size: 11)).foregroundColor(theme.textMuted)
+                                    .background(Color.xuanInfo.opacity(0.3)).cornerRadius(4)
+                                Text("\((course.duration ?? 0) / 60) 分钟").font(.system(size: 11)).foregroundColor(Color.xuanTextTertiary)
                             }
                         }
                         Spacer()
-                        Image(systemName: "chevron.right").font(.system(size: 14)).foregroundColor(theme.textMuted)
-                    }.padding().background(theme.cardBackground).cornerRadius(theme.radiusMD)
+                        Image("common_more").font(.system(size: 14)).foregroundColor(Color.xuanTextTertiary)
+                    }.padding().background(Color.xuanWhite).cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("courses_item_\(course.id)")
             }
         }
     }

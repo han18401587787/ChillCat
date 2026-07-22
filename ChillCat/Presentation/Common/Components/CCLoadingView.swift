@@ -10,25 +10,24 @@ import SwiftUI
 
 struct CCLoadingView: View {
     let message: String?
-    @Environment(\.ccAppTheme) private var theme
 
     init(message: String? = nil) {
         self.message = message
     }
 
     var body: some View {
-        VStack(spacing: theme.spacingMD) {
+        VStack(spacing: XuanSpacing.md) {
             ProgressView()
                 .scaleEffect(1.5)
-                .tint(theme.primary)
+                .tint(Color.xuanApricot)
 
             if let message = message {
                 Text(message)
                     .font(.system(size: 15))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(theme.background)
+        .background(Color.xuanApricotBg)
     }
 }

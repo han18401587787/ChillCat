@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 @Observable
@@ -58,9 +59,8 @@ final class CCMemberViewModel {
         do {
             memberInfo = try await fetchMemberInfoUseCase.execute()
         } catch {
-            // API 不可用时使用 mock 数据
-            memberInfo = CCMemberInfo.mock
-            print("⚠️ [Member] API failed, using mock data: \(error)")
+            errorMessage = "会员信息加载失败"
+            LogW("[Member] API failed: \(error)", module: .network, category: "Member")
         }
         products = CCMemberViewModel.defaultProducts()
         privileges = CCMemberViewModel.defaultPrivileges()
@@ -110,12 +110,12 @@ final class CCMemberViewModel {
 
     static func defaultPrivileges() -> [CCMemberPrivilege] {
         [
-            CCMemberPrivilege(id: "1", title: "高清画质", description: "享受1080P高清画质", iconName: "eye.fill", isHighlight: true, availableTypes: CCMemberType.allCases),
-            CCMemberPrivilege(id: "2", title: "离线下载", description: "随时随地离线观看", iconName: "arrow.down.circle.fill", isHighlight: false, availableTypes: CCMemberType.allCases),
-            CCMemberPrivilege(id: "3", title: "专属客服", description: "VIP专属客服通道", iconName: "person.fill.checkmark", isHighlight: false, availableTypes: CCMemberType.allCases),
-            CCMemberPrivilege(id: "4", title: "免广告", description: "畅享无广告体验", iconName: "nosign", isHighlight: true, availableTypes: CCMemberType.allCases),
-            CCMemberPrivilege(id: "5", title: "专属标识", description: "尊贵VIP身份标识", iconName: "star.fill", isHighlight: false, availableTypes: CCMemberType.allCases),
-            CCMemberPrivilege(id: "6", title: "提前观看", description: "抢先看最新内容", iconName: "forward.fill", isHighlight: false, availableTypes: CCMemberType.allCases)
+            CCMemberPrivilege(id: "1", title: "高清画质", description: "享受1080P高清画质", iconName: "healing_scan", isHighlight: true, availableTypes: CCMemberType.allCases),
+            CCMemberPrivilege(id: "2", title: "离线下载", description: "随时随地离线观看", iconName: "other_download", isHighlight: false, availableTypes: CCMemberType.allCases),
+            CCMemberPrivilege(id: "3", title: "专属客服", description: "VIP专属客服通道", iconName: "profile_user", isHighlight: false, availableTypes: CCMemberType.allCases),
+            CCMemberPrivilege(id: "4", title: "免广告", description: "畅享无广告体验", iconName: "common_close", isHighlight: true, availableTypes: CCMemberType.allCases),
+            CCMemberPrivilege(id: "5", title: "专属标识", description: "尊贵VIP身份标识", iconName: "emotion_hopeful", isHighlight: false, availableTypes: CCMemberType.allCases),
+            CCMemberPrivilege(id: "6", title: "提前观看", description: "抢先看最新内容", iconName: "common_more", isHighlight: false, availableTypes: CCMemberType.allCases)
         ]
     }
 }

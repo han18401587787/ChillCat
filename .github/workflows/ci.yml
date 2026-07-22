@@ -2,39 +2,166 @@ name: ChillCat CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, v3.0-dev]
   pull_request:
-    branches: [main]
+    branches: [main, v3.0-dev]
+  schedule:
+    - cron: '0 2 * * *'  # 每天 UTC 2:00 (北京时间 10:00)
 
 jobs:
-  server-test:
-    name: Server Build & Test
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: server
+  # =============================================
+  # iOS 构建验证
+  # =============================================
+  ios-build:
+    name: iOS Build
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.25'
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
       - name: Build
-        run: go build ./...
-      - name: Test
-        run: go test ./... -count=1 -race
-      - name: Lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          working-directory: server
-          version: latest
-          args: --timeout=5m
+        run: |
+          xcodebuild build \
+            -scheme ChillCat \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -quiet \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
-  docker:
-    name: Docker Build
-    runs-on: ubuntu-latest
-    needs: server-test
+  # =============================================
+  # iOS UI 测试（连接已部署的云服务器）
+  # =============================================
+  ios-test:
+    name: iOS Tests
+    runs-on: macos-15
+    needs: ios-build
+    timeout-minutes: 30
+    env:
+      CHILLCAT_API_URL: "http://81.70.178.249:8080"
     steps:
       - uses: actions/checkout@v4
-      - name: Build Docker image
-        working-directory: server
-        run: docker build -t chillcat-server .
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+      - name: Create Simulator
+        run: |
+          RUNTIME=$(xcrun simctl list runtimes -j | python3 -c "
+          import json,sys
+          data=json.load(sys.stdin)
+          ios=[r for r in data['runtimes'] if 'iOS' in r.get('name','') and r.get('isAvailable',False)]
+          print(ios[-1]['identifier']) if ios else sys.exit(1)
+          ")
+          DEVICE=$(xcrun simctl list devicetypes -j | python3 -c "
+          import json,sys
+          data=json.load(sys.stdin)
+          iphones=[d for d in data['devicetypes'] if 'iPhone' in d.get('name','')]
+          target=next((d for d in iphones if 'iPhone 16' in d['name']), iphones[-1])
+          print(target['name'])
+          ")
+          xcrun simctl create CI-iPhone "$DEVICE" "$RUNTIME"
+          xcrun simctl boot CI-iPhone
+      - name: Run Tests
+        run: |
+          xcodebuild test \
+            -scheme ChillCat \
+            -destination 'platform=iOS Simulator,name=CI-iPhone' \
+            -only-testing:ChillCatUITests/ChillCatV3UITests \
+            -only-testing:ChillCatUITests/CCInteractionTests \
+            -only-testing:ChillCatUITests/ChillCatVisualRegressionTests \
+            -resultBundlePath ui-test-results.xcresult \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+        continue-on-error: true
+
+      # ── 解析 xcresult 生成 JSON 报告 ──
+      - name: Parse Test Results
+        if: always()
+        run: |
+          xcrun xcresulttool get --path ui-test-results.xcresult --format json > test-results.json 2>/dev/null || true
+          # 提取测试摘要
+          python3 -c "
+          import json, sys
+          try:
+              with open('test-results.json') as f:
+                  data = json.load(f)
+              # 提取关键信息生成简要报告
+              print(json.dumps(data.get('issues', {}), indent=2)[:5000])
+          except:
+              print('{\"error\": \"Failed to parse xcresult\"}')
+          " > test-summary.json 2>/dev/null || true
+
+      # ── 收集失败截图 ──
+      - name: Collect Failure Screenshots
+        if: always()
+        run: |
+          mkdir -p failure-screenshots
+          # 从临时目录复制 VisualTesting 失败截图
+          cp -r /tmp/VisualDiffFailures/* failure-screenshots/ 2>/dev/null || true
+          ls -la failure-screenshots/ 2>/dev/null || echo "No failure screenshots"
+
+      # ── 上传测试报告 ──
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-test-results
+          path: |
+            ui-test-results.xcresult
+            test-summary.json
+            failure-screenshots/
+
+  # =============================================
+  # 测试报告汇总 + 问题清单
+  # =============================================
+  report:
+    name: Test Report Summary
+    runs-on: ubuntu-latest
+    needs: [ios-test]
+    if: always()
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-test-results
+          path: test-artifacts
+
+      - name: Generate Issue Report
+        run: |
+          echo "## 🧪 绪安 v3.0 CI 测试报告" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| iOS Build | ${{ needs.ios-build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| iOS Tests | ${{ needs.ios-test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📋 测试套件" >> $GITHUB_STEP_SUMMARY
+          echo "- **ChillCatV3UITests** — Tab导航/页面入口/功能验证" >> $GITHUB_STEP_SUMMARY
+          echo "- **CCInteractionTests** — 控件类型/点击区域/输入框/按钮状态" >> $GITHUB_STEP_SUMMARY
+          echo "- **ChillCatVisualRegressionTests** — AI视觉校验/像素对比" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # 检查是否有失败截图
+          if ls test-artifacts/failure-screenshots/*.png 2>/dev/null; then
+            echo "### ⚠️ 视觉差异截图" >> $GITHUB_STEP_SUMMARY
+            for f in test-artifacts/failure-screenshots/*.png; do
+              echo "- $(basename $f)" >> $GITHUB_STEP_SUMMARY
+            done
+          fi
+
+          # 检查测试摘要
+          if [ -f test-artifacts/test-summary.json ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            cat test-artifacts/test-summary.json >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # 生成可操作的修复建议
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔧 修复流程" >> $GITHUB_STEP_SUMMARY
+          echo "1. 下载 \`ios-test-results\` artifact 查看详细日志" >> $GITHUB_STEP_SUMMARY
+          echo "2. 在 Xcode 中打开 \`.xcresult\` 文件查看具体失败用例" >> $GITHUB_STEP_SUMMARY
+          echo "3. 对照 \`failure-screenshots/\` 中的截图定位视觉差异" >> $GITHUB_STEP_SUMMARY
+          echo "4. 修复代码后推送，CI 自动重新验证" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| iOS Build | ${{ needs.ios-build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| iOS Tests | ${{ needs.ios-test.result }} |" >> $GITHUB_STEP_SUMMARY

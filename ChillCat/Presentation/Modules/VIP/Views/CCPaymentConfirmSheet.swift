@@ -13,34 +13,36 @@ struct CCPaymentConfirmSheet: View {
     let onDismiss: () -> Void
 
     @State private var isProcessing = false
-    @Environment(\.ccAppTheme) private var theme
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: theme.spacingLG) {
-                headerSection
-                detailSection
-                Spacer()
-                actionButtons
+            ScrollView {
+                VStack(spacing: XuanSpacing.lg) {
+                    headerSection
+                    detailSection
+                    Spacer()
+                    actionButtons
+                }
+                .padding()
             }
-            .padding()
             .navigationTitle("确认购买")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("取消") { dismiss(); onDismiss() }
                         .disabled(isProcessing)
+                        .accessibilityIdentifier("payment_cancel")
                 }
             }
         }
     }
 
     private var headerSection: some View {
-        VStack(spacing: theme.spacingSM) {
-            Image(systemName: "crown.fill")
+        VStack(spacing: XuanSpacing.sm) {
+            Image("profile_vip")
                 .font(.system(size: 40))
-                .foregroundColor(theme.warm)
+                .foregroundColor(Color.xuanApricotDark)
 
             Text(product.type.displayName)
                 .font(.title3)
@@ -49,12 +51,12 @@ struct CCPaymentConfirmSheet: View {
             Text(product.displayPrice)
                 .font(.largeTitle)
                 .fontWeight(.heavy)
-                .foregroundColor(theme.primary)
+                .foregroundColor(Color.xuanApricot)
 
             if let originalPrice = product.originalPrice {
                 Text("原价 \(originalPrice.formatted())")
                     .font(.caption)
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .strikethrough()
             }
 
@@ -64,18 +66,18 @@ struct CCPaymentConfirmSheet: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 2)
-                    .background(theme.error)
-                    .cornerRadius(theme.radiusSM)
+                    .background(Color.xuanDanger)
+                    .cornerRadius(XuanRadius.sm)
             }
         }
-        .padding(theme.spacingLG)
+        .padding(XuanSpacing.lg)
         .frame(maxWidth: .infinity)
-        .background(theme.surface)
-        .cornerRadius(theme.radiusLG)
+        .background(Color.xuanSurface)
+        .cornerRadius(XuanRadius.lg)
     }
 
     private var detailSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             Text("购买详情")
                 .font(.headline)
 
@@ -93,30 +95,30 @@ struct CCPaymentConfirmSheet: View {
                     detailRow(icon: "checkmark.shield.fill", title: "购买方式", value: "一次性买断")
                 }
             }
-            .padding(theme.spacingMD)
-            .background(theme.surface)
-            .cornerRadius(theme.radiusMD)
+            .padding(XuanSpacing.md)
+            .background(Color.xuanSurface)
+            .cornerRadius(XuanRadius.md)
         }
     }
 
     private func detailRow(icon: String, title: String, value: String) -> some View {
         HStack {
-            Image(systemName: icon)
-                .foregroundColor(theme.primary)
+            CCIconMapper.image(for: icon)
+                .foregroundColor(Color.xuanApricot)
                 .frame(width: 24)
             Text(title)
                 .font(.subheadline)
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
             Spacer()
             Text(value)
                 .font(.subheadline)
                 .fontWeight(.medium)
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(Color.xuanTextPrimary)
         }
     }
 
     private var actionButtons: some View {
-        VStack(spacing: theme.spacingSM) {
+        VStack(spacing: XuanSpacing.sm) {
             Button(action: {
                 isProcessing = true
                 Task {
@@ -135,15 +137,16 @@ struct CCPaymentConfirmSheet: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(isProcessing ? theme.primary.opacity(0.5) : theme.primary)
+                .background(isProcessing ? Color.xuanApricot.opacity(0.5) : Color.xuanApricot)
                 .foregroundColor(.white)
-                .cornerRadius(theme.radiusMD)
+                .cornerRadius(XuanRadius.md)
             }
             .disabled(isProcessing)
+            .accessibilityIdentifier("payment_confirm")
 
             Text("支付即表示您同意服务条款和隐私政策")
                 .font(.caption2)
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
                 .multilineTextAlignment(.center)
         }
     }

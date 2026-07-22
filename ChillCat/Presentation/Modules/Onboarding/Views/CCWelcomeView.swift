@@ -2,21 +2,20 @@ import SwiftUI
 
 struct CCWelcomeView: View {
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
     @State private var viewModel = CCWelcomeViewModel()
 
     var body: some View {
         ZStack {
             LinearGradient(
-                colors: [Color(hex: "E8D9F0").opacity(0.6), Color(hex: "B8D4E3").opacity(0.4), Color(hex: "F9F6F2")],
+                colors: [Color(hex: "A085C6").opacity(0.3).opacity(0.6), Color.xuanInfo.opacity(0.4), Color.xuanApricotBg],
                 startPoint: .topLeading, endPoint: .bottomTrailing
             ).ignoresSafeArea()
 
             VStack(spacing: 32) {
                 Spacer()
-                Image(systemName: "leaf.circle.fill").font(.system(size: 72)).foregroundColor(Color(hex: "5A7A8A"))
+                Image("emotion_calm").font(.system(size: 72)).foregroundColor(Color.xuanApricotDark)
                 Text("绪安").font(.system(size: 36, weight: .bold))
-                Text("陪你温柔自愈").font(.system(size: 18)).foregroundColor(Color(hex: "7A9AAA"))
+                Text("陪你温柔自愈").font(.system(size: 18)).foregroundColor(Color.xuanInfo)
                 VStack(spacing: 8) {
                     Text("接住所有情绪").font(.system(size: 22, weight: .medium))
                     Text("温柔自愈  自在松弛").font(.system(size: 16)).foregroundColor(.secondary)
@@ -31,17 +30,20 @@ struct CCWelcomeView: View {
                         }
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 16)
-                    .background(Color(hex: "5A7A8A")).foregroundColor(.white).cornerRadius(12)
+                    .background(Color.xuanApricotDark).foregroundColor(.white).cornerRadius(12)
                     .disabled(viewModel.isLoading)
+                    .accessibilityIdentifier("welcome_anonymous_entry")
 
                     Button("已有账号登录") {
                         coordinator.hasSeenWelcome = true
                     }
-                    .foregroundColor(Color(hex: "5A7A8A"))
+                    .foregroundColor(Color.xuanApricotDark)
                     .disabled(viewModel.isLoading)
+                    .accessibilityIdentifier("welcome_login_entry")
                 }.padding(.horizontal, 32).padding(.bottom, 50)
             }
         }
+        .trackPage("Onboarding:CCWelcomeView")
         .alert("提示", isPresented: Binding(
             get: { viewModel.errorMessage != nil },
             set: { if !$0 { viewModel.errorMessage = nil } }

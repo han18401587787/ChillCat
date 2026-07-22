@@ -10,17 +10,16 @@ struct CCVoiceCheckinView: View {
     @State private var showEmojiPicker = false
     @State private var isPressed = false
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
     @FocusState private var transcriptionFocused: Bool
     @FocusState private var tagFocused: Bool
 
     var body: some View {
         ZStack {
-            theme.background.ignoresSafeArea()
+            Color.xuanApricotBg.ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: theme.spacingLG) {
-                    Spacer().frame(height: theme.spacingSM)
+                VStack(spacing: XuanSpacing.lg) {
+                    Spacer().frame(height: XuanSpacing.sm)
 
                     switch viewModel.state {
                     case .idle:
@@ -39,49 +38,35 @@ struct CCVoiceCheckinView: View {
                         errorStateView
                     }
                 }
-                .padding(.horizontal, theme.spacingMD)
-                .padding(.bottom, theme.spacingXL)
+                .padding(.horizontal, XuanSpacing.md)
+                .padding(.bottom, XuanSpacing.xl)
             }
             .scrollDisabled(viewModel.state == .idle || viewModel.isRecording)
-
-            // Emoji Picker overlay
-            if showEmojiPicker {
-                VStack {
-                    Spacer()
-                    CCEmojiPicker(isShowing: $showEmojiPicker) { emoji in
-                        viewModel.editableTranscription += emoji
-                    }
-                    .frame(height: 300)
-                    .background(theme.background)
-                    .cornerRadius(theme.radiusXL)
-                    .shadow(radius: 10)
-                    .transition(.move(edge: .bottom))
-                }
-                .ignoresSafeArea(edges: .bottom)
-                .zIndex(1)
-            }
+        }
+        .cc_emojiPickerOverlay(isShowing: $showEmojiPicker) { emoji in
+            viewModel.editableTranscription += emoji.displayName
         }
         .animation(.easeInOut(duration: 0.3), value: viewModel.state)
         .animation(.easeInOut, value: showEmojiPicker)
-        .navigationTitle("语音打卡")
+        .navigationTitle("语音日记")
         .navigationBarTitleDisplayMode(.inline)
     }
 
     // MARK: - Idle State
 
     private var idleStateView: some View {
-        VStack(spacing: theme.spacingXL) {
+        VStack(spacing: XuanSpacing.xl) {
             Spacer().frame(height: 40)
 
             Text("随便说什么都好，这里不评判…")
                 .font(.system(size: 18))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
 
             idleWaveform
                 .frame(height: 80)
 
-            Spacer().frame(height: theme.spacingSM)
+            Spacer().frame(height: XuanSpacing.sm)
 
             recordButton
                 .simultaneousGesture(
@@ -99,10 +84,11 @@ struct CCVoiceCheckinView: View {
                             }
                         }
                 )
+                .accessibilityIdentifier("voice_checkin_record_button")
 
             Text("按住说话…")
                 .font(.system(size: 14))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
 
             Spacer()
         }
@@ -111,42 +97,42 @@ struct CCVoiceCheckinView: View {
     // MARK: - Recording State
 
     private var recordingStateView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: XuanSpacing.lg) {
             Spacer().frame(height: 20)
 
             Text("正在聆听…")
                 .font(.system(size: 18))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
 
             liveWaveform
                 .frame(height: 80)
-                .padding(.vertical, theme.spacingMD)
+                .padding(.vertical, XuanSpacing.md)
 
             Text(viewModel.formattedDuration)
                 .font(.system(size: 32, weight: .light))
-                .foregroundColor(theme.primary)
+                .foregroundColor(Color.xuanApricot)
                 .monospacedDigit()
 
             HStack(spacing: 6) {
                 Circle()
-                    .fill(Color(hex: "E57373"))
+                    .fill(Color.xuanDanger)
                     .frame(width: 8, height: 8)
                     .opacity(viewModel.recordingDuration % 2 == 0 ? 1 : 0.3)
                     .animation(.easeInOut(duration: 0.5), value: viewModel.recordingDuration)
 
                 Text("录制中")
                     .font(.system(size: 13))
-                    .foregroundColor(Color(hex: "E57373"))
+                    .foregroundColor(Color.xuanDanger)
             }
 
-            Spacer().frame(height: theme.spacingMD)
+            Spacer().frame(height: XuanSpacing.md)
 
             ZStack {
                 Circle()
-                    .stroke(theme.primaryMuted, lineWidth: 3)
+                    .stroke(Color.xuanApricot.opacity(0.6), lineWidth: 3)
                     .frame(width: 100, height: 100)
                 Circle()
-                    .fill(Color(hex: "E57373"))
+                    .fill(Color.xuanDanger)
                     .frame(width: 70, height: 70)
             }
             .scaleEffect(isPressed ? 0.92 : 1.0)
@@ -154,7 +140,7 @@ struct CCVoiceCheckinView: View {
 
             Text("松手完成录音")
                 .font(.system(size: 14))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
 
             Spacer()
         }
@@ -163,13 +149,13 @@ struct CCVoiceCheckinView: View {
     // MARK: - Analyzing State
 
     private var analyzingStateView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: XuanSpacing.lg) {
             Spacer().frame(height: 60)
 
             HStack(spacing: 8) {
                 ForEach(0..<3, id: \.self) { i in
                     Circle()
-                        .fill(theme.primaryMuted)
+                        .fill(Color.xuanApricot.opacity(0.6))
                         .frame(width: 12, height: 12)
                         .scaleEffect(viewModel.isAnalyzing ? (i == 0 ? 1.3 : i == 1 ? 1.0 : 0.7) : 0.5)
                         .animation(
@@ -184,11 +170,11 @@ struct CCVoiceCheckinView: View {
 
             Text("AI 正在理解你的情绪…")
                 .font(.system(size: 18))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
 
             Text("这可能需要 1-2 秒")
                 .font(.system(size: 13))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
 
             Spacer()
         }
@@ -197,7 +183,7 @@ struct CCVoiceCheckinView: View {
     // MARK: - Result State
 
     private var resultStateView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: XuanSpacing.lg) {
             analysisResultCard
             transcriptionEditor
             tagsEditor
@@ -206,17 +192,17 @@ struct CCVoiceCheckinView: View {
     }
 
     private var analysisResultCard: some View {
-        VStack(alignment: .leading, spacing: theme.spacingMD) {
-            HStack(spacing: theme.spacingSM) {
-                Image(systemName: "heart.text.clinic.fill")
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            HStack(spacing: XuanSpacing.sm) {
+                Image("alert_guardian")
                     .font(.system(size: 18))
-                    .foregroundColor(Color(hex: "66BB6A"))
+                    .foregroundColor(Color.xuanMint)
                 Text("情绪识别:")
                     .font(.system(size: 15, weight: .medium))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                 Text(viewModel.resultData?.emotion ?? "")
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(theme.primary)
+                    .foregroundColor(Color.xuanApricot)
                 Spacer()
                 Text(viewModel.confidencePercent)
                     .font(.system(size: 13, weight: .medium))
@@ -224,14 +210,14 @@ struct CCVoiceCheckinView: View {
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
                     .background(viewModel.confidenceColor.opacity(0.12))
-                    .cornerRadius(theme.radiusSM)
+                    .cornerRadius(XuanRadius.sm)
             }
 
             if viewModel.resultData != nil {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 4)
-                            .fill(theme.primaryMuted.opacity(0.3))
+                            .fill(Color.xuanApricot.opacity(0.6).opacity(0.3))
                             .frame(height: 4)
                         RoundedRectangle(cornerRadius: 4)
                             .fill(viewModel.confidenceColor)
@@ -241,127 +227,130 @@ struct CCVoiceCheckinView: View {
                 .frame(height: 4)
             }
 
-            Divider().background(theme.primaryMuted.opacity(0.3))
+            Divider().background(Color.xuanApricot.opacity(0.6).opacity(0.3))
 
-            HStack(alignment: .top, spacing: theme.spacingSM) {
-                Image(systemName: "doc.text.fill")
+            HStack(alignment: .top, spacing: XuanSpacing.sm) {
+                Image("report_weekly")
                     .font(.system(size: 14))
-                    .foregroundColor(theme.primaryLight)
+                    .foregroundColor(Color.xuanApricotLight)
                     .frame(width: 20)
                 Text("转文字:")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                 Text(viewModel.resultData?.transcription ?? "")
                     .font(.system(size: 14))
-                    .foregroundColor(theme.textPrimary)
+                    .foregroundColor(Color.xuanTextPrimary)
                     .lineSpacing(4)
             }
 
-            HStack(alignment: .top, spacing: theme.spacingSM) {
-                Image(systemName: "tag.fill")
+            HStack(alignment: .top, spacing: XuanSpacing.sm) {
+                Image("treehole_tag")
                     .font(.system(size: 14))
-                    .foregroundColor(theme.warmLight)
+                    .foregroundColor(Color.xuanApricotLight)
                     .frame(width: 20)
                 Text("标签:")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                 Text(viewModel.resultData?.tags.map { $0 }.joined(separator: " ") ?? "")
                     .font(.system(size: 14))
-                    .foregroundColor(theme.warm)
+                    .foregroundColor(Color.xuanApricotDark)
             }
         }
-        .padding(theme.spacingMD)
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusLG)
+        .padding(XuanSpacing.md)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
         .shadow(color: .black.opacity(0.04), radius: 4, y: 2)
     }
 
     // MARK: - Transcription Editor
 
     private var transcriptionEditor: some View {
-        VStack(alignment: .leading, spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             HStack {
                 Text("编辑转文字")
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                 Spacer()
                 Button(action: { showEmojiPicker.toggle() }) {
                     HStack(spacing: 4) {
-                        Image(systemName: "face.smiling")
+                        Image("emotion_happy")
                             .font(.system(size: 16))
                         Text("表情")
                             .font(.system(size: 13))
                     }
-                    .foregroundColor(theme.primary)
+                    .foregroundColor(Color.xuanApricot)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .background(theme.primaryMuted.opacity(0.2))
-                    .cornerRadius(theme.radiusSM)
+                    .background(Color.xuanApricot.opacity(0.6).opacity(0.2))
+                    .cornerRadius(XuanRadius.sm)
                 }
             }
 
             TextEditor(text: $viewModel.editableTranscription)
                 .font(.system(size: 15))
                 .focused($transcriptionFocused)
-                .padding(theme.spacingSM)
+                .padding(XuanSpacing.sm)
                 .frame(minHeight: 80)
-                .background(theme.surface)
-                .cornerRadius(theme.radiusMD)
+                .background(Color.xuanSurface)
+                .cornerRadius(XuanRadius.md)
                 .overlay(
-                    RoundedRectangle(cornerRadius: theme.radiusMD)
-                        .stroke(transcriptionFocused ? theme.primary.opacity(0.4) : Color.clear, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: XuanRadius.md)
+                        .stroke(transcriptionFocused ? Color.xuanApricot.opacity(0.4) : Color.clear, lineWidth: 1)
                 )
+                .accessibilityIdentifier("voice_checkin_transcription_editor")
         }
     }
 
     // MARK: - Tags Editor
 
     private var tagsEditor: some View {
-        VStack(alignment: .leading, spacing: theme.spacingSM) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             Text("情绪标签")
                 .font(.system(size: 14, weight: .medium))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
 
             FlowLayout(spacing: 8) {
                 ForEach(viewModel.editableTags, id: \.self) { tag in
                     HStack(spacing: 4) {
                         Text(tag)
                             .font(.system(size: 13))
-                            .foregroundColor(theme.warm)
+                            .foregroundColor(Color.xuanApricotDark)
                         Button(action: { viewModel.removeTag(tag) }) {
-                            Image(systemName: "xmark.circle.fill")
+                            Image("common_close")
                                 .font(.system(size: 12))
-                                .foregroundColor(theme.textMuted)
+                                .foregroundColor(Color.xuanTextTertiary)
                         }
                     }
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .background(theme.warmLight.opacity(0.12))
-                    .cornerRadius(theme.radiusSM)
+                    .background(Color.xuanApricotLight.opacity(0.12))
+                    .cornerRadius(XuanRadius.sm)
                 }
             }
 
-            HStack(spacing: theme.spacingSM) {
+            HStack(spacing: XuanSpacing.sm) {
                 TextField("添加标签…", text: $viewModel.newTagInput)
                     .font(.system(size: 14))
                     .focused($tagFocused)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.md)
+                    .accessibilityIdentifier("voice_checkin_tag_input")
 
                 Button(action: {
                     viewModel.addTag()
                     tagFocused = false
                 }) {
-                    Image(systemName: "plus.circle.fill")
+                    Image("common_add")
                         .font(.system(size: 24))
                         .foregroundColor(
                             viewModel.newTagInput.trimmingCharacters(in: .whitespaces).isEmpty
-                                ? theme.textMuted : theme.primary
+                                ? Color.xuanTextTertiary : Color.xuanApricot
                         )
                 }
                 .disabled(viewModel.newTagInput.trimmingCharacters(in: .whitespaces).isEmpty)
+                .accessibilityIdentifier("voice_checkin_tag_add")
             }
         }
     }
@@ -369,29 +358,30 @@ struct CCVoiceCheckinView: View {
     // MARK: - Action Buttons
 
     private var actionButtons: some View {
-        HStack(spacing: theme.spacingMD) {
+        HStack(spacing: XuanSpacing.md) {
             Button(action: {
                 CCHaptic.selection()
                 viewModel.reRecord()
             }) {
                 HStack(spacing: 6) {
-                    Image(systemName: "arrow.counterclockwise")
+                    Image("common_refresh")
                         .font(.system(size: 15))
                     Text("重新录制")
                         .font(.system(size: 15, weight: .medium))
                 }
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(theme.surface)
-                .cornerRadius(theme.radiusMD)
+                .background(Color.xuanSurface)
+                .cornerRadius(XuanRadius.md)
             }
+            .accessibilityIdentifier("voice_checkin_re_record")
 
             Button(action: {
                 Task { await viewModel.saveDiary() }
             }) {
                 HStack(spacing: 6) {
-                    Image(systemName: "square.and.arrow.down.fill")
+                    Image("other_download")
                         .font(.system(size: 15))
                     Text("保存日记")
                         .font(.system(size: 15, weight: .semibold))
@@ -399,22 +389,23 @@ struct CCVoiceCheckinView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(theme.primary)
-                .cornerRadius(theme.radiusMD)
+                .background(Color.xuanApricot)
+                .cornerRadius(XuanRadius.md)
             }
+            .accessibilityIdentifier("voice_checkin_save")
         }
     }
 
     // MARK: - Saving State
 
     private var savingStateView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: XuanSpacing.lg) {
             Spacer().frame(height: 80)
             ProgressView()
                 .scaleEffect(1.5)
             Text("正在保存日记…")
                 .font(.system(size: 18))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
             Spacer()
         }
     }
@@ -422,95 +413,169 @@ struct CCVoiceCheckinView: View {
     // MARK: - Saved State
 
     private var savedStateView: some View {
-        VStack(spacing: theme.spacingLG) {
-            Spacer().frame(height: 60)
+        ScrollView {
+            VStack(spacing: XuanSpacing.lg) {
+                Spacer().frame(height: 40)
 
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 72))
-                .foregroundColor(theme.softGreen)
+                // 打卡成功图标
+                Image("home_checkin")
+                    .font(.system(size: 64))
+                    .foregroundColor(Color.xuanMint)
 
-            Text("打卡成功")
-                .font(.system(size: 22, weight: .bold))
-                .foregroundColor(theme.textPrimary)
+                Text("打卡成功")
+                    .font(XuanFont.h2)
+                    .foregroundColor(Color.xuanTextPrimary)
 
-            if let result = viewModel.resultData {
-                VStack(spacing: 4) {
-                    Text("情绪: \(result.emotion)")
-                        .font(.system(size: 15))
-                        .foregroundColor(theme.textSecondary)
-                    Text("时长: \(viewModel.formattedDuration)")
-                        .font(.system(size: 13))
-                        .foregroundColor(theme.textMuted)
+                if let result = viewModel.resultData {
+                    VStack(spacing: 2) {
+                        Text("情绪: \(result.emotion)")
+                            .font(XuanFont.bodyL)
+                            .foregroundColor(Color.xuanTextSecondary)
+                        Text("时长: \(viewModel.formattedDuration)")
+                            .font(XuanFont.bodyS)
+                            .foregroundColor(Color.xuanTextTertiary)
+                    }
                 }
+
+                // AI 回应卡片
+                aiResponseCard
+
+                // 3 个操作按钮
+                savedActionButtons
+
+                Spacer(minLength: 20)
+            }
+            .padding(.horizontal, XuanSpacing.lg)
+        }
+        .background(Color.xuanApricotBg)
+    }
+
+    // MARK: - AI 回应卡片
+    private var aiResponseCard: some View {
+        VStack(alignment: .leading, spacing: XuanSpacing.md) {
+            HStack(spacing: XuanSpacing.sm) {
+                ZStack {
+                    Circle()
+                        .fill(Color.xuanMint.opacity(0.15))
+                        .frame(width: 36, height: 36)
+                    Image("home_mood")
+                        .font(.system(size: 16))
+                        .foregroundColor(Color.xuanMint)
+                }
+
+                Text("AI 倾听官")
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanTextPrimary)
+
+                Spacer()
+
+                Text("刚刚")
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
 
-            Spacer().frame(height: theme.spacingMD)
+            Text("我听到了你的声音，感受到了你的情绪。\n你愿意和我再多聊一会儿吗？")
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextPrimary)
+                .lineSpacing(6)
 
-            HStack(spacing: theme.spacingMD) {
-                Button(action: { viewModel.reRecord() }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "mic.fill")
-                            .font(.system(size: 15))
-                        Text("再录一条")
-                            .font(.system(size: 15, weight: .medium))
-                    }
-                    .foregroundColor(theme.textSecondary)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
-                }
-
-                Button(action: {
-                    coordinator.pop()
-                }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "house.fill")
-                            .font(.system(size: 15))
-                        Text("返回首页")
-                            .font(.system(size: 15, weight: .semibold))
-                    }
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(theme.primary)
-                    .cornerRadius(theme.radiusMD)
-                }
+            HStack(spacing: XuanSpacing.sm) {
+                Text("💚 温暖陪伴")
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanMint)
+                    .padding(.horizontal, XuanSpacing.sm)
+                    .padding(.vertical, 2)
+                    .background(Color.xuanMint.opacity(0.1))
+                    .cornerRadius(XuanRadius.full)
             }
+        }
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
+    }
 
-            Spacer()
+    // MARK: - 操作按钮（已保存状态）
+    private var savedActionButtons: some View {
+        VStack(spacing: XuanSpacing.sm) {
+            Button(action: { coordinator.navigate(to: .aiListener) }) {
+                HStack(spacing: XuanSpacing.sm) {
+                    Image("home_mood")
+                    Text("继续和AI聊聊")
+                }
+                .font(XuanFont.bodyLMedium)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(Color.xuanApricot)
+                .cornerRadius(XuanRadius.lg)
+            }
+            .accessibilityIdentifier("voice_checkin_talk_ai")
+
+            Button(action: { coordinator.navigate(to: .resonanceWall) }) {
+                HStack(spacing: XuanSpacing.sm) {
+                    Image("resonance_like")
+                    Text("匿名发布到共鸣墙")
+                }
+                .font(XuanFont.bodyLMedium)
+                .foregroundColor(Color.xuanApricot)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(Color(hex: "F2DBC9"))
+                .cornerRadius(XuanRadius.lg)
+                .overlay(
+                    RoundedRectangle(cornerRadius: XuanRadius.lg)
+                        .stroke(Color(hex: "F2DBC9"), lineWidth: 1)
+                )
+            }
+            .accessibilityIdentifier("voice_checkin_publish_resonance")
+
+            Button(action: { coordinator.navigate(to: .emotionDecoder) }) {
+                HStack(spacing: XuanSpacing.sm) {
+                    Image("report_overview")
+                    Text("查看情绪解码")
+                }
+                .font(XuanFont.bodyLMedium)
+                .foregroundColor(Color.xuanTextSecondary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(Color.xuanSurface)
+                .cornerRadius(XuanRadius.lg)
+            }
+            .accessibilityIdentifier("voice_checkin_view_decoder")
         }
     }
 
     // MARK: - Error State
 
     private var errorStateView: some View {
-        VStack(spacing: theme.spacingLG) {
+        VStack(spacing: XuanSpacing.lg) {
             Spacer().frame(height: 60)
 
-            Image(systemName: "exclamationmark.circle.fill")
+            Image("alert_warn")
                 .font(.system(size: 56))
-                .foregroundColor(theme.error)
+                .foregroundColor(Color.xuanDanger)
 
             Text(viewModel.errorMessage ?? "发生未知错误")
                 .font(.system(size: 18))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
 
-            HStack(spacing: theme.spacingMD) {
+            HStack(spacing: XuanSpacing.md) {
                 Button(action: { viewModel.reRecord() }) {
                     HStack(spacing: 6) {
-                        Image(systemName: "arrow.counterclockwise")
+                        Image("common_refresh")
                             .font(.system(size: 15))
                         Text("重新录制")
                             .font(.system(size: 15, weight: .medium))
                     }
-                    .foregroundColor(theme.textSecondary)
+                    .foregroundColor(Color.xuanTextSecondary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(theme.surface)
-                    .cornerRadius(theme.radiusMD)
+                    .background(Color.xuanSurface)
+                    .cornerRadius(XuanRadius.md)
                 }
+                .accessibilityIdentifier("voice_checkin_error_re_record")
 
                 Button(action: {
                     Task { await viewModel.saveDiary() }
@@ -520,10 +585,11 @@ struct CCVoiceCheckinView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(theme.primary)
-                        .cornerRadius(theme.radiusMD)
+                        .background(Color.xuanApricot)
+                        .cornerRadius(XuanRadius.md)
                 }
                 .disabled(viewModel.resultData == nil)
+                .accessibilityIdentifier("voice_checkin_error_retry_save")
             }
 
             Spacer()
@@ -536,7 +602,7 @@ struct CCVoiceCheckinView: View {
         HStack(spacing: 2) {
             ForEach(0..<30, id: \.self) { i in
                 RoundedRectangle(cornerRadius: 2)
-                    .fill(theme.primaryMuted.opacity(0.4))
+                    .fill(Color.xuanApricot.opacity(0.6).opacity(0.4))
                     .frame(width: 3, height: 6)
             }
         }
@@ -548,8 +614,8 @@ struct CCVoiceCheckinView: View {
                 RoundedRectangle(cornerRadius: 2)
                     .fill(
                         viewModel.isRecording
-                            ? theme.primary.opacity(0.5 + Double(viewModel.waveformData[i]) / 120)
-                            : theme.primaryMuted
+                            ? Color.xuanApricot.opacity(0.5 + Double(viewModel.waveformData[i]) / 120)
+                            : Color.xuanApricot.opacity(0.6)
                     )
                     .frame(width: 3, height: max(4, viewModel.waveformData[i]))
                     .animation(.easeInOut(duration: 0.15), value: viewModel.waveformData[i])
@@ -562,15 +628,15 @@ struct CCVoiceCheckinView: View {
     private var recordButton: some View {
         ZStack {
             Circle()
-                .stroke(theme.primaryMuted, lineWidth: 3)
+                .stroke(Color.xuanApricot.opacity(0.6), lineWidth: 3)
                 .frame(width: 100, height: 100)
 
             Circle()
-                .fill(isPressed ? Color(hex: "E57373") : theme.primary)
+                .fill(isPressed ? Color.xuanDanger : Color.xuanApricot)
                 .frame(width: isPressed ? 70 : 80, height: isPressed ? 70 : 80)
                 .animation(.easeInOut(duration: 0.15), value: isPressed)
 
-            Image(systemName: "mic.fill")
+            Image("ai_listen")
                 .font(.system(size: 32))
                 .foregroundColor(.white)
         }
@@ -579,49 +645,3 @@ struct CCVoiceCheckinView: View {
     }
 }
 
-// MARK: - Flow Layout
-
-private struct FlowLayout: Layout {
-    var spacing: CGFloat = 8
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let rows = arrange(proposal: proposal, subviews: subviews)
-        let height = rows.map { $0.map { $0.sizeThatFits(proposal).height }.max() ?? 0 }.reduce(0, +)
-            + CGFloat(max(0, rows.count - 1)) * spacing
-        return CGSize(width: proposal.width ?? 0, height: height)
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let rows = arrange(proposal: proposal, subviews: subviews)
-        var y = bounds.minY
-        for row in rows {
-            var x = bounds.minX
-            for item in row {
-                item.place(at: CGPoint(x: x, y: y), proposal: .unspecified)
-                x += item.sizeThatFits(.unspecified).width + spacing
-            }
-            y += (row.map { $0.sizeThatFits(.unspecified).height }.max() ?? 0) + spacing
-        }
-    }
-
-    private func arrange(proposal: ProposedViewSize, subviews: Subviews) -> [[LayoutSubview]] {
-        let maxWidth = proposal.width ?? .infinity
-        var rows: [[LayoutSubview]] = []
-        var currentRow: [LayoutSubview] = []
-        var currentX: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if currentX + size.width > maxWidth && !currentRow.isEmpty {
-                rows.append(currentRow)
-                currentRow = [subview]
-                currentX = size.width + spacing
-            } else {
-                currentRow.append(subview)
-                currentX += size.width + spacing
-            }
-        }
-        if !currentRow.isEmpty { rows.append(currentRow) }
-        return rows
-    }
-}

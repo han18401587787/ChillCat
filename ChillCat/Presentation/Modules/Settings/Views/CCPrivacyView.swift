@@ -1,39 +1,90 @@
+//
+//  CCPrivacyView.swift
+//  绪安 - 隐私保护承诺 (严格对照设计稿 page_12)
+//
+
 import SwiftUI
 
 struct CCPrivacyView: View {
-    @Environment(\.ccAppTheme) private var theme
-    @State private var viewModel = CCSettingsViewModel()
-
     var body: some View {
-        List {
-            Section("情绪数据") {
-                Toggle("展示情绪状态", isOn: Binding(
-                    get: { viewModel.showMood },
-                    set: { viewModel.showMood = $0 }
-                ))
-                Toggle("公开情绪日记", isOn: Binding(
-                    get: { viewModel.showJournal },
-                    set: { viewModel.showJournal = $0 }
-                ))
+        ScrollView {
+            VStack(spacing: XuanSpacing.xl2) {
+                headerSection
+
+                VStack(spacing: XuanSpacing.md) {
+                    privacyItem(icon: "lock.shield.fill", title: "数据加密存储", desc: "所有你的情绪数据都经过AES-256加密后存储，即使服务端也无法直接读取明文内容。", color: Color.xuanMint)
+                        .accessibilityIdentifier("privacy_encryption")
+                    privacyItem(icon: "eye.slash.fill", title: "匿名保护", desc: "你的身份信息与情绪数据完全隔离。在共鸣墙上发布的内容默认匿名，没有人知道你是谁。", color: Color.xuanInfo)
+                        .accessibilityIdentifier("privacy_anonymous")
+                    privacyItem(icon: "trash.fill", title: "数据删除权利", desc: "你可以随时在「设置-数据管理」中一键删除所有数据。删除后数据不可恢复。", color: Color.xuanDanger)
+                        .accessibilityIdentifier("privacy_data_deletion")
+                    privacyItem(icon: "hand.raised.fill", title: "不出售数据", desc: "我们承诺永远不出售、不分享你的个人数据给任何第三方。你的隐私是我们的底线。", color: Color.xuanApricotDark)
+                        .accessibilityIdentifier("privacy_no_sale")
+                }
             }
-            Section("数据收集") {
-                Toggle("允许匿名数据收集", isOn: Binding(
-                    get: { viewModel.allowDataCollection },
-                    set: { viewModel.allowDataCollection = $0 }
-                ))
-                Text("用于改善绪安的情绪分析准确度，不包含个人身份信息").font(.system(size: 12)).foregroundColor(theme.textMuted)
-            }
-            Section("加密") {
-                Label("加密", systemImage: "lock.shield.fill").foregroundColor(Color(hex: "66BB6A"))
-                Text("所有日记和语音数据均已端到端加密存储").font(.system(size: 12)).foregroundColor(theme.textMuted)
-            }
-            Section {
-                Label("匿名已开启", systemImage: "theatermasks.fill").foregroundColor(Color(hex: "5A7A8A"))
-                Button("切换为实名") { viewModel.initiateRealNameFlow() }
-                    .foregroundColor(Color(hex: "E57373"))
-            }
+            .padding(XuanSpacing.lg)
         }
-        .navigationTitle("隐私设置")
-        .background(theme.background)
+        .background(Color.xuanApricotBg)
+        .navigationTitle("隐私保护")
+        .navigationBarTitleDisplayMode(.large)
+        .trackPage("Settings:CCPrivacyView")
+    }
+
+    private var headerSection: some View {
+        VStack(spacing: XuanSpacing.md) {
+            ZStack {
+                Circle()
+                    .fill(Color.xuanMint.opacity(0.12))
+                    .frame(width: 80, height: 80)
+                Image("profile_privacy")
+                    .font(.system(size: 36))
+                    .foregroundColor(Color.xuanMint)
+            }
+
+            Text("你的隐私，我们的责任")
+                .font(XuanFont.h2)
+                .foregroundColor(Color.xuanTextPrimary)
+
+            Text("绪安将你的数据安全放在首位。\n以下是我们的隐私保护承诺。")
+                .font(XuanFont.bodyM)
+                .foregroundColor(Color.xuanTextSecondary)
+                .multilineTextAlignment(.center)
+                .lineSpacing(4)
+        }
+        .padding(XuanSpacing.xl)
+        .frame(maxWidth: .infinity)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
+    }
+
+    private func privacyItem(icon: String, title: String, desc: String, color: Color) -> some View {
+        HStack(alignment: .top, spacing: XuanSpacing.lg) {
+            ZStack {
+                RoundedRectangle(cornerRadius: XuanRadius.md)
+                    .fill(color.opacity(0.12))
+                    .frame(width: 48, height: 48)
+                CCIconMapper.image(for: icon)
+                    .font(.system(size: 22))
+                    .foregroundColor(color)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(XuanFont.bodyLBold)
+                    .foregroundColor(Color.xuanTextPrimary)
+                Text(desc)
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanTextSecondary)
+                    .lineSpacing(4)
+            }
+            Spacer()
+        }
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
     }
 }
+
+#Preview { NavigationStack { CCPrivacyView() } }

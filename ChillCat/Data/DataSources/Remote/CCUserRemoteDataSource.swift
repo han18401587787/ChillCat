@@ -9,41 +9,30 @@
 import Foundation
 
 final class CCUserRemoteDataSource {
-    private let apiClient: CCAPIClientProtocol
-
-    init(apiClient: CCAPIClientProtocol) {
-        self.apiClient = apiClient
-    }
 
     func login(username: String, password: String) async throws -> CCUserDTO {
-        let response: CCAPIResponse<CCUserDTO> = try await apiClient.request(CCUserAPI.login(username: username, password: password))
-        guard response.isSuccess, let data = response.data else {
-            throw CCAPIError.badRequest
-        }
-        return data
+        try await CCXuanAPI.login(username: username, password: password)
     }
 
     func register(username: String, password: String, email: String) async throws -> CCUserDTO {
-        let response: CCAPIResponse<CCUserDTO> = try await apiClient.request(CCUserAPI.register(username: username, password: password, email: email))
-        guard response.isSuccess, let data = response.data else {
-            throw CCAPIError.badRequest
-        }
-        return data
+        try await CCXuanAPI.register(username: username, password: password, email: email)
     }
 
     func fetchProfile() async throws -> CCUserDTO {
-        let response: CCAPIResponse<CCUserDTO> = try await apiClient.request(CCUserAPI.profile)
-        guard response.isSuccess, let data = response.data else {
-            throw CCAPIError.badRequest
+        do {
+            return try await CCXuanAPI.getProfile()
+        } catch let error as CCAPIError {
+            // 401 / unauthorized → 让上层用默认值
+            if error == .unauthorized { throw CCAPIError.unauthorized }
+            throw error
         }
-        return data
     }
 
     func logout() async throws {
-        let _: CCAPIResponse<CCEmptyResponse> = try await apiClient.request(CCUserAPI.logout)
+        try await CCXuanAPI.logout()
     }
 
     func deleteAccount() async throws {
-        let _: CCAPIResponse<CCEmptyResponse> = try await apiClient.request(CCUserAPI.deleteAccount)
+        try await CCXuanAPI.deleteAccount()
     }
 }

@@ -22,12 +22,13 @@ enum CCTransactionStatus: String, Codable, CaseIterable {
         }
     }
 
-    var systemImage: String {
+    /// 自定义图标名（对应 Assets.xcassets）
+    var iconName: String {
         switch self {
-        case .pending:   return "clock.fill"
-        case .completed: return "checkmark.circle.fill"
-        case .failed:    return "xmark.circle.fill"
-        case .refunded:  return "arrow.uturn.backward.circle.fill"
+        case .pending:   return "ai_history"       // 时钟 → 历史
+        case .completed: return "home_checkin"     // 完成 → 签到
+        case .failed:    return "common_close"     // 失败 → 关闭
+        case .refunded:  return "common_refresh"   // 退款 → 刷新
         }
     }
 }

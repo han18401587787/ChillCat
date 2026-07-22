@@ -7,10 +7,9 @@
         "FIGMA_ACCESS_TOKEN": "figd_Sn6vr1rK4tPMBuuNvRuRsdV0IZYp8fVmBL1xVI4Q"
       }
     },
-    "understand-anything": {
+    "apple-docs": {
       "command": "npx",
-      "args": ["-y", "understand-anything-mcp@latest"],
-      "env": {}
+      "args": ["-y", "@kimsungwhee/apple-docs-mcp", "mcp"]
     }
   }
 }

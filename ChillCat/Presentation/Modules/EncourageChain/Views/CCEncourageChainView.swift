@@ -1,11 +1,14 @@
+//
+//  CCEncourageChainView.swift
+//  绪安 - 鼓励接力 (严格对照设计稿 page_44 像素级还原)
+//
+
 import SwiftUI
 
-/// 鼓励链 — §2.4
 struct CCEncourageChainView: View {
     @State private var viewModel = CCEncourageChainViewModel()
     @State private var showEmoji = false
     @Environment(CCAppCoordinator.self) private var coordinator
-    @Environment(\.ccAppTheme) private var theme
     @FocusState private var isFocused: Bool
 
     let specificChainId: Int64?
@@ -17,78 +20,54 @@ struct CCEncourageChainView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                VStack(spacing: 0) {
-                    // Header
+                VStack(spacing: XuanSpacing.lg) {
                     headerSection
 
                     if viewModel.isLoading {
                         CCLoadingView(message: "加载鼓励链…")
                             .frame(height: 300)
                     } else {
-                        // Chain visualization
                         chainVisualization
                     }
 
-                    // Input area (only on current chain)
                     if !viewModel.links.isEmpty && viewModel.chainId > 0 {
                         inputSection
                             .id("inputArea")
                     }
 
-                    // "我的鼓励链" link
                     NavigationLink(value: CCAppRoute.myEncourageChains) {
-                        HStack {
-                            Image(systemName: "list.bullet.rectangle.portrait")
+                        HStack(spacing: XuanSpacing.sm) {
+                            Image("report_overview")
                                 .font(.system(size: 14))
                             Text("我的鼓励链")
-                                .font(.system(size: 14, weight: .medium))
+                                .font(XuanFont.bodyM)
                             Spacer()
-                            Image(systemName: "chevron.right")
+                            Image("common_more")
                                 .font(.system(size: 12))
                         }
-                        .foregroundColor(theme.warm)
-                        .padding()
-                        .background(theme.cardBackground)
-                        .cornerRadius(theme.radiusMD)
-                        .padding(.horizontal)
-                        .padding(.top, theme.spacingMD)
+                        .foregroundColor(Color.xuanApricotDark)
+                        .padding(XuanSpacing.lg)
+                        .background(Color.xuanWhite)
+                        .cornerRadius(XuanRadius.md)
                     }
+                    .padding(.horizontal, XuanSpacing.lg)
 
-                    // Error message
                     if let error = viewModel.errorMessage {
-                        HStack {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .foregroundColor(theme.error)
-                            Text(error)
-                                .foregroundColor(theme.error)
-                        }
-                        .font(.system(size: 14))
-                        .padding()
-                        .background(theme.error.opacity(0.08))
-                        .cornerRadius(theme.radiusSM)
-                        .padding(.horizontal)
+                        errorBanner(error)
                     }
                 }
                 .padding(.bottom, 40)
             }
-            .background(theme.background)
+            .background(Color.xuanApricotBg)
             .onChange(of: viewModel.links.count) { _, _ in
-                withAnimation {
-                    proxy.scrollTo("inputArea", anchor: .bottom)
-                }
+                withAnimation { proxy.scrollTo("inputArea", anchor: .bottom) }
             }
         }
-        .overlay(alignment: .bottom) {
-            if showEmoji {
-                CCEmojiPicker(isShowing: $showEmoji) { emoji in
-                    viewModel.relayText += emoji
-                }
-                .frame(height: 280)
-                .transition(.move(edge: .bottom))
-            }
+        .cc_emojiPickerOverlay(isShowing: $showEmoji) { emoji in
+            viewModel.relayText += emoji.displayName
         }
-        .animation(.easeInOut, value: showEmoji)
-        .navigationTitle("鼓励链")
+        .navigationTitle("鼓励接力")
+        .navigationBarTitleDisplayMode(.large)
         .task {
             if let chainId = specificChainId {
                 await viewModel.loadChain(id: chainId)
@@ -96,49 +75,45 @@ struct CCEncourageChainView: View {
                 await viewModel.loadCurrentChain()
             }
         }
+        .trackPage("EncourageChain:CCEncourageChainView")
     }
 
     // MARK: - Header
-
     private var headerSection: some View {
-        VStack(spacing: 6) {
-            HStack {
-                Spacer()
-                Text("🌟 鼓励链 #\(viewModel.chainId)")
-                    .font(.system(size: 22, weight: .bold))
-                    .foregroundColor(theme.textPrimary)
-                Spacer()
-            }
+        VStack(spacing: XuanSpacing.sm) {
+            Text("🔥 鼓励链 #\(viewModel.chainId)")
+                .font(XuanFont.h2)
+                .foregroundColor(Color.xuanTextPrimary)
+
             if viewModel.participantCount > 0 {
-                Text("\(viewModel.participantCount) 人参与传递")
-                    .font(.system(size: 14))
-                    .foregroundColor(theme.textSecondary)
+                Text("\(viewModel.participantCount) 人参与传递善意")
+                    .font(XuanFont.bodyM)
+                    .foregroundColor(Color.xuanTextSecondary)
             }
 
-            // Milestone banner
             if viewModel.links.count >= 100 {
                 HStack(spacing: 4) {
                     Text("🎉")
                     Text("已达成里程碑！")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(theme.warm)
+                        .font(XuanFont.bodyS)
+                        .foregroundColor(Color.xuanApricotDark)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(theme.warm.opacity(0.1))
-                .cornerRadius(theme.radiusSM)
+                .padding(.horizontal, XuanSpacing.md)
+                .padding(.vertical, XuanSpacing.xs)
+                .background(Color.xuanApricotDark.opacity(0.1))
+                .cornerRadius(XuanRadius.full)
             }
         }
-        .padding()
+        .padding(XuanSpacing.lg)
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Chain Visualization
-
     private var chainVisualization: some View {
         VStack(spacing: 0) {
             ForEach(Array(viewModel.links.enumerated()), id: \.element.id) { index, link in
                 chainCard(link)
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, XuanSpacing.lg)
                     .padding(.vertical, 4)
 
                 if index < viewModel.links.count - 1 {
@@ -146,17 +121,20 @@ struct CCEncourageChainView: View {
                 }
             }
 
-            // Empty state
             if viewModel.links.isEmpty {
-                VStack(spacing: 16) {
-                    Image(systemName: "flame.fill")
+                VStack(spacing: XuanSpacing.lg) {
+                    Image("emotion_angry")
                         .font(.system(size: 48))
-                        .foregroundColor(theme.warm)
-                    Text("还没有鼓励链")
-                        .font(.system(size: 18, weight: .semibold))
-                    Text("成为第一个发起鼓励的人")
-                        .font(.system(size: 14))
-                        .foregroundColor(theme.textSecondary)
+                        .foregroundColor(Color.xuanApricotDark)
+
+                    VStack(spacing: XuanSpacing.xs) {
+                        Text("还没有鼓励链")
+                            .font(XuanFont.h3)
+                            .foregroundColor(Color.xuanTextPrimary)
+                        Text("成为第一个传递善意的人吧")
+                            .font(XuanFont.bodyM)
+                            .foregroundColor(Color.xuanTextSecondary)
+                    }
                 }
                 .padding(.vertical, 60)
             }
@@ -164,84 +142,83 @@ struct CCEncourageChainView: View {
     }
 
     private func chainCard(_ link: ChainLinkDisplay) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: XuanSpacing.sm) {
             HStack {
                 Text(link.displayIcon)
                     .font(.system(size: 20))
-                Text("\(link.label) — 匿名")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(theme.warm)
+                Text("\(link.label) · 匿名")
+                    .font(XuanFont.bodyS)
+                    .foregroundColor(Color.xuanApricotDark)
                 Spacer()
                 Text(link.createdAt, style: .relative)
-                    .font(.system(size: 11))
-                    .foregroundColor(theme.textMuted)
+                    .font(XuanFont.caption)
+                    .foregroundColor(Color.xuanTextTertiary)
             }
 
             Text(link.content)
-                .font(.system(size: 15))
-                .foregroundColor(theme.textPrimary)
+                .font(XuanFont.bodyL)
+                .foregroundColor(Color.xuanTextPrimary)
                 .lineSpacing(5)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding()
-        .background(theme.cardBackground)
-        .cornerRadius(theme.radiusMD)
-        .shadow(color: Color.black.opacity(0.03), radius: 3, y: 1)
+        .padding(XuanSpacing.lg)
+        .background(Color.xuanWhite)
+        .cornerRadius(XuanRadius.lg)
+        .xuanCardShadow()
     }
 
     private var chainConnector: some View {
         VStack(spacing: 0) {
             Rectangle()
-                .fill(theme.primaryMuted.opacity(0.4))
+                .fill(Color.xuanApricot.opacity(0.3))
                 .frame(width: 2, height: 20)
-            Image(systemName: "arrowtriangle.down.fill")
+            Image("common_more")
                 .font(.system(size: 8))
-                .foregroundColor(theme.primaryMuted.opacity(0.6))
+                .foregroundColor(Color.xuanApricot.opacity(0.4))
         }
     }
 
     // MARK: - Input Section
-
     private var inputSection: some View {
-        VStack(spacing: 12) {
-            Rectangle()
-                .fill(theme.primaryMuted.opacity(0.3))
-                .frame(width: 2, height: 20)
+        VStack(spacing: XuanSpacing.md) {
+            chainConnector
 
-            VStack(spacing: 10) {
+            VStack(spacing: XuanSpacing.sm) {
                 HStack(spacing: 4) {
                     Text("✍️")
-                        .font(.system(size: 16))
                     Text("写下你的鼓励，传递下去")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(theme.textSecondary)
+                        .font(XuanFont.bodyM)
+                        .foregroundColor(Color.xuanTextSecondary)
                 }
 
                 ZStack(alignment: .bottomTrailing) {
                     TextField("写下你的鼓励…", text: $viewModel.relayText, axis: .vertical)
                         .focused($isFocused)
-                        .font(.system(size: 15))
+                        .font(XuanFont.bodyL)
                         .lineLimit(3...5)
-                        .padding()
-                        .background(theme.surface)
-                        .cornerRadius(theme.radiusMD)
+                        .padding(XuanSpacing.lg)
+                        .background(Color.xuanSurface)
+                        .cornerRadius(XuanRadius.md)
+                        .accessibilityIdentifier("encourage_chain_input")
 
                     Text("\(viewModel.characterCount)/140")
-                        .font(.system(size: 11))
+                        .font(XuanFont.caption)
                         .foregroundColor(
-                            viewModel.characterCount > 140 ? theme.error : theme.textMuted
+                            viewModel.characterCount > 140
+                                ? Color.xuanDanger
+                                : Color.xuanTextTertiary
                         )
-                        .padding(.trailing, 12)
-                        .padding(.bottom, 8)
+                        .padding(.trailing, XuanSpacing.md)
+                        .padding(.bottom, XuanSpacing.sm)
                 }
 
                 HStack {
                     Button(action: { showEmoji.toggle() }) {
-                        Image(systemName: "face.smiling")
+                        Image("emotion_happy")
                             .font(.system(size: 18))
-                            .foregroundColor(theme.primary)
+                            .foregroundColor(Color.xuanApricot)
                             .frame(width: 40, height: 40)
-                            .background(theme.primary.opacity(0.1))
+                            .background(Color.xuanApricot.opacity(0.1))
                             .clipShape(Circle())
                     }
 
@@ -254,28 +231,46 @@ struct CCEncourageChainView: View {
                     }) {
                         HStack(spacing: 4) {
                             if viewModel.isRelaying {
-                                ProgressView()
-                                    .tint(.white)
-                                    .scaleEffect(0.8)
+                                ProgressView().tint(.white).scaleEffect(0.8)
                             } else {
-                                Image(systemName: "paperplane.fill")
+                                Image("common_share")
                             }
-                            Text("发送")
+                            Text("传递善意")
                         }
-                        .font(.system(size: 14, weight: .medium))
+                        .font(XuanFont.bodyM)
                         .foregroundColor(.white)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 10)
-                        .background(viewModel.canRelay ? theme.primary : theme.textMuted)
-                        .cornerRadius(theme.radiusMD)
+                        .padding(.horizontal, XuanSpacing.xl)
+                        .padding(.vertical, XuanSpacing.sm)
+                        .background(
+                            viewModel.canRelay
+                                ? Color.xuanApricot
+                                : Color.xuanTextTertiary
+                        )
+                        .cornerRadius(XuanRadius.md)
                     }
                     .disabled(!viewModel.canRelay || viewModel.isRelaying)
+                    .accessibilityIdentifier("encourage_chain_relay")
                 }
             }
-            .padding()
-            .background(theme.cardBackground)
-            .cornerRadius(theme.radiusMD)
-            .padding(.horizontal, 16)
+            .padding(XuanSpacing.lg)
+            .background(Color.xuanWhite)
+            .cornerRadius(XuanRadius.lg)
+            .padding(.horizontal, XuanSpacing.lg)
         }
+    }
+
+    // MARK: - Error Banner
+    private func errorBanner(_ message: String) -> some View {
+        HStack(spacing: XuanSpacing.sm) {
+            Image("alert_warn")
+                .foregroundColor(Color.xuanDanger)
+            Text(message)
+                .font(XuanFont.bodyS)
+                .foregroundColor(Color.xuanDanger)
+        }
+        .padding(XuanSpacing.md)
+        .background(Color.xuanDanger.opacity(0.08))
+        .cornerRadius(XuanRadius.sm)
+        .padding(.horizontal, XuanSpacing.lg)
     }
 }

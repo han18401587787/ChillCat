@@ -5,6 +5,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 @Observable
@@ -23,67 +24,81 @@ final class CCResonanceViewModel {
     var isAnonymous: Bool = true
 
     func loadResonance() async {
-        print("🔄 [Resonance] loadResonance start")
+        LogD("[Resonance] loadResonance start", module: .network, category: "Resonance")
         isLoading = true; error = nil; currentPage = 1
         do {
             let page = try await CCXuanAPI.listResonance(page: 1)
-            resonanceItems = mapItems(page.list)
-            onlineCount = 0
-            hasMore = page.total > resonanceItems.count
+            resonanceItems = mapItems(page.list ?? [])
+            onlineCount = page.onlineCount ?? 0
+            hasMore = (page.total ?? 0) > resonanceItems.count
             if resonanceItems.isEmpty { resonanceItems = [] }
-            print("✅ [Resonance] loadResonance done: \(resonanceItems.count) items, \(onlineCount) online")
+            LogI("[Resonance] loadResonance done: \(resonanceItems.count) items, \(onlineCount) online", module: .network, category: "Resonance")
         } catch {
             self.error = error
             if resonanceItems.isEmpty { resonanceItems = [] }
-            print("❌ [Resonance] loadResonance failed: \(error)")
+            LogE("[Resonance] loadResonance failed: \(error)", module: .network, category: "Resonance")
         }
         isLoading = false
     }
 
     func refresh() async {
-        print("🔄 [Resonance] refresh start")
+        LogD("[Resonance] refresh start", module: .network, category: "Resonance")
         isRefreshing = true; error = nil; currentPage = 1
         do {
             let page = try await CCXuanAPI.listResonance(page: 1)
-            resonanceItems = mapItems(page.list)
-            onlineCount = 0
-            hasMore = page.total > resonanceItems.count
-            print("✅ [Resonance] refresh done: \(resonanceItems.count) items")
+            resonanceItems = mapItems(page.list ?? [])
+            onlineCount = page.onlineCount ?? 0
+            hasMore = (page.total ?? 0) > resonanceItems.count
+            LogI("[Resonance] refresh done: \(resonanceItems.count) items", module: .network, category: "Resonance")
         } catch {
             self.error = error
-            print("❌ [Resonance] refresh failed: \(error)")
+            LogE("[Resonance] refresh failed: \(error)", module: .network, category: "Resonance")
         }
         isRefreshing = false
     }
 
     func loadMore() async {
         guard !isLoadingMore, hasMore else { return }
-        print("🔄 [Resonance] loadMore start page=\(currentPage + 1)")
+        LogD("[Resonance] loadMore start page=\(currentPage + 1)", module: .network, category: "Resonance")
         isLoadingMore = true; currentPage += 1
         do {
             let page = try await CCXuanAPI.listResonance(page: currentPage)
-            resonanceItems += mapItems(page.list)
-            hasMore = page.total > resonanceItems.count
-            print("✅ [Resonance] loadMore done: +\(page.list.count) items, total=\(resonanceItems.count)")
+            let newItems = mapItems(page.list ?? [])
+            resonanceItems += newItems
+            hasMore = (page.total ?? 0) > resonanceItems.count
+            LogI("[Resonance] loadMore done: +\(newItems.count) items, total=\(resonanceItems.count)", module: .network, category: "Resonance")
         } catch {
             currentPage -= 1
-            print("❌ [Resonance] loadMore failed: \(error)")
+            LogE("[Resonance] loadMore failed: \(error)", module: .network, category: "Resonance")
         }
         isLoadingMore = false
     }
 
-    private func mapItems(_ list: [CCXuanAPI.PostResponse]) -> [CCResonanceDisplayItem] {
+    private func mapItems(_ list: [CCXuanAPI.ResonanceItem]) -> [CCResonanceDisplayItem] {
         list.map { p in
             CCResonanceDisplayItem(
                 id: String(p.id),
-                content: p.content,
-                emotion: "",
-                emotionColor: "primaryMuted",
-                isAnonymous: p.isAnonymous,
-                displayName: p.displayName,
-                resonanceCount: Int(p.hugs),
-                createdAt: ISO8601DateFormatter().date(from: p.createdAt) ?? Date()
+                content: p.content ?? "",
+                emotion: p.emotionType ?? "平静",
+                emotionColor: emotionColorFor(p.emotionType ?? "平静"),
+                isAnonymous: p.isAnonymous ?? true,
+                displayName: p.displayName ?? "匿名用户",
+                resonanceCount: Int(p.resonanceCount ?? 0),
+                createdAt: ISO8601DateFormatter().date(from: p.createdAt ?? "") ?? Date()
             )
+        }
+    }
+
+    private func emotionColorFor(_ type: String) -> String {
+        switch type {
+        case "calm":    return "A8D9BA"
+        case "happy":   return "D4A882"
+        case "anxious": return "A085C6"
+        case "wronged": return "F5A6BA"
+        case "angry":   return "E67373"
+        case "lonely":  return "63B5F5"
+        case "tired":   return "B8D4E3"
+        default:        return "A8D9BA"
         }
     }
 
@@ -107,10 +122,10 @@ final class CCResonanceViewModel {
                 let _ = try await CCXuanAPI.createResonancePost(
                     emotion: "平静", content: text, isAnonymous: anon
                 )
-                print("✅ [Resonance] publishPost done")
+                LogI("[Resonance] publishPost done", module: .network, category: "Resonance")
                 await loadResonance()
             } catch {
-                print("❌ [Resonance] publishPost failed: \(error)")
+                LogE("[Resonance] publishPost failed: \(error)", module: .network, category: "Resonance")
             }
         }
     }

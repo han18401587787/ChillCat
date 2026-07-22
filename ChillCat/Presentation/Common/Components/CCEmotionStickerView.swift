@@ -29,9 +29,9 @@ enum CCLayerDepth: String {
 
     var color: Color {
         switch self {
-        case .surface: return Color(hex: "D4C8E8")   // softPurple
-        case .middle:  return Color(hex: "B8D4E3")   // primaryMuted
-        case .deep:    return Color(hex: "66BB6A")    // softGreen
+        case .surface: return Color(hex: "A085C6")   // softPurple
+        case .middle:  return Color.xuanInfo   // primaryMuted
+        case .deep:    return Color.xuanMint    // softGreen
         }
     }
 
@@ -84,17 +84,17 @@ extension CCEmotion {
     /// Returns the mapped theme color for this emotion
     var emotionColor: Color {
         switch colorName {
-        case "softGreen":       return Color(hex: "66BB6A")
-        case "warmLight":       return Color(hex: "C9A063")
-        case "primaryMuted":    return Color(hex: "B8D4E3")
-        case "softPurple":      return Color(hex: "D4C8E8")
-        case "softPink":        return Color(hex: "E8B8C8")
-        case "primaryLight":    return Color(hex: "7A9AAA")
-        case "error":           return Color(hex: "E57373")
-        case "softPurpleLight": return Color(hex: "E8D9F0")
-        case "warm":            return Color(hex: "8B6F47")
-        case "textMuted":       return Color(hex: "AAAAAA")
-        default:                return Color(hex: "5A7A8A")
+        case "softGreen":       return Color.xuanMint
+        case "warmLight":       return Color.xuanApricotDark
+        case "primaryMuted":    return Color.xuanInfo
+        case "softPurple":      return Color(hex: "A085C6")
+        case "softPink":        return Color.xuanPink
+        case "primaryLight":    return Color.xuanInfo
+        case "error":           return Color.xuanDanger
+        case "softPurpleLight": return Color(hex: "A085C6").opacity(0.3)
+        case "warm":            return Color.xuanApricotDark
+        case "textMuted":       return Color.xuanTextTertiary
+        default:                return Color.xuanApricotDark
         }
     }
 }
@@ -175,7 +175,7 @@ struct CCEmotionStickerView: View {
 
     private var cardSticker: some View {
         HStack(spacing: 12) {
-            Image(systemName: data.emotion.iconName)
+            CCIconMapper.image(for: data.emotion.iconName)
                 .font(.system(size: 22))
                 .foregroundColor(data.emotion.emotionColor)
                 .frame(width: 44, height: 44)
@@ -185,11 +185,11 @@ struct CCEmotionStickerView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(data.label)
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(Color(hex: "2D2D2D"))
+                    .foregroundColor(Color.xuanTextPrimary)
                 if let desc = data.description {
                     Text(desc)
                         .font(.system(size: 13))
-                        .foregroundColor(Color(hex: "7A7A7A"))
+                        .foregroundColor(Color.xuanTextSecondary)
                         .lineLimit(2)
                 }
             }
@@ -199,7 +199,7 @@ struct CCEmotionStickerView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(hex: "F9F6F2"))
+                .fill(Color.xuanApricotBg)
                 .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
         )
         .overlay(
@@ -214,7 +214,7 @@ struct CCEmotionStickerView: View {
         VStack(spacing: 0) {
             // Depth label badge
             HStack(spacing: 4) {
-                Image(systemName: depth.iconName)
+                CCIconMapper.image(for: depth.iconName)
                     .font(.system(size: 10))
                 Text(depth.label)
                     .font(.system(size: 11, weight: .medium))
@@ -236,12 +236,12 @@ struct CCEmotionStickerView: View {
 
                 Text(data.label)
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(Color(hex: "2D2D2D"))
+                    .foregroundColor(Color.xuanTextPrimary)
 
                 if let desc = data.description {
                     Text(desc)
                         .font(.system(size: 13))
-                        .foregroundColor(Color(hex: "7A7A7A"))
+                        .foregroundColor(Color.xuanTextSecondary)
                         .multilineTextAlignment(.center)
                         .lineSpacing(4)
                         .padding(.horizontal, 8)
@@ -267,13 +267,13 @@ struct CCEmotionLayerArrow: View {
 
     var body: some View {
         VStack(spacing: 2) {
-            Image(systemName: "chevron.compact.down")
+            Image("common_more")
                 .font(.system(size: 20, weight: .medium))
-            Image(systemName: "chevron.compact.down")
+            Image("common_more")
                 .font(.system(size: 20, weight: .medium))
                 .offset(y: -8)
         }
-        .foregroundColor(Color(hex: "B8D4E3"))
+        .foregroundColor(Color.xuanInfo)
         .scaleEffect(breathing ? 1.15 : 0.9)
         .opacity(breathing ? 1.0 : 0.5)
         .onAppear {
@@ -359,7 +359,7 @@ struct CCEmotionStickerView_Previews: PreviewProvider {
             }
             .padding()
         }
-        .background(Color(hex: "F9F6F2"))
+        .background(Color.xuanApricotBg)
     }
 }
 #endif

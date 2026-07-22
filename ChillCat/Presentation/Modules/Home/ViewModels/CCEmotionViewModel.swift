@@ -5,11 +5,13 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 @Observable
 final class CCEmotionViewModel {
     var selectedEmotion: CCEmotion?
+    var selectedNeed: String?  // 选中的需求标签（被倾听/被理解/被鼓励/只是想说说）
     var todayNote: String = ""
     var hasCheckedIn: Bool = false
     var streakDays: Int = 0
@@ -19,6 +21,10 @@ final class CCEmotionViewModel {
     var dailyTask: String = "记录一件今天微小的开心事"
     var dailyTaskCompleted: Bool = false
     var quote: String = ""
+    var weeklyProgress: Int = 3  // 本周稳情计划完成天数
+
+    // 首页顶部4个核心情绪
+    var topEmotions: [CCEmotion] = [.happy, .calm, .anxious, .wronged]
 
     private let dailyTaskKey = "CCDailyTaskCompleted"
     private let dailyTaskDateKey = "CCDailyTaskDate"
@@ -53,48 +59,38 @@ final class CCEmotionViewModel {
     }
 
     func loadToday() async {
-        print("🔄 [Emotion] loadToday start")
+        LogD("[Emotion] loadToday start", module: .network, category: "Emotion")
         do {
             let today = try await CCXuanAPI.getToday()
-            if today.id > 0 {
+            if let id = today.id, id > 0 {
                 hasCheckedIn = true
-                if let e = CCEmotion.allCases.first(where: { $0.rawValue == today.emotion }) {
+                if let emotion = today.emotion,
+                   let e = CCEmotion.allCases.first(where: { $0.rawValue == emotion }) {
                     selectedEmotion = e
                 }
-                todayNote = today.note
+                todayNote = today.note ?? ""
             }
-            streakDays = Int(today.streakDays)
-            totalDays = Int(today.streakDays)
-            print("✅ [Emotion] loadToday done: checkedIn=\(hasCheckedIn), streak=\(streakDays)")
+            streakDays = Int(today.streakDays ?? 0)
+            totalDays = Int(today.streakDays ?? 0)
+            LogI("[Emotion] loadToday done: checkedIn=\(hasCheckedIn), streak=\(streakDays)", module: .network, category: "Emotion")
         } catch {
-            // API 不可用时使用 mock 数据
-            let mock = CCMockData.generateToday()
-            if mock.id > 0 {
-                hasCheckedIn = true
-                if let e = CCEmotion.allCases.first(where: { $0.rawValue == mock.emotion }) {
-                    selectedEmotion = e
-                }
-                todayNote = mock.note
-            }
-            streakDays = Int(mock.streakDays)
-            totalDays = Int(mock.streakDays)
-            weeklyNote = "这周你记录了 5 次打卡。你已经很努力了。"
-            print("⚠️ [Emotion] loadToday API failed, using mock data: \(error)")
+            weeklyNote = "加载中，请稍后重试"
+            LogW("[Emotion] loadToday API failed: \(error)", module: .network, category: "Emotion")
         }
         await loadWeeklyStats()
     }
 
     private func loadWeeklyStats() async {
-        print("🔄 [Emotion] loadWeeklyStats start")
+        LogD("[Emotion] loadWeeklyStats start", module: .network, category: "Emotion")
         do {
             let stats = try await CCXuanAPI.getWeeklyStats()
-            weeklyNote = "本周记录 \(stats.totalCount) 次，你的情绪以「\(stats.topEmotion)」为主"
-            print("✅ [Emotion] loadWeeklyStats done: \(stats.totalCount) entries, top=\(stats.topEmotion)")
+            let count = stats.totalCount ?? 0
+            let top = stats.topEmotion ?? "平静"
+            weeklyNote = "本周记录 \(count) 次，你的情绪以「\(top)」为主"
+            LogI("[Emotion] loadWeeklyStats done: \(count) entries, top=\(top)", module: .network, category: "Emotion")
         } catch {
-            // API 不可用时使用 mock 数据
-            let stats = CCMockData.generateWeeklyStats()
-            weeklyNote = "本周记录 \(stats.totalCount) 次，你的情绪以「\(stats.topEmotion)」为主"
-            print("⚠️ [Emotion] loadWeeklyStats API failed, using mock data: \(error)")
+            weeklyNote = "本周数据加载失败"
+            LogW("[Emotion] loadWeeklyStats API failed: \(error)", module: .network, category: "Emotion")
         }
     }
 
@@ -102,17 +98,26 @@ final class CCEmotionViewModel {
         selectedEmotion = emotion
     }
 
+    func selectNeed(_ need: String) {
+        selectedNeed = need
+    }
+
     func completeCheckIn() {
-        guard let emotion = selectedEmotion else { return }
+        // 没选情绪时默认"平静"
+        let emotionToCheckin = selectedEmotion ?? .calm
+        selectedEmotion = emotionToCheckin
         hasCheckedIn = true
         Task {
             do {
-                let result = try await CCXuanAPI.checkin(emotion: emotion.rawValue, note: todayNote)
-                streakDays = Int(result.streakDays)
+                let result = try await CCXuanAPI.checkin(emotion: emotionToCheckin.rawValue, note: todayNote)
+                streakDays = Int(result.streakDays ?? 0)
+                totalDays = Int(result.streakDays ?? 0)
                 // 同步数据到 Widget
-                CCWidgetDataSync.update(emotion: emotion.rawValue, streak: Int(result.streakDays), quote: quote)
+                CCWidgetDataSync.update(emotion: emotionToCheckin.rawValue, streak: Int(result.streakDays ?? 0), quote: quote)
+                LogI("[Emotion] checkin success: streak=\(streakDays)", module: .network, category: "Emotion")
             } catch {
-                // Already checked in today — still show success
+                // 已打卡或其他错误 — 仍保持已打卡状态
+                LogW("[Emotion] checkin API error (已打卡?): \(error)", module: .network, category: "Emotion")
             }
         }
     }

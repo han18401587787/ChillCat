@@ -14,7 +14,6 @@ struct CCEmptyStateView: View {
     let imageName: String
     let actionTitle: String?
     let action: (() async -> Void)?
-    @Environment(\.ccAppTheme) private var theme
 
     init(
         title: String,
@@ -31,18 +30,18 @@ struct CCEmptyStateView: View {
     }
 
     var body: some View {
-        VStack(spacing: theme.spacingMD) {
-            Image(systemName: imageName)
+        VStack(spacing: XuanSpacing.md) {
+            CCIconMapper.image(for: imageName)
                 .font(.system(size: 48))
-                .foregroundColor(theme.textMuted)
+                .foregroundColor(Color.xuanTextTertiary)
 
             Text(title)
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(theme.textPrimary)
+                .foregroundColor(Color.xuanTextPrimary)
 
             Text(message)
                 .font(.system(size: 15))
-                .foregroundColor(theme.textSecondary)
+                .foregroundColor(Color.xuanTextSecondary)
                 .multilineTextAlignment(.center)
 
             if let actionTitle = actionTitle, let action = action {
@@ -50,12 +49,12 @@ struct CCEmptyStateView: View {
                     Task { await action() }
                 }
                 .buttonStyle(.bordered)
-                .tint(theme.primary)
-                .padding(.top, theme.spacingSM)
+                .tint(Color.xuanApricot)
+                .padding(.top, XuanSpacing.sm)
             }
         }
-        .padding(theme.spacingLG)
+        .padding(XuanSpacing.lg)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(theme.background)
+        .background(Color.xuanApricotBg)
     }
 }

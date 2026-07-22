@@ -5,6 +5,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 @Observable
@@ -15,7 +16,7 @@ final class CCTrendsViewModel {
     var errorMessage: String?
 
     func loadStats() async {
-        print("🔄 [Trends] loadStats start")
+        LogD("[Trends] loadStats start", module: .network, category: "Trends")
         isLoading = true
         errorMessage = nil
         do {
@@ -23,26 +24,18 @@ final class CCTrendsViewModel {
             stats = s
             let dayNames = ["日", "一", "二", "三", "四", "五", "六"]
             var counts: [String: Int] = [:]
-            for e in s.entries {
-                let d = e.checkinDate
+            for e in s.entries ?? [] {
+                guard let d = e.checkinDate else { continue }
                 let idx = dayOfWeek(from: d)
                 counts[dayNames[idx], default: 0] += 1
             }
             weekData = dayNames.map { ($0, counts[$0] ?? 0) }
-            print("✅ [Trends] loadStats done: \(s.totalCount) entries, top=\(s.topEmotion), streak=\(s.streakDays)")
+            LogI("[Trends] loadStats done: \(s.totalCount) entries, top=\(s.topEmotion), streak=\(s.streakDays)", module: .network, category: "Trends")
         } catch {
-            // API 不可用时使用 mock 数据
-            let s = CCMockData.generateWeeklyStats()
-            stats = s
-            let dayNames = ["日", "一", "二", "三", "四", "五", "六"]
-            var counts: [String: Int] = [:]
-            for e in s.entries {
-                let idx = dayOfWeek(from: e.checkinDate)
-                counts[dayNames[idx], default: 0] += 1
-            }
-            weekData = dayNames.map { ($0, counts[$0] ?? 0) }
-            errorMessage = nil
-            print("⚠️ [Trends] API failed, using mock data: \(error)")
+            stats = nil
+            weekData = []
+            errorMessage = "数据加载失败，请检查网络后重试"
+            LogW("[Trends] API failed: \(error)", module: .network, category: "Trends")
         }
         isLoading = false
     }

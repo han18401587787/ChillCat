@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 @Observable
@@ -30,6 +31,18 @@ final class CCProfileViewModel {
         user?.email ?? ""
     }
 
+    var totalCheckins: Int {
+        user?.totalCheckins ?? 0
+    }
+
+    var streakDays: Int {
+        user?.streakDays ?? 0
+    }
+
+    var resonanceCount: Int {
+        user?.resonanceCount ?? 0
+    }
+
     func loadProfile() async {
         isLoading = true
         errorMessage = nil
@@ -37,7 +50,13 @@ final class CCProfileViewModel {
         do {
             user = try await profileUseCase.fetchProfile()
         } catch {
-            errorMessage = error.localizedDescription
+            // 未登录或网络错误：不显示错误页，正常展示默认信息
+            if let apiError = error as? CCAPIError, apiError == .unauthorized {
+                user = nil
+            } else {
+                // 其他错误也静默处理，user 保持 nil，页面正常展示
+                user = nil
+            }
         }
 
         isLoading = false

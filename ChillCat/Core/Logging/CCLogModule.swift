@@ -19,6 +19,7 @@ enum CCLogModule: String, CaseIterable, Sendable {
     case payment     = "Payment"
     case performance = "Performance"
     case di          = "DI"
+    case audio        = "Audio"
 
     var displayName: String {
         switch self {
@@ -32,6 +33,7 @@ enum CCLogModule: String, CaseIterable, Sendable {
         case .payment:   return "支付"
         case .performance: return "性能"
         case .di:        return "依赖注入"
+        case .audio:      return "音频"
         }
     }
 }

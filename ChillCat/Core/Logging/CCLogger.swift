@@ -92,8 +92,6 @@ final class CCLogger: CCLoggerProtocol {
         guard level >= minLevel else { return }
 
         let fileName = (file as NSString).lastPathComponent
-        let traceID = traceManager.currentTraceID
-        let spanID = traceManager.currentSpan?.spanID
 
         var errorInfo: CCLogEntry.CCLogErrorInfo? = nil
         if let err = error {
@@ -108,12 +106,21 @@ final class CCLogger: CCLoggerProtocol {
 
         let entry = CCLogEntry(
             timestamp: Date(), level: level.label, module: module.rawValue,
-            category: category, message: message, traceID: traceID, spanID: spanID,
+            category: category, message: message, traceID: nil, spanID: nil,
             file: fileName, function: function, line: line,
-            tags: traceManager.currentSpan?.tags, metadata: nil, error: errorInfo
+            tags: nil, metadata: nil, error: errorInfo
         )
 
         os_log("%{public}@", log: osLog, type: level.osLogType, entry.toReadableString())
+
+        // 桥接到诊断收集器（仅 WARNING 和 ERROR 级别）
+        #if DEBUG
+        if level >= .warning {
+            DispatchQueue.main.async {
+                CCDiagnosticCollector.shared.record(from: entry)
+            }
+        }
+        #endif
     }
 }
 

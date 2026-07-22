@@ -1,0 +1,972 @@
+{
+  "ChillCat/App/CCApp.swift": {
+    "mtime": 1782556379.438741,
+    "ast_hash": "ca6977ff78f1b83347b4d30f9b704287",
+    "semantic_hash": "ca6977ff78f1b83347b4d30f9b704287"
+  },
+  "ChillCat/App/CCAppDependencyContainer.swift": {
+    "mtime": 1782534934.1296992,
+    "ast_hash": "43e117ed58c4adb2d44a31afa9a0fb3d",
+    "semantic_hash": "43e117ed58c4adb2d44a31afa9a0fb3d"
+  },
+  "ChillCat/AppDelegate.swift": {
+    "mtime": 1782534934.1296992,
+    "ast_hash": "d6fbfbaed8f56cb1a85cb7190c5da77c",
+    "semantic_hash": "d6fbfbaed8f56cb1a85cb7190c5da77c"
+  },
+  "ChillCat/Assets/generate_emoji_placeholders.py": {
+    "mtime": 1782534934.135699,
+    "ast_hash": "fb0964983e2cd78348515bd3e7ee6e88",
+    "semantic_hash": "fb0964983e2cd78348515bd3e7ee6e88"
+  },
+  "ChillCat/Assets/generate_lottie_placeholders.py": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "7e1bc075bc8999c1d8e34ffa44c37fe9",
+    "semantic_hash": "7e1bc075bc8999c1d8e34ffa44c37fe9"
+  },
+  "ChillCat/Core/DI/CCDIContainer.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "6f75eb0d67cf984238fb911e04a5e443",
+    "semantic_hash": "6f75eb0d67cf984238fb911e04a5e443"
+  },
+  "ChillCat/Core/Extensions/Codable+CCExtension.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "fb72e84d7f6dfc604b06215da344db32",
+    "semantic_hash": "fb72e84d7f6dfc604b06215da344db32"
+  },
+  "ChillCat/Core/Extensions/Date+CCExtension.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "1a1350259169214bbbc4fb7838193f8e",
+    "semantic_hash": "1a1350259169214bbbc4fb7838193f8e"
+  },
+  "ChillCat/Core/Extensions/String+CCExtension.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "b3a53ac91c8972b5ec538725a60863af",
+    "semantic_hash": "b3a53ac91c8972b5ec538725a60863af"
+  },
+  "ChillCat/Core/Extensions/UIColor+CCExtension.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "7a65f7081a14839d24d49c3ac43afcdd",
+    "semantic_hash": "7a65f7081a14839d24d49c3ac43afcdd"
+  },
+  "ChillCat/Core/Extensions/UIDevice+CCExtension.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "e84e9fa46f23085b42d53fca17acbf8b",
+    "semantic_hash": "e84e9fa46f23085b42d53fca17acbf8b"
+  },
+  "ChillCat/Core/Helpers/CCAppEnvironment.swift": {
+    "mtime": 1782618634.0341158,
+    "ast_hash": "fd671dfcdd22a757d2f40e6b4d71031c",
+    "semantic_hash": "fd671dfcdd22a757d2f40e6b4d71031c"
+  },
+  "ChillCat/Core/Helpers/CCAppError.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "0214e1bdbe9059fb81d03167bf925867",
+    "semantic_hash": "0214e1bdbe9059fb81d03167bf925867"
+  },
+  "ChillCat/Core/Helpers/CCAudioGenerator.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "0affe4a8cea936da1b44f726b4d404de",
+    "semantic_hash": "0affe4a8cea936da1b44f726b4d404de"
+  },
+  "ChillCat/Core/Helpers/CCConstants.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "075fd8aba303be0a84a3a088b910a2f2",
+    "semantic_hash": "075fd8aba303be0a84a3a088b910a2f2"
+  },
+  "ChillCat/Core/Helpers/CCHapticManager.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "1711d15a7bd3baf5c4899ee219eea21f",
+    "semantic_hash": "1711d15a7bd3baf5c4899ee219eea21f"
+  },
+  "ChillCat/Core/Helpers/CCMathSafety.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "55a2de4d1ac62d6470564b1d2d16309a",
+    "semantic_hash": "55a2de4d1ac62d6470564b1d2d16309a"
+  },
+  "ChillCat/Core/Helpers/CCTypeSafety.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "033801e2dc5e95ea589e2a39d42fe887",
+    "semantic_hash": "033801e2dc5e95ea589e2a39d42fe887"
+  },
+  "ChillCat/Core/Helpers/CCWidgetDataSync.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "384f968fc99757d04ec35267b5ba7282",
+    "semantic_hash": "384f968fc99757d04ec35267b5ba7282"
+  },
+  "ChillCat/Core/Logging/CCErrorReporter.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "1262d1b2e8cd09701e1f02c9e2f17fd6",
+    "semantic_hash": "1262d1b2e8cd09701e1f02c9e2f17fd6"
+  },
+  "ChillCat/Core/Logging/CCLogEntry.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "15b6327cd6505db33376cc6420fdcb1b",
+    "semantic_hash": "15b6327cd6505db33376cc6420fdcb1b"
+  },
+  "ChillCat/Core/Logging/CCLogLevel.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "e5b9d35fdc3e0cdd9e0388f164adcb5d",
+    "semantic_hash": "e5b9d35fdc3e0cdd9e0388f164adcb5d"
+  },
+  "ChillCat/Core/Logging/CCLogModule.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "d04d3b61f74460c8cd5522f5ccd6320e",
+    "semantic_hash": "d04d3b61f74460c8cd5522f5ccd6320e"
+  },
+  "ChillCat/Core/Logging/CCLogger.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "f9107ab7fe235419c728f99e076c2857",
+    "semantic_hash": "f9107ab7fe235419c728f99e076c2857"
+  },
+  "ChillCat/Core/Logging/CCTraceManager.swift": {
+    "mtime": 1782534934.1366992,
+    "ast_hash": "6ae383ee0560202ba3b6e148b3963a86",
+    "semantic_hash": "6ae383ee0560202ba3b6e148b3963a86"
+  },
+  "ChillCat/Core/Networking/CCAPIClient.swift": {
+    "mtime": 1782556379.4437408,
+    "ast_hash": "f264feebfd7a7f6afb3e32953aa1b2d4",
+    "semantic_hash": "f264feebfd7a7f6afb3e32953aa1b2d4"
+  },
+  "ChillCat/Core/Networking/CCAPIEndpoint.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "c944955491bd1f740af45072115b5cfa",
+    "semantic_hash": "c944955491bd1f740af45072115b5cfa"
+  },
+  "ChillCat/Core/Networking/CCAPIError.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "ef8ae08e72846b55717ff1976ffec8b4",
+    "semantic_hash": "ef8ae08e72846b55717ff1976ffec8b4"
+  },
+  "ChillCat/Core/Networking/CCHTTPMethod.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "406c547839ad82d6f21eb0020a1fca47",
+    "semantic_hash": "406c547839ad82d6f21eb0020a1fca47"
+  },
+  "ChillCat/Core/Networking/CCNetworkLogger.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "13bf4d74df03a1271bfd3a32ead712a4",
+    "semantic_hash": "13bf4d74df03a1271bfd3a32ead712a4"
+  },
+  "ChillCat/Core/Networking/CCReachabilityManager.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "4de284427fa29041153f49c454db609c",
+    "semantic_hash": "4de284427fa29041153f49c454db609c"
+  },
+  "ChillCat/Core/Networking/CCRequestInterceptor.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "12e46da756b7501c4ec777b2fea9fda5",
+    "semantic_hash": "12e46da756b7501c4ec777b2fea9fda5"
+  },
+  "ChillCat/Core/Networking/CCSSLPinningDelegate.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "5fa954f4d715940b23225737c686def6",
+    "semantic_hash": "5fa954f4d715940b23225737c686def6"
+  },
+  "ChillCat/Core/Networking/CCTokenInterceptor.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "803fee035fe29ae711eb33ba88dd56f3",
+    "semantic_hash": "803fee035fe29ae711eb33ba88dd56f3"
+  },
+  "ChillCat/Core/Networking/CCXuanAPI.swift": {
+    "mtime": 1782711615.4779866,
+    "ast_hash": "9a128063d50ab4ad76e72802868e52e8",
+    "semantic_hash": "9a128063d50ab4ad76e72802868e52e8"
+  },
+  "ChillCat/Core/Safe/Array+Safe.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "1fb9f2211ffcfad8ae7ba7646186efa8",
+    "semantic_hash": "1fb9f2211ffcfad8ae7ba7646186efa8"
+  },
+  "ChillCat/Core/Safe/Dictionary+Safe.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "1806e36d5da09f24fd23b0c3b2fd4a78",
+    "semantic_hash": "1806e36d5da09f24fd23b0c3b2fd4a78"
+  },
+  "ChillCat/Core/Safe/String+Safe.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "c9c66127e0167a2a310e09e080e6a50f",
+    "semantic_hash": "c9c66127e0167a2a310e09e080e6a50f"
+  },
+  "ChillCat/Core/Storage/CCCacheManager.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "13774c1c6313d843461d3f2e0c14561c",
+    "semantic_hash": "13774c1c6313d843461d3f2e0c14561c"
+  },
+  "ChillCat/Core/Storage/CCKeychainManager.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "fe661c5d92986c3d8170c26d2b3a12e9",
+    "semantic_hash": "fe661c5d92986c3d8170c26d2b3a12e9"
+  },
+  "ChillCat/Core/Storage/CCTokenProvider.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "0e3c79ef59014ef6c4b0698dfd41b106",
+    "semantic_hash": "0e3c79ef59014ef6c4b0698dfd41b106"
+  },
+  "ChillCat/Core/Storage/CCUserDefaultsManager.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "e44addfdb1f47395804092fa42ae1c44",
+    "semantic_hash": "e44addfdb1f47395804092fa42ae1c44"
+  },
+  "ChillCat/Core/Theme/CCAppTheme.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "e20b1f267e2fb972789137e5c42f645a",
+    "semantic_hash": "e20b1f267e2fb972789137e5c42f645a"
+  },
+  "ChillCat/Core/Theme/CCComponentStyles.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "0bee71d68d23a027203a837a173eee61",
+    "semantic_hash": "0bee71d68d23a027203a837a173eee61"
+  },
+  "ChillCat/Core/Theme/CCEmotionColors.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "31ee6fcf031661bde8ccdc4545038fc5",
+    "semantic_hash": "31ee6fcf031661bde8ccdc4545038fc5"
+  },
+  "ChillCat/Core/Theme/CCEmotionSet.swift": {
+    "mtime": 1782534934.1376991,
+    "ast_hash": "1d94717d6f2faf90d9a277d8077313ad",
+    "semantic_hash": "1d94717d6f2faf90d9a277d8077313ad"
+  },
+  "ChillCat/Core/Theme/CCThemeManager.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "22791b61f4118bfc302a5a933c551f08",
+    "semantic_hash": "22791b61f4118bfc302a5a933c551f08"
+  },
+  "ChillCat/Data/DTOs/CCBaseResponse.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "bf780cc158d7a4546668a0a8b72b84bf",
+    "semantic_hash": "bf780cc158d7a4546668a0a8b72b84bf"
+  },
+  "ChillCat/Data/DTOs/CCMemberInfoDTO.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "3d31a6106c1692439fe9ac46636d571f",
+    "semantic_hash": "3d31a6106c1692439fe9ac46636d571f"
+  },
+  "ChillCat/Data/DTOs/CCUserDTO.swift": {
+    "mtime": 1782711339.276958,
+    "ast_hash": "8c31ac4b30cdc293d567f68d5247daa5",
+    "semantic_hash": "8c31ac4b30cdc293d567f68d5247daa5"
+  },
+  "ChillCat/Data/DataSources/Local/CCMemberLocalDataSource.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "5d6b33629a7e16af3674c56f757e670c",
+    "semantic_hash": "5d6b33629a7e16af3674c56f757e670c"
+  },
+  "ChillCat/Data/DataSources/Local/CCUserLocalDataSource.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "f727b2872be289f0fb9ea924ac026927",
+    "semantic_hash": "f727b2872be289f0fb9ea924ac026927"
+  },
+  "ChillCat/Data/DataSources/Remote/CCMemberAPI.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "d2de9e85f7b67576d650e772d86c9fef",
+    "semantic_hash": "d2de9e85f7b67576d650e772d86c9fef"
+  },
+  "ChillCat/Data/DataSources/Remote/CCMemberRemoteDataSource.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "0645ecbfdb9fa4dbbb5dc570d04dcde5",
+    "semantic_hash": "0645ecbfdb9fa4dbbb5dc570d04dcde5"
+  },
+  "ChillCat/Data/DataSources/Remote/CCUserAPI.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "ad9ae86642b41a702d66f97372dc4d03",
+    "semantic_hash": "ad9ae86642b41a702d66f97372dc4d03"
+  },
+  "ChillCat/Data/DataSources/Remote/CCUserRemoteDataSource.swift": {
+    "mtime": 1782620418.5219355,
+    "ast_hash": "19a4c49410666d6bd7a69eb1db7679a9",
+    "semantic_hash": "19a4c49410666d6bd7a69eb1db7679a9"
+  },
+  "ChillCat/Data/Repositories/CCMemberRepository.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "d060a5cc04bcd59a9b90bd4ac2a8cce5",
+    "semantic_hash": "d060a5cc04bcd59a9b90bd4ac2a8cce5"
+  },
+  "ChillCat/Data/Repositories/CCUserRepository.swift": {
+    "mtime": 1782711480.7914603,
+    "ast_hash": "02430d68e4c4e7481776a877c15e1611",
+    "semantic_hash": "02430d68e4c4e7481776a877c15e1611"
+  },
+  "ChillCat/Domain/Entities/CCAIEmpathy.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "dff6594ee837857809dade260a2bbe8d",
+    "semantic_hash": "dff6594ee837857809dade260a2bbe8d"
+  },
+  "ChillCat/Domain/Entities/CCAIResponse.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "3ad0629109cb6ccff75012afe2deff08",
+    "semantic_hash": "3ad0629109cb6ccff75012afe2deff08"
+  },
+  "ChillCat/Domain/Entities/CCAchievementBadge.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "caa7902f6baded5acf2a41c75462f8c4",
+    "semantic_hash": "caa7902f6baded5acf2a41c75462f8c4"
+  },
+  "ChillCat/Domain/Entities/CCEmotion.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "afbfdf7066bbf7bce1f5d61c5f511b87",
+    "semantic_hash": "afbfdf7066bbf7bce1f5d61c5f511b87"
+  },
+  "ChillCat/Domain/Entities/CCEmotionDecode.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "dec24bc80ad534f375ecb181d5567576",
+    "semantic_hash": "dec24bc80ad534f375ecb181d5567576"
+  },
+  "ChillCat/Domain/Entities/CCEncourageChain.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "6a3b82d6b602180522df5dec8c4409e0",
+    "semantic_hash": "6a3b82d6b602180522df5dec8c4409e0"
+  },
+  "ChillCat/Domain/Entities/CCMeditationSession.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "6f4daea79b842b576117ed2087201404",
+    "semantic_hash": "6f4daea79b842b576117ed2087201404"
+  },
+  "ChillCat/Domain/Entities/CCMemberInfo.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "115d508b30d256c0339fb90009aac8cf",
+    "semantic_hash": "115d508b30d256c0339fb90009aac8cf"
+  },
+  "ChillCat/Domain/Entities/CCMemberPrivilege.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "e96753941c0e368f2d6662586bc9712a",
+    "semantic_hash": "e96753941c0e368f2d6662586bc9712a"
+  },
+  "ChillCat/Domain/Entities/CCMemberProduct.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "ea419e801f39d05634affc1724142a76",
+    "semantic_hash": "ea419e801f39d05634affc1724142a76"
+  },
+  "ChillCat/Domain/Entities/CCMemberStatus.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "4d88c8d9c5a69441c9dbea9ac3493bb5",
+    "semantic_hash": "4d88c8d9c5a69441c9dbea9ac3493bb5"
+  },
+  "ChillCat/Domain/Entities/CCMemberType.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "1848041a5626547e7708a23b7a9b6b74",
+    "semantic_hash": "1848041a5626547e7708a23b7a9b6b74"
+  },
+  "ChillCat/Domain/Entities/CCMilestoneTracker.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "cae29f90411475f876dfce72f018aa9d",
+    "semantic_hash": "cae29f90411475f876dfce72f018aa9d"
+  },
+  "ChillCat/Domain/Entities/CCMutualAidGroup.swift": {
+    "mtime": 1782534934.138699,
+    "ast_hash": "0bd669e70ae2b70c95e3cbd0edf301c4",
+    "semantic_hash": "0bd669e70ae2b70c95e3cbd0edf301c4"
+  },
+  "ChillCat/Domain/Entities/CCResonanceItem.swift": {
+    "mtime": 1782534934.1396992,
+    "ast_hash": "7530a2b5b252e643fe0096199269112b",
+    "semantic_hash": "7530a2b5b252e643fe0096199269112b"
+  },
+  "ChillCat/Domain/Entities/CCResonanceStory.swift": {
+    "mtime": 1782534934.1396992,
+    "ast_hash": "e32d8dcc00fd07e04898d0f32ccbc322",
+    "semantic_hash": "e32d8dcc00fd07e04898d0f32ccbc322"
+  },
+  "ChillCat/Domain/Entities/CCTransaction.swift": {
+    "mtime": 1782534934.1396992,
+    "ast_hash": "9ed51d173b9f0feedb3435b3f2b60ecb",
+    "semantic_hash": "9ed51d173b9f0feedb3435b3f2b60ecb"
+  },
+  "ChillCat/Domain/Entities/CCUser.swift": {
+    "mtime": 1782540989.8312335,
+    "ast_hash": "ccfe61836b47e43c228fc0c82d8954b1",
+    "semantic_hash": "ccfe61836b47e43c228fc0c82d8954b1"
+  },
+  "ChillCat/Domain/Entities/CCWarmResponseTemplate.swift": {
+    "mtime": 1782534934.1396992,
+    "ast_hash": "c66922231ee80934dd7ea99dae00018b",
+    "semantic_hash": "c66922231ee80934dd7ea99dae00018b"
+  },
+  "ChillCat/Domain/RepositoryProtocols/CCMemberRepositoryProtocol.swift": {
+    "mtime": 1782534934.1396992,
+    "ast_hash": "dc78fedd66928cd6be7322e3e6a5fcdb",
+    "semantic_hash": "dc78fedd66928cd6be7322e3e6a5fcdb"
+  },
+  "ChillCat/Domain/RepositoryProtocols/CCUserRepositoryProtocol.swift": {
+    "mtime": 1782534934.1396992,
+    "ast_hash": "4db712e96b4c90bb4fc6e0426a960eac",
+    "semantic_hash": "4db712e96b4c90bb4fc6e0426a960eac"
+  },
+  "ChillCat/Domain/UseCases/CCFetchMemberInfoUseCase.swift": {
+    "mtime": 1782534934.1396992,
+    "ast_hash": "77d4ad53dd6cb0b1031ee67a7bb766f2",
+    "semantic_hash": "77d4ad53dd6cb0b1031ee67a7bb766f2"
+  },
+  "ChillCat/Domain/UseCases/CCLoginUseCase.swift": {
+    "mtime": 1782534934.1396992,
+    "ast_hash": "4ed4fd2cf9000f835ce495cca08e2214",
+    "semantic_hash": "4ed4fd2cf9000f835ce495cca08e2214"
+  },
+  "ChillCat/Domain/UseCases/CCPurchaseMemberUseCase.swift": {
+    "mtime": 1782534934.1396992,
+    "ast_hash": "59c4f24c4e1c46e7b61bb4fd4c29dff7",
+    "semantic_hash": "59c4f24c4e1c46e7b61bb4fd4c29dff7"
+  },
+  "ChillCat/Domain/UseCases/CCUserProfileUseCase.swift": {
+    "mtime": 1782534934.1396992,
+    "ast_hash": "f78e7df4ddc054703df662e2d735dcf4",
+    "semantic_hash": "f78e7df4ddc054703df662e2d735dcf4"
+  },
+  "ChillCat/Presentation/Common/Components/CCEmojiPicker.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "561e47664834162bc0d08cca4010ab07",
+    "semantic_hash": "561e47664834162bc0d08cca4010ab07"
+  },
+  "ChillCat/Presentation/Common/Components/CCEmotionCorrectionView.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "fe665fd869123155481a8c9350ad7dfd",
+    "semantic_hash": "fe665fd869123155481a8c9350ad7dfd"
+  },
+  "ChillCat/Presentation/Common/Components/CCEmotionGridView.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "481a7e2308b03fe9035d4aa9208588aa",
+    "semantic_hash": "481a7e2308b03fe9035d4aa9208588aa"
+  },
+  "ChillCat/Presentation/Common/Components/CCEmotionStickerView.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "c8816a290491b0bdfc16291e129d4de6",
+    "semantic_hash": "c8816a290491b0bdfc16291e129d4de6"
+  },
+  "ChillCat/Presentation/Common/Components/CCEmotionTagView.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "486999b26b64e539a9e5c797d19e1307",
+    "semantic_hash": "486999b26b64e539a9e5c797d19e1307"
+  },
+  "ChillCat/Presentation/Common/Components/CCEmptyStateView.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "f7bbe935705157659c8221ff35a2aef6",
+    "semantic_hash": "f7bbe935705157659c8221ff35a2aef6"
+  },
+  "ChillCat/Presentation/Common/Components/CCErrorView.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "e20f5cab0c1ba6389e05f104c9651452",
+    "semantic_hash": "e20f5cab0c1ba6389e05f104c9651452"
+  },
+  "ChillCat/Presentation/Common/Components/CCHealingAnimation.swift": {
+    "mtime": 1782555088.2369907,
+    "ast_hash": "c7942204e82144847a943480ad8d9ab3",
+    "semantic_hash": "c7942204e82144847a943480ad8d9ab3"
+  },
+  "ChillCat/Presentation/Common/Components/CCLoadingView.swift": {
+    "mtime": 1782555088.2379909,
+    "ast_hash": "bfbe694a4ebde61109577ad811761be6",
+    "semantic_hash": "bfbe694a4ebde61109577ad811761be6"
+  },
+  "ChillCat/Presentation/Common/Components/CCSkeletonView.swift": {
+    "mtime": 1782555088.2379909,
+    "ast_hash": "34305ccd56f1e3587e2a26d929f9d6a0",
+    "semantic_hash": "34305ccd56f1e3587e2a26d929f9d6a0"
+  },
+  "ChillCat/Presentation/Common/Components/CCToastView.swift": {
+    "mtime": 1782555088.2379909,
+    "ast_hash": "44ca3f37b7cd651f288bdd3b1778026a",
+    "semantic_hash": "44ca3f37b7cd651f288bdd3b1778026a"
+  },
+  "ChillCat/Presentation/Common/Components/CCVoiceRecorderView.swift": {
+    "mtime": 1782555088.2379909,
+    "ast_hash": "2d5418f7ce4ada1aa4cbcc8c65be6bd1",
+    "semantic_hash": "2d5418f7ce4ada1aa4cbcc8c65be6bd1"
+  },
+  "ChillCat/Presentation/Common/Modifiers/CCShadowModifier.swift": {
+    "mtime": 1782555088.2379909,
+    "ast_hash": "f26e1c64b3ea4ced77b770d2e067f55d",
+    "semantic_hash": "f26e1c64b3ea4ced77b770d2e067f55d"
+  },
+  "ChillCat/Presentation/Common/Styles/CCTypography.swift": {
+    "mtime": 1782555088.2379909,
+    "ast_hash": "ab402cd44401af2f280a99eabf258bb3",
+    "semantic_hash": "ab402cd44401af2f280a99eabf258bb3"
+  },
+  "ChillCat/Presentation/Modules/AIAssistant/CCAIChatView.swift": {
+    "mtime": 1782555088.2379909,
+    "ast_hash": "c427dc1a73d1560b651567eece93a1af",
+    "semantic_hash": "c427dc1a73d1560b651567eece93a1af"
+  },
+  "ChillCat/Presentation/Modules/Account/ViewModels/CCDeleteAccountViewModel.swift": {
+    "mtime": 1782552255.0290174,
+    "ast_hash": "3a292aeda659608bb1d347947b830d8b",
+    "semantic_hash": "3a292aeda659608bb1d347947b830d8b"
+  },
+  "ChillCat/Presentation/Modules/Account/Views/CCDeleteAccountView.swift": {
+    "mtime": 1782555088.2379909,
+    "ast_hash": "0ef88230fe57c836010c709eaa2596f9",
+    "semantic_hash": "0ef88230fe57c836010c709eaa2596f9"
+  },
+  "ChillCat/Presentation/Modules/Auth/CCAuthPrivacyPolicyView.swift": {
+    "mtime": 1782555088.2379909,
+    "ast_hash": "09a4ed0574be7f93b8ad291cbec5d965",
+    "semantic_hash": "09a4ed0574be7f93b8ad291cbec5d965"
+  },
+  "ChillCat/Presentation/Modules/Auth/CCOnboardingView.swift": {
+    "mtime": 1782555088.2379909,
+    "ast_hash": "5ba59f6e337ea44fddfaf5c037fc5167",
+    "semantic_hash": "5ba59f6e337ea44fddfaf5c037fc5167"
+  },
+  "ChillCat/Presentation/Modules/Auth/ViewModels/CCLoginViewModel.swift": {
+    "mtime": 1782552255.0300174,
+    "ast_hash": "b1a15b2256cde1a0be76bdcb4635e9dc",
+    "semantic_hash": "b1a15b2256cde1a0be76bdcb4635e9dc"
+  },
+  "ChillCat/Presentation/Modules/Auth/Views/CCLoginView.swift": {
+    "mtime": 1782555088.2379909,
+    "ast_hash": "c075a0180317cd3f0acd4882b80a41ad",
+    "semantic_hash": "c075a0180317cd3f0acd4882b80a41ad"
+  },
+  "ChillCat/Presentation/Modules/Community/ViewModels/CCMutualAidGroupViewModel.swift": {
+    "mtime": 1782552255.0300174,
+    "ast_hash": "e65288e482c163e60b2bfb7a7fec00b1",
+    "semantic_hash": "e65288e482c163e60b2bfb7a7fec00b1"
+  },
+  "ChillCat/Presentation/Modules/Community/Views/CCMutualAidGroupView.swift": {
+    "mtime": 1782555088.2389908,
+    "ast_hash": "2431c6f1727520ecd217611d7454d83e",
+    "semantic_hash": "2431c6f1727520ecd217611d7454d83e"
+  },
+  "ChillCat/Presentation/Modules/Courses/ViewModels/CCCoursesViewModel.swift": {
+    "mtime": 1782555088.2389908,
+    "ast_hash": "1de3efe2c31b1a94b1f7c425f72604ef",
+    "semantic_hash": "1de3efe2c31b1a94b1f7c425f72604ef"
+  },
+  "ChillCat/Presentation/Modules/Courses/Views/CCCourseDetailView.swift": {
+    "mtime": 1782555088.2389908,
+    "ast_hash": "276978ba4d202f8cd491d2f71a2eb70b",
+    "semantic_hash": "276978ba4d202f8cd491d2f71a2eb70b"
+  },
+  "ChillCat/Presentation/Modules/Courses/Views/CCCoursesView.swift": {
+    "mtime": 1782555088.2389908,
+    "ast_hash": "b17a431e2a8bfcd0a508140187dbadc4",
+    "semantic_hash": "b17a431e2a8bfcd0a508140187dbadc4"
+  },
+  "ChillCat/Presentation/Modules/EmotionDecoder/ViewModels/CCEmotionDecoderViewModel.swift": {
+    "mtime": 1782552255.0300174,
+    "ast_hash": "e21e78654910351fd1174e8b2aa75756",
+    "semantic_hash": "e21e78654910351fd1174e8b2aa75756"
+  },
+  "ChillCat/Presentation/Modules/EmotionDecoder/Views/CCEmotionDecoderView.swift": {
+    "mtime": 1782555088.2389908,
+    "ast_hash": "6ff8fc764d85c6ffe67de2249fb51695",
+    "semantic_hash": "6ff8fc764d85c6ffe67de2249fb51695"
+  },
+  "ChillCat/Presentation/Modules/Encourage/CCEncourageDiscoverView.swift": {
+    "mtime": 1782555088.2389908,
+    "ast_hash": "7493e328ce93891d488a419f7c3cd918",
+    "semantic_hash": "7493e328ce93891d488a419f7c3cd918"
+  },
+  "ChillCat/Presentation/Modules/Encourage/CCEncourageMuseumView.swift": {
+    "mtime": 1782555088.2389908,
+    "ast_hash": "2d2f16d8b8127e1f4a07aad9dc99ec00",
+    "semantic_hash": "2d2f16d8b8127e1f4a07aad9dc99ec00"
+  },
+  "ChillCat/Presentation/Modules/Encourage/CCEncouragePassView.swift": {
+    "mtime": 1782555088.2389908,
+    "ast_hash": "01c5faa2652dd91ad7cc742e4c92d091",
+    "semantic_hash": "01c5faa2652dd91ad7cc742e4c92d091"
+  },
+  "ChillCat/Presentation/Modules/Encourage/CCMyKindnessView.swift": {
+    "mtime": 1782555088.2389908,
+    "ast_hash": "69347e4068e9a92b399120e553da8b77",
+    "semantic_hash": "69347e4068e9a92b399120e553da8b77"
+  },
+  "ChillCat/Presentation/Modules/EncourageChain/ViewModels/CCEncourageChainViewModel.swift": {
+    "mtime": 1782552255.0310173,
+    "ast_hash": "77c606f8e6c4120fd667395c60a212ad",
+    "semantic_hash": "77c606f8e6c4120fd667395c60a212ad"
+  },
+  "ChillCat/Presentation/Modules/EncourageChain/Views/CCEncourageChainView.swift": {
+    "mtime": 1782555088.2389908,
+    "ast_hash": "9ace869cac8ff2ef2c9fedf8d14bb92f",
+    "semantic_hash": "9ace869cac8ff2ef2c9fedf8d14bb92f"
+  },
+  "ChillCat/Presentation/Modules/EncourageChain/Views/CCMyEncourageChainsView.swift": {
+    "mtime": 1782555088.2389908,
+    "ast_hash": "c8a355fcfb52b44e16c9d9f499c6901e",
+    "semantic_hash": "c8a355fcfb52b44e16c9d9f499c6901e"
+  },
+  "ChillCat/Presentation/Modules/GrowthArchive/ViewModels/CCGrowthArchiveViewModel.swift": {
+    "mtime": 1782552255.0310173,
+    "ast_hash": "97e602d6a5f17c375342222e11a9afa4",
+    "semantic_hash": "97e602d6a5f17c375342222e11a9afa4"
+  },
+  "ChillCat/Presentation/Modules/GrowthArchive/Views/CCGrowthArchiveView.swift": {
+    "mtime": 1782555088.2399907,
+    "ast_hash": "4f49f222b5e9817f4b6b9b0285ad653c",
+    "semantic_hash": "4f49f222b5e9817f4b6b9b0285ad653c"
+  },
+  "ChillCat/Presentation/Modules/GrowthArchive/Views/CCGrowthReportView.swift": {
+    "mtime": 1782555088.2399907,
+    "ast_hash": "9d343d705f7ce79fd4d7c92bd5e0ad0d",
+    "semantic_hash": "9d343d705f7ce79fd4d7c92bd5e0ad0d"
+  },
+  "ChillCat/Presentation/Modules/Home/CCCheckinResultView.swift": {
+    "mtime": 1782555088.2399907,
+    "ast_hash": "ac134ed78f5279b19692802f57d05f77",
+    "semantic_hash": "ac134ed78f5279b19692802f57d05f77"
+  },
+  "ChillCat/Presentation/Modules/Home/CCEmotionDecodeView.swift": {
+    "mtime": 1782555088.2399907,
+    "ast_hash": "317e6e9908f0894d9d079e209d9333a3",
+    "semantic_hash": "317e6e9908f0894d9d079e209d9333a3"
+  },
+  "ChillCat/Presentation/Modules/Home/CCHealingPlanView.swift": {
+    "mtime": 1782555088.2399907,
+    "ast_hash": "6c7f61eda2bf1536810ebe8b9c316c6c",
+    "semantic_hash": "6c7f61eda2bf1536810ebe8b9c316c6c"
+  },
+  "ChillCat/Presentation/Modules/Home/ViewModels/CCAIListenerViewModel.swift": {
+    "mtime": 1782552255.0310173,
+    "ast_hash": "77020ee4544227c74eee9653834b4b19",
+    "semantic_hash": "77020ee4544227c74eee9653834b4b19"
+  },
+  "ChillCat/Presentation/Modules/Home/ViewModels/CCEmotionViewModel.swift": {
+    "mtime": 1782552255.0310173,
+    "ast_hash": "61f326b89328c568e017769bf1929996",
+    "semantic_hash": "61f326b89328c568e017769bf1929996"
+  },
+  "ChillCat/Presentation/Modules/Home/Views/CCAIListenerCard.swift": {
+    "mtime": 1782555088.2399907,
+    "ast_hash": "9ed247aa3d813f4dd1958289691d09e1",
+    "semantic_hash": "9ed247aa3d813f4dd1958289691d09e1"
+  },
+  "ChillCat/Presentation/Modules/Home/Views/CCCrisisHotlineView.swift": {
+    "mtime": 1782555088.2399907,
+    "ast_hash": "5b0495cea7426252ad73f8a04806af3d",
+    "semantic_hash": "5b0495cea7426252ad73f8a04806af3d"
+  },
+  "ChillCat/Presentation/Modules/Home/Views/CCHomeView.swift": {
+    "mtime": 1782555088.2409906,
+    "ast_hash": "6ff1547cd8c2233954d4d87306ed961a",
+    "semantic_hash": "6ff1547cd8c2233954d4d87306ed961a"
+  },
+  "ChillCat/Presentation/Modules/Home/Views/CCProfessionalResourceView.swift": {
+    "mtime": 1782555088.2409906,
+    "ast_hash": "d78e1234d9d34803fbc6d6ddca399d0b",
+    "semantic_hash": "d78e1234d9d34803fbc6d6ddca399d0b"
+  },
+  "ChillCat/Presentation/Modules/Home/Views/CCSafetyPlanView.swift": {
+    "mtime": 1782555088.2409906,
+    "ast_hash": "d21c4cd8cf84a56646386973350c49ec",
+    "semantic_hash": "d21c4cd8cf84a56646386973350c49ec"
+  },
+  "ChillCat/Presentation/Modules/Home/Views/CCWebView.swift": {
+    "mtime": 1782552255.0320175,
+    "ast_hash": "d1c574ee0fd5a227f8cd3f4998eb28ea",
+    "semantic_hash": "d1c574ee0fd5a227f8cd3f4998eb28ea"
+  },
+  "ChillCat/Presentation/Modules/Journal/ViewModels/CCJournalViewModel.swift": {
+    "mtime": 1782552255.0330174,
+    "ast_hash": "137b719f45698faa0d808b665e7c2171",
+    "semantic_hash": "137b719f45698faa0d808b665e7c2171"
+  },
+  "ChillCat/Presentation/Modules/Journal/Views/CCJournalDetailView.swift": {
+    "mtime": 1782555088.2409906,
+    "ast_hash": "31a36982d4f69385921428e1fb000f8a",
+    "semantic_hash": "31a36982d4f69385921428e1fb000f8a"
+  },
+  "ChillCat/Presentation/Modules/Journal/Views/CCJournalView.swift": {
+    "mtime": 1782555088.2409906,
+    "ast_hash": "d7a3b624973d9d339d2eace4ad33f52d",
+    "semantic_hash": "d7a3b624973d9d339d2eace4ad33f52d"
+  },
+  "ChillCat/Presentation/Modules/Meditation/ViewModels/CCAudioPlayerViewModel.swift": {
+    "mtime": 1782552255.0330174,
+    "ast_hash": "72e27c4f8d87e9e611608c783788801a",
+    "semantic_hash": "72e27c4f8d87e9e611608c783788801a"
+  },
+  "ChillCat/Presentation/Modules/Meditation/Views/CCMeditationPlayerView.swift": {
+    "mtime": 1782555088.2409906,
+    "ast_hash": "729abb71c0ffc881c068a074fa25b5c3",
+    "semantic_hash": "729abb71c0ffc881c068a074fa25b5c3"
+  },
+  "ChillCat/Presentation/Modules/Meditation/Views/CCMeditationView.swift": {
+    "mtime": 1782555088.2409906,
+    "ast_hash": "7d42ba68cf0efdcd282deb692fbf017d",
+    "semantic_hash": "7d42ba68cf0efdcd282deb692fbf017d"
+  },
+  "ChillCat/Presentation/Modules/Onboarding/ViewModels/CCWelcomeViewModel.swift": {
+    "mtime": 1782574115.4732463,
+    "ast_hash": "82cf0b25e191910acd0b7cd05ebfa094",
+    "semantic_hash": "82cf0b25e191910acd0b7cd05ebfa094"
+  },
+  "ChillCat/Presentation/Modules/Onboarding/Views/CCWelcomeView.swift": {
+    "mtime": 1782555088.2409906,
+    "ast_hash": "cf3aa88f8303b8439d009acec06f09a9",
+    "semantic_hash": "cf3aa88f8303b8439d009acec06f09a9"
+  },
+  "ChillCat/Presentation/Modules/Profile/ViewModels/CCProfileViewModel.swift": {
+    "mtime": 1782620427.6858625,
+    "ast_hash": "ac9ca2ecb30ade7355ac2a9ea5f76f07",
+    "semantic_hash": "ac9ca2ecb30ade7355ac2a9ea5f76f07"
+  },
+  "ChillCat/Presentation/Modules/Profile/Views/CCProfileView.swift": {
+    "mtime": 1782622040.2539995,
+    "ast_hash": "50d843ed7b3ab04e61e5d2a13a6abf37",
+    "semantic_hash": "50d843ed7b3ab04e61e5d2a13a6abf37"
+  },
+  "ChillCat/Presentation/Modules/Resonance/ViewModels/CCResonanceViewModel.swift": {
+    "mtime": 1782711632.8389254,
+    "ast_hash": "67c0c43bfa1e67dbf4a3f1addc4f694a",
+    "semantic_hash": "67c0c43bfa1e67dbf4a3f1addc4f694a"
+  },
+  "ChillCat/Presentation/Modules/Resonance/Views/CCResonanceDetailView.swift": {
+    "mtime": 1782555088.2409906,
+    "ast_hash": "551c9789426d78b7cb74d1a7ca201cc8",
+    "semantic_hash": "551c9789426d78b7cb74d1a7ca201cc8"
+  },
+  "ChillCat/Presentation/Modules/Resonance/Views/CCResonanceView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "e03e6e064ada394e9b36b1e14dfe5f76",
+    "semantic_hash": "e03e6e064ada394e9b36b1e14dfe5f76"
+  },
+  "ChillCat/Presentation/Modules/Safety/CCCrisisInterventionView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "84e1869e0b8e70a2c260ad51daad94a5",
+    "semantic_hash": "84e1869e0b8e70a2c260ad51daad94a5"
+  },
+  "ChillCat/Presentation/Modules/Settings/ViewModels/CCSettingsViewModel.swift": {
+    "mtime": 1782552255.0340173,
+    "ast_hash": "dce7038437510da61d1de54e5cb67312",
+    "semantic_hash": "dce7038437510da61d1de54e5cb67312"
+  },
+  "ChillCat/Presentation/Modules/Settings/Views/CCDataManagementView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "44f36529e0bced06c9bb8e04d487deb8",
+    "semantic_hash": "44f36529e0bced06c9bb8e04d487deb8"
+  },
+  "ChillCat/Presentation/Modules/Settings/Views/CCFAQView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "cf45f59647a84ab49f89b84e1d55ee9b",
+    "semantic_hash": "cf45f59647a84ab49f89b84e1d55ee9b"
+  },
+  "ChillCat/Presentation/Modules/Settings/Views/CCFeedbackView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "83d0f43a16430c2908691ff4966f8bea",
+    "semantic_hash": "83d0f43a16430c2908691ff4966f8bea"
+  },
+  "ChillCat/Presentation/Modules/Settings/Views/CCPrivacyPolicyView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "fc9d1792ec9bc0ad95a2e66924e86e29",
+    "semantic_hash": "fc9d1792ec9bc0ad95a2e66924e86e29"
+  },
+  "ChillCat/Presentation/Modules/Settings/Views/CCPrivacyView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "66aedc416ef382561d1c210337d369b5",
+    "semantic_hash": "66aedc416ef382561d1c210337d369b5"
+  },
+  "ChillCat/Presentation/Modules/Settings/Views/CCSettingsView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "5899230f7993a3c914a7ef486fd2685a",
+    "semantic_hash": "5899230f7993a3c914a7ef486fd2685a"
+  },
+  "ChillCat/Presentation/Modules/Settings/Views/CCUserAgreementView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "2d8772a0e764f3721a0db250c6f21ffd",
+    "semantic_hash": "2d8772a0e764f3721a0db250c6f21ffd"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/ViewModels/CCBehavioralActivationViewModel.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "fbcef92f9a92d46e9381497b1a1b93a7",
+    "semantic_hash": "fbcef92f9a92d46e9381497b1a1b93a7"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/ViewModels/CCBodyScanViewModel.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "03851d5ca274a583dbf31d16cd6990b1",
+    "semantic_hash": "03851d5ca274a583dbf31d16cd6990b1"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/ViewModels/CCCBTViewModel.swift": {
+    "mtime": 1782552255.0350173,
+    "ast_hash": "e62439ae8e3e8e881f42000b7c6738a6",
+    "semantic_hash": "e62439ae8e3e8e881f42000b7c6738a6"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/ViewModels/CCGratitudeJournalViewModel.swift": {
+    "mtime": 1782552255.0350173,
+    "ast_hash": "5b426caf451346663b4ab9d6af62de5c",
+    "semantic_hash": "5b426caf451346663b4ab9d6af62de5c"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/ViewModels/CCPMRViewModel.swift": {
+    "mtime": 1782552255.0350173,
+    "ast_hash": "651ccb276ce56bd21a283ec5ed0c2db6",
+    "semantic_hash": "651ccb276ce56bd21a283ec5ed0c2db6"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/ViewModels/CCValuesExplorerViewModel.swift": {
+    "mtime": 1782552255.0350173,
+    "ast_hash": "9bd90aacce321dbb5d3c4f1df02cd91f",
+    "semantic_hash": "9bd90aacce321dbb5d3c4f1df02cd91f"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/Views/CCBehavioralActivationView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "bc2fa105036e362626b73ee913c39079",
+    "semantic_hash": "bc2fa105036e362626b73ee913c39079"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/Views/CCBodyScanView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "f1fab0c7ec849481df0594bc61d70f87",
+    "semantic_hash": "f1fab0c7ec849481df0594bc61d70f87"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/Views/CCCBTView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "fcc78a8913f3c672d4b455bafa5ad79b",
+    "semantic_hash": "fcc78a8913f3c672d4b455bafa5ad79b"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/Views/CCGratitudeJournalView.swift": {
+    "mtime": 1782555088.2419908,
+    "ast_hash": "4a8117efab1fdd71acb704e23cf7cd1d",
+    "semantic_hash": "4a8117efab1fdd71acb704e23cf7cd1d"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/Views/CCPMRView.swift": {
+    "mtime": 1782555088.2429907,
+    "ast_hash": "13b483055bc0acf8fd1d72e03d828419",
+    "semantic_hash": "13b483055bc0acf8fd1d72e03d828419"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/Views/CCToolboxView.swift": {
+    "mtime": 1782555088.2429907,
+    "ast_hash": "c3e73f8de60911676978b5b532fdb0cf",
+    "semantic_hash": "c3e73f8de60911676978b5b532fdb0cf"
+  },
+  "ChillCat/Presentation/Modules/Toolbox/Views/CCValuesExplorerView.swift": {
+    "mtime": 1782555088.2429907,
+    "ast_hash": "39a54b8ce1ff6af894058f9b02445761",
+    "semantic_hash": "39a54b8ce1ff6af894058f9b02445761"
+  },
+  "ChillCat/Presentation/Modules/TreeHole/ViewModels/CCTreeHoleViewModel.swift": {
+    "mtime": 1782552255.0360174,
+    "ast_hash": "dec26713982dd1ea1c716812096fa53b",
+    "semantic_hash": "dec26713982dd1ea1c716812096fa53b"
+  },
+  "ChillCat/Presentation/Modules/TreeHole/Views/CCTreeHolePostDetailView.swift": {
+    "mtime": 1782555088.2429907,
+    "ast_hash": "6ec067505dead7394377fc8aed50661c",
+    "semantic_hash": "6ec067505dead7394377fc8aed50661c"
+  },
+  "ChillCat/Presentation/Modules/TreeHole/Views/CCTreeHoleView.swift": {
+    "mtime": 1782555088.2429907,
+    "ast_hash": "fec560c354ae3957b5feb0c832b26f6c",
+    "semantic_hash": "fec560c354ae3957b5feb0c832b26f6c"
+  },
+  "ChillCat/Presentation/Modules/Trends/ViewModels/CCTrendsViewModel.swift": {
+    "mtime": 1782552255.0360174,
+    "ast_hash": "aa11af6a10c0ab002ad8a5d761e0c2c4",
+    "semantic_hash": "aa11af6a10c0ab002ad8a5d761e0c2c4"
+  },
+  "ChillCat/Presentation/Modules/Trends/Views/CCTrendsView.swift": {
+    "mtime": 1782555088.2429907,
+    "ast_hash": "a338e771dcbfdb94db1272bbe55b11d4",
+    "semantic_hash": "a338e771dcbfdb94db1272bbe55b11d4"
+  },
+  "ChillCat/Presentation/Modules/VIP/ViewModels/CCMemberViewModel.swift": {
+    "mtime": 1782552255.0360174,
+    "ast_hash": "459a7ba30b2736f911d5d4f962239e66",
+    "semantic_hash": "459a7ba30b2736f911d5d4f962239e66"
+  },
+  "ChillCat/Presentation/Modules/VIP/ViewModels/CCOrderTrackingViewModel.swift": {
+    "mtime": 1782552255.0360174,
+    "ast_hash": "a78d9ad53d949edc21332d3787fdbb26",
+    "semantic_hash": "a78d9ad53d949edc21332d3787fdbb26"
+  },
+  "ChillCat/Presentation/Modules/VIP/Views/CCMemberCenterView.swift": {
+    "mtime": 1782555088.2429907,
+    "ast_hash": "95ac38b879fbdac2671f90e4e802fb67",
+    "semantic_hash": "95ac38b879fbdac2671f90e4e802fb67"
+  },
+  "ChillCat/Presentation/Modules/VIP/Views/CCPaymentConfirmSheet.swift": {
+    "mtime": 1782555088.2429907,
+    "ast_hash": "bec9c448d17318db6e0533c04b610f02",
+    "semantic_hash": "bec9c448d17318db6e0533c04b610f02"
+  },
+  "ChillCat/Presentation/Modules/VIP/Views/CCTransactionHistoryView.swift": {
+    "mtime": 1782555088.2429907,
+    "ast_hash": "056fc24b7fef4509554c6eed89babd8c",
+    "semantic_hash": "056fc24b7fef4509554c6eed89babd8c"
+  },
+  "ChillCat/Presentation/Modules/VoiceCheckin/ViewModels/CCVoiceDiaryViewModel.swift": {
+    "mtime": 1782555088.2429907,
+    "ast_hash": "3c3b4c52cb395f0ebc8dcc6ef243610c",
+    "semantic_hash": "3c3b4c52cb395f0ebc8dcc6ef243610c"
+  },
+  "ChillCat/Presentation/Modules/VoiceCheckin/Views/CCVoiceCheckinView.swift": {
+    "mtime": 1782555088.2429907,
+    "ast_hash": "4a74a21ebc03947947d52860415b1819",
+    "semantic_hash": "4a74a21ebc03947947d52860415b1819"
+  },
+  "ChillCat/Presentation/Navigation/CCAppCoordinator.swift": {
+    "mtime": 1782552255.0370173,
+    "ast_hash": "13f0772a23e00fc6e9bcdbb112aeaebc",
+    "semantic_hash": "13f0772a23e00fc6e9bcdbb112aeaebc"
+  },
+  "ChillCat/Presentation/Navigation/CCAppRoute.swift": {
+    "mtime": 1782552255.0370173,
+    "ast_hash": "c6df3cd262df6692b4d50f6ad40f5314",
+    "semantic_hash": "c6df3cd262df6692b4d50f6ad40f5314"
+  },
+  "ChillCat/Presentation/Navigation/CCMainTabView.swift": {
+    "mtime": 1782556379.4437408,
+    "ast_hash": "ce64bb8ea01311490bdc54e2985ae4a4",
+    "semantic_hash": "ce64bb8ea01311490bdc54e2985ae4a4"
+  },
+  "ChillCat/SceneDelegate.swift": {
+    "mtime": 1782534934.147699,
+    "ast_hash": "6e0a393971807f5642d90a27f88184fb",
+    "semantic_hash": "6e0a393971807f5642d90a27f88184fb"
+  },
+  "ChillCatUITests/ChillCatUITests.swift": {
+    "mtime": 1782534934.147699,
+    "ast_hash": "9a873efc593abd535733a1cbe11587a7",
+    "semantic_hash": "9a873efc593abd535733a1cbe11587a7"
+  },
+  "ChillCatUITests/ChillCatUITestsLaunchTests.swift": {
+    "mtime": 1782534934.147699,
+    "ast_hash": "01c6d9e81219df4128c01f853ab28456",
+    "semantic_hash": "01c6d9e81219df4128c01f853ab28456"
+  },
+  "ChillCatUITests/ChillCatV3UITests.swift": {
+    "mtime": 1782534934.147699,
+    "ast_hash": "230102ac4612104ab9eedde28bec42a5",
+    "semantic_hash": "230102ac4612104ab9eedde28bec42a5"
+  },
+  "ChillCatUITests/Helpers/CCVisionTypes.swift": {
+    "mtime": 1782534934.147699,
+    "ast_hash": "be4a03598a5d3f6d5929e7b758a51218",
+    "semantic_hash": "be4a03598a5d3f6d5929e7b758a51218"
+  },
+  "ChillCatUITests/Helpers/VisualTesting.swift": {
+    "mtime": 1782534934.147699,
+    "ast_hash": "04ee61f87000a1356b7005bc3ae0f515",
+    "semantic_hash": "04ee61f87000a1356b7005bc3ae0f515"
+  },
+  "ChillCatUITests/Helpers/XCUIApplication+Extensions.swift": {
+    "mtime": 1782534934.147699,
+    "ast_hash": "9929cf6bdaa4bd494922964a9e5e6462",
+    "semantic_hash": "9929cf6bdaa4bd494922964a9e5e6462"
+  },
+  "Package.swift": {
+    "mtime": 1782534934.1576989,
+    "ast_hash": "fba95906c137c0a950149bbec45b3d29",
+    "semantic_hash": "fba95906c137c0a950149bbec45b3d29"
+  },
+  "XuanWidget/XuanWidget.swift": {
+    "mtime": 1782534934.158699,
+    "ast_hash": "570ab779fd5db449513cb25d5dc78a24",
+    "semantic_hash": "570ab779fd5db449513cb25d5dc78a24"
+  },
+  "XuanWidget/XuanWidgetBundle.swift": {
+    "mtime": 1782534934.158699,
+    "ast_hash": "d02aee926e9b3736b4ea62279ded1f9d",
+    "semantic_hash": "d02aee926e9b3736b4ea62279ded1f9d"
+  },
+  "run_tests.sh": {
+    "mtime": 1782534934.159699,
+    "ast_hash": "bdef0364fd28d54c914680c0caa602e4",
+    "semantic_hash": "bdef0364fd28d54c914680c0caa602e4"
+  },
+  "scripts/swift-precheck.sh": {
+    "mtime": 1782534934.159699,
+    "ast_hash": "a68490c366e23a4a1c0b8a3fcae2ff37",
+    "semantic_hash": "a68490c366e23a4a1c0b8a3fcae2ff37"
+  }
+}

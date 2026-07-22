@@ -30,10 +30,20 @@ final class CCErrorReporter: CCErrorReporterProtocol {
     func report(_ error: CCAppError, context: [String: Any]? = nil) {
         guard isEnabled, shouldSample() else { return }
         var enrichedContext = context ?? [:]
-        enrichedContext["traceID"] = CCTraceManager.shared.currentTraceID
         enrichedContext["errorCode"] = error.code
         enrichedContext["isRetryable"] = error.isRetryable
         reporters.forEach { $0.report(error, context: enrichedContext) }
+
+        #if DEBUG
+        CCDiagnosticCollector.shared.record(
+            level: .error,
+            message: error.errorDescription ?? "\(error)",
+            module: "ErrorReporter",
+            category: "Reported",
+            errorDescription: error.errorDescription,
+            traceID: nil
+        )
+        #endif
     }
 
     func report(_ error: Error, context: [String: Any]? = nil) {
