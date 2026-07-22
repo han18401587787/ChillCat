@@ -36,18 +36,18 @@ jobs:
             // 评论说明自动处理流程
             const body = `🤖 **Debug Issue 自动分诊**
 
-此 Issue 由 App 内 Debug 诊断面板自动创建，包含：
-- 页面名、设备信息、App 版本
-- 问题描述 / 期望结果 / 实际结果
-- 自动附加的诊断日志（含 \`@ file:line\` 锚点）
+            此 Issue 由 App 内 Debug 诊断面板自动创建，包含：
+            - 页面名、设备信息、App 版本
+            - 问题描述 / 期望结果 / 实际结果
+            - 自动附加的诊断日志（含 \`@ file:line\` 锚点）
 
-**处理流程**：
-1. ✅ 已自动打标 \`auto-triage\`
-2. ⏳ bug-fixer Agent 将分析诊断日志
-3. 🔧 高置信度问题自动生成修复 PR（分支 \`fix/issue-${issueNumber}-*\`）
-4. 👀 **PR 需人工 Review 后合并**（Agent 绝不自动合并）
+            **处理流程**：
+            1. ✅ 已自动打标 \`auto-triage\`
+            2. ⏳ bug-fixer Agent 将分析诊断日志
+            3. 🔧 高置信度问题自动生成修复 PR（分支 \`fix/issue-${issueNumber}-*\`）
+            4. 👀 **PR 需人工 Review 后合并**（Agent 绝不自动合并）
 
-> 若问题描述模糊或无诊断日志锚点，Agent 会跳过并请求补充信息。`;
+            > 若问题描述模糊或无诊断日志锚点，Agent 会跳过并请求补充信息。`;
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,
