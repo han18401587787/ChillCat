@@ -21,7 +21,11 @@ struct CCDiagnosticEvent: Identifiable, Sendable {
 
         static func < (lhs: CCDiagnosticLevel, rhs: CCDiagnosticLevel) -> Bool {
             let order: [CCDiagnosticLevel] = [.warning, .error, .fatal]
-            return order.firstIndex(of: lhs)! < order.firstIndex(of: rhs)!
+            guard let lhsIndex = order.firstIndex(of: lhs),
+                  let rhsIndex = order.firstIndex(of: rhs) else {
+                return false
+            }
+            return lhsIndex < rhsIndex
         }
 
         var color: Color {
