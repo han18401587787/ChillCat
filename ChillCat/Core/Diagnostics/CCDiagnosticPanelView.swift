@@ -250,6 +250,8 @@ private struct BugDraftView: View {
     @State private var submitResult: SubmitResult?
     @State private var showTokenSetup = false
 
+    @FocusState private var isInputFocused: Bool
+
     private let reporter = CCGitHubIssueReporter.shared
 
     enum SubmitResult {
@@ -368,16 +370,19 @@ private struct BugDraftView: View {
                 Section("问题描述") {
                     TextField("描述你遇到的问题...", text: $description, axis: .vertical)
                         .lineLimit(3...6)
+                        .focused($isInputFocused)
                 }
 
                 Section("期望结果") {
                     TextField("正常情况下应该...", text: $expectedResult, axis: .vertical)
                         .lineLimit(2...4)
+                        .focused($isInputFocused)
                 }
 
                 Section("实际结果") {
                     TextField("实际发生了什么...", text: $actualResult, axis: .vertical)
                         .lineLimit(2...4)
+                        .focused($isInputFocused)
                 }
 
                 Section("自动附加信息") {
@@ -466,6 +471,14 @@ private struct BugDraftView: View {
             }
             .navigationTitle("Bug 草稿")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .keyboard) {
+                    HStack {
+                        Spacer()
+                        Button("完成") { isInputFocused = false }
+                    }
+                }
+            }
             .sheet(isPresented: $showTokenSetup) {
                 TokenSetupView(onSave: { showTokenSetup = false })
             }
