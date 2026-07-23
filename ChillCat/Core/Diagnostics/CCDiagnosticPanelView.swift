@@ -505,7 +505,7 @@ private struct BugDraftView: View {
             case .queued:
                 submitResult = .queued
                 LogW("Bug 提交失败，已存入本地队列等待补传", module: .ui, category: "BugReport")
-            case .failure(let error):
+            case .failed(let error):
                 submitResult = .failure(message: error.localizedDescription)
                 LogE("Bug 提交失败: \(error.localizedDescription)", module: .ui, category: "BugReport", error: error)
             }
