@@ -462,22 +462,10 @@ private struct BugDraftView: View {
                             .font(.caption)
                         }
                     }
-
-                    // 复制到剪贴板（备用）
-                    Button(action: {
-                        UIPasteboard.general.string = bugReportPlain
-                    }) {
-                        Label("复制到剪贴板", systemImage: "doc.on.doc")
-                    }
                 }
             }
             .navigationTitle("Bug 草稿")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("完成") { onDismiss() }
-                }
-            }
             .sheet(isPresented: $showTokenSetup) {
                 TokenSetupView(onSave: { showTokenSetup = false })
             }
@@ -510,6 +498,10 @@ private struct BugDraftView: View {
                 // 自动复制 Issue 链接
                 UIPasteboard.general.string = issueURL
                 LogI("Bug 已提交到 GitHub: \(issueURL)", module: .ui, category: "BugReport")
+                // 提交成功后自动关闭草稿面板，给出明确“已完成”反馈，避免误以为未提交
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    onDismiss()
+                }
             case .queued:
                 submitResult = .queued
                 LogW("Bug 提交失败，已存入本地队列等待补传", module: .ui, category: "BugReport")
