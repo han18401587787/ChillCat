@@ -58,7 +58,7 @@
 2. **置信度分级** — LOW 不开 PR；MEDIUM 标注【待人工确认】；HIGH 直接开
 3. **最小改动** — 只改诊断日志指向的代码，禁止顺手重构
 4. **单 Issue 单 PR** — 不批量处理，避免 Review 困难
-5. **分支隔离** — 全部基于 `v3.0-dev` 创建 `fix/issue-N-slug`，不直接碰 `main`
+5. **分支隔离** — 全部基于 `main` 创建 `fix/issue-N-slug`（PR 指向 `main`），但绝不自动合并（见护栏 1）
 6. **幂等** — 脚本处理前在 Issue 评论"已派单"，避免重复派单；GitHub Action 打 `auto-triage` 标签
 7. **失败可见** — 任何跳过/失败都在 Issue 评论说明原因
 

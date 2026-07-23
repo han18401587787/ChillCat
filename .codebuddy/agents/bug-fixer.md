@@ -56,7 +56,7 @@
 
 ### 第四步：开 PR（护栏第二道）
 
-1. 基于当前 `v3.0-dev` 创建分支：`fix/issue-{N}-{slug}`（slug = Issue 标题前 3 个关键词 kebab-case，限 20 字符）
+1. 基于当前 `main` 创建分支：`fix/issue-{N}-{slug}`（slug = Issue 标题前 3 个关键词 kebab-case，限 20 字符）
 2. `git add` 仅改动文件，`git commit` 信息格式：
    ```
    fix(issue #N): 一句话描述

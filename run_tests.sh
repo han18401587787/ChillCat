@@ -59,11 +59,11 @@ cat "$REPORT_FILE"
 # 提交
 cd "$IOS_DIR"
 git add docs/tests/ .github/workflows/ ChillCatUITests/ChillCatV3UITests.swift run_tests.sh
-git commit -m "test: 自动化测试报告 $TIMESTAMP — $PASS PASS / $FAIL FAIL" 2>/dev/null && git push origin v3.0-dev 2>/dev/null || true
+git commit -m "test: 自动化测试报告 $TIMESTAMP — $PASS PASS / $FAIL FAIL" 2>/dev/null && git push origin main 2>/dev/null || true
 
 cd "$SERVER_DIR"
 mkdir -p docs/tests && cp "$REPORT_FILE" docs/tests/
 git add docs/tests/
-git commit -m "test: 自动化测试报告 $TIMESTAMP — $PASS PASS / $FAIL FAIL" 2>/dev/null && git push origin v3.0-dev 2>/dev/null || true
+git commit -m "test: 自动化测试报告 $TIMESTAMP — $PASS PASS / $FAIL FAIL" 2>/dev/null && git push origin main 2>/dev/null || true
 
 echo "✅ 测试完成: $PASS PASS, $FAIL FAIL"
