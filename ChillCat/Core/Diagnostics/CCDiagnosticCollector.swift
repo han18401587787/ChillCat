@@ -68,7 +68,30 @@ final class CCDiagnosticCollector: ObservableObject {
     @Published private(set) var errorCount: Int = 0
     @Published private(set) var warningCount: Int = 0
 
-    private init() {}
+    // MARK: - 自动上报新错误到 GitHub（仅 DEBUG）
+
+    #if DEBUG
+    private let autoUploadLock = NSLock()
+    private var seenSignatures: Set<String> = []
+    private var autoUploadCount = 0
+    private let maxAutoUploads = 30
+    private let seenSignaturesKey = "cc_debug_seen_error_signatures"
+    private let autoUploadEnabledKey = "cc_debug_auto_upload"
+
+    /// 默认开启；可在 UserDefaults 设 cc_debug_auto_upload = false 关闭
+    private var autoUploadEnabled: Bool {
+        guard UserDefaults.standard.object(forKey: autoUploadEnabledKey) != nil else { return true }
+        return UserDefaults.standard.bool(forKey: autoUploadEnabledKey)
+    }
+    #endif
+
+    private init() {
+        #if DEBUG
+        if let saved = UserDefaults.standard.array(forKey: seenSignaturesKey) as? [String] {
+            seenSignatures = Set(saved)
+        }
+        #endif
+    }
 
     // MARK: - 记录事件
 
@@ -105,6 +128,19 @@ final class CCDiagnosticCollector: ObservableObject {
         if events.count > maxEvents {
             events.removeLast(events.count - maxEvents)
         }
+
+        // 自动上报新错误到 GitHub Issue（仅 DEBUG，需配置 Token + 跨启动去重）
+        #if DEBUG
+        if level == .error || level == .fatal {
+            let signature = "\(module)|\(message)"
+            autoUploadLock.lock()
+            let alreadySeen = seenSignatures.contains(signature)
+            autoUploadLock.unlock()
+            if !alreadySeen {
+                Task { await self.autoUploadIfAllowed(signature: signature, event: event) }
+            }
+        }
+        #endif
     }
 
     /// 从 CCLogEntry 记录（供 CCLogger 桥接）
@@ -121,6 +157,75 @@ final class CCDiagnosticCollector: ObservableObject {
             traceID: entry.traceID
         )
     }
+
+    // MARK: - 自动上报（DEBUG）
+
+    #if DEBUG
+    /// 仅当开启、已配置 Token、且本次会话未超限时才上报，并标记该错误已见（跨启动持久化去重）
+    @MainActor
+    private func autoUploadIfAllowed(signature: String, event: CCDiagnosticEvent) async {
+        guard autoUploadEnabled, CCGitHubIssueReporter.shared.hasToken else { return }
+
+        autoUploadLock.lock()
+        let canUpload = autoUploadCount < maxAutoUploads
+        if canUpload {
+            seenSignatures.insert(signature)
+            autoUploadCount += 1
+            let snapshot = Array(seenSignatures.suffix(1000))
+            autoUploadLock.unlock()
+            UserDefaults.standard.set(snapshot, forKey: seenSignaturesKey)
+        } else {
+            autoUploadLock.unlock()
+        }
+        guard canUpload else { return }
+
+        let title = autoIssueTitle(event)
+        let body = autoIssueBody(event)
+        _ = await CCGitHubIssueReporter.shared.submitWithQueue(
+            title: title,
+            body: body,
+            screenshot: nil,
+            labels: ["bug", "from-debug-panel", "auto-error"]
+        )
+    }
+
+    private func autoIssueTitle(_ e: CCDiagnosticEvent) -> String {
+        let desc = String(e.message.prefix(80))
+        return "[Bug] \(currentPage): \(desc)"
+    }
+
+    private func autoIssueBody(_ e: CCDiagnosticEvent) -> String {
+        var lines: [String] = [
+            "## 自动上报的错误（Debug 诊断采集器）",
+            "",
+            "| 字段 | 内容 |",
+            "|------|------|",
+            "| **页面** | \(currentPage) |",
+            "| **级别** | \(e.level.rawValue) |",
+            "| **模块** | \(e.module) |",
+            "| **时间** | \(ISO8601DateFormatter().string(from: e.timestamp)) |",
+            "",
+            "### 错误信息",
+            e.message,
+            "",
+        ]
+        if let err = e.errorDescription {
+            lines.append("### 错误详情")
+            lines.append(err)
+            lines.append("")
+        }
+        lines.append("### 代码位置")
+        lines.append("`\(e.file):\(e.line)`")
+        lines.append("")
+        lines.append("### 近期诊断日志")
+        lines.append("```")
+        for ev in recentEvents(count: 10) {
+            lines.append("[\(ev.formattedTime)] [\(ev.level.rawValue)] [\(ev.module)] \(ev.message)")
+        }
+        lines.append("```")
+        return lines.joined(separator: "\n")
+    }
+    #endif
 
     // MARK: - 导出
 
