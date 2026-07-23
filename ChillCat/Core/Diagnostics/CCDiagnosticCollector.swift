@@ -133,11 +133,20 @@ final class CCDiagnosticCollector: ObservableObject {
         #if DEBUG
         if level == .error || level == .fatal {
             let signature = "\(module)|\(message)"
+            var shouldUpload = false
             autoUploadLock.lock()
-            let alreadySeen = seenSignatures.contains(signature)
-            autoUploadLock.unlock()
-            if !alreadySeen {
-                Task { await self.autoUploadIfAllowed(signature: signature, event: event) }
+            if !seenSignatures.contains(signature) && autoUploadCount < maxAutoUploads {
+                seenSignatures.insert(signature)
+                autoUploadCount += 1
+                let snapshot = Array(seenSignatures.suffix(1000))
+                shouldUpload = true
+                autoUploadLock.unlock()
+                UserDefaults.standard.set(snapshot, forKey: seenSignaturesKey)
+            } else {
+                autoUploadLock.unlock()
+            }
+            if shouldUpload {
+                Task { await self.autoUpload(event: event) }
             }
         }
         #endif
@@ -161,23 +170,10 @@ final class CCDiagnosticCollector: ObservableObject {
     // MARK: - 自动上报（DEBUG）
 
     #if DEBUG
-    /// 仅当开启、已配置 Token、且本次会话未超限时才上报，并标记该错误已见（跨启动持久化去重）
+    /// 去重与标记已见已在 record() 内原子完成（检查+标记同锁），此处仅负责实际上传
     @MainActor
-    private func autoUploadIfAllowed(signature: String, event: CCDiagnosticEvent) async {
+    private func autoUpload(event: CCDiagnosticEvent) async {
         guard autoUploadEnabled, CCGitHubIssueReporter.shared.hasToken else { return }
-
-        autoUploadLock.lock()
-        let canUpload = autoUploadCount < maxAutoUploads
-        if canUpload {
-            seenSignatures.insert(signature)
-            autoUploadCount += 1
-            let snapshot = Array(seenSignatures.suffix(1000))
-            autoUploadLock.unlock()
-            UserDefaults.standard.set(snapshot, forKey: seenSignaturesKey)
-        } else {
-            autoUploadLock.unlock()
-        }
-        guard canUpload else { return }
 
         let title = autoIssueTitle(event)
         let body = autoIssueBody(event)
