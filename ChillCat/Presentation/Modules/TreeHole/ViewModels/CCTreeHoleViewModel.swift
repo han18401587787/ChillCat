@@ -153,7 +153,7 @@ final class CCTreeHoleViewModel {
         guard let id = Int64(post.id) else { return }
         Task {
             do {
-                try await CCXuanAPI.hugResonance(id: id, message: encouragement)
+                try await CCXuanAPI.hugPost(id: id)
                 if let idx = posts.firstIndex(where: { $0.id == post.id }) {
                     posts[idx].resonanceCount += 1
                     posts[idx].hasResonated = true
