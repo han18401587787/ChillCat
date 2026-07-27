@@ -111,7 +111,7 @@ jobs:
       # ── 启动 App ──
       - name: Launch App
         run: |
-          xcrun simctl launch "$SIMULATOR_NAME" app.xuanpeace.chillcat
+          xcrun simctl launch "$SIMULATOR_NAME" com.qxjz.ChillCat
           sleep 5  # 等待 App 完全启动
 
       # ── 执行验证脚本 ──

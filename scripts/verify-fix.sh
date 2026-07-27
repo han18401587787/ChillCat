@@ -129,7 +129,7 @@ echo ""
 echo "📱 验证 App 运行状态..."
 
 APP_RUNNING=false
-if xcrun simctl listapps booted | grep -q "xuanpeace.chillcat" 2>/dev/null; then
+if xcrun simctl listapps booted | grep -q "qxjz.ChillCat" 2>/dev/null; then
   APP_RUNNING=true
   echo "   ✅ ChillCat 已安装到 Simulator"
 else
@@ -150,7 +150,7 @@ fi
 
 # 确保 App 在前台
 if [[ "$APP_RUNNING" == "true" ]]; then
-  xcrun simctl launch booted app.xuanpeace.chillcat 2>/dev/null || true
+  xcrun simctl launch booted com.qxjz.ChillCat 2>/dev/null || true
   sleep 3
 fi
 
