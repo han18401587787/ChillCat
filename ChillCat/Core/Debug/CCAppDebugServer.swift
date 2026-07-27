@@ -145,10 +145,12 @@ final class CCAppDebugServer: ObservableObject {
 
     /// 从非隔离的 NWConnection 回调中安全移除连接
     private nonisolated func removeConnection(_ connection: NWConnection) {
-        connectionLock.lock()
-        defer { connectionLock.unlock() }
-        connections.removeAll { $0 === connection }
         connection.cancel()
+        // 数组修改需要回到 MainActor
+        Task { @MainActor [weak self] in
+            self?.connections.removeAll { $0 === connection }
+            self?.connectedPeers = self?.connections.count ?? 0
+        }
     }
 
     /// 接收数据（可在非隔离上下文中调用）
