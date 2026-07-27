@@ -37,6 +37,9 @@ struct EncourageDiscoverView: View {
         .fullScreenCover(item: $selectedChain) { chain in
             EncouragePassView(chain: chain)
         }
+        .debugAction(id: "encourage.refresh", pageName: "Encourage", label: "刷新鼓励链列表") {
+            Task { await viewModel.refresh() }
+        }
     }
     
     // MARK: - Header

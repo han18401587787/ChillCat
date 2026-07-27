@@ -64,6 +64,9 @@ struct CCHomeView: View {
         .scrollDismissesKeyboard(.interactively)
         .task { await viewModel.loadData() }
         .trackPage("Home:CCHomeView")
+        .debugAction(id: "home.refresh", pageName: "Home", label: "刷新首页") {
+            Task { await viewModel.loadData() }
+        }
     }
 
     // MARK: - 1. 顶部状态栏

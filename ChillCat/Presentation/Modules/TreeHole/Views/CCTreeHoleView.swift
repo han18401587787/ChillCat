@@ -196,6 +196,9 @@ struct CCTreeHoleView: View {
                 }
                 .listStyle(.plain)
                 .refreshable { await viewModel.refresh() }
+                .debugAction(id: "treehole.refresh", pageName: "TreeHole", label: "刷新树洞") {
+                    Task { await viewModel.refresh() }
+                }
 
                 if viewModel.isLoadingMore {
                     HStack { Spacer(); ProgressView(); Spacer() }.padding()

@@ -51,6 +51,9 @@ struct AIChatView: View {
         } message: {
             Text("对话已超过10轮，AI的记忆有限，开启新对话可以获得更好的体验。")
         }
+        .debugAction(id: "ai.new_conversation", pageName: "AIAssistant", label: "开始新对话") {
+            viewModel.startNewConversation()
+        }
     }
 
     // MARK: - AI Companion Header

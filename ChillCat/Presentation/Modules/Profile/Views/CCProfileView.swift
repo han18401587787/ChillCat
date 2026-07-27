@@ -27,6 +27,9 @@ struct CCProfileView: View {
         .navigationBarTitleDisplayMode(.large)
         .task { await viewModel.loadProfile() }
         .trackPage("Profile:CCProfileView")
+        .debugAction(id: "profile.refresh", pageName: "Profile", label: "刷新个人中心") {
+            Task { await viewModel.loadProfile() }
+        }
     }
 
     // MARK: - 主内容

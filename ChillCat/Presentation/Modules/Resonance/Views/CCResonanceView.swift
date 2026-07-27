@@ -41,6 +41,9 @@ struct CCResonanceView: View {
         .sheet(isPresented: $showComposer) { composeSheet }
         .animation(.easeInOut(duration: 0.25), value: showComposer)
         .trackPage("Resonance:CCResonanceView")
+        .debugAction(id: "resonance.refresh", pageName: "Resonance", label: "刷新共鸣墙") {
+            Task { await viewModel.refresh() }
+        }
     }
 
     // MARK: - Toolbar
