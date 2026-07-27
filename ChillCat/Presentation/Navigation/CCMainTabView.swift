@@ -88,6 +88,19 @@ struct CCMainTabView: View {
             .tag(CCMainTab.profile)
         }
         .tint(Color.xuanApricot)
+        .debugAction(
+            id: "tab.switch",
+            pageName: "MainTab",
+            label: "切换 Tab",
+            description: "通过传入参数切换到指定 Tab"
+        ) {
+            // 循环切换 Tab
+            let allTabs = CCMainTab.allCases
+            if let currentIndex = allTabs.firstIndex(of: selectedTab) {
+                let nextIndex = (currentIndex + 1) % allTabs.count
+                selectedTab = allTabs[nextIndex]
+            }
+        }
         .onChange(of: selectedTab) { _, newTab in
             coordinator.activeTab = newTab.rawValue
             #if DEBUG

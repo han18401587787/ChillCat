@@ -15,6 +15,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
+        #if DEBUG
+        // 启动 App 内 Debug HTTP Server（供 agent-device / MCP Bridge 远程调试）
+        // WiFi 直连: http://<iPhone IP>:9080/
+        // USB 隧道: iproxy 9080 9080 → http://localhost:9080/
+        CCAppDebugServer.shared.start(port: 9080)
+        #endif
+
         return true
     }
 

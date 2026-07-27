@@ -1,0 +1,32 @@
+# ChillCat AppDebug MCP Bridge — Docker Compose 部署配置
+#
+# 前置条件:
+#   1. iPhone 通过 USB 连接到局域网内的 Mac
+#   2. Mac 上运行: iproxy 9080 9080
+#   3. Mac IP 对云服务器可访问（或同局域网）
+#
+# 部署步骤:
+#   1. 将 cloud/mcp-bridge/ 上传到云服务器
+#   2. 修改 DEVICE_URL 为实际 iPhone/Mac 地址
+#   3. docker compose up -d
+
+version: "3.8"
+
+services:
+  mcp-bridge:
+    build: .
+    container_name: chillcat-mcp-bridge
+    restart: unless-stopped
+    environment:
+      - DEVICE_URL=${DEVICE_URL:-http://localhost:9080}
+      - TIMEOUT=${TIMEOUT:-15}
+    # 如果通过宿主机 iproxy 隧道连接，使用 host 网络模式
+    # network_mode: host
+    ports:
+      - "${MCP_PORT:-9081}:9081"
+    # MCP stdio 模式不需要端口暴露，这里预留 HTTP API 扩展
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
