@@ -66,7 +66,7 @@
    - 关联：#{N}
    ```
 3. `git push -u origin fix/issue-{N}-{slug}`
-4. 用 `gh pr create` 开 PR，正文模板：
+4. 用 `gh pr create` 开 PR，**必须添加 `auto-fix` 标签**（触发 verify-fix CI），正文模板：
    ```markdown
    ## 关联 Issue
    Closes #{N}
@@ -86,7 +86,24 @@
    本 PR 由 bug-fixer Agent 基于 Debug 面板诊断日志自动生成，
    **请人工 Review 后再合并**。置信度：HIGH / MEDIUM
    ```
-5. 在 Issue 下评论：`🤖 已自动生成修复 PR #{PR_N}，等待人工 Review。分支：\`fix/issue-{N}-{slug}\``
+   ```bash
+   gh pr create --repo han18401587787/ChillCat \
+     --base main \
+     --title "fix(issue #N): ..." \
+     --body "..." \
+     --label "auto-fix"
+   ```
+5. 在 Issue 下评论：`🤖 已自动生成修复 PR #{PR_N}，等待 verify-fix 截图验证 + 人工 Review。分支：\`fix/issue-{N}-{slug}\``
+
+### 第四步附：验证闭环（自动触发）
+
+PR 创建后，GitHub Actions `verify-fix.yml` 自动执行：
+1. 在 macOS Simulator 中构建并启动 ChillCat
+2. 用 agent-device 截取关键页面截图 + accessibility 快照
+3. 将证据链嵌入 PR Comment
+
+Agent 无需手动触发验证 — `auto-fix` 标签会自动触发。Agent 可在 Issue 评论中提醒：
+> 📸 verify-fix 正在 macOS Simulator 中验证修复，稍后将在 PR 评论中看到截图证据。
 
 ### 第五步：失败兜底
 
