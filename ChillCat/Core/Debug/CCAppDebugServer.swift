@@ -170,6 +170,11 @@ final class CCAppDebugServer: ObservableObject {
             }
         }
     }
+
+    // MARK: - 请求处理
+
+    /// 解析并路由 HTTP 请求
+    private func processRequest(_ data: Data, on connection: NWConnection) async {
         guard let requestString = String(data: data, encoding: .utf8) else {
             sendResponse(status: 400, body: "Bad Request", contentType: "text/plain", on: connection)
             return
