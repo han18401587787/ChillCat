@@ -51,6 +51,11 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode.app
 
+      # ── 安装 CocoaPods 依赖 ──
+      - name: Install CocoaPods dependencies
+        run: |
+          pod install --repo-update
+
       # ── 安装 agent-device CLI ──
       - name: Install agent-device
         run: |
@@ -80,10 +85,11 @@ jobs:
           echo "SIMULATOR_NAME=CI-Verify-iPhone" >> "$GITHUB_ENV"
 
       # ── 构建 ChillCat Debug ──
-      # 不指定 derivedDataPath，使用默认路径确保 SPM 依赖正确解析
+      # 使用 workspace（CocoaPods 项目必须用 workspace）
       - name: Build ChillCat Debug
         run: |
           xcodebuild build \
+            -workspace ChillCat.xcworkspace \
             -scheme ChillCat \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
