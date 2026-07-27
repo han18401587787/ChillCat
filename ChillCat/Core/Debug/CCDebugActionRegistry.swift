@@ -79,18 +79,12 @@ final class CCDebugActionRegistry: ObservableObject {
 
 // MARK: - Debug Action 模型
 
-struct CCDebugAction: Identifiable, Sendable {
+struct CCDebugAction: Identifiable, @unchecked Sendable {
     let id: String
     let pageName: String
     let label: String
     let description: String
     let handler: @MainActor () -> Void
-
-    // 为 Sendable 提供非隔离比较
-    var nonisolatedID: String { id }
-    var nonisolatedPageName: String { pageName }
-    var nonisolatedLabel: String { label }
-    var nonisolatedDescription: String { description }
 }
 
 // MARK: - SwiftUI Modifier
