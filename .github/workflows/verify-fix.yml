@@ -14,6 +14,12 @@ name: Verify Fix (agent-device)
 on:
   pull_request:
     types: [opened, reopened, labeled]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR 编号（手动触发时指定）'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -27,8 +33,9 @@ jobs:
   verify:
     name: Verify Fix on Simulator
     runs-on: macos-15
-    # 仅在带有 auto-fix 标签的 PR 上运行
+    # PR 触发：仅带有 auto-fix 标签；workflow_dispatch：始终运行
     if: |
+      github.event_name == 'workflow_dispatch' ||
       (github.event.action == 'labeled' && github.event.label.name == 'auto-fix') ||
       (github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'auto-fix'))
     timeout-minutes: 30
@@ -104,9 +111,11 @@ jobs:
       # ── 执行验证脚本 ──
       - name: Run verify-fix.sh
         id: verify
+        env:
+          PR_NUMBER: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
         run: |
           chmod +x scripts/verify-fix.sh
-          ./scripts/verify-fix.sh --pr=${{ github.event.pull_request.number }} --label=auto-fix
+          ./scripts/verify-fix.sh --pr=${PR_NUMBER} --label=auto-fix
         continue-on-error: true
 
       # ── 发布 PR Comment ──
@@ -114,17 +123,18 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
         run: |
           chmod +x scripts/post-pr-comment.sh
-          ./scripts/post-pr-comment.sh --pr=${{ github.event.pull_request.number }}
+          ./scripts/post-pr-comment.sh --pr=${PR_NUMBER}
 
       # ── 上传证据 artifact（备查） ──
       - name: Upload evidence artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: verify-evidence-pr-${{ github.event.pull_request.number }}
-          path: /tmp/verify-evidence/pr-${{ github.event.pull_request.number }}/
+          name: verify-evidence-pr-${{ github.event.inputs.pr_number || github.event.pull_request.number }}
+          path: /tmp/verify-evidence/pr-${{ github.event.inputs.pr_number || github.event.pull_request.number }}/
           retention-days: 7
 
       # ── 清理 ──
