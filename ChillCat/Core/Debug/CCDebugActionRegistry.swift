@@ -155,8 +155,8 @@ extension View {
 
 // MARK: - 辅助扩展
 
-extension LogModule {
-    static let debug = LogModule(rawValue: "Debug")
+extension CCLogModule {
+    static let debug = CCLogModule(rawValue: "Debug")
 }
 
 #endif // DEBUG
