@@ -49,7 +49,7 @@ final class CCDebugActionRegistry: ObservableObject {
 
     /// 激活一个 action（由 AppDebugServer 的 /activate 路由调用）
     func activate(id: String) -> Bool {
-        guard let action = find(id) else {
+        guard let action = find(id: id) else {
             LogW("Debug Action 未找到: \(id)", module: .debug, category: "Registry")
             return false
         }
