@@ -68,14 +68,14 @@ echo "📝 构建评论内容..."
 SCREENSHOT_MD=""
 for f in "$EVIDENCE_DIR"/*.png; do
   if [[ -f "$f" ]]; then
-    local base=$(basename "$f")
-    local size=$(stat -f%z "$f" 2>/dev/null || stat -c%s "$f" 2>/dev/null || echo 0)
+    base=$(basename "$f")
+    size=$(stat -f%z "$f" 2>/dev/null || stat -c%s "$f" 2>/dev/null || echo 0)
 
     if [[ "$size" -gt 2097152 ]]; then
       # 超过 2MB，跳过内嵌，改为文件引用
       SCREENSHOT_MD="${SCREENSHOT_MD}\n> ⚠️ \`${base}\` 超过 2MB，无法内嵌。请下载 artifact 查看。\n"
     else
-      local b64=$(base64 -i "$f" 2>/dev/null || base64 < "$f")
+      b64=$(base64 -i "$f" 2>/dev/null || base64 < "$f")
       SCREENSHOT_MD="${SCREENSHOT_MD}\n![${base}](data:image/png;base64,${b64})\n"
       echo "   ✅ ${base} 已编码为 base64 (${size} bytes)"
     fi
