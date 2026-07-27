@@ -125,30 +125,34 @@ final class CCAppDebugServer: ObservableObject {
         connectionLock.unlock()
 
         connection.stateUpdateHandler = { [weak self] state in
-            switch state {
-            case .ready:
-                LogD("AppDebugServer: 新连接", module: .debug, category: "Server")
-                // 开始接收数据
-                self?.receive(on: connection)
-            case .failed, .cancelled:
-                self?.removeConnection(connection)
-            default:
-                break
+            guard let self = self else { return }
+            Task { @MainActor in
+                switch state {
+                case .ready:
+                    LogD("AppDebugServer: 新连接", module: .debug, category: "Server")
+                    // 开始接收数据
+                    self.receive(on: connection)
+                case .failed, .cancelled:
+                    self.removeConnection(connection)
+                default:
+                    break
+                }
             }
         }
 
         connection.start(queue: .main)
     }
 
-    private func removeConnection(_ connection: NWConnection) {
+    /// 从非隔离的 NWConnection 回调中安全移除连接
+    private nonisolated func removeConnection(_ connection: NWConnection) {
         connectionLock.lock()
+        defer { connectionLock.unlock() }
         connections.removeAll { $0 === connection }
-        connectedPeers = connections.count
-        connectionLock.unlock()
         connection.cancel()
     }
 
-    private func receive(on connection: NWConnection) {
+    /// 接收数据（可在非隔离上下文中调用）
+    private nonisolated func receive(on connection: NWConnection) {
         connection.receive(minimumIncompleteLength: 1, maximumLength: 65536) { [weak self] data, _, isComplete, error in
             guard let self = self else { return }
 
@@ -166,10 +170,6 @@ final class CCAppDebugServer: ObservableObject {
             }
         }
     }
-
-    // MARK: - HTTP 请求处理
-
-    private func processRequest(_ data: Data, on connection: NWConnection) async {
         guard let requestString = String(data: data, encoding: .utf8) else {
             sendResponse(status: 400, body: "Bad Request", contentType: "text/plain", on: connection)
             return
