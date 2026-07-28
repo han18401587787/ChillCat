@@ -167,20 +167,29 @@ take_screenshot() {
 
   if command -v "$AGENT_DEVICE_BIN" &>/dev/null; then
     # agent-device 优先：获得结构化 accessibility 快照 + 截图
+    # 0.20.x 参数: screenshot [path] --out <path> [--max-size <px>]
+    # --max-size 1280 顺便压缩截图尺寸（原图 ~407KB，影响评论内嵌）
     echo "   📸 [agent-device] ${label}..."
-    "$AGENT_DEVICE_BIN" screenshot --output "$filepath" 2>&1 | tail -3 || true
+    "$AGENT_DEVICE_BIN" screenshot --out "$filepath" --max-size 1280 2>&1 | tail -3 || true
   fi
 
   # 降级：xcrun simctl io
   if [[ ! -f "$filepath" ]]; then
     echo "   📸 [simctl] ${label}..."
     xcrun simctl io booted screenshot "$filepath" 2>/dev/null || true
+    # simctl 截图为全分辨率，压缩到 1280px 宽控制体积
+    if [[ -f "$filepath" ]]; then
+      sips -Z 1280 "$filepath" >/dev/null 2>&1 || true
+    fi
   fi
 
   if [[ -f "$filepath" ]]; then
     SCREENSHOT_COUNT=$((SCREENSHOT_COUNT + 1))
     local size=$(du -h "$filepath" | cut -f1)
     echo "   ✅ ${label} (${size})"
+    # 生成 JPEG 副本(评论内嵌用,体积更小;PNG 原图保留给 artifact)
+    sips -s format jpeg -s formatOptions 70 "$filepath" \
+      --out "${EVIDENCE_DIR}/${label}.jpg" >/dev/null 2>&1 || true
     return 0
   else
     echo "   ❌ ${label} 截图失败"
@@ -212,7 +221,8 @@ take_snapshot() {
 take_screenshot "01-main-screen"
 
 # 5.2 Accessibility 快照（用于 AI 分析页面结构）
-take_snapshot "02-accessibility-snapshot"
+# || true: snapshot 失败不应终止脚本（set -e 环境下 return 1 会中断主流程）
+take_snapshot "02-accessibility-snapshot" || true
 
 # 5.3 导航到核心 Tab 页并截图
 # Tab 切换通过 agent-device 或 simctl open 实现
@@ -227,10 +237,11 @@ if command -v "$AGENT_DEVICE_BIN" &>/dev/null; then
     TAB_REF=$("$AGENT_DEVICE_BIN" snapshot -i 2>/dev/null | grep -i "$tab_label" | head -1 | grep -oE '@e[0-9]+' | head -1 || true)
     if [[ -n "${TAB_REF:-}" ]]; then
       echo "   点击 Tab: ${tab_label} (${TAB_REF})"
-      "$AGENT_DEVICE_BIN" fill "$TAB_REF" 2>/dev/null || true
+      # press 才是点击;fill 是文本填充(此前误用)
+      "$AGENT_DEVICE_BIN" press "$TAB_REF" 2>/dev/null || true
       sleep 2
       SAFE_NAME=$(echo "$tab_label" | tr '[:upper:]' '[:lower:]')
-      take_screenshot "tab-${SAFE_NAME}"
+      take_screenshot "tab-${SAFE_NAME}" || true
     fi
   done
 else
@@ -270,8 +281,8 @@ echo "📄 生成 evidence.md..."
   echo "|------|------|------|"
   for f in "$EVIDENCE_DIR"/*.png; do
     if [[ -f "$f" ]]; then
-      local base=$(basename "$f")
-      local size=$(du -h "$f" | cut -f1)
+      base=$(basename "$f")
+      size=$(du -h "$f" | cut -f1)
       echo "| $((++i)) | \`${base}\` | ${size} |"
     fi
   done

@@ -12,15 +12,16 @@
 #
 # 行为:
 #   1. 读取 evidence.md
-#   2. 将截图转为 base64 内嵌到 Markdown（避免外部链接失效）
+#   2. 截图 push 到 ci-artifacts 分支，评论用 raw URL 引用
+#      （base64 data URI 会被 GitHub sanitize 剥离，已验证不可行）
 #   3. 在 PR 下发 Comment（使用 REST API，与查找/更新保持一致）
 #   4. 若已存在 verify-fix 评论，更新而非重复创建
 #
 # 注意:
 #   - 全程使用 REST API（gh api），不使用 gh pr comment（GraphQL），
 #     避免 "Could not resolve to a PullRequest" 错误
-#   - GitHub Comment body 上限 65536 字符，base64 图片可能超限，
-#     超限时跳过内嵌改为 artifact 引用
+#   - 评论 body 经 jq 包装为合法 JSON，避免 HTTP 400
+#   - 需要 workflow 权限 contents: write（推送 ci-artifacts 分支）
 
 set -euo pipefail
 
@@ -66,39 +67,66 @@ echo "💬 post-pr-comment — PR #${PR_NUMBER}"
 echo "   证据目录: ${EVIDENCE_DIR}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# ── 1. 构建 Comment Body ─────────────────────────────
+# ── 1. 推送截图到 ci-artifacts 分支 ─────────────────
 echo ""
 echo "📝 构建评论内容..."
 
-# GitHub Comment body 上限 65536 字符
-GITHUB_COMMENT_LIMIT=65536
-# 预留 4000 字符给 evidence.md 文本 + 模板，剩余给 base64 图片
-BASE64_BUDGET=$((GITHUB_COMMENT_LIMIT - 4000))
+# 为什么不用 base64 内嵌:GitHub sanitize 会剥离 data: URI,
+# 任何格式的 base64 图片在评论里都不会渲染(官方 /markdown API 已验证)。
+# 方案:截图 push 到 ci-artifacts 孤儿分支,评论用 raw URL 引用。
+ARTIFACT_BRANCH="ci-artifacts"
+RAW_BASE="https://raw.githubusercontent.com/${REPO}/${ARTIFACT_BRANCH}/pr-${PR_NUMBER}"
+
+SCREENSHOT_FILES=()
+for f in "$EVIDENCE_DIR"/*.jpg; do
+  [[ -f "$f" ]] && SCREENSHOT_FILES+=("$f")
+done
 
 SCREENSHOT_MD=""
-USED_BUDGET=0
-for f in "$EVIDENCE_DIR"/*.png; do
-  if [[ -f "$f" ]]; then
-    base=$(basename "$f")
-    size=$(stat -f%z "$f" 2>/dev/null || stat -c%s "$f" 2>/dev/null || echo 0)
-    # base64 编码后大小约为原始大小的 4/3
-    b64_estimated=$((size * 4 / 3))
-
-    if [[ "$size" -gt 2097152 ]]; then
-      # 超过 2MB，跳过内嵌
-      SCREENSHOT_MD="${SCREENSHOT_MD}\n> ⚠️ \`${base}\` 超过 2MB，无法内嵌。请下载 artifact 查看。\n"
-    elif [[ $((USED_BUDGET + b64_estimated)) -gt $BASE64_BUDGET ]]; then
-      # 超出字符预算，跳过内嵌
-      SCREENSHOT_MD="${SCREENSHOT_MD}\n> ⚠️ \`${base}\` 因评论长度限制未内嵌。请下载 artifact 查看。\n"
-      echo "   ⏭️ ${base} 跳过内嵌 (预算不足, ${size} bytes)"
+if [[ ${#SCREENSHOT_FILES[@]} -gt 0 ]]; then
+  echo "   📤 推送 ${#SCREENSHOT_FILES[@]} 张截图到 ${ARTIFACT_BRANCH} 分支..."
+  PUSH_OK=false
+  TMP_GIT=$(mktemp -d)
+  if (
+    set -e
+    cd "$TMP_GIT"
+    git init -q
+    git config user.name "github-actions[bot]"
+    git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
+    if git fetch --depth 1 origin "$ARTIFACT_BRANCH" 2>/dev/null; then
+      git checkout -q -b "$ARTIFACT_BRANCH" FETCH_HEAD
     else
-      b64=$(base64 -i "$f" 2>/dev/null || base64 < "$f")
-      SCREENSHOT_MD="${SCREENSHOT_MD}\n![${base}](data:image/png;base64,${b64})\n"
-      USED_BUDGET=$((USED_BUDGET + b64_estimated))
-      echo "   ✅ ${base} 已编码为 base64 (${size} bytes)"
+      git checkout -q --orphan "$ARTIFACT_BRANCH"
+      git rm -rf . 2>/dev/null || true
     fi
+    mkdir -p "pr-${PR_NUMBER}"
+    for f in "${SCREENSHOT_FILES[@]}"; do
+      cp "$f" "pr-${PR_NUMBER}/"
+    done
+    git add "pr-${PR_NUMBER}"
+    git commit -q -m "ci: PR #${PR_NUMBER} 验证截图 $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    git push -q origin "$ARTIFACT_BRANCH"
+  ); then
+    PUSH_OK=true
+    echo "   ✅ 截图已推送"
+  else
+    echo "   ⚠️ 分支推送失败，评论将只保留 artifact 引用"
   fi
+  rm -rf "$TMP_GIT"
+
+  for f in "${SCREENSHOT_FILES[@]}"; do
+    base=$(basename "$f")
+    if [[ "$PUSH_OK" == "true" ]]; then
+      SCREENSHOT_MD="${SCREENSHOT_MD}\n![${base}](${RAW_BASE}/${base})\n"
+      echo "   🔗 ${base} → raw URL 已内嵌"
+    else
+      SCREENSHOT_MD="${SCREENSHOT_MD}\n> ⚠️ \`${base}\` 请下载 artifact 查看。\n"
+    fi
   done
+else
+  SCREENSHOT_MD="\n> 无截图文件。\n"
+fi
 
 # 读取 evidence.md 核心内容（跳过 YAML front matter 如果有）
 EVIDENCE_TEXT=$(cat "$EVIDENCE_MD")
@@ -133,7 +161,7 @@ EXISTING_COMMENT_ID=$(gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" \
 COMMENT_FILE=$(mktemp)
 echo "$COMMENT_BODY" > "$COMMENT_FILE"
 BODY_SIZE=$(wc -c < "$COMMENT_FILE")
-echo "   📏 评论大小: ${BODY_SIZE} bytes (限制: ${GITHUB_COMMENT_LIMIT})"
+echo "   📏 评论大小: ${BODY_SIZE} bytes"
 
 # 包装为 JSON {"body": "..."} —— GitHub REST API 要求 JSON body，
 # 直接 --input 纯 Markdown 会报 "Problems parsing JSON (HTTP 400)"

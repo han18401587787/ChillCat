@@ -22,7 +22,7 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write  # write: post-pr-comment.sh 需推送 ci-artifacts 分支存放截图
   issues: write
   pull-requests: write
 
@@ -119,6 +119,7 @@ jobs:
         id: verify
         env:
           PR_NUMBER: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x scripts/verify-fix.sh
           ./scripts/verify-fix.sh --pr=${PR_NUMBER} --label=auto-fix

@@ -25,12 +25,15 @@ target 'ChillCat' do
   pod 'LookinServer', :configurations => ['Debug']
 
   # ── 测试 Target ──
+  # inherit! :complete — 完整继承(链接 + framework 复制进 Test Runner)
+  # 此前 :search_paths 只继承搜索路径,导致 UITest bundle 运行时
+  # dlopen 找不到 Alamofire.framework(Library not loaded: @rpath/Alamofire.framework)
   target 'ChillCatTests' do
-    inherit! :search_paths
+    inherit! :complete
   end
 
   target 'ChillCatUITests' do
-    inherit! :search_paths
+    inherit! :complete
   end
 end
 
