@@ -65,6 +65,7 @@ echo "📱 收集设备信息..."
 {
   echo "# 验证证据 — PR #${PR_NUMBER}"
   echo ""
+  echo "**标签**: ${LABEL}"
   echo "**生成时间**: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   echo "**设备**: ${DEVICE_NAME}"
   echo "**Runner**: $(uname -a)"
@@ -160,6 +161,14 @@ echo "📸 执行截图验证..."
 
 SCREENSHOT_COUNT=0
 
+# agent-device 0.20.x 是 session 制:任何 screenshot/snapshot/press 前
+# 必须先 open 建立会话(否则报 "Run open first or pass an explicit device selector")
+if command -v "$AGENT_DEVICE_BIN" &>/dev/null; then
+  echo "   🔗 [agent-device] 建立会话 (open ChillCat)..."
+  "$AGENT_DEVICE_BIN" open "ChillCat" 2>&1 | tail -2 || true
+  sleep 1
+fi
+
 # 辅助函数：用 agent-device 截图，降级到 xcrun simctl
 take_screenshot() {
   local label="$1"
@@ -185,7 +194,8 @@ take_screenshot() {
 
   if [[ -f "$filepath" ]]; then
     SCREENSHOT_COUNT=$((SCREENSHOT_COUNT + 1))
-    local size=$(du -h "$filepath" | cut -f1)
+    local size
+    size=$(du -h "$filepath" | cut -f1)  # SC2155: 声明赋值分开,避免 local 掩盖命令返回值
     echo "   ✅ ${label} (${size})"
     # 生成 JPEG 副本(评论内嵌用,体积更小;PNG 原图保留给 artifact)
     sips -s format jpeg -s formatOptions 70 "$filepath" \
@@ -206,7 +216,8 @@ take_snapshot() {
     echo "   🔍 [agent-device] snapshot..."
     "$AGENT_DEVICE_BIN" snapshot -i 2>/dev/null > "$filepath" || true
     if [[ -s "$filepath" ]]; then
-      local lines=$(wc -l < "$filepath" | tr -d ' ')
+      local lines
+      lines=$(wc -l < "$filepath" | tr -d ' ')  # SC2155: 声明赋值分开
       echo "   ✅ ${label} (${lines} 行 accessibility 元素)"
       return 0
     fi
@@ -279,6 +290,7 @@ echo "📄 生成 evidence.md..."
   echo ""
   echo "| 序号 | 文件 | 说明 |"
   echo "|------|------|------|"
+  i=0  # set -u 环境下 $((++i)) 引用未初始化变量会报 unbound variable
   for f in "$EVIDENCE_DIR"/*.png; do
     if [[ -f "$f" ]]; then
       base=$(basename "$f")
