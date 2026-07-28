@@ -1,0 +1,151 @@
+name: Verify Fix (agent-device)
+
+# 当带有 auto-fix 标签的 PR 被打开或重新打开时，
+# 在 macOS Simulator 中运行 App 并截取关键页面截图，
+# 将证据链（截图 + accessibility 快照 + 日志）嵌入 PR Comment。
+#
+# 这是「Agent 验证能力」的阶段 A（MVP）：
+#   - agent-device CLI 截图 + accessibility snapshot
+#   - 证据链写入 PR Comment
+#   - 不阻塞合并（人工复查后决定）
+#
+# 阶段 B（AppDebugServer 深度集成）将在后续 PR 中实现。
+
+on:
+  pull_request:
+    types: [opened, reopened, labeled]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR 编号（手动触发时指定）'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  # =============================================
+  # 验证修复：macOS Simulator 截图闭环
+  # =============================================
+  verify:
+    name: Verify Fix on Simulator
+    runs-on: macos-15
+    # PR 触发：仅带有 auto-fix 标签；workflow_dispatch：始终运行
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.action == 'labeled' && github.event.label.name == 'auto-fix') ||
+      (github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'auto-fix'))
+    timeout-minutes: 30
+
+    env:
+      CHILLCAT_API_URL: "http://81.70.178.249:8080"
+
+    steps:
+      # ── 检出代码 ──
+      - uses: actions/checkout@v4
+
+      # ── 选择 Xcode ──
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      # ── 安装 CocoaPods 依赖 ──
+      - name: Install CocoaPods dependencies
+        run: |
+          pod install --repo-update
+
+      # ── 安装 agent-device CLI ──
+      - name: Install agent-device
+        run: |
+          npm install -g agent-device@latest
+          agent-device --version || echo "agent-device installed (version check skipped)"
+
+      # ── 创建并启动 Simulator ──
+      - name: Create & Boot Simulator
+        run: |
+          RUNTIME=$(xcrun simctl list runtimes -j | python3 -c "
+          import json,sys
+          data=json.load(sys.stdin)
+          ios=[r for r in data['runtimes'] if 'iOS' in r.get('name','') and r.get('isAvailable',False)]
+          print(ios[-1]['identifier']) if ios else sys.exit(1)
+          ")
+          DEVICE=$(xcrun simctl list devicetypes -j | python3 -c "
+          import json,sys
+          data=json.load(sys.stdin)
+          iphones=[d for d in data['devicetypes'] if 'iPhone' in d.get('name','')]
+          target=next((d for d in iphones if 'iPhone 16' in d['name']), iphones[-1])
+          print(target['name'])
+          ")
+          echo "📱 Runtime: ${RUNTIME}"
+          echo "📱 Device: ${DEVICE}"
+          xcrun simctl create CI-Verify-iPhone "$DEVICE" "$RUNTIME" || true
+          xcrun simctl boot CI-Verify-iPhone
+          echo "SIMULATOR_NAME=CI-Verify-iPhone" >> "$GITHUB_ENV"
+
+      # ── 构建 ChillCat Debug ──
+      # 使用 workspace（CocoaPods 项目必须用 workspace）
+      - name: Build ChillCat Debug
+        run: |
+          xcodebuild build \
+            -workspace ChillCat.xcworkspace \
+            -scheme ChillCat \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -configuration Debug \
+            -quiet \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+
+      # ── 安装到 Simulator ──
+      - name: Install App to Simulator
+        run: |
+          APP_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "ChillCat.app" -path "*/Debug-iphonesimulator/*" -type d 2>/dev/null | head -1)
+          if [[ -z "${APP_PATH}" ]]; then
+            echo "❌ 无法找到 ChillCat.app"
+            exit 1
+          fi
+          echo "📦 App path: ${APP_PATH}"
+          xcrun simctl install "$SIMULATOR_NAME" "$APP_PATH"
+
+      # ── 启动 App ──
+      - name: Launch App
+        run: |
+          xcrun simctl launch "$SIMULATOR_NAME" com.qxjz.ChillCat
+          sleep 5  # 等待 App 完全启动
+
+      # ── 执行验证脚本 ──
+      - name: Run verify-fix.sh
+        id: verify
+        env:
+          PR_NUMBER: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
+        run: |
+          chmod +x scripts/verify-fix.sh
+          ./scripts/verify-fix.sh --pr=${PR_NUMBER} --label=auto-fix
+        continue-on-error: true
+
+      # ── 发布 PR Comment ──
+      - name: Post PR Comment with evidence
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
+        run: |
+          chmod +x scripts/post-pr-comment.sh
+          ./scripts/post-pr-comment.sh --pr=${PR_NUMBER}
+
+      # ── 上传证据 artifact（备查） ──
+      - name: Upload evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-evidence-pr-${{ github.event.inputs.pr_number || github.event.pull_request.number }}
+          path: /tmp/verify-evidence/pr-${{ github.event.inputs.pr_number || github.event.pull_request.number }}/
+          retention-days: 7
+
+      # ── 清理 ──
+      - name: Cleanup Simulator
+        if: always()
+        run: |
+          xcrun simctl shutdown "$SIMULATOR_NAME" 2>/dev/null || true
+          xcrun simctl delete "$SIMULATOR_NAME" 2>/dev/null || true
