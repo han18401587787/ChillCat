@@ -135,22 +135,27 @@ echo "$COMMENT_BODY" > "$COMMENT_FILE"
 BODY_SIZE=$(wc -c < "$COMMENT_FILE")
 echo "   📏 评论大小: ${BODY_SIZE} bytes (限制: ${GITHUB_COMMENT_LIMIT})"
 
+# 包装为 JSON {"body": "..."} —— GitHub REST API 要求 JSON body，
+# 直接 --input 纯 Markdown 会报 "Problems parsing JSON (HTTP 400)"
+JSON_FILE=$(mktemp)
+jq -Rs '{body: .}' "$COMMENT_FILE" > "$JSON_FILE"
+
 if [[ -n "${EXISTING_COMMENT_ID:-}" ]]; then
   echo "   📝 更新已有评论: ${EXISTING_COMMENT_ID}"
   gh api "repos/${REPO}/issues/comments/${EXISTING_COMMENT_ID}" \
     -X PATCH \
-    --input "$COMMENT_FILE" > /dev/null
+    --input "$JSON_FILE" > /dev/null
   echo "   ✅ 评论已更新"
 else
   echo "   📝 创建新评论"
   # 使用 REST API 创建评论（不用 gh pr comment，避免 GraphQL 解析问题）
   gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" \
     -X POST \
-    --input "$COMMENT_FILE" > /dev/null
+    --input "$JSON_FILE" > /dev/null
   echo "   ✅ 评论已创建"
 fi
 
-rm -f "$COMMENT_FILE"
+rm -f "$COMMENT_FILE" "$JSON_FILE"
 
 # ── 4. 输出摘要 ──────────────────────────────────────
 echo ""
