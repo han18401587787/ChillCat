@@ -13,8 +13,14 @@
 # 行为:
 #   1. 读取 evidence.md
 #   2. 将截图转为 base64 内嵌到 Markdown（避免外部链接失效）
-#   3. 在 PR 下发 Comment（使用 gh pr comment）
+#   3. 在 PR 下发 Comment（使用 REST API，与查找/更新保持一致）
 #   4. 若已存在 verify-fix 评论，更新而非重复创建
+#
+# 注意:
+#   - 全程使用 REST API（gh api），不使用 gh pr comment（GraphQL），
+#     避免 "Could not resolve to a PullRequest" 错误
+#   - GitHub Comment body 上限 65536 字符，base64 图片可能超限，
+#     超限时跳过内嵌改为 artifact 引用
 
 set -euo pipefail
 
@@ -64,23 +70,35 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 echo "📝 构建评论内容..."
 
-# 生成截图内嵌 Markdown（base64 图片，限制单张 ≤ 2MB）
+# GitHub Comment body 上限 65536 字符
+GITHUB_COMMENT_LIMIT=65536
+# 预留 4000 字符给 evidence.md 文本 + 模板，剩余给 base64 图片
+BASE64_BUDGET=$((GITHUB_COMMENT_LIMIT - 4000))
+
 SCREENSHOT_MD=""
+USED_BUDGET=0
 for f in "$EVIDENCE_DIR"/*.png; do
   if [[ -f "$f" ]]; then
     base=$(basename "$f")
     size=$(stat -f%z "$f" 2>/dev/null || stat -c%s "$f" 2>/dev/null || echo 0)
+    # base64 编码后大小约为原始大小的 4/3
+    b64_estimated=$((size * 4 / 3))
 
     if [[ "$size" -gt 2097152 ]]; then
-      # 超过 2MB，跳过内嵌，改为文件引用
+      # 超过 2MB，跳过内嵌
       SCREENSHOT_MD="${SCREENSHOT_MD}\n> ⚠️ \`${base}\` 超过 2MB，无法内嵌。请下载 artifact 查看。\n"
+    elif [[ $((USED_BUDGET + b64_estimated)) -gt $BASE64_BUDGET ]]; then
+      # 超出字符预算，跳过内嵌
+      SCREENSHOT_MD="${SCREENSHOT_MD}\n> ⚠️ \`${base}\` 因评论长度限制未内嵌。请下载 artifact 查看。\n"
+      echo "   ⏭️ ${base} 跳过内嵌 (预算不足, ${size} bytes)"
     else
       b64=$(base64 -i "$f" 2>/dev/null || base64 < "$f")
       SCREENSHOT_MD="${SCREENSHOT_MD}\n![${base}](data:image/png;base64,${b64})\n"
+      USED_BUDGET=$((USED_BUDGET + b64_estimated))
       echo "   ✅ ${base} 已编码为 base64 (${size} bytes)"
     fi
   fi
-done
+  done
 
 # 读取 evidence.md 核心内容（跳过 YAML front matter 如果有）
 EVIDENCE_TEXT=$(cat "$EVIDENCE_MD")
@@ -111,17 +129,28 @@ echo "🔍 查找已有验证评论..."
 EXISTING_COMMENT_ID=$(gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" \
   --jq '.[] | select(.body | contains("自动验证结果")) | .id' 2>/dev/null | head -1 || echo "")
 
+# 将评论写入临时文件，避免 shell 变量长度限制
+COMMENT_FILE=$(mktemp)
+echo "$COMMENT_BODY" > "$COMMENT_FILE"
+BODY_SIZE=$(wc -c < "$COMMENT_FILE")
+echo "   📏 评论大小: ${BODY_SIZE} bytes (限制: ${GITHUB_COMMENT_LIMIT})"
+
 if [[ -n "${EXISTING_COMMENT_ID:-}" ]]; then
   echo "   📝 更新已有评论: ${EXISTING_COMMENT_ID}"
   gh api "repos/${REPO}/issues/comments/${EXISTING_COMMENT_ID}" \
     -X PATCH \
-    -f body="$COMMENT_BODY" > /dev/null
+    --input "$COMMENT_FILE" > /dev/null
   echo "   ✅ 评论已更新"
 else
   echo "   📝 创建新评论"
-  echo "$COMMENT_BODY" | gh pr comment "$PR_NUMBER" --repo "$REPO" --body-file -
+  # 使用 REST API 创建评论（不用 gh pr comment，避免 GraphQL 解析问题）
+  gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" \
+    -X POST \
+    --input "$COMMENT_FILE" > /dev/null
   echo "   ✅ 评论已创建"
 fi
+
+rm -f "$COMMENT_FILE"
 
 # ── 4. 输出摘要 ──────────────────────────────────────
 echo ""
