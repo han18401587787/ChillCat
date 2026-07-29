@@ -25,13 +25,20 @@ target 'ChillCat' do
   pod 'LookinServer', :configurations => ['Debug']
 
   # ── 测试 Target ──
-  # inherit! :complete — 完整继承(链接 + framework 复制进 Test Runner)
-  # 此前 :search_paths 只继承搜索路径,导致 UITest bundle 运行时
-  # dlopen 找不到 Alamofire.framework(Library not loaded: @rpath/Alamofire.framework)
+  # 两个 target 运行方式不同,继承方式必须区别对待:
+  #
+  # ChillCatTests(单元测试): TEST_HOST=ChillCat.app, 注入宿主进程运行,
+  # framework 由宿主 App 提供 → 只需 :search_paths。
+  # 误用 :complete 会让 CocoaPods 给托管包加 Embed 阶段,
+  # 构建时报 "Build input file cannot be found: .../PlugIns/ChillCatTests.xctest/ChillCatTests"
+  # (CI #269-#272 exit 65、0 测试运行的根因)
   target 'ChillCatTests' do
-    inherit! :complete
+    inherit! :search_paths
   end
 
+  # ChillCatUITests(UI 测试): 独立 runner 进程, 必须自带 framework 副本,
+  # 否则运行时 dlopen 找不到 Alamofire.framework
+  # (Library not loaded: @rpath/Alamofire.framework) → 需要 :complete
   target 'ChillCatUITests' do
     inherit! :complete
   end
