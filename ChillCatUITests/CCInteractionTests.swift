@@ -84,7 +84,9 @@ final class CCInteractionTests: XCTestCase {
         XCTAssertTrue(aiBtn.waitForExistence(timeout: 5), "首页应该有AI倾听官入口")
         aiBtn.tap()
         // 现场快照:默认 deleteOnSuccess,失败时随 xcresult 导出便于定位
-        add(XCTAttachment(screenshot: app.screenshot(), name: "AI入口点击后"))
+        let shotAfterAITap = XCTAttachment(screenshot: app.screenshot())
+        shotAfterAITap.name = "AI入口点击后"
+        add(shotAfterAITap)
 
         // 实际导航目标是 CCAIListenerCard(navigationTitle "AI 倾听官",
         // 输入框 ai_listener_input);AIChatView(ai_chat_input)在导航图中
@@ -260,7 +262,9 @@ final class CCInteractionTests: XCTestCase {
         let loginEntry = freshApp.buttons["welcome_login_entry"].firstMatch
         XCTAssertTrue(loginEntry.waitForExistence(timeout: 10), "Welcome页应该有登录入口")
         loginEntry.tap()
-        add(XCTAttachment(screenshot: freshApp.screenshot(), name: "Welcome登录入口点击后"))
+        let shotAfterWelcomeTap = XCTAttachment(screenshot: freshApp.screenshot())
+        shotAfterWelcomeTap.name = "Welcome登录入口点击后"
+        add(shotAfterWelcomeTap)
 
         let profileTab = freshApp.tabBars.buttons["个人中心"].firstMatch
         XCTAssertTrue(profileTab.waitForExistence(timeout: 8), "点击后应该进入主页(游客态)")
@@ -269,7 +273,9 @@ final class CCInteractionTests: XCTestCase {
         let userCard = freshApp.buttons["profile_user_card"].firstMatch
         XCTAssertTrue(userCard.waitForExistence(timeout: 5), "个人中心应该有用户卡片")
         userCard.tap()
-        add(XCTAttachment(screenshot: freshApp.screenshot(), name: "用户卡片点击后"))
+        let shotAfterCardTap = XCTAttachment(screenshot: freshApp.screenshot())
+        shotAfterCardTap.name = "用户卡片点击后"
+        add(shotAfterCardTap)
 
         let phoneField = freshApp.textFields["login_phone_field"].firstMatch
         XCTAssertTrue(phoneField.waitForExistence(timeout: 5), "登录页应有手机号输入框")

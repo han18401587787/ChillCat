@@ -224,7 +224,9 @@ final class ChillCatV3UITests: XCTestCase {
         let loginEntry = freshApp.buttons["welcome_login_entry"].firstMatch
         XCTAssertTrue(loginEntry.waitForExistence(timeout: 10), "Welcome页应该有登录入口")
         loginEntry.tap()
-        add(XCTAttachment(screenshot: freshApp.screenshot(), name: "Welcome登录入口点击后"))
+        let shotAfterWelcomeTap = XCTAttachment(screenshot: freshApp.screenshot())
+        shotAfterWelcomeTap.name = "Welcome登录入口点击后"
+        add(shotAfterWelcomeTap)
 
         let profileTab = freshApp.tabBars.buttons["个人中心"].firstMatch
         XCTAssertTrue(profileTab.waitForExistence(timeout: 8), "点击后应该进入主页(游客态)")
@@ -233,7 +235,9 @@ final class ChillCatV3UITests: XCTestCase {
         let userCard = freshApp.buttons["profile_user_card"].firstMatch
         XCTAssertTrue(userCard.waitForExistence(timeout: 5), "个人中心应该有用户卡片")
         userCard.tap()
-        add(XCTAttachment(screenshot: freshApp.screenshot(), name: "用户卡片点击后"))
+        let shotAfterCardTap = XCTAttachment(screenshot: freshApp.screenshot())
+        shotAfterCardTap.name = "用户卡片点击后"
+        add(shotAfterCardTap)
 
         XCTAssertTrue(freshApp.textFields["login_phone_field"].waitForExistence(timeout: 5), "登录页应该有手机号输入框")
     }
