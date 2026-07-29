@@ -75,7 +75,7 @@ jobs:
             -only-testing:ChillCatUITests/ChillCatVisualRegressionTests \
             -resultBundlePath ui-test-results.xcresult \
             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-        continue-on-error: true
+        # 不再 continue-on-error:测试失败必须标红(证据步骤有 if: always() 仍会产出)
 
       # ── 解析 xcresult 生成 JSON 报告 ──
       - name: Parse Test Results
@@ -167,7 +167,3 @@ jobs:
           echo "2. 在 Xcode 中打开 \`.xcresult\` 文件查看具体失败用例" >> $GITHUB_STEP_SUMMARY
           echo "3. 对照 \`failure-screenshots/\` 中的截图定位视觉差异" >> $GITHUB_STEP_SUMMARY
           echo "4. 修复代码后推送，CI 自动重新验证" >> $GITHUB_STEP_SUMMARY
-          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| iOS Build | ${{ needs.ios-build.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| iOS Tests | ${{ needs.ios-test.result }} |" >> $GITHUB_STEP_SUMMARY
