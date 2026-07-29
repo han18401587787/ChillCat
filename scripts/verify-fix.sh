@@ -236,23 +236,22 @@ take_screenshot "01-main-screen"
 take_snapshot "02-accessibility-snapshot" || true
 
 # 5.3 导航到核心 Tab 页并截图
-# Tab 切换通过 agent-device 或 simctl open 实现
+# agent-device 0.20.x 支持 selector 直按: press 'label="X"' --settle(等 UI 稳定)
+# 官方推荐 selector 而非 snapshot|grep @eN 管道(refs 每次快照都会变,管道易碎)
 if command -v "$AGENT_DEVICE_BIN" &>/dev/null; then
   echo ""
   echo "🧭 导航到核心页面..."
 
-  # 尝试点击底部 Tab（通过 accessibility 引用）
-  # Tab 按钮通常标记为 "树洞" "共鸣" "鼓励" "我的"
-  for tab_label in "树洞" "共鸣" "鼓励" "我的"; do
-    # 尝试用 agent-device 点击对应 accessibility 元素
-    TAB_REF=$("$AGENT_DEVICE_BIN" snapshot -i 2>/dev/null | grep -i "$tab_label" | head -1 | grep -oE '@e[0-9]+' | head -1 || true)
-    if [[ -n "${TAB_REF:-}" ]]; then
-      echo "   点击 Tab: ${tab_label} (${TAB_REF})"
-      # press 才是点击;fill 是文本填充(此前误用)
-      "$AGENT_DEVICE_BIN" press "$TAB_REF" 2>/dev/null || true
-      sleep 2
+  # Tab 标签与 CCMainTabView.swift 一致: 首页/树洞/共鸣墙/治愈空间/个人中心
+  # (此前用 "共鸣"/"鼓励"/"我的" 匹配不到真实 Tab,导致 Tab 截图全部缺失)
+  for tab_label in "树洞" "共鸣墙" "治愈空间" "个人中心"; do
+    echo "   点击 Tab: ${tab_label}"
+    if "$AGENT_DEVICE_BIN" press "label=\"${tab_label}\"" --settle 2>&1 | tail -2; then
+      sleep 1
       SAFE_NAME=$(echo "$tab_label" | tr '[:upper:]' '[:lower:]')
       take_screenshot "tab-${SAFE_NAME}" || true
+    else
+      echo "   ⚠️ ${tab_label} 点击失败,跳过该 Tab"
     fi
   done
 else
@@ -318,6 +317,12 @@ echo "📄 生成 evidence.md..."
   echo "---"
   echo "*由 verify-fix.sh (agent-device MVP) 自动生成*"
 } >> evidence.md
+
+# ── 7.1 收尾 agent-device 会话 ───────────────────────
+# 官方推荐闭环: open -> snapshot -> press/fill -> close
+if command -v "$AGENT_DEVICE_BIN" &>/dev/null; then
+  "$AGENT_DEVICE_BIN" close 2>/dev/null || true
+fi
 
 # ── 8. 输出结果 ───────────────────────────────────────
 echo ""

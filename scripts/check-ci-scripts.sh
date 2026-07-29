@@ -88,8 +88,10 @@ case "$1" in
     ;;
   snapshot)
     echo "@e1 button \"树洞\""
-    echo "@e2 button \"共鸣\""
+    echo "@e2 button \"共鸣墙\""
     ;;
+  press)     echo "pressed $2" ;;  # selector 直按(verify-fix.sh 5.3 节)
+  close)     echo "session closed" ;;
   *) exit 0 ;;
 esac
 STUB
@@ -146,6 +148,14 @@ if [[ -f "$EVIDENCE_MD" ]] && grep -q "截图清单" "$EVIDENCE_MD"; then
   green "✅ evidence.md 含完整汇总章节(截图清单)"
 else
   red "❌ evidence.md 缺少汇总章节 —— 脚本中途被截断"; FAIL=1
+fi
+
+# 关键断言:Tab 导航截图必须生成(selector press 流程真实走过)
+# (此前 grep @eN 管道 + 错误 Tab 标签导致 4 个 Tab 截图全部缺失却无任何报错)
+if [[ -f "$EVIDENCE_MD" ]] && grep -q "tab-树洞.png" "$EVIDENCE_MD"; then
+  green "✅ Tab 导航截图已生成(tab-树洞 等)"
+else
+  red "❌ Tab 截图缺失 —— selector press 流程未生效"; FAIL=1
 fi
 
 # ── 运行 post-pr-comment.sh ──

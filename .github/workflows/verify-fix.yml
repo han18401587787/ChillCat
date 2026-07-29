@@ -7,7 +7,8 @@ name: Verify Fix (agent-device)
 # 这是「Agent 验证能力」的阶段 A（MVP）：
 #   - agent-device CLI 截图 + accessibility snapshot
 #   - 证据链写入 PR Comment
-#   - 不阻塞合并（人工复查后决定）
+#   - verify 步骤失败时评论/artifact 照常产出,但最终 Run 状态标红
+#     （不掩盖失败;是否合并仍由人工复查决定）
 #
 # 阶段 B（AppDebugServer 深度集成）将在后续 PR 中实现。
 
@@ -150,3 +151,12 @@ jobs:
         run: |
           xcrun simctl shutdown "$SIMULATOR_NAME" 2>/dev/null || true
           xcrun simctl delete "$SIMULATOR_NAME" 2>/dev/null || true
+
+      # ── 如实反映 verify 结果 ──
+      # verify 步骤 continue-on-error 是为了让评论/artifact 照常产出,
+      # 但最终状态必须红:否则截图失败被掩盖成"成功"(Run #21 教训)
+      - name: Fail if verification failed
+        if: always() && steps.verify.outcome == 'failure'
+        run: |
+          echo "::error::verify-fix.sh 执行失败(评论与 artifact 已照常产出,请查看步骤日志)"
+          exit 1
