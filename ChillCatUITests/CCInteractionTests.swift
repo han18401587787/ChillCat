@@ -94,8 +94,9 @@ final class CCInteractionTests: XCTestCase {
         let navBar = app.navigationBars["AI 倾听官"].firstMatch
         XCTAssertTrue(navBar.waitForExistence(timeout: 8), "点击AI入口后应该导航到AI倾听官页")
 
-        // TextField(axis: .vertical) 多行输入框在 a11y 树中暴露为 textView
-        let input = app.textViews["ai_listener_input"].firstMatch
+        // CI #279 失败现场 UI hierarchy 实测:该输入框暴露为 TextField 类型
+        // (TextField, identifier: 'ai_listener_input'),不是 textView
+        let input = app.textFields["ai_listener_input"].firstMatch
         XCTAssertTrue(input.waitForExistence(timeout: 5), "AI倾听官页应该有输入框")
     }
 

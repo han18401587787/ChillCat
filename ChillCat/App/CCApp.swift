@@ -135,6 +135,10 @@ struct CCApp: View {
         // UITest 强制 Welcome: 清除 token + 跳过自动匿名登录,让 Welcome 页可达
         if isUITestShowWelcome {
             keychain["access_token"] = nil
+            // 同时清除缓存用户资料(CI #279 根因):cached_user 存于 Keychain,
+            // 跨 launch 残留。若不清除,个人中心 loadProfile 会命中缓存的匿名用户,
+            // viewModel.user != nil → 点击用户卡片不跳登录页,游客态判断失效
+            try? CCKeychainManager().delete("cached_user")
             coordinator.hasSeenWelcome = false
             isInitializing = false
             LogI("UITest 启动模式: 强制显示 Welcome", module: .ui, category: "Launch")
