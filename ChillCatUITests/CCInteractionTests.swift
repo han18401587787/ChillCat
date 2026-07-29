@@ -84,15 +84,15 @@ final class CCInteractionTests: XCTestCase {
         XCTAssertTrue(aiBtn.waitForExistence(timeout: 5), "首页应该有AI倾听官入口")
         aiBtn.tap()
 
-        // 中间断言:先确认导航确实发生(AI 倾听官 header 出现),
-        // 失败时能区分「导航没发生」还是「输入框缺失」
-        let header = app.staticTexts["AI 倾听官"].firstMatch
-        XCTAssertTrue(header.waitForExistence(timeout: 8), "点击AI入口后应该导航到AI对话页")
+        // 实际导航目标是 CCAIListenerCard(navigationTitle "AI 倾听官",
+        // 输入框 ai_listener_input);AIChatView(ai_chat_input)在导航图中
+        // 无任何入口,是死页面。中间断言用 navigationBars 确认导航发生。
+        let navBar = app.navigationBars["AI 倾听官"].firstMatch
+        XCTAssertTrue(navBar.waitForExistence(timeout: 8), "点击AI入口后应该导航到AI倾听官页")
 
-        // TextField(axis: .vertical) 多行输入框在 a11y 树中暴露为 textView;
-        // 不用 descendants(.any) 全局查询(遍历整棵树极慢,8s 可能只轮询1-2次)
-        let input = app.textViews["ai_chat_input"].firstMatch
-        XCTAssertTrue(input.waitForExistence(timeout: 5), "AI对话页应该有输入框")
+        // TextField(axis: .vertical) 多行输入框在 a11y 树中暴露为 textView
+        let input = app.textViews["ai_listener_input"].firstMatch
+        XCTAssertTrue(input.waitForExistence(timeout: 5), "AI倾听官页应该有输入框")
     }
 
     // MARK: - 树洞交互验证
@@ -248,9 +248,9 @@ final class CCInteractionTests: XCTestCase {
     // MARK: - 登录页交互验证
 
     func test_Login_PhoneInputIsTextField() throws {
-        // 本套件是 -UITEST_AUTO_LOGIN 已登录态,个人中心用户卡片不会跳登录页;
-        // 且 profile_login_entry 标识符不存在(真实为 profile_user_card)。
-        // 正确路径:用 -UITEST_SHOW_WELCOME 重新 launch,从 Welcome 页进登录页。
+        // 当前实现下登录页的真实可达路径:
+        // Welcome → "已有账号登录"(仅置 hasSeenWelcome,进游客主页)
+        // → 个人中心 → 用户卡片(未登录时跳登录页)
         let freshApp = XCUIApplication()
         freshApp.launchArguments = ["-UITEST_SHOW_WELCOME"]
         freshApp.launch()
@@ -258,6 +258,14 @@ final class CCInteractionTests: XCTestCase {
         let loginEntry = freshApp.buttons["welcome_login_entry"].firstMatch
         XCTAssertTrue(loginEntry.waitForExistence(timeout: 10), "Welcome页应该有登录入口")
         loginEntry.tap()
+
+        let profileTab = freshApp.tabBars.buttons["个人中心"].firstMatch
+        XCTAssertTrue(profileTab.waitForExistence(timeout: 8), "点击后应该进入主页(游客态)")
+        profileTab.tap()
+
+        let userCard = freshApp.buttons["profile_user_card"].firstMatch
+        XCTAssertTrue(userCard.waitForExistence(timeout: 5), "个人中心应该有用户卡片")
+        userCard.tap()
 
         let phoneField = freshApp.textFields["login_phone_field"].firstMatch
         XCTAssertTrue(phoneField.waitForExistence(timeout: 5), "登录页应有手机号输入框")

@@ -214,11 +214,26 @@ final class ChillCatV3UITests: XCTestCase {
     }
 
     func test_LoginPage_IdentifiersExist() throws {
+        // 当前实现下登录页的真实可达路径:
+        // Welcome → "已有账号登录"(仅置 hasSeenWelcome,进游客主页)
+        // → 个人中心 → 用户卡片(未登录时跳登录页)
         let freshApp = XCUIApplication()
         freshApp.launchArguments = ["-UITEST_SHOW_WELCOME"]
         freshApp.launch()
-        freshApp.buttons["welcome_login_entry"].tap()
-        XCTAssertTrue(freshApp.textFields["login_phone_field"].waitForExistence(timeout: 5))
+
+        let loginEntry = freshApp.buttons["welcome_login_entry"].firstMatch
+        XCTAssertTrue(loginEntry.waitForExistence(timeout: 10), "Welcome页应该有登录入口")
+        loginEntry.tap()
+
+        let profileTab = freshApp.tabBars.buttons["个人中心"].firstMatch
+        XCTAssertTrue(profileTab.waitForExistence(timeout: 8), "点击后应该进入主页(游客态)")
+        profileTab.tap()
+
+        let userCard = freshApp.buttons["profile_user_card"].firstMatch
+        XCTAssertTrue(userCard.waitForExistence(timeout: 5), "个人中心应该有用户卡片")
+        userCard.tap()
+
+        XCTAssertTrue(freshApp.textFields["login_phone_field"].waitForExistence(timeout: 5), "登录页应该有手机号输入框")
     }
 
     func test_HomePage_IdentifiersExist() throws {
