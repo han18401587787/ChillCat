@@ -137,13 +137,14 @@ final class ChillCatV3UITests: XCTestCase {
     func testTreeHoleLoads() throws {
         app.tabTreeHole.tap()
         XCTAssertTrue(app.tabTreeHole.isSelected)
-        // v3.0 树洞: 用 identifier 定位发布框(TextEditor)或空状态
-        let publishBox = app.textViews["tree_hole_content"].firstMatch
+        // v3.0 树洞: 用真实 identifier 定位发布框(TextEditor)或发送按钮或空状态
+        // (此前找不存在的 "tree_hole_content",且 loading 文案是瞬态,导致必失败)
+        let publishBox = app.textViews["treehole_content_input"].firstMatch
+        let publishBtn = app.buttons["treehole_publish_button"].firstMatch
         let emptyState = app.staticTexts["树洞是空的"]
-        let loadingState = app.staticTexts["正在加载倾诉…"]
-        XCTAssertTrue(publishBox.waitForExistence(timeout: 3) ||
-                      emptyState.waitForExistence(timeout: 5) ||
-                      loadingState.waitForExistence(timeout: 5),
+        XCTAssertTrue(publishBox.waitForExistence(timeout: 5) ||
+                      publishBtn.waitForExistence(timeout: 5) ||
+                      emptyState.waitForExistence(timeout: 5),
                       "树洞页面应该显示发布框或空状态")
     }
 
@@ -204,8 +205,9 @@ final class ChillCatV3UITests: XCTestCase {
     // MARK: - accessibilityIdentifier 定位验证
 
     func test_WelcomePage_IdentifiersExist() throws {
-        // 重新启动不带 skip 参数
+        // 必须用 -UITEST_SHOW_WELCOME:正常启动会自动匿名登录直达主页,Welcome 不可达
         let freshApp = XCUIApplication()
+        freshApp.launchArguments = ["-UITEST_SHOW_WELCOME"]
         freshApp.launch()
         XCTAssertTrue(freshApp.buttons["welcome_anonymous_entry"].waitForExistence(timeout: 10))
         XCTAssertTrue(freshApp.buttons["welcome_login_entry"].exists)
@@ -213,6 +215,7 @@ final class ChillCatV3UITests: XCTestCase {
 
     func test_LoginPage_IdentifiersExist() throws {
         let freshApp = XCUIApplication()
+        freshApp.launchArguments = ["-UITEST_SHOW_WELCOME"]
         freshApp.launch()
         freshApp.buttons["welcome_login_entry"].tap()
         XCTAssertTrue(freshApp.textFields["login_phone_field"].waitForExistence(timeout: 5))
@@ -226,7 +229,9 @@ final class ChillCatV3UITests: XCTestCase {
     // MARK: - 关键用户路径测试
 
     func test_AnonymousLoginFlow() throws {
+        // 必须用 -UITEST_SHOW_WELCOME 让 Welcome 页可达(否则会跳过匿名登录直通主页)
         let freshApp = XCUIApplication()
+        freshApp.launchArguments = ["-UITEST_SHOW_WELCOME"]
         freshApp.launch()
         freshApp.buttons["welcome_anonymous_entry"].tap()
         XCTAssertTrue(freshApp.tabBars.buttons.firstMatch.waitForExistence(timeout: 15))

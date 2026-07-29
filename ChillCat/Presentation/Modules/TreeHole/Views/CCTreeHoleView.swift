@@ -115,6 +115,7 @@ struct CCTreeHoleView: View {
                     .background(Color.clear)
                     .frame(minHeight: 100, maxHeight: 160)
                     .padding(XuanSpacing.sm)
+                    .accessibilityIdentifier("treehole_content_input")
             }
             .background(Color.xuanWhite)
             .cornerRadius(XuanRadius.lg)

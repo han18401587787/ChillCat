@@ -21,11 +21,17 @@ struct CCApp: View {
 
     /// XCUITest 可通过 launchArguments 跳过 Welcome: `-UITEST_SKIP_WELCOME`
     /// XCUITest 可通过 launchArguments 自动登录: `-UITEST_AUTO_LOGIN`
+    /// XCUITest 可通过 launchArguments 强制显示 Welcome: `-UITEST_SHOW_WELCOME`
+    ///   (正常启动会自动匿名登录直达主页,Welcome 页不可达;测试 Welcome/登录流程时
+    ///    需要此参数跳过自动登录并清除已有 token)
     private var isUITesting: Bool {
         ProcessInfo.processInfo.arguments.contains("-UITEST_SKIP_WELCOME")
     }
     private var isUITestAutoLogin: Bool {
         ProcessInfo.processInfo.arguments.contains("-UITEST_AUTO_LOGIN")
+    }
+    private var isUITestShowWelcome: Bool {
+        ProcessInfo.processInfo.arguments.contains("-UITEST_SHOW_WELCOME")
     }
 
     var body: some View {
@@ -125,6 +131,15 @@ struct CCApp: View {
         initError = nil
 
         let keychain = Keychain(service: "app.xuanpeace.token")
+
+        // UITest 强制 Welcome: 清除 token + 跳过自动匿名登录,让 Welcome 页可达
+        if isUITestShowWelcome {
+            keychain["access_token"] = nil
+            coordinator.hasSeenWelcome = false
+            isInitializing = false
+            LogI("UITest 启动模式: 强制显示 Welcome", module: .ui, category: "Launch")
+            return
+        }
 
         // 如果已有有效 token，直接进入
         if let existingToken = keychain["access_token"], !existingToken.isEmpty {

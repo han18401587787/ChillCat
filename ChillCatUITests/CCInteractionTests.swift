@@ -83,9 +83,10 @@ final class CCInteractionTests: XCTestCase {
         let aiBtn = app.buttons["home_ai_listener_entry"].firstMatch
         if aiBtn.waitForExistence(timeout: 5) {
             aiBtn.tap()
-            // AI 聊天页使用 TextField，有明确的 accessibilityIdentifier
-            let inputExists = app.textFields["ai_chat_input"].waitForExistence(timeout: 5)
-            XCTAssertTrue(inputExists, "AI对话页应该有输入框")
+            // 注意:TextField(axis: .vertical) 多行输入框在 a11y 树中暴露为 textView
+            // 而非 textField,按 identifier 做类型无关查询
+            let input = app.descendants(matching: .any).matching(identifier: "ai_chat_input").firstMatch
+            XCTAssertTrue(input.waitForExistence(timeout: 8), "AI对话页应该有输入框")
         }
     }
 
@@ -95,25 +96,25 @@ final class CCInteractionTests: XCTestCase {
         app.tabTreeHole.tap()
         _ = app.tabTreeHole.waitForExistence(timeout: 3)
 
-        // 输入框应该是可编辑的 (用 identifier 定位)
-        let editor = app.textViews["tree_hole_content"].firstMatch
-        if editor.waitForExistence(timeout: 3) {
-            editor.tap()
-            editor.typeText("测试倾诉内容")
-            XCTAssertTrue(editor.value as? String != "", "输入框应该接受输入")
-        }
+        // 输入框应该是可编辑的 (用真实 identifier 定位,此前 "tree_hole_content"
+        // 不存在导致 if 守卫静默跳过,测试形同虚设)
+        let editor = app.textViews["treehole_content_input"].firstMatch
+        XCTAssertTrue(editor.waitForExistence(timeout: 5), "树洞输入框应该存在")
+        editor.tap()
+        editor.typeText("测试倾诉内容")
+        XCTAssertTrue(editor.value as? String != "", "输入框应该接受输入")
     }
 
     func test_TreeHole_PublishButtonState() throws {
         app.tabTreeHole.tap()
         _ = app.tabTreeHole.waitForExistence(timeout: 3)
 
-        let publishBtn = app.buttons["tree_hole_publish"].firstMatch
-        if publishBtn.waitForExistence(timeout: 3) {
-            XCTAssertEqual(publishBtn.elementType, .button)
-            // 空内容时按钮应该不可用
-            XCTAssertFalse(publishBtn.isEnabled, "空内容时发送按钮应该禁用")
-        }
+        // 真实 identifier 是 treehole_publish_button(此前 tree_hole_publish 不存在,静默跳过)
+        let publishBtn = app.buttons["treehole_publish_button"].firstMatch
+        XCTAssertTrue(publishBtn.waitForExistence(timeout: 5), "发送按钮应该存在")
+        XCTAssertEqual(publishBtn.elementType, .button)
+        // 空内容时按钮应该不可用
+        XCTAssertFalse(publishBtn.isEnabled, "空内容时发送按钮应该禁用")
     }
 
     // MARK: - 共鸣墙交互验证
