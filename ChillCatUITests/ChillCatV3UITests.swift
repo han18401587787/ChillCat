@@ -55,25 +55,27 @@ final class ChillCatV3UITests: XCTestCase {
     // MARK: - 首页探索入口测试
 
     func testHomeExploreEntriesExist() throws {
+        // 依据:设计图首页含「情绪探索」内容位(PRD 四·首页-情绪探索轮播 P0),
+        // 真实 identifier home_emotion_explore,点击 → 情绪解码页(navigationTitle "情绪地图")
+        // (原假设的 home_resonance_entry 在设计图与实现中均不存在)
         app.tabHome.tap()
         app.swipeUp()
         app.swipeUp()
-        // v3.0 首页底部有情绪探索区，用 identifier 定位
-        let resonanceBtn = app.buttons["home_resonance_entry"].firstMatch
-        if resonanceBtn.waitForExistence(timeout: 5) {
-            XCTAssertTrue(resonanceBtn.exists, "共鸣墙入口应可见")
-        }
+        let exploreBtn = app.buttons["home_emotion_explore"].firstMatch
+        XCTAssertTrue(exploreBtn.waitForExistence(timeout: 8), "首页应该有情绪探索内容位")
+        exploreBtn.tap()
+        let decoderNav = app.navigationBars["情绪地图"].firstMatch
+        XCTAssertTrue(decoderNav.waitForExistence(timeout: 8), "点击情绪探索应该导航到情绪解码页")
     }
 
     func testNavigateToHealingFromHome() throws {
-        app.tabHome.tap()
-        app.swipeUp(); app.swipeUp()
-        let healingBtn = app.buttons["home_healing_entry"].firstMatch
-        if healingBtn.waitForExistence(timeout: 5) {
-            healingBtn.tap()
-            let nav = app.navigationBars.firstMatch
-            XCTAssertTrue(nav.waitForExistence(timeout: 5))
-        }
+        // 依据:设计图中治愈空间是底部 Tab(设计名「治愈」/实现名「治愈空间」),
+        // 首页无直接入口(原假设的 home_healing_entry 不存在)
+        app.tabHealing.tap()
+        let navBar = app.navigationBars["治愈空间"].firstMatch
+        XCTAssertTrue(navBar.waitForExistence(timeout: 8), "治愈空间 Tab 应该展示治愈空间页")
+        let breathingBtn = app.buttons["healing_breathing_button"].firstMatch
+        XCTAssertTrue(breathingBtn.waitForExistence(timeout: 5), "治愈空间应该有呼吸练习入口(稳情计划 P0)")
     }
 
     func testNavigateToGrowthArchiveFromHome() throws {
@@ -86,50 +88,83 @@ final class ChillCatV3UITests: XCTestCase {
     // MARK: - AI 倾听官测试
 
     func testAIListenerInput() throws {
+        // 依据:设计图首页有「和绪安聊聊」AI 入口(home_ai_listener_entry),
+        // 真实导航目标是 CCAIListenerCard(输入框 ai_listener_input);
+        // 原查询的 ai_chat_input 属于无导航入口的 AIChatView 死页面
         app.tabHome.tap()
-        // AI倾听官卡片应该在首页顶部，用 identifier 定位输入框
-        let inputField = app.textFields["ai_chat_input"].firstMatch
-        if inputField.waitForExistence(timeout: 5) {
-            inputField.tap()
-            inputField.typeText("今天心情不错")
-            let sendBtn = app.buttons["ai_listener_send"].firstMatch
-            XCTAssertTrue(sendBtn.isEnabled)
-        }
+        app.swipeUp(); app.swipeUp(); app.swipeUp()
+        let aiEntry = app.buttons["home_ai_listener_entry"].firstMatch
+        XCTAssertTrue(aiEntry.waitForExistence(timeout: 8), "首页应该有AI倾听官入口")
+        aiEntry.tap()
+
+        // CI #279 实测:该输入框在 a11y 树中暴露为 TextField 类型
+        let inputField = app.textFields["ai_listener_input"].firstMatch
+        XCTAssertTrue(inputField.waitForExistence(timeout: 8), "AI倾听官页应该有输入框")
+        inputField.tap()
+        inputField.typeText("今天心情不错")
+        let sendBtn = app.buttons["ai_listener_send"].firstMatch
+        XCTAssertTrue(sendBtn.waitForExistence(timeout: 5), "AI倾听官页应该有发送按钮")
+        XCTAssertTrue(sendBtn.isEnabled, "输入文字后发送按钮应该可用")
     }
 
     // MARK: - 治愈空间测试 (v3.0 替代工具箱)
 
     func testHealingSpaceMeditationVisible() throws {
+        // 依据:治愈空间页(CCMeditationView)真实 identifier 为
+        // meditation_session_<标题> / healing_audio_<标题> / healing_breathing_button;
+        // 原查询的 toolbox_* 属于无导航入口的 CCToolboxView 死页面
         app.tabHealing.tap()
-        let cards = ["toolbox_sleep", "toolbox_solitude", "toolbox_anxiety"]
-        for card in cards {
-            let btn = app.buttons[card].firstMatch
-            if btn.waitForExistence(timeout: 3) {
-                XCTAssertTrue(btn.exists, "冥想课程 identifier '\(card)' 应可见")
-            }
-        }
+        let navBar = app.navigationBars["治愈空间"].firstMatch
+        XCTAssertTrue(navBar.waitForExistence(timeout: 8), "应该进入治愈空间页")
+
+        let breathingBtn = app.buttons["healing_breathing_button"].firstMatch
+        let anySession = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "meditation_session_")).firstMatch
+        let anyAudio = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "healing_audio_")).firstMatch
+        XCTAssertTrue(breathingBtn.waitForExistence(timeout: 5) ||
+                      anySession.waitForExistence(timeout: 5) ||
+                      anyAudio.waitForExistence(timeout: 5),
+                      "治愈空间应该展示呼吸练习/冥想课程/治愈音频至少一种内容(PRD:治愈音频 P0 内容位)")
     }
 
     // MARK: - 成长档案测试
 
     func testGrowthArchiveAccessible() throws {
+        // 依据:个人中心「治愈记录」行 → CCGrowthArchiveView(内有 growth_archive_report);
+        // 原直接在个人中心找 growth_archive_report,该 identifier 在档案页内部,必然找不到
         app.tabProfile.tap()
-        let archiveBtn = app.buttons["growth_archive_report"].firstMatch
-        if archiveBtn.waitForExistence(timeout: 5) {
-            archiveBtn.tap()
-            let nav = app.navigationBars.firstMatch
-            XCTAssertTrue(nav.waitForExistence(timeout: 5))
-        }
+        let archiveRow = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "治愈记录")).firstMatch
+        XCTAssertTrue(archiveRow.waitForExistence(timeout: 8), "个人中心应该有治愈记录入口")
+        archiveRow.tap()
+        let reportBtn = app.buttons["growth_archive_report"].firstMatch
+        XCTAssertTrue(reportBtn.waitForExistence(timeout: 8), "成长档案页应该有报告入口")
     }
 
     func testSafetyPlanAccessible() throws {
-        app.tabProfile.tap()
-        let safetyBtn = app.buttons["profile_safety_plan"].firstMatch
-        if safetyBtn.waitForExistence(timeout: 5) {
-            safetyBtn.tap()
-            let navTitle = app.navigationBars.firstMatch
-            XCTAssertTrue(navTitle.waitForExistence(timeout: 5))
-        }
+        // 依据:PRD 6.4 危机干预协议——安全守护入口是危机触发式的。
+        // 实现:AI倾听官页输入危机关键词并发送 → crisisDetected=true 且
+        // riskLevel >= medium → 输入栏出现安全计划入口(NavigationLink → CCSafetyPlanView)
+        // (原假设的 profile_safety_plan 在个人中心不存在)
+        app.tabHome.tap()
+        app.swipeUp(); app.swipeUp(); app.swipeUp()
+        let aiEntry = app.buttons["home_ai_listener_entry"].firstMatch
+        XCTAssertTrue(aiEntry.waitForExistence(timeout: 8), "首页应该有AI倾听官入口")
+        aiEntry.tap()
+
+        let inputField = app.textFields["ai_listener_input"].firstMatch
+        XCTAssertTrue(inputField.waitForExistence(timeout: 8), "AI倾听官页应该有输入框")
+        inputField.tap()
+        inputField.typeText("最近压力很大，有过不想活的念头")
+
+        let sendBtn = app.buttons["ai_listener_send"].firstMatch
+        XCTAssertTrue(sendBtn.waitForExistence(timeout: 5))
+        sendBtn.tap()
+
+        // 危机关键词本地检测,发送后同步出现安全计划入口(图标按钮 label=resonance_like)
+        let safetyLink = app.buttons["resonance_like"].firstMatch
+        XCTAssertTrue(safetyLink.waitForExistence(timeout: 8), "检测到危机内容后应该出现安全守护入口(PRD 6.4)")
+        safetyLink.tap()
+        let addStrategyBtn = app.buttons["safety_plan_add_strategy"].firstMatch
+        XCTAssertTrue(addStrategyBtn.waitForExistence(timeout: 8), "应该进入安全守护计划页")
     }
 
     // MARK: - 树洞/社区测试
@@ -148,15 +183,32 @@ final class ChillCatV3UITests: XCTestCase {
                       "树洞页面应该显示发布框或空状态")
     }
 
-    // MARK: - 专业资源测试 (v3.0 安全守护)
+    // MARK: - 危机热线测试 (PRD 6.4 危机干预协议)
 
-    func testProfessionalResourcesNavigate() throws {
-        app.tabProfile.tap()
-        // 导航到安全守护
-        let safetyBtn = app.buttons["profile_safety_plan"].firstMatch
-        if !safetyBtn.waitForExistence(timeout: 3) {
-            return  // 入口不存在则跳过
-        }
+    func testCrisisHotlineTriggeredByKeywords() throws {
+        // 依据:PRD 6.4.1——检测到自伤倾向 → 弹出求助热线(全国心理援助热线 400-161-9995)。
+        // 实现:AI倾听官页发送危机关键词 → 出现 ai_listener_crisis_hotline 按钮,
+        // 点击打开热线 Sheet(含 400-161-9995)
+        app.tabHome.tap()
+        app.swipeUp(); app.swipeUp(); app.swipeUp()
+        let aiEntry = app.buttons["home_ai_listener_entry"].firstMatch
+        XCTAssertTrue(aiEntry.waitForExistence(timeout: 8), "首页应该有AI倾听官入口")
+        aiEntry.tap()
+
+        let inputField = app.textFields["ai_listener_input"].firstMatch
+        XCTAssertTrue(inputField.waitForExistence(timeout: 8), "AI倾听官页应该有输入框")
+        inputField.tap()
+        inputField.typeText("心里难受，有过自伤的想法")
+
+        let sendBtn = app.buttons["ai_listener_send"].firstMatch
+        XCTAssertTrue(sendBtn.waitForExistence(timeout: 5))
+        sendBtn.tap()
+
+        let hotlineBtn = app.buttons["ai_listener_crisis_hotline"].firstMatch
+        XCTAssertTrue(hotlineBtn.waitForExistence(timeout: 8), "检测到危机内容后应该出现心理援助热线按钮(PRD 6.4)")
+        hotlineBtn.tap()
+        let hotlineNumber = app.staticTexts["400-161-9995"].firstMatch
+        XCTAssertTrue(hotlineNumber.waitForExistence(timeout: 5), "热线Sheet应该展示全国心理援助热线 400-161-9995")
     }
 
     // MARK: - AI 视觉完整度校验
@@ -214,32 +266,15 @@ final class ChillCatV3UITests: XCTestCase {
     }
 
     func test_LoginPage_IdentifiersExist() throws {
-        // 当前实现下登录页的真实可达路径:
-        // Welcome → "已有账号登录"(仅置 hasSeenWelcome,进游客主页)
-        // → 个人中心 → 用户卡片(未登录时跳登录页)
+        // 登录页元素验证。经 -UITEST_SHOW_LOGIN hook 直达(原因见 CCApp 注释:
+        // 匿名登录自举导致"用户卡片跳登录"分支实际不可达,已记录产品事项)
         let freshApp = XCUIApplication()
-        freshApp.launchArguments = ["-UITEST_SHOW_WELCOME"]
+        freshApp.launchArguments = ["-UITEST_SHOW_LOGIN"]
         freshApp.launch()
 
-        let loginEntry = freshApp.buttons["welcome_login_entry"].firstMatch
-        XCTAssertTrue(loginEntry.waitForExistence(timeout: 10), "Welcome页应该有登录入口")
-        loginEntry.tap()
-        let shotAfterWelcomeTap = XCTAttachment(screenshot: freshApp.screenshot())
-        shotAfterWelcomeTap.name = "Welcome登录入口点击后"
-        add(shotAfterWelcomeTap)
-
-        let profileTab = freshApp.tabBars.buttons["个人中心"].firstMatch
-        XCTAssertTrue(profileTab.waitForExistence(timeout: 8), "点击后应该进入主页(游客态)")
-        profileTab.tap()
-
-        let userCard = freshApp.buttons["profile_user_card"].firstMatch
-        XCTAssertTrue(userCard.waitForExistence(timeout: 5), "个人中心应该有用户卡片")
-        userCard.tap()
-        let shotAfterCardTap = XCTAttachment(screenshot: freshApp.screenshot())
-        shotAfterCardTap.name = "用户卡片点击后"
-        add(shotAfterCardTap)
-
-        XCTAssertTrue(freshApp.textFields["login_phone_field"].waitForExistence(timeout: 5), "登录页应该有手机号输入框")
+        XCTAssertTrue(freshApp.textFields["login_phone_field"].waitForExistence(timeout: 10), "登录页应该有手机号输入框")
+        XCTAssertTrue(freshApp.buttons["login_send_code"].waitForExistence(timeout: 5), "登录页应该有发送验证码按钮")
+        XCTAssertTrue(freshApp.buttons["login_submit_button"].waitForExistence(timeout: 5), "登录页应该有登录提交按钮")
     }
 
     func test_HomePage_IdentifiersExist() throws {
@@ -259,78 +294,60 @@ final class ChillCatV3UITests: XCTestCase {
     }
 
     func test_EmotionCheckinFlow() throws {
+        // 依据:PRD 5.2 打卡流程 + 实现(home_checkin_button → completeCheckIn →
+        // CCCheckinResultView 展示「今日已打卡 ✨」与「绪安的回应」)。
+        // 原断言(emotion_ 按钮或任意导航栏)恒为真,形同虚设,改为硬断言成功页内容
         app.tabHome.tap()
         let checkinBtn = app.buttons["home_checkin_button"].firstMatch
-        if checkinBtn.waitForExistence(timeout: 5) {
-            checkinBtn.tap()
-            // 等待情绪选择页
-            let emotionGrid = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "emotion_"))
-            XCTAssertTrue(emotionGrid.count > 0 || app.navigationBars.firstMatch.waitForExistence(timeout: 3))
-        }
+        XCTAssertTrue(checkinBtn.waitForExistence(timeout: 8), "首页应该有今日心情打卡按钮")
+        checkinBtn.tap()
+
+        let successLabel = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "今日已打卡")).firstMatch
+        XCTAssertTrue(successLabel.waitForExistence(timeout: 8), "打卡后应该展示打卡成功页(PRD 5.2)")
+        let aiReplySection = app.staticTexts["绪安的回应"].firstMatch
+        XCTAssertTrue(aiReplySection.waitForExistence(timeout: 8), "打卡成功页应该展示 AI 共情回应区(PRD 6.1.3)")
     }
 
     func test_ToolboxEntryFlow() throws {
-        app.tabHome.tap()
-        app.swipeUp(); app.swipeUp()
-        // 心理工具箱入口
-        let toolboxBtn = app.buttons["home_toolbox_entry"].firstMatch
-        if toolboxBtn.waitForExistence(timeout: 5) {
-            toolboxBtn.tap()
-            let nav = app.navigationBars["心理工具箱"]
-            XCTAssertTrue(nav.waitForExistence(timeout: 5))
-        }
-    }
-
-    func test_SafetyPlanFlow() throws {
-        app.tabProfile.tap()
-        app.swipeUp()
-        let safetyBtn = app.buttons["profile_safety_plan"].firstMatch
-        if safetyBtn.waitForExistence(timeout: 5) {
-            safetyBtn.tap()
-            let addStrategyBtn = app.buttons["safety_plan_add_strategy"].firstMatch
-            if addStrategyBtn.waitForExistence(timeout: 5) {
-                XCTAssertTrue(addStrategyBtn.exists)
-            }
-        }
+        // 依据:v3.0 设计以「治愈空间」Tab 替代原心理工具箱入口
+        // (CCToolboxView 在导航图中无入口,home_toolbox_entry 不存在)。
+        // 呼吸训练是稳情计划(P0)核心练习,验证其可达性
+        app.tabHealing.tap()
+        let navBar = app.navigationBars["治愈空间"].firstMatch
+        XCTAssertTrue(navBar.waitForExistence(timeout: 8), "应该进入治愈空间页")
+        let breathingBtn = app.buttons["healing_breathing_button"].firstMatch
+        XCTAssertTrue(breathingBtn.waitForExistence(timeout: 5), "治愈空间应该有呼吸训练入口")
     }
 
     func test_VoiceCheckinFlow() throws {
+        // 依据:语音情绪日记(PRD 6.1.2 P0)的真实入口在 AI 倾听官页输入栏
+        // (NavigationLink 图标按钮 label=ai_listen → CCVoiceCheckinView);
+        // 原假设的 home_voice_checkin_entry 在首页不存在
         app.tabHome.tap()
-        // 语音签到入口
-        let voiceBtn = app.buttons["home_voice_checkin_entry"].firstMatch
-        if voiceBtn.waitForExistence(timeout: 5) {
-            voiceBtn.tap()
-            let recordBtn = app.buttons["voice_checkin_record_button"].firstMatch
-            if recordBtn.waitForExistence(timeout: 5) {
-                XCTAssertTrue(recordBtn.exists)
-            }
-        }
+        app.swipeUp(); app.swipeUp(); app.swipeUp()
+        let aiEntry = app.buttons["home_ai_listener_entry"].firstMatch
+        XCTAssertTrue(aiEntry.waitForExistence(timeout: 8), "首页应该有AI倾听官入口")
+        aiEntry.tap()
+
+        let voiceEntry = app.buttons["ai_listen"].firstMatch
+        XCTAssertTrue(voiceEntry.waitForExistence(timeout: 8), "AI倾听官页应该有语音日记入口")
+        voiceEntry.tap()
+        let recordBtn = app.buttons["voice_checkin_record_button"].firstMatch
+        XCTAssertTrue(recordBtn.waitForExistence(timeout: 8), "语音打卡页应该有录音按钮(PRD 6.1.2)")
     }
 
     func test_DeleteAccountFlow() throws {
+        // 依据:删除账号入口在 设置 页(settings_delete_account),
+        // 需从个人中心先进入「设置」;原直接在个人中心找,必然找不到
         app.tabProfile.tap()
-        app.swipeUp(); app.swipeUp()
-        let deleteBtn = app.buttons["settings_delete_account"].firstMatch
-        if deleteBtn.waitForExistence(timeout: 5) {
-            deleteBtn.tap()
-            let confirmBtn = app.buttons["delete_account_confirm"].firstMatch
-            if confirmBtn.waitForExistence(timeout: 5) {
-                XCTAssertTrue(confirmBtn.exists)
-            }
-        }
-    }
+        let settingsRow = app.buttons["设置"].firstMatch
+        XCTAssertTrue(settingsRow.waitForExistence(timeout: 8), "个人中心应该有设置入口")
+        settingsRow.tap()
 
-    func test_CrisisHotlineFlow() throws {
-        app.tabProfile.tap()
-        app.swipeUp()
-        let safetyBtn = app.buttons["profile_safety_plan"].firstMatch
-        if safetyBtn.waitForExistence(timeout: 5) {
-            safetyBtn.tap()
-            // 危机热线
-            let hotlineBtn = app.buttons["pro_resource_safety_plan"].firstMatch
-            if !hotlineBtn.exists {
-                app.swipeUp()
-            }
-        }
+        let deleteBtn = app.buttons["settings_delete_account"].firstMatch
+        XCTAssertTrue(deleteBtn.waitForExistence(timeout: 8), "设置页应该有删除账号入口")
+        deleteBtn.tap()
+        let confirmBtn = app.buttons["delete_account_confirm"].firstMatch
+        XCTAssertTrue(confirmBtn.waitForExistence(timeout: 8), "删除账号应该有二次确认(合规要求)")
     }
 }

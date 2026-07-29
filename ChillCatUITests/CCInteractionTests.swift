@@ -253,36 +253,22 @@ final class CCInteractionTests: XCTestCase {
     // MARK: - 登录页交互验证
 
     func test_Login_PhoneInputIsTextField() throws {
-        // 当前实现下登录页的真实可达路径:
-        // Welcome → "已有账号登录"(仅置 hasSeenWelcome,进游客主页)
-        // → 个人中心 → 用户卡片(未登录时跳登录页)
+        // 登录页渲染与输入验证。经 -UITEST_SHOW_LOGIN hook 直达登录页——
+        // 因匿名登录自举(无 refresh token 时 CCTokenProvider 自动匿名登录),
+        // 联网下个人中心用户卡片 user 恒非 nil,"未登录跳登录页"分支实际不可达,
+        // 该路径缺陷已记录为产品事项,测试不再假装它能走通
         let freshApp = XCUIApplication()
-        freshApp.launchArguments = ["-UITEST_SHOW_WELCOME"]
+        freshApp.launchArguments = ["-UITEST_SHOW_LOGIN"]
         freshApp.launch()
 
-        let loginEntry = freshApp.buttons["welcome_login_entry"].firstMatch
-        XCTAssertTrue(loginEntry.waitForExistence(timeout: 10), "Welcome页应该有登录入口")
-        loginEntry.tap()
-        let shotAfterWelcomeTap = XCTAttachment(screenshot: freshApp.screenshot())
-        shotAfterWelcomeTap.name = "Welcome登录入口点击后"
-        add(shotAfterWelcomeTap)
-
-        let profileTab = freshApp.tabBars.buttons["个人中心"].firstMatch
-        XCTAssertTrue(profileTab.waitForExistence(timeout: 8), "点击后应该进入主页(游客态)")
-        profileTab.tap()
-
-        let userCard = freshApp.buttons["profile_user_card"].firstMatch
-        XCTAssertTrue(userCard.waitForExistence(timeout: 5), "个人中心应该有用户卡片")
-        userCard.tap()
-        let shotAfterCardTap = XCTAttachment(screenshot: freshApp.screenshot())
-        shotAfterCardTap.name = "用户卡片点击后"
-        add(shotAfterCardTap)
-
         let phoneField = freshApp.textFields["login_phone_field"].firstMatch
-        XCTAssertTrue(phoneField.waitForExistence(timeout: 5), "登录页应有手机号输入框")
+        XCTAssertTrue(phoneField.waitForExistence(timeout: 10), "登录页应有手机号输入框")
         phoneField.tap()
         phoneField.typeText("13800138000")
         XCTAssertTrue((phoneField.value as? String ?? "").contains("138"), "输入框应该接受输入")
+
+        let submitBtn = freshApp.buttons["login_submit_button"].firstMatch
+        XCTAssertTrue(submitBtn.waitForExistence(timeout: 5), "登录页应有提交按钮")
     }
 
     // MARK: - 治愈空间交互验证
@@ -328,13 +314,29 @@ final class CCInteractionTests: XCTestCase {
     // MARK: - 安全守护交互验证
 
     func test_SafetyPlan_Navigates() throws {
-        app.tabProfile.tap()
-        _ = app.tabProfile.waitForExistence(timeout: 5)
+        // 依据 PRD 6.4 危机干预协议:安全守护入口是危机触发式的——
+        // AI倾听官页发送危机关键词 → crisisDetected=true 且 riskLevel >= medium
+        // → 输入栏出现安全计划入口(NavigationLink,图标 label=resonance_like)。
+        // (原假设的 profile_safety_plan 在个人中心不存在,测试早期 return 形同虚设)
+        app.tabHome.tap()
+        app.swipeUp(); app.swipeUp(); app.swipeUp()
+        let aiEntry = app.buttons["home_ai_listener_entry"].firstMatch
+        XCTAssertTrue(aiEntry.waitForExistence(timeout: 8), "首页应该有AI倾听官入口")
+        aiEntry.tap()
 
-        let safetyBtn = app.buttons["profile_safety_plan"].firstMatch
-        if !safetyBtn.waitForExistence(timeout: 2) {
-            // 尝试其他入口
-            return
-        }
+        let inputField = app.textFields["ai_listener_input"].firstMatch
+        XCTAssertTrue(inputField.waitForExistence(timeout: 8), "AI倾听官页应该有输入框")
+        inputField.tap()
+        inputField.typeText("最近压力很大，有过不想活的念头")
+
+        let sendBtn = app.buttons["ai_listener_send"].firstMatch
+        XCTAssertTrue(sendBtn.waitForExistence(timeout: 5))
+        sendBtn.tap()
+
+        let safetyLink = app.buttons["resonance_like"].firstMatch
+        XCTAssertTrue(safetyLink.waitForExistence(timeout: 8), "检测到危机内容后应该出现安全守护入口(PRD 6.4)")
+        safetyLink.tap()
+        let addStrategyBtn = app.buttons["safety_plan_add_strategy"].firstMatch
+        XCTAssertTrue(addStrategyBtn.waitForExistence(timeout: 8), "点击安全守护入口应该进入安全守护计划页")
     }
 }

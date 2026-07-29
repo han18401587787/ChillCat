@@ -33,10 +33,20 @@ struct CCApp: View {
     private var isUITestShowWelcome: Bool {
         ProcessInfo.processInfo.arguments.contains("-UITEST_SHOW_WELCOME")
     }
+    /// XCUITest 可通过 launchArguments 直达登录页: `-UITEST_SHOW_LOGIN`
+    ///   (因匿名登录自举——无 refresh token 时 CCTokenProvider 自动匿名登录,
+    ///    联网下 fetchProfile 总会成功,个人中心"未登录点击卡片跳登录"分支实际不可达,
+    ///    登录页只能经此 hook 直达验证渲染)
+    private var isUITestShowLogin: Bool {
+        ProcessInfo.processInfo.arguments.contains("-UITEST_SHOW_LOGIN")
+    }
 
     var body: some View {
         Group {
-            if isUITesting {
+            if isUITestShowLogin {
+                // UITest 模式：直达登录页（验证登录页渲染与输入交互）
+                NavigationStack { CCLoginView() }
+            } else if isUITesting {
                 // UITest 模式：跳过初始化和欢迎页，直接进入主界面
                 // - 有 -UITEST_AUTO_LOGIN → coordinator.isLoggedIn = true（模拟已登录）
                 // - 无 -UITEST_AUTO_LOGIN → 未登录状态（测试登录页/离线场景）
@@ -64,7 +74,7 @@ struct CCApp: View {
         .preferredColorScheme(themeManager.colorScheme)
         .withDiagnosticPanel()
         .task {
-            guard !isUITesting else { return }
+            guard !isUITesting && !isUITestShowLogin else { return }
             await initializeApp()
             #if DEBUG
             // 冷启补传：自动重试本地队列中未提交的 Bug 草稿
