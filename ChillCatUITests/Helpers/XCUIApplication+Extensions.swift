@@ -215,14 +215,14 @@ extension XCUIApplication {
         buttons["profile_safety_plan"].firstMatch
     }
 
-    /// 个人中心 - 登录入口
+    /// 个人中心 - 用户卡片(未登录时点击跳登录页)
     var profileLoginEntry: XCUIElement {
-        buttons["profile_login_entry"].firstMatch
+        buttons["profile_user_card"].firstMatch
     }
 
-    /// 个人中心 - 会员入口
+    /// 个人中心 - 会员横幅
     var profileVIPEntry: XCUIElement {
-        buttons["profile_vip_entry"].firstMatch
+        buttons["profile_vip_banner"].firstMatch
     }
 
     // MARK: - 设置页元素
@@ -254,9 +254,9 @@ extension XCUIApplication {
         buttons["tree_hole_publish"].firstMatch
     }
 
-    /// 共鸣墙 - 发布按钮
+    /// 共鸣墙 - 发布按钮(悬浮 FAB)
     var resonancePublish: XCUIElement {
-        buttons["resonance_publish"].firstMatch
+        buttons["resonance_compose_fab"].firstMatch
     }
 
     // MARK: - 会员中心

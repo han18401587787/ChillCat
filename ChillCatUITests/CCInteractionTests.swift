@@ -79,15 +79,20 @@ final class CCInteractionTests: XCTestCase {
         app.tabHome.tap()
         app.swipeUp(); app.swipeUp(); app.swipeUp()
 
-        // 使用 accessibilityIdentifier 定位 AI 入口
+        // home_ai_listener_entry 是首页真实 identifier,改硬断言不再 if 守卫静默跳过
         let aiBtn = app.buttons["home_ai_listener_entry"].firstMatch
-        if aiBtn.waitForExistence(timeout: 5) {
-            aiBtn.tap()
-            // 注意:TextField(axis: .vertical) 多行输入框在 a11y 树中暴露为 textView
-            // 而非 textField,按 identifier 做类型无关查询
-            let input = app.descendants(matching: .any).matching(identifier: "ai_chat_input").firstMatch
-            XCTAssertTrue(input.waitForExistence(timeout: 8), "AI对话页应该有输入框")
-        }
+        XCTAssertTrue(aiBtn.waitForExistence(timeout: 5), "首页应该有AI倾听官入口")
+        aiBtn.tap()
+
+        // 中间断言:先确认导航确实发生(AI 倾听官 header 出现),
+        // 失败时能区分「导航没发生」还是「输入框缺失」
+        let header = app.staticTexts["AI 倾听官"].firstMatch
+        XCTAssertTrue(header.waitForExistence(timeout: 8), "点击AI入口后应该导航到AI对话页")
+
+        // TextField(axis: .vertical) 多行输入框在 a11y 树中暴露为 textView;
+        // 不用 descendants(.any) 全局查询(遍历整棵树极慢,8s 可能只轮询1-2次)
+        let input = app.textViews["ai_chat_input"].firstMatch
+        XCTAssertTrue(input.waitForExistence(timeout: 5), "AI对话页应该有输入框")
     }
 
     // MARK: - 树洞交互验证
@@ -149,11 +154,11 @@ final class CCInteractionTests: XCTestCase {
         app.tabResonance.tap()
         _ = app.tabResonance.waitForExistence(timeout: 5)
 
-        let fab = app.buttons["resonance_publish"].firstMatch
-        if fab.waitForExistence(timeout: 5) {
-            XCTAssertEqual(fab.elementType, .button)
-            XCTAssertTrue(fab.isHittable, "写下心情按钮应该可点击")
-        }
+        // 真实 identifier 是 resonance_compose_fab(原 resonance_publish 不存在,if 守卫下静默跳过)
+        let fab = app.buttons["resonance_compose_fab"].firstMatch
+        XCTAssertTrue(fab.waitForExistence(timeout: 5), "共鸣墙应该有发布按钮")
+        XCTAssertEqual(fab.elementType, .button)
+        XCTAssertTrue(fab.isHittable, "写下心情按钮应该可点击")
     }
 
     // MARK: - 治愈空间交互验证
@@ -189,22 +194,21 @@ final class CCInteractionTests: XCTestCase {
         app.tabProfile.tap()
         _ = app.tabProfile.waitForExistence(timeout: 5)
 
-        // 用户卡片可点击（未登录时跳转登录页）
-        let userCard = app.buttons["profile_login_entry"].firstMatch
-        if userCard.waitForExistence(timeout: 3) {
-            XCTAssertEqual(userCard.elementType, .button)
-        }
+        // 用户卡片真实 identifier 是 profile_user_card(原 profile_login_entry 不存在)
+        let userCard = app.buttons["profile_user_card"].firstMatch
+        XCTAssertTrue(userCard.waitForExistence(timeout: 3), "个人中心应该有用户卡片")
+        XCTAssertEqual(userCard.elementType, .button)
     }
 
     func test_Profile_VIPBannerTappable() throws {
         app.tabProfile.tap()
         _ = app.tabProfile.waitForExistence(timeout: 5)
 
-        let vipBanner = app.buttons["profile_vip_entry"].firstMatch
-        if vipBanner.waitForExistence(timeout: 3) {
-            XCTAssertEqual(vipBanner.elementType, .button)
-            XCTAssertTrue(vipBanner.isHittable)
-        }
+        // 真实 identifier 是 profile_vip_banner(原 profile_vip_entry 不存在)
+        let vipBanner = app.buttons["profile_vip_banner"].firstMatch
+        XCTAssertTrue(vipBanner.waitForExistence(timeout: 3), "个人中心应该有会员横幅")
+        XCTAssertEqual(vipBanner.elementType, .button)
+        XCTAssertTrue(vipBanner.isHittable)
     }
 
     // MARK: - 通用交互验证
@@ -244,20 +248,22 @@ final class CCInteractionTests: XCTestCase {
     // MARK: - 登录页交互验证
 
     func test_Login_PhoneInputIsTextField() throws {
-        app.tabProfile.tap()
-        _ = app.tabProfile.waitForExistence(timeout: 5)
+        // 本套件是 -UITEST_AUTO_LOGIN 已登录态,个人中心用户卡片不会跳登录页;
+        // 且 profile_login_entry 标识符不存在(真实为 profile_user_card)。
+        // 正确路径:用 -UITEST_SHOW_WELCOME 重新 launch,从 Welcome 页进登录页。
+        let freshApp = XCUIApplication()
+        freshApp.launchArguments = ["-UITEST_SHOW_WELCOME"]
+        freshApp.launch()
 
-        // 点击登录区域
-        let loginBtn = app.buttons["profile_login_entry"].firstMatch
-        if loginBtn.waitForExistence(timeout: 3) {
-            loginBtn.tap()
-            // 等待登录页加载
-            let phoneField = app.textFields["login_phone_field"].firstMatch
-            XCTAssertTrue(phoneField.waitForExistence(timeout: 5), "登录页应有手机号输入框")
-            phoneField.tap()
-            phoneField.typeText("13800138000")
-            XCTAssertTrue((phoneField.value as? String ?? "").contains("138"), "输入框应该接受输入")
-        }
+        let loginEntry = freshApp.buttons["welcome_login_entry"].firstMatch
+        XCTAssertTrue(loginEntry.waitForExistence(timeout: 10), "Welcome页应该有登录入口")
+        loginEntry.tap()
+
+        let phoneField = freshApp.textFields["login_phone_field"].firstMatch
+        XCTAssertTrue(phoneField.waitForExistence(timeout: 5), "登录页应有手机号输入框")
+        phoneField.tap()
+        phoneField.typeText("13800138000")
+        XCTAssertTrue((phoneField.value as? String ?? "").contains("138"), "输入框应该接受输入")
     }
 
     // MARK: - 治愈空间交互验证
@@ -292,12 +298,12 @@ final class CCInteractionTests: XCTestCase {
         app.tabProfile.tap()
         _ = app.tabProfile.waitForExistence(timeout: 5)
 
-        let vipBtn = app.buttons["profile_vip_entry"].firstMatch
-        if vipBtn.waitForExistence(timeout: 3) {
-            vipBtn.tap()
-            let navTitle = app.navigationBars.firstMatch
-            XCTAssertTrue(navTitle.waitForExistence(timeout: 5), "应该导航到心光会员页")
-        }
+        // 真实 identifier 是 profile_vip_banner(原 profile_vip_entry 不存在)
+        let vipBtn = app.buttons["profile_vip_banner"].firstMatch
+        XCTAssertTrue(vipBtn.waitForExistence(timeout: 3), "个人中心应该有会员横幅")
+        vipBtn.tap()
+        let navTitle = app.navigationBars.firstMatch
+        XCTAssertTrue(navTitle.waitForExistence(timeout: 5), "应该导航到心光会员页")
     }
 
     // MARK: - 安全守护交互验证

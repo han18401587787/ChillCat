@@ -69,6 +69,7 @@ struct CCLoginView: View {
                             TextField("请输入手机号", text: $phoneNumber)
                                 .keyboardType(.numberPad)
                                 .font(XuanFont.bodyL)
+                                .accessibilityIdentifier("login_phone_field")
                         }
                         .padding(.vertical, XuanSpacing.md)
                         .background(Color.xuanWhite)
@@ -77,7 +78,6 @@ struct CCLoginView: View {
                             RoundedRectangle(cornerRadius: XuanRadius.md)
                                 .stroke(Color.xuanBorder, lineWidth: 1)
                         )
-                        .accessibilityIdentifier("login_phone_field")
 
                         // 验证码
                         HStack(spacing: XuanSpacing.sm) {
