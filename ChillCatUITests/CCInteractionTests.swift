@@ -277,13 +277,18 @@ final class CCInteractionTests: XCTestCase {
         app.tabHealing.tap()
         _ = app.tabHealing.waitForExistence(timeout: 5)
 
-        let audioCards = ["白噪音·雨声", "森林声音", "钢琴曲"]
-        for card in audioCards {
-            let btn = app.buttons[card].firstMatch
+        // 真实 identifier 是 healing_audio_<标题>(CI #281:按中文 label 模糊查询
+        // 既不匹配 identifier 也不匹配完整 label,且触发快照评估超时)
+        let audioIds = ["healing_audio_白噪音·雨声", "healing_audio_森林声音", "healing_audio_钢琴曲"]
+        var found = 0
+        for aid in audioIds {
+            let btn = app.buttons[aid].firstMatch
             if btn.waitForExistence(timeout: 3) {
-                XCTAssertEqual(btn.elementType, .button, "「\(card)」应该是Button类型")
+                XCTAssertEqual(btn.elementType, .button, "「\(aid)」应该是Button类型")
+                found += 1
             }
         }
+        XCTAssertGreaterThan(found, 0, "治愈空间应该至少有一张治愈音频卡片(PRD:治愈音频 P0 内容位)")
     }
 
     // MARK: - 设置页交互验证

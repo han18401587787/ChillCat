@@ -332,8 +332,12 @@ final class ChillCatV3UITests: XCTestCase {
         let voiceEntry = app.buttons["ai_listen"].firstMatch
         XCTAssertTrue(voiceEntry.waitForExistence(timeout: 8), "AI倾听官页应该有语音日记入口")
         voiceEntry.tap()
-        let recordBtn = app.buttons["voice_checkin_record_button"].firstMatch
-        XCTAssertTrue(recordBtn.waitForExistence(timeout: 8), "语音打卡页应该有录音按钮(PRD 6.1.2)")
+        // CI #281 失败现场实测:录音区是「按住说话」手势区,a11y 树中暴露为
+        // Image 类型(identifier=voice_checkin_record_button),不是 Button
+        let recordBtn = app.images["voice_checkin_record_button"].firstMatch
+        XCTAssertTrue(recordBtn.waitForExistence(timeout: 8), "语音打卡页应该有录音区(PRD 6.1.2)")
+        let hint = app.staticTexts["按住说话…"].firstMatch
+        XCTAssertTrue(hint.waitForExistence(timeout: 5), "语音打卡页应该展示「按住说话」交互提示(PRD ER-002)")
     }
 
     func test_DeleteAccountFlow() throws {
