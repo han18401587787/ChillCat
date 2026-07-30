@@ -344,8 +344,11 @@ final class ChillCatV3UITests: XCTestCase {
         // 依据:删除账号入口在 设置 页(settings_delete_account),
         // 需从个人中心先进入「设置」;原直接在个人中心找,必然找不到
         app.tabProfile.tap()
+        _ = app.tabProfile.waitForExistence(timeout: 5)
+        // 设置入口在个人中心列表底部(CI #282:不滚动时 8s 内未挂载到 a11y 树)
+        app.swipeUp(); app.swipeUp()
         let settingsRow = app.buttons["设置"].firstMatch
-        XCTAssertTrue(settingsRow.waitForExistence(timeout: 8), "个人中心应该有设置入口")
+        XCTAssertTrue(settingsRow.waitForExistence(timeout: 10), "个人中心应该有设置入口")
         settingsRow.tap()
 
         let deleteBtn = app.buttons["settings_delete_account"].firstMatch
