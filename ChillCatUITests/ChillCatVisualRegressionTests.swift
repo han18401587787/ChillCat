@@ -219,13 +219,10 @@ final class ChillCatVisualRegressionTests: XCTestCase {
         VisualTesting.compareWithBaseline(named: "home_page_v3", in: app)
     }
 
-    /// 个人中心像素对比
-    func testPixelDiff_ProfilePage() throws {
-        app.tabProfile.tap()
-        _ = app.buttons["profile_user_card"].waitForExistence(timeout: 5)
-        sleep(pageTransitionDelay)
-        VisualTesting.compareWithBaseline(named: "profile_page_v3", in: app)
-    }
+    // 注:个人中心不做像素对比——页面内容依赖远端 loadProfile() 实时返回
+    // (用户名/陪伴天数/统计数据/加载失败态),基线在 run 内采集,两次独立会话
+    // 间网络结果不一致会产生 50%+ 假差异(CI 定时任务 30516057284 实测 54.49%)。
+    // 个人中心的视觉校验由 testVisual_ProfilePage(AI 分析,加载失败自动跳过)覆盖。
 
     /// 树洞像素对比
     func testPixelDiff_TreeHolePage() throws {
@@ -239,10 +236,10 @@ final class ChillCatVisualRegressionTests: XCTestCase {
 
     /// 采集所有页面的基线截图（仅在首次/设计稿变更时运行）
     func testCaptureAllBaselines() throws {
+        // 仅采集内容确定性的页面;个人中心为远端数据驱动,不做像素基线
         let pages: [(String, () -> Void)] = [
             ("home_page_v3", { self.app.tabHome.tap() }),
             ("treehole_page_v3", { self.app.tabTreeHole.tap() }),
-            ("profile_page_v3", { self.app.tabProfile.tap() }),
         ]
 
         for (name, navigate) in pages {
